@@ -3,21 +3,11 @@ import styles from '../styles/Home.module.css'
 import LoginForm from '../components/loginForm/LoginForm'
 import ShowConnectionState from '../components/ShowConnectionState'
 import { 
-    Button,
     Card, 
     CardBody,
     Heading,
     Text,
-    ButtonGroup,
-    Divider,
     Box,
-    useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
 } from '@chakra-ui/react'
 
 const Home: NextPage = () => {
