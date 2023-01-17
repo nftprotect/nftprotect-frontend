@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
 import LoginForm from '../components/loginForm/LoginForm'
-import ShowConnectionState from '../components/ShowConnectionState'
+import NavBar from '../components/navBar/NavBar'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 
@@ -18,25 +18,24 @@ const Home: NextPage = () => {
 
     if ( active ) {
         return (        
-            <div >
+            <div>
+                <NavBar />
                 <main className={styles.main}>
-                <ShowConnectionState />
                     <Card 
                         overflow='hidden'
                         variant='unstyled'
                         align='center'
                     >
                         <CardBody textAlign="center">
-                            
+
                         </CardBody>
                     </Card>
-                    
                 </main>
             </div>
         )
     } else {
         return (
-            <div >
+            <div>
                 <main className={styles.main}>
                     <Card 
                         direction='row'
