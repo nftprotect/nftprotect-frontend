@@ -25,28 +25,13 @@ const ConnectWalletConnect = () => {
     }
 
     return (
-        <div>
-            {active && typeof account === 'string' ? (
-                <div>  
-                    <Button
-                        type="button" 
-                        onClick={onClickDisconnect}
-                    >
-                        {'Account: ' + formatAddress(account,4)}
-                    </Button>
-                </div>
-            ) : (
-                <div>
-                    <Button 
-                        type="button" 
-                        onClick={onClickConnect}
-                        leftIcon={<Wallet fontSize='20px'/>}
-                    >
-                        WalletConnect
-                    </Button>
-                </div>  
-            )}
-        </div>
+        <Button 
+            type="button" 
+            onClick={active ? onClickDisconnect : onClickConnect}
+            leftIcon={<Wallet fontSize='20px'/>}
+        >
+            WalletConnect
+        </Button>
     )
 }
 

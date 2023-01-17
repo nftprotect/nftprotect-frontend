@@ -26,28 +26,13 @@ const ConnectMetamask = () => {
     }
 
     return (
-        <div>
-            {active && typeof account === 'string' ? (
-                <div>  
-                    <Button
-                        type="button" 
-                        onClick={onClickDisconnect}
-                    >
-                        {formatAddress(account,4)}
-                    </Button>
-                </div>
-            ) : (
-                <div>
-                    <Button 
-                        type="button" 
-                        onClick={onClickConnect}
-                        leftIcon={<Metamask fontSize='20px'/>}
-                    >
-                        MetaMask
-                    </Button>
-                </div>  
-            )}
-        </div>
+        <Button 
+            type="button" 
+            onClick={active ? onClickDisconnect : onClickConnect}
+            leftIcon={<Metamask fontSize='20px'/>}
+        >
+            MetaMask
+        </Button>
     )
 }
 
