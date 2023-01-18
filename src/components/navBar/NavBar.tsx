@@ -15,18 +15,22 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import ShowConnectionState from '../ShowConnectionState'
+import ShowConnectionState from './ShowConnectionState'
+import NetworkMenu from './NetworkMenu'
+
 
 const NavBar = () => {
 
     return (
-        <Box display="flex">
-            <Box>LOGO</Box>
-            <Box width="100%" textAlign="right">
-                <ShowConnectionState />
+        <nav style={{width: "100%"}}>
+            <Box float = "left">LOGO</Box>
+            <Box float = "right">
+                <Box display="flex">
+                    <NetworkMenu />
+                    <ShowConnectionState />
+                </Box>
             </Box>
-            
-        </Box>
+        </nav>
     )
 }
 

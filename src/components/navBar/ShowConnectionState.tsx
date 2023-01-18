@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import { formatEther } from "@ethersproject/units"
-import { formatAddress, copyTextToClipboard } from '../utils/helpers'
+import { formatAddress, copyTextToClipboard } from '../../utils/helpers'
 import { 
     Card, 
     CardBody,
