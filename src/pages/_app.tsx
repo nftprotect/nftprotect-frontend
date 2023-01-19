@@ -14,9 +14,9 @@ function getLibrary(provider: any): Web3Provider {
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <Web3ReactProvider getLibrary={getLibrary}>
-            <ChakraProvider>
-                <Component {...pageProps} />
-            </ChakraProvider>
+                <ChakraProvider>
+                    <Component {...pageProps} />
+                </ChakraProvider>
         </Web3ReactProvider>
     )
 }

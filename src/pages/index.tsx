@@ -4,7 +4,7 @@ import LoginForm from '../components/loginForm/LoginForm'
 import NavBar from '../components/navBar/NavBar'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
-
+import NFTView from '../components/nftView/NFTView'
 import { 
     Card, 
     CardBody,
@@ -27,7 +27,7 @@ const Home: NextPage = () => {
                         align='center'
                     >
                         <CardBody textAlign="center">
-
+                            <NFTView />
                         </CardBody>
                     </Card>
                 </main>

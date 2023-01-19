@@ -11,6 +11,12 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
+interface ProviderError {
+    code: number,
+    message: string
+}
+
+
 const NetworkMenu = () => {
       const { chainId, setError } = useWeb3React()
       const currentNetwork = supportedChains.find(it => it.id == chainId)
@@ -18,15 +24,16 @@ const NetworkMenu = () => {
       const handleChange = async (e: any) => {
         const networkId = e.target.value
         // check if the user is connected through MetaMask
-        const provider = window.ethereum //|| window.walletconnect
-        if (provider) {
+        if (window.ethereum?.request !== undefined) {
             try {
-                const accounts = await provider.request({
+                const accounts = await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: hexValue(BigNumber.from(networkId).toHexString()) }],
                 });
             } catch (error) {
-                if (error?.code === 4902) {
+                const e = error as ProviderError
+                if (e?.code === 4902) {
+                    console.log(error)
                     alert('Add network first!')
                 } else {
                     console.error(error)
