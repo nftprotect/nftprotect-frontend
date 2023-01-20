@@ -31,3 +31,4 @@ export const supportedChains = [
 ]
 
 export const libraryPollingInterval = 12000
+export const contractAddress = '0xf4910C763eD4e47A585E2D34baA9A4b611aE448C'
