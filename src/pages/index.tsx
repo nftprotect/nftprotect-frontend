@@ -5,7 +5,8 @@ import NavBar from '../components/navBar/NavBar'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import NFTView from '../components/nftView/NFTView'
-import { 
+import {
+    Container,
     Card, 
     CardBody,
     Heading,
@@ -21,15 +22,9 @@ const Home: NextPage = () => {
             <div>
                 <NavBar />
                 <main className={styles.main}>
-                    <Card 
-                        overflow='hidden'
-                        variant='unstyled'
-                        align='center'
-                    >
-                        <CardBody textAlign="center">
-                            <NFTView />
-                        </CardBody>
-                    </Card>
+                    <Container>
+                        <NFTView />
+                    </Container>
                 </main>
             </div>
         )

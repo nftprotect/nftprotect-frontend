@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import {
     Container,
+    SimpleGrid,
     Button,
     Card, 
     CardBody, 
@@ -18,27 +19,29 @@ import {
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
+import NFTCard from './NFTCard'
 
 const NFTView = () => {
 
     const { chainId, account, active, library} = useWeb3React<Web3Provider>()
 
-    const nfts = useEvmWalletNFTs({
+    const { data, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: chainId,
         address: account || '0x0'
     })
-    const data = nfts.data || []
 
-    console.log(nfts)
-    let nftElements = data.map(nft => {
-        console.log('NFT: ', nft)
-        return <Box>NFT {nft.name }</Box>
+    console.log(data)
+    let nftElements = data?.map(nft => {
+        console.log('NFT: ', nft.name, nft)
+        return <NFTCard
+            nft={nft}
+        />
     })
 
     return (
-        <Box>
+        <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
             { nftElements }
-        </Box>
+        </SimpleGrid>
     )
 }
 
