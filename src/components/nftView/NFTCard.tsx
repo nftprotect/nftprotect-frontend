@@ -97,7 +97,7 @@ const NFTCard = (props: NFTInitialData) => {
             <CardBody alignItems="center">
                 <Box>{ result }</Box>
                 <Box display="flex">
-                    <Text>{ metadata.name }</Text>
+                    <Text>{ metadata?.name || nft.name }</Text>
                     <Box width="100%" />
                     <Text float="right">x{ nft.amount }</Text>
                 </Box>

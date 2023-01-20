@@ -16,10 +16,19 @@ import {
     ModalHeader,
     ModalBody,
     ModalCloseButton,
+    Heading
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
+import { contractAddress } from '../../utils/config'
+
+const renderNFT = (nft: EvmNft) => {
+    console.log('NFT: ', nft.name, nft)
+    return <NFTCard
+        nft={nft}
+    />
+}
 
 const NFTView = () => {
 
@@ -31,18 +40,21 @@ const NFTView = () => {
     })
 
     console.log(data)
-    let nftElements = data?.map(nft => {
-        console.log('NFT: ', nft.name, nft)
-        return <NFTCard
-            nft={nft}
-        />
-    })
+    const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== contractAddress.toLowerCase() )
+    const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === contractAddress.toLowerCase() )
+    const ownNftElements = ownNfts?.map(renderNFT)
+    const wNftElements = wNfts?.map(renderNFT)
 
-    return (
+    return ( <>
+        <Heading>NFT в кошельке:</Heading>
         <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
-            { nftElements }
+            { ownNftElements }
         </SimpleGrid>
-    )
+        <Heading>wNFT:</Heading>
+        <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
+            { wNftElements }
+        </SimpleGrid>
+    </> )
 }
 
 export default NFTView
