@@ -4,8 +4,8 @@ import { Button } from '@chakra-ui/react'
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { Sandbox } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
-import ERC721ABI from '../../pages/abi/ERC721ABI';
-import ERC1155ABI from '../../pages/abi/ERC1155ABI';
+import { ERC721ABI } from '../../pages/abi/ERC721ABI';
+import { ERC1155ABI } from '../../pages/abi/ERC1155ABI';
 import { nftpContractAddress } from '../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 
