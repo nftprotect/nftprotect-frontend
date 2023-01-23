@@ -1,20 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import {
-    Container,
-    Button,
     Card, 
     CardBody, 
     Text,
-    ButtonGroup,
-    Divider,
     Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
     Spinner,
     Image,
 } from '@chakra-ui/react'
@@ -23,11 +13,10 @@ import { GetNFTMetadataRequest } from '@moralisweb3/common-evm-utils';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { EvmChainish } from 'moralis/common-core';
 import { EvmAddressish } from '@moralisweb3/common-evm-utils';
-import { NftCard } from '@web3uikit/core';
-import { JsxElement } from 'typescript';
 import { useState, useEffect } from 'react';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { deIpfsUrl } from '../../utils/helpers'
+import SecureNFTButton from './SecureNFTButton';
 
 interface NFTInitialData {
     nft: EvmNft,
@@ -100,6 +89,7 @@ const NFTCard = (props: NFTInitialData) => {
                     <Text>{ metadata?.name || nft.name }</Text>
                     <Box width="100%" />
                     <Text float="right">x{ nft.amount }</Text>
+                    <SecureNFTButton nft={ nft } metadata={ metadata } />
                 </Box>
             </CardBody>
         </Card>

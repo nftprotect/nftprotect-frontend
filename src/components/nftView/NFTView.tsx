@@ -1,27 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import {
-    Container,
     SimpleGrid,
-    Button,
-    Card, 
-    CardBody, 
-    Text,
-    ButtonGroup,
-    Divider,
-    Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
     Heading
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
-import { contractAddress } from '../../utils/config'
+import { nftpContractAddress } from '../../utils/config'
 
 const renderNFT = (nft: EvmNft) => {
     console.log('NFT: ', nft.name, nft)
@@ -40,8 +26,8 @@ const NFTView = () => {
     })
 
     console.log(data)
-    const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== contractAddress.toLowerCase() )
-    const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === contractAddress.toLowerCase() )
+    const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== nftpContractAddress.toLowerCase() )
+    const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase() )
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
 

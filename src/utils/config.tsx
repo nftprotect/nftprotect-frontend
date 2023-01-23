@@ -31,4 +31,5 @@ export const supportedChains = [
 ]
 
 export const libraryPollingInterval = 12000
-export const contractAddress = '0xf4910C763eD4e47A585E2D34baA9A4b611aE448C'
+export const nftpContractAddress = '0xC9e3a16f869C159DA241FC9c73A0B68b763d4A7d'
+export const couponsContractAddress = '0x0cbFAC30A803A90e4FE052A323AA42D47498CA96'
