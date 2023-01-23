@@ -1,4 +1,4 @@
-const NFTProtectABI = [
+export const NFTProtectABI = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -1755,5 +1755,3 @@ const NFTProtectABI = [
 		"type": "function"
 	}
 ]
-
-export default NFTProtectABI
