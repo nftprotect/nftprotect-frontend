@@ -1,4 +1,4 @@
-export const ERC1155ABI = [
+const ERC1155ABI = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -312,3 +312,5 @@ export const ERC1155ABI = [
 		"type": "function"
 	}
 ]
+
+export default ERC1155ABI

@@ -1,4 +1,4 @@
-export const ERC20ABI = [
+const ERC20ABI = [
     {
         "constant": true,
         "inputs": [],
@@ -220,3 +220,5 @@ export const ERC20ABI = [
         "type": "event"
     }
 ]
+
+export default ERC20ABI
