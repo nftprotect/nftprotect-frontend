@@ -37,25 +37,20 @@ const NFTCard = (props: NFTInitialData) => {
     const nft = props.nft
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     const [ hasMetadata, setHasMetadata ] = useState(true)
-    
-    let fetchEnded = true
+    const [ fetchEnded, setFetchEnded ] = useState(true)
 
     useEffect(() => {
-        if (!metadata) {
-            if (nft.metadata) {
-                setMetadata(nft.metadata)
-                setHasMetadata(true)
-            } else if (nft.tokenUri) {
+        if (!metadata && hasMetadata) {
+            if (nft.tokenUri) {
                 if (fetchEnded) {
-                    fetchEnded = false
+                    setFetchEnded(false)
                     fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
                         if (response.ok) {
                             setMetadata(data)
-                            setHasMetadata(true)
                         } else {
                             setHasMetadata(false)
                         }
-                        fetchEnded = true
+                        setFetchEnded(true)
                     })
                 }
             } else {
@@ -66,11 +61,11 @@ const NFTCard = (props: NFTInitialData) => {
 
     let result = <div />
 
-    if (hasMetadata && metadata) {
+    if (metadata) {
         // Metadata already loaded, showing it
         const img = deIpfsUrl(metadata?.image)
         result = <Image src={ img } height='12em'/>
-    } else if (hasMetadata && !metadata) {
+    } else if (!fetchEnded) {
         // Metadata is still loading, showing loading
         result = <Spinner size='xl' />
     } else {
