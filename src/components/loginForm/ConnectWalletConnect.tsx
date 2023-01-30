@@ -25,10 +25,22 @@ const ConnectWalletConnect = () => {
     }
 
     return (
-        <Button 
+        <Button
+            pY={2}
+            pX={4}
+            my={2}
+            justifyContent="flex-start"
             type="button" 
             onClick={active ? onClickDisconnect : onClickConnect}
             leftIcon={<Wallet fontSize='20px'/>}
+            bg="none"
+            border="2px"
+            borderColor="#BC9CFF"
+            borderRadius="22px"
+            fontSize={['xs', 'sm', 'md', 'lg']}
+            _hover={{
+                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+            }}
         >
             WalletConnect
         </Button>
