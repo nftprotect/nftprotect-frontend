@@ -1,36 +1,36 @@
-import { useWeb3React } from '@web3-react/core'
 import {
     Container,
-    Button,
-    Card, 
-    CardBody, 
-    Text,
-    ButtonGroup,
-    Divider,
-    Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
+    Flex,
+    Image,
 } from '@chakra-ui/react'
 import ShowConnectionState from './ShowConnectionState'
 import NetworkMenu from './NetworkMenu'
-
+import MainMenu from './MainMenu'
 
 const NavBar = () => {
 
     return (
-        <nav style={{width: "100%"}}>
-            <Box float = "left">LOGO</Box>
-            <Box float = "right">
-                <Box display="flex">
-                    <NetworkMenu />
-                    <ShowConnectionState />
-                </Box>
-            </Box>
-        </nav>
+        <Container maxW="2800px" p={0}>
+            <nav>
+                <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    my={[3, 6]}
+                >
+                    <Flex ml={[2, 4, 6, 10]}>
+                        <Image
+                            src='/images/logo.svg'
+                            alt='Logo'
+                        />
+                    </Flex>
+                    <Flex mx={[2, 4, 6, 10]}>
+                        <MainMenu />
+                        <NetworkMenu />
+                        <ShowConnectionState />
+                    </Flex>
+                </Flex>
+            </nav>
+        </Container>
     )
 }
 
