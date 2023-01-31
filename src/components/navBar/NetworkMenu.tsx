@@ -16,12 +16,11 @@ interface ProviderError {
     message: string
 }
 
-
 const NetworkMenu = () => {
-      const { chainId, setError } = useWeb3React()
-      const currentNetwork = supportedChains.find(it => it.id == chainId)
-  
-      const handleChange = async (e: any) => {
+    const { chainId, setError } = useWeb3React()
+    const currentNetwork = supportedChains.find(it => it.id == chainId)
+
+    const handleChange = async (e: any) => {
         const networkId = e.target.value
         // check if the user is connected through MetaMask
         if (window.ethereum?.request !== undefined) {
@@ -40,23 +39,50 @@ const NetworkMenu = () => {
                 }
             }
         }
-    }    
-  
+    }
+
     return (
         <Menu>
             <MenuButton 
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-            >{ currentNetwork?.name }</MenuButton>
+                py={[2, 4]}
+                px={[3, 6]}
+                my={2}
+                mr={2}
+                fontSize={['xs', 'sm', 'md']}
+                bg="none"
+                _active={{
+                    borderRadius: "13px",
+                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                    color: "#FFF"
+                }}
+                _hover={{
+                    border: "2px",
+                    borderColor: "#BC9CFF",
+                    borderRadius: "13px",
+                }}
+            >
+                { (currentNetwork) ? currentNetwork?.name : 'Choose network' }
+            </MenuButton>
             <MenuList>
                 { supportedChains.map(({ name, id }) => (
-                        <MenuItem key={id} value={id} onClick={handleChange}>
+                        <MenuItem
+                            key={id}
+                            value={id} 
+                            onClick={handleChange}
+                            borderRadius="13px"
+                            fontSize={['xs', 'sm', 'md']}
+                            _hover={{
+                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                            }}
+                        >
                             { name }
                         </MenuItem>
                 )) }
-                </MenuList>
+            </MenuList>
         </Menu>
     )
 }
-  
-  export default NetworkMenu;
+
+export default NetworkMenu;
