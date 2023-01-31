@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 import {
     Box,
     Button,
-    ButtonGroup,
     Card, 
     CardBody,
     Flex,
@@ -40,17 +39,16 @@ const LoginForm = () => {
             onClick={onOpen}
             border="2px"
             borderColor="#BC9CFF"
-            borderRadius="22px"
-            textTransform="uppercase"
-            fontSize={['xs', 'sm', 'md', 'lg']}
+            borderRadius="13px"
+            fontSize={['xs', 'sm', 'md']}
             py={[2, 4]}
             px={[3, 6]}
             my={2}
             mr={2}
-            bg="none"
+            bg="linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)"
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                transition: 'top ease 0.5s'
+                color: "#FFF"
             }}
         >Connect Wallet
         </Button>
@@ -101,7 +99,7 @@ const LoginForm = () => {
                                 >Connect your wallet
                                 </Heading>
                                 <Text
-                                    fontSize={['xs', 'sm', 'md', 'lg']}
+                                    fontSize={['xs', 'sm', 'md']}
                                 >Connecting your wallet is like “logging in” to Web3. Select your wallet from the options to get started.
                                 </Text>
 
