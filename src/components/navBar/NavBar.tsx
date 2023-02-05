@@ -1,4 +1,5 @@
 import {
+    Box,
     Container,
     Flex,
     Image,
@@ -10,7 +11,10 @@ import MainMenu from './MainMenu'
 const NavBar = () => {
 
     return (
-        <Container maxW="2800px" p={0}>
+        <Box 
+            maxW="2800px"
+            p={0}
+        >
             <nav>
                 <Flex
                     alignItems="center"
@@ -21,6 +25,7 @@ const NavBar = () => {
                         <Image
                             src='/images/logo.svg'
                             alt='Logo'
+                            minW="40px"
                         />
                     </Flex>
                     <Flex mx={[2, 4, 6, 10]}>
@@ -30,7 +35,7 @@ const NavBar = () => {
                     </Flex>
                 </Flex>
             </nav>
-        </Container>
+        </Box>
     )
 }
 
