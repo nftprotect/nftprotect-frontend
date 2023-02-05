@@ -6,7 +6,7 @@ import { formatAddress } from '../../../utils/helpers'
 import { Button } from '@chakra-ui/react'
 import {Metamask} from '@web3uikit/icons'
 
-const ConnectMetamask = ({nextStep}) => {
+const ConnectMetamask = ({nextStep}: any) => {
 
     const { chainId, account, activate, deactivate, setError, active,library ,connector} = useWeb3React<Web3Provider>()
 

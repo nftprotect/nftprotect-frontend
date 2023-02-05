@@ -9,7 +9,7 @@ import {
     Text,
 } from '@chakra-ui/react'
 
-const ConnectWallet = ({nextStep}) => {
+const ConnectWallet = ({nextStep}: any) => {
 
     return (
         <Flex

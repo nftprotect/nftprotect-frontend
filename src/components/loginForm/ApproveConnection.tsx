@@ -12,7 +12,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 
-const ApproveConnection = ({nextStep, active}) => {
+const ApproveConnection = ({nextStep, active}: any) => {
 
     // const { onClose } = useDisclosure()
     if(active) {
