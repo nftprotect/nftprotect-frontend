@@ -1,8 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
-import { walletConnect } from '../../utils/connectors'
+import { walletConnect } from '../../../utils/connectors'
 import { UserRejectedRequestError } from '@web3-react/walletconnect-connector'
-import { formatAddress } from '../../utils/helpers'
+import { formatAddress } from '../../../utils/helpers'
 import { Button } from '@chakra-ui/react'
 import { Wallet } from '@web3uikit/icons'
 const ConnectWalletConnect = () => {
@@ -26,8 +26,8 @@ const ConnectWalletConnect = () => {
 
     return (
         <Button
-            pY={2}
-            pX={4}
+            py={2}
+            px={4}
             my={2}
             justifyContent="flex-start"
             type="button" 

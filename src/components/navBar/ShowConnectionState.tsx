@@ -5,18 +5,26 @@ import { formatEther } from "@ethersproject/units"
 import { formatAddress, copyTextToClipboard } from '../../utils/helpers'
 import LoginForm from '../loginForm/LoginForm'
 import {
+    Box,
     Button,
+    Card,
+    CardBody,
+    Center,
+    Flex,
+    Icon,
+    Image,
     Menu,
     MenuButton,
-    MenuGroup,
     MenuList,
-    MenuItem
+    Text,
+    Tooltip,
 } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, CopyIcon,  } from '@chakra-ui/icons'
+import { Copy, Off } from '@web3uikit/icons'
 
 const ShowConnectionState = () => {
 
-    const { chainId, account, active, deactivate, library} = useWeb3React<Web3Provider>()
+    const { chainId, account, active, deactivate, library } = useWeb3React<Web3Provider>()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
 
     useEffect(() => {
@@ -73,59 +81,92 @@ const ShowConnectionState = () => {
                         <p>Connect Wallet</p>
                     )}
                 </MenuButton>
-                <MenuList>
-                    <MenuGroup 
-                        title='Account' 
+
+                <MenuList 
+                    p="0"
+                    w={[200, 300]}
+                >
+                    <Card
+                        w="100%"
+                        h="100%"
                         fontSize={['xs', 'sm', 'md']}
-                        borderBottom="2px"
-                        borderColor="#BC9CFF"
                     >
-                        <MenuItem
-                            fontSize={['xs', 'sm', 'md']}
-                            pl={[8]}
-                            _hover={{
-                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                            }}
-                        >
-                            { formatAddress(account || '', 8) }
-                        </MenuItem>
-                        <MenuItem 
-                            onClick={ copyAccountToClipboard }
-                            fontSize={['xs', 'sm', 'md']}
-                            pl={[8]}
-                            _hover={{
-                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                            }}
-                        >
-                            Copy address
-                        </MenuItem>
-                        <MenuItem 
-                            onClick={ onClickDisconnect }
-                            fontSize={['xs', 'sm', 'md']}
-                            pl={[8]}
-                            _hover={{
-                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                            }}
-                        >
-                            Disconnect
-                        </MenuItem>
-                    </MenuGroup>
-                    <MenuGroup 
-                        title='Balance'
-                        fontSize={['xs', 'sm', 'md']}
-                        borderBottom="2px"
-                        borderColor="#BC9CFF"
-                    >
-                        <MenuItem
-                            fontSize={['xs', 'sm', 'md']}
-                            pl={[8]}
-                            _hover={{
-                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                            }}
-                        >
-                            { ethBalance } ETH
-                        </MenuItem>
-                    </MenuGroup>
+                        <CardBody>
+                            <Flex
+                                justifyContent="space-between"
+                                alignItems="center"
+                                mb={[8]}
+                            >
+                                <Flex>
+                                    <Image
+                                        src='/images/noAvatarImage.png' alt='User avatar'
+                                        w={['3em']}
+                                        h={['3em']}
+                                        border="2px"
+                                        borderColor="#BC9CFF"
+                                        borderRadius={['1.5em']}
+                                    >
+                                    </Image>
+                                    <Box ml={[4]}>
+                                        <Text fontSize={['16px']} color="#000">
+                                            maximste
+                                        </Text>
+                                        <Text fontSize={['16px']}>
+                                        { formatAddress(account || '', 4) }
+                                        </Text>
+                                    </Box>
+                                </Flex>
+                                
+                                <Flex>
+                                    <Tooltip label="Copy" bg="none" color="#1A202C">
+                                        <Flex
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            w="2em"
+                                            h="2em"
+                                            p={[1]}
+                                            borderRadius="1em"
+                                            bgColor="rgba(211, 211, 211, .6)"
+                                            cursor="pointer"
+                                            _hover={{
+                                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                                color: "#FFF"
+                                            }}
+                                        >   
+                                            <CopyIcon onClick={ copyAccountToClipboard } />
+                                        </Flex>
+                                    </Tooltip>
+                                    <Tooltip label="Disconnect" bg="none" color="#1A202C">
+                                        <Flex
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            w="2em"
+                                            h="2em"
+                                            p={[1]}
+                                            mx={[1]}
+                                            borderRadius="1em"
+                                            bgColor="rgba(211, 211, 211, .6)"
+                                            cursor="pointer"
+                                            _hover={{
+                                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                                color: "#FFF"
+                                            }}
+                                        >
+                                            <Off onClick={ onClickDisconnect }/>
+                                        </Flex>
+                                    </Tooltip>
+                                </Flex>
+                            </Flex>
+                            <Box align="center">
+                                <Text fontSize={['14px']}>
+                                    ETH Balance
+                                </Text>
+                                <Text fontSize={['36px']}>
+                                    { ethBalance } ETH
+                                </Text>
+                            </Box>
+                        </CardBody>
+                    </Card>
                 </MenuList>
             </Menu>
         )

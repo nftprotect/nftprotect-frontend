@@ -1,16 +1,19 @@
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
-import { injected } from '../../utils/connectors'
+import { injected } from '../../../utils/connectors'
 import { UserRejectedRequestError } from '@web3-react/injected-connector'
-import { formatAddress } from '../../utils/helpers'
+import { formatAddress } from '../../../utils/helpers'
 import { Button } from '@chakra-ui/react'
 import {Metamask} from '@web3uikit/icons'
 
-const ConnectMetamask = () => {
+const ConnectMetamask = ({nextStep}) => {
 
     const { chainId, account, activate, deactivate, setError, active,library ,connector} = useWeb3React<Web3Provider>()
 
     const onClickConnect = async () => {
+        
+        nextStep()
+
         activate(injected,(error) => {
             if (error instanceof UserRejectedRequestError) {
                 // ignore user rejected error
