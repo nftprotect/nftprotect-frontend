@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon,  } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
+import CouponBalance from './CouponBalance'
 
 const ShowConnectionState = () => {
 
@@ -47,7 +48,7 @@ const ShowConnectionState = () => {
 
     if(!active) {
         return (
-            <LoginForm mt={[8]}/>
+            <LoginForm/> // mt={[8]}/>
         )
         
     } else {
@@ -157,12 +158,20 @@ const ShowConnectionState = () => {
                                     </Tooltip>
                                 </Flex>
                             </Flex>
-                            <Box align="center">
+                            <Box textAlign="center">
                                 <Text fontSize={['14px']}>
                                     ETH Balance
                                 </Text>
                                 <Text fontSize={['36px']}>
                                     { ethBalance } ETH
+                                </Text>
+                            </Box>
+                            <Box textAlign="center">
+                                <Text fontSize={['14px']}>
+                                    Coupon Balance
+                                </Text>
+                                <Text fontSize={['36px']}>
+                                    <CouponBalance />
                                 </Text>
                             </Box>
                         </CardBody>
