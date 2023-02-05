@@ -23,9 +23,17 @@ const SecureNFTButton = (props: ButtonInitialData) => {
     const didDialogDisclosure = useDisclosure()
 
     const handleError = (error: any) => {
-        // Нужно зарегистрировать DID
-        if (error.error.code === -32603) {
-            didDialogDisclosure.onOpen()
+        const errorMessage = error.error.data?.originalError?.message
+        if (errorMessage) {
+            if (errorMessage.includes('NFTProtect: user must be registered')) {
+                // Must register DID
+                didDialogDisclosure.onOpen()
+            } else if (errorMessage.includes('NFTProtect: invalid referrer')) {
+                // Invalid referrer address
+                console.log('Invalid referrer!')
+            } else {
+                console.error(error)
+            }
         } else {
             console.error(error)
         }
