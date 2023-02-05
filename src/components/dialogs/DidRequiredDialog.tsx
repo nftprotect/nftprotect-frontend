@@ -9,7 +9,7 @@ import {
     Button,
     useDisclosure
 } from "@chakra-ui/react"
-import RegisterDidDialog from "./RegisterDidDialog"
+// import RegisterDidDialog from "./RegisterDidDialog"
 
 const DidRequiredDialog = (props: any) => {
     const { isOpen, onOpen, onClose } = props.disclosure
@@ -38,7 +38,7 @@ const DidRequiredDialog = (props: any) => {
                         Cancel
                     </Button>
                     <Button colorScheme='red' onClick={(event) => {
-                        registerDidDisclosure.onOpen()
+                        // registerDidDisclosure.onOpen()
                         onClose(event)
                     }} ml={3}>
                         Register
@@ -47,7 +47,7 @@ const DidRequiredDialog = (props: any) => {
                 </AlertDialogContent>
                 </AlertDialogOverlay>
             </AlertDialog>
-            <RegisterDidDialog disclosure={ registerDidDisclosure } />
+            {/* <RegisterDidDialog disclosure={ registerDidDisclosure } /> */}
         </>
     )
 }
