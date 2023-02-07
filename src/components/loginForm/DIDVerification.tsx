@@ -92,7 +92,7 @@ const DIDVerification = () => {
                 spacing='1em'
             >
                 { DIDVerificationOptions.map(({ header, content, buttonTitle }) => (
-                    <Card>
+                    <Card key='header'>
                         <CardBody
                             display="flex"
                             flexDirection="column"

@@ -9,6 +9,8 @@ import { nftpContractAddress } from '../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../dialogs/DidRequiredDialog';
 import { useDisclosure } from '@chakra-ui/react';
+import ERC721ABI from '../../abi/ERC721ABI';
+import ERC1155ABI from '../../abi/ERC1155ABI';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -21,11 +23,21 @@ const SecureNFTButton = (props: ButtonInitialData) => {
     const metadata = props.metadata
     const { chainId, account, setError, library, connector } = useWeb3React<Web3Provider>()
     const didDialogDisclosure = useDisclosure()
+    const referrer = '0x0000000000000000000000000000000000000000' // should be replaced by real referrer
+    const nftProtect: Contract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
 
     const handleError = (error: any) => {
-        // Нужно зарегистрировать DID
-        if (error.error.code === -32603) {
-            didDialogDisclosure.onOpen()
+        const errorMessage = error.error?.data?.originalError?.message
+        if (errorMessage) {
+            if (errorMessage.includes('NFTProtect: user must be registered')) {
+                // Must register DID
+                didDialogDisclosure.onOpen()
+            } else if (errorMessage.includes('NFTProtect: invalid referrer')) {
+                // Invalid referrer address
+                console.log('Invalid referrer!')
+            } else {
+                console.error(error)
+            }
         } else {
             console.error(error)
         }
@@ -37,12 +49,42 @@ const SecureNFTButton = (props: ButtonInitialData) => {
 
         console.log(tokenContractAddress, tokenId, metadata)
 
-        const contract: Contract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
         try {
             if (nft.contractType === 'ERC721') {
-                contract.wrap721(tokenContractAddress, nft.tokenId, 0, account).catch(handleError)
+                const tokenContract: Contract = new Contract(tokenContractAddress, ERC721ABI, library?.getSigner())
+                // check if transfer already approved for this token
+                console.log('ERC721')
+                tokenContract.getApproved(nft.tokenId).then( (result: string) => {
+                    console.log('RESULT', result)
+                    if (result.toLowerCase() === nftpContractAddress.toLowerCase()) {
+                        // already approved, fire wrap
+                        nftProtect.wrap721(tokenContractAddress, nft.tokenId, 0, referrer).catch(handleError)
+                    } else {
+                        tokenContract.approve(nftpContractAddress, nft.tokenId).then(() => {
+                        //     //should wait for transaction to mine, now waiting for transaction sent only
+                        // after mined fire wrap
+                        //     nftProtect.wrap721(tokenContractAddress, nft.tokenId, 0, referrer).catch(handleError)
+                        }).catch(handleError)
+                    }
+                }).catch(handleError)
             } else if (nft.contractType === 'ERC1155') {
-                contract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, account).catch(handleError)
+                const tokenContract: Contract = new Contract(tokenContractAddress, ERC1155ABI, library?.getSigner())
+                // check if NFT Protect is allowed to transfer user's tokens
+                tokenContract.isApprovedForAll(account, nftpContractAddress).then( (result: boolean) => {
+                    console.log('RESULT', result)
+                    if (result) {
+                        // already approved, fire wrap
+                        nftProtect.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer).catch(handleError)
+                    } else {
+                        // set approval
+                        console.log('SET APPROVAL')
+                        tokenContract.setApprovalForAll(nftpContractAddress, true).then(() => {
+                            // should wait for transaction to mine, now waiting for transaction sent only
+                            // after mined fire wrap
+                            // nftProtect.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer).catch(handleError)
+                        }).catch(handleError)
+                    }
+                }).catch(handleError)
             } else {
                 console.log(`Unknown NFT contract type: ${nft.contractType}`)
             }

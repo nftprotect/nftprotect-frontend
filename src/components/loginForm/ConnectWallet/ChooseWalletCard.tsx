@@ -10,7 +10,7 @@ import {
     Text,
 } from '@chakra-ui/react'
 
-const ChooseWalletCard = ({nextStep}) => {
+const ChooseWalletCard = ({nextStep}: any) => {
 
     return(
         <Card mb={[4, 8]}>
