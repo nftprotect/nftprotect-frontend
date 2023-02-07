@@ -34,7 +34,7 @@ const ShowConnectionState = () => {
                 setEthBalance(Number(formatEther(result)))
             })
         }
-        console.log(chainId, account, active)
+        // console.log(chainId, account, active)
     })
 
     const onClickDisconnect = () => {

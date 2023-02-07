@@ -2,7 +2,8 @@ import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import {
     SimpleGrid,
-    Heading
+    Heading,
+    Container,
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
@@ -31,16 +32,23 @@ const NFTView = () => {
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
 
-    return ( <>
-        <Heading>NFT в кошельке:</Heading>
-        <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
-            { ownNftElements }
-        </SimpleGrid>
-        <Heading>wNFT:</Heading>
-        <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
-            { wNftElements }
-        </SimpleGrid>
-    </> )
-}
+    return (
+        <>
+            <Heading>NFT в кошельке:</Heading>
+            <SimpleGrid 
+                minChildWidth={['8em', '10em', '12em']}
+                spacing='1em'
+            >
+                { ownNftElements }
+            </SimpleGrid>
+
+
+
+            <Heading>wNFT:</Heading>
+            <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
+                { wNftElements }
+            </SimpleGrid>
+        </>
+)}
 
 export default NFTView

@@ -16,46 +16,56 @@ const DIDVerification = () => {
 
     const DIDVerificationOptions = [
         {
+            id: 'option1',
             header: 'GTC',
             content: 'Connect your wallet to confirm GTC possession',
             buttonTitle: 'Verify ownership'
         },
-        {
+        {   
+            id: 'option2',
             header: 'GTC Staking',
             content: 'Connect your wallet to verify your staked amount. This accesses ypur Passport data',
             buttonTitle: 'Verify account'
         },
         {
+            id: 'option3',
             header: 'Gitcoin Grants',
             content: 'Connect Github account to review your donation activity on Gitcoin (Up to GR15.)',
             buttonTitle: 'Connect account'
         },
-        {
+        {   
+            id: 'option4',
             header: 'Twitter',
             content: 'Connect your Twitter account to verify stamp details.',
             buttonTitle: 'Connect account'
         },
         {
+            id: 'option5',
             header: 'Discord',
             content: 'Connect your Discord account to verify stamp details.',
             buttonTitle: 'Connect account'
         },
         {
+            id: 'option6',
             header: 'Google',
             content: 'Connect your Google account to verify stamp details.',
             buttonTitle: 'Connect account'
         },
-        {
+        {   
+            id: 'option7',
             header: 'Github',
             content: 'Connect your Github account to verify stamp details.',
             buttonTitle: 'Connect account'
         },
         {
+            id: 'option8',
             header: 'Facebook',
             content: 'Connect your Facebook account to verify stamp details.',
             buttonTitle: 'Connect account'
         },
     ]
+
+    let i=0
 
     return(
         <Flex

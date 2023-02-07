@@ -20,15 +20,19 @@ const Home: NextPage = () => {
 
     if ( active ) {
         return (
-            <Container maxW="2800px" p={0} mt={12}>
+            <>
                 <CheckUrlPopup />
-                <NavBar />
-                <main className={styles.main}>
-                    <Container>
+                <Container 
+                    maxW="2200px"
+                    mx={["10em"]}
+                    p={['10em']}
+                >
+                    <NavBar />
+                    <main>
                         <NFTView />
-                    </Container>
-                </main>
-            </Container>
+                    </main>
+                </Container>
+            </>
         )
     } else {
         return (

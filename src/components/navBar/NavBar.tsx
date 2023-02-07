@@ -15,7 +15,7 @@ const NavBar = () => {
             maxW="2800px"
             p={0}
         >
-            <nav>
+            <nav key="navBar">
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
