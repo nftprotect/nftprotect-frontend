@@ -13,7 +13,8 @@ const ConnectMetamask = ({nextStep}: any) => {
     const onClickConnect = async () => {
         
         nextStep()
-
+        
+        
         activate(injected,(error) => {
             if (error instanceof UserRejectedRequestError) {
                 // ignore user rejected error
@@ -22,6 +23,8 @@ const ConnectMetamask = ({nextStep}: any) => {
                 setError(error)
             }
         }, false)
+        .then(nextStep)
+        
     }
 
     const onClickDisconnect = () => {
