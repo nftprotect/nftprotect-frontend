@@ -101,8 +101,8 @@ const DIDVerification = () => {
                 minChildWidth={['8em', '10em', '12em']}
                 spacing='1em'
             >
-                { DIDVerificationOptions.map(({ header, content, buttonTitle }) => (
-                    <Card key='header'>
+                { DIDVerificationOptions.map(({ id, header, content, buttonTitle }) => (
+                    <Card key={`did-card-${id}`}>
                         <CardBody
                             display="flex"
                             flexDirection="column"
