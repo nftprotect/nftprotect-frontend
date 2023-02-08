@@ -43,6 +43,49 @@ const SecureNFTButton = (props: ButtonInitialData) => {
         }
     }
 
+    const finalTransactionSent = () => {
+
+    }
+
+    const performSecure = (
+        tokenContract: Contract,
+        checkApprovedMethodCall: Function,
+        checkApproved: Function,
+        setApproveMethodCall: Function,
+        wrapMethodCall: Function
+    ) => {
+        checkApprovedMethodCall()
+            .then((result: any) => {
+                // check if transfer already approved 
+                if (checkApproved(result)) {
+                    console.log('Token transfer already approved')
+                    wrapMethodCall()
+                        .then( finalTransactionSent )
+                        .catch( handleError )
+                } else {
+                    console.log('Asking to approve token transfer')
+                    setApproveMethodCall()
+                        .then((tx: any) => {
+                            console.log('Waiting for TX', tx.hash);
+                            // Waiting for transaction to complete
+                            tokenContract.provider.once(tx.hash, (receipt) => {
+                                if (receipt.status === 1) {
+                                    // after mined fire wrap
+                                    console.log("Transaction successful", tx.hash);
+                                    wrapMethodCall()
+                                        .then( finalTransactionSent )
+                                        .catch( handleError )
+                                } else {
+                                    console.log("Transaction failed", tx.hash);
+                                }
+                            })
+                        })
+                        .catch( handleError )
+                }
+            })
+            .catch( handleError )
+    }
+
     const secureNFT = () => {
         const tokenContractAddress = nft.tokenAddress.format()
         const tokenId = nft.tokenId
@@ -52,39 +95,24 @@ const SecureNFTButton = (props: ButtonInitialData) => {
         try {
             if (nft.contractType === 'ERC721') {
                 const tokenContract: Contract = new Contract(tokenContractAddress, ERC721ABI, library?.getSigner())
-                // check if transfer already approved for this token
                 console.log('ERC721')
-                tokenContract.getApproved(nft.tokenId).then( (result: string) => {
-                    console.log('RESULT', result)
-                    if (result.toLowerCase() === nftpContractAddress.toLowerCase()) {
-                        // already approved, fire wrap
-                        nftProtect.wrap721(tokenContractAddress, nft.tokenId, 0, referrer).catch(handleError)
-                    } else {
-                        tokenContract.approve(nftpContractAddress, nft.tokenId).then(() => {
-                        //     //should wait for transaction to mine, now waiting for transaction sent only
-                        // after mined fire wrap
-                        //     nftProtect.wrap721(tokenContractAddress, nft.tokenId, 0, referrer).catch(handleError)
-                        }).catch(handleError)
-                    }
-                }).catch(handleError)
+                performSecure(
+                    tokenContract,
+                    () => tokenContract.getApproved(nft.tokenId),
+                    (result: any) => ( result.toLowerCase() === nftpContractAddress.toLowerCase() ),
+                    () => tokenContract.approve(nftpContractAddress, nft.tokenId),
+                    () => nftProtect.wrap721(tokenContractAddress, nft.tokenId, 0, referrer)
+                )
             } else if (nft.contractType === 'ERC1155') {
                 const tokenContract: Contract = new Contract(tokenContractAddress, ERC1155ABI, library?.getSigner())
-                // check if NFT Protect is allowed to transfer user's tokens
-                tokenContract.isApprovedForAll(account, nftpContractAddress).then( (result: boolean) => {
-                    console.log('RESULT', result)
-                    if (result) {
-                        // already approved, fire wrap
-                        nftProtect.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer).catch(handleError)
-                    } else {
-                        // set approval
-                        console.log('SET APPROVAL')
-                        tokenContract.setApprovalForAll(nftpContractAddress, true).then(() => {
-                            // should wait for transaction to mine, now waiting for transaction sent only
-                            // after mined fire wrap
-                            // nftProtect.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer).catch(handleError)
-                        }).catch(handleError)
-                    }
-                }).catch(handleError)
+                console.log('ERC1155')
+                performSecure(
+                    tokenContract,
+                    () => tokenContract.isApprovedForAll(account, nftpContractAddress),
+                    (result: any) => result,
+                    () => tokenContract.setApprovalForAll(nftpContractAddress, true),
+                    () => nftProtect.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer)
+                )
             } else {
                 console.log(`Unknown NFT contract type: ${nft.contractType}`)
             }
