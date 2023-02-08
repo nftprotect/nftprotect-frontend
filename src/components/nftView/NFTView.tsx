@@ -13,6 +13,7 @@ import { nftpContractAddress } from '../../utils/config'
 const renderNFT = (nft: EvmNft) => {
     console.log('NFT: ', nft.name, nft)
     return <NFTCard
+        key={nft.tokenHash}
         nft={nft}
     />
 }
@@ -26,7 +27,6 @@ const NFTView = () => {
         address: account || '0x0'
     })
 
-    console.log(data)
     const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== nftpContractAddress.toLowerCase() )
     const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase() )
     const ownNftElements = ownNfts?.map(renderNFT)
@@ -34,7 +34,7 @@ const NFTView = () => {
 
     return (
         <>
-            <Heading>NFT в кошельке:</Heading>
+            <Heading>My NFTs:</Heading>
             <SimpleGrid 
                 minChildWidth={['8em', '10em', '12em']}
                 spacing='1em'
@@ -44,7 +44,7 @@ const NFTView = () => {
 
 
 
-            <Heading>wNFT:</Heading>
+            <Heading>My wNFTs:</Heading>
             <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
                 { wNftElements }
             </SimpleGrid>
