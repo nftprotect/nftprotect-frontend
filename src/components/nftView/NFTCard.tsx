@@ -53,9 +53,10 @@ const NFTCard = (props: NFTInitialData) => {
                             setHasMetadata(false)
                         }
                         setFetchEnded(true)
-                    })
+                    }).catch(() => setFetchEnded(true))
             } else {
                 setHasMetadata(false)
+                setFetchEnded(true)
             }
         }
     }, [])

@@ -10,6 +10,7 @@ import {
     Button
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 
 interface ProviderError {
     code: number,
@@ -17,8 +18,9 @@ interface ProviderError {
 }
 
 const NetworkMenu = () => {
-    const { chainId, setError } = useWeb3React()
+    const { chainId, setError, connector } = useWeb3React()
     const currentNetwork = supportedChains.find(it => it.id == chainId)
+    const canSwitchNetwork = !(connector instanceof WalletConnectConnector)
 
     const handleChange = async (e: any) => {
         const networkId = e.target.value
@@ -45,7 +47,7 @@ const NetworkMenu = () => {
         <Menu>
             <MenuButton 
                 as={Button}
-                rightIcon={<ChevronDownIcon />}
+                rightIcon={canSwitchNetwork && <ChevronDownIcon />}
                 py={[2, 4]}
                 px={[3, 6]}
                 my={2}
@@ -65,22 +67,23 @@ const NetworkMenu = () => {
             >
                 { (currentNetwork) ? currentNetwork?.name : 'Choose network' }
             </MenuButton>
-            <MenuList>
-                { supportedChains.map(({ name, id }) => (
-                        <MenuItem
-                            key={id}
-                            value={id} 
-                            onClick={handleChange}
-                            borderRadius="13px"
-                            fontSize={['xs', 'sm', 'md']}
-                            _hover={{
-                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                            }}
-                        >
-                            { name }
-                        </MenuItem>
-                )) }
-            </MenuList>
+            { canSwitchNetwork && <MenuList>
+                    { supportedChains.map(({ name, id }) => (
+                            <MenuItem
+                                key={id}
+                                value={id} 
+                                onClick={handleChange}
+                                borderRadius="13px"
+                                fontSize={['xs', 'sm', 'md']}
+                                _hover={{
+                                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                }}
+                            >
+                                { name }
+                            </MenuItem>
+                    )) }
+                </MenuList>
+            } 
         </Menu>
     )
 }
