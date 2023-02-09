@@ -31,6 +31,7 @@ import StepWizard from 'react-step-wizard';
 interface ButtonInitialData {
     nft: EvmNft,
     metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
+    nftReFetch: Function // function to update nft list
 }
 
 const SecureNFTButton = (props: ButtonInitialData) => {
@@ -102,6 +103,7 @@ const SecureNFTButton = (props: ButtonInitialData) => {
                     // after mined fire wrap
                     setNextStep(stepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
+                    props.nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);

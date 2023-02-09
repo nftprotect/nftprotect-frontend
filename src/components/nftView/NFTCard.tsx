@@ -20,6 +20,7 @@ import SecureNFTButton from './SecureNFTButton';
 
 interface NFTInitialData {
     nft: EvmNft,
+    nftReFetch: Function
 }
 
 async function fetchMetadataUri(uri: string) {  
@@ -84,7 +85,7 @@ const NFTCard = (props: NFTInitialData) => {
                     <Text>{ metadata?.name || nft.name }</Text>
                     <Box width="100%" />
                     <Text float="right">x{ nft.amount }</Text>
-                    <SecureNFTButton nft={ nft } metadata={ metadata } />
+                    <SecureNFTButton nft={ nft } metadata={ metadata } nftReFetch={props.nftReFetch} />
                 </Box>
             </CardBody>
         </Card>

@@ -9,23 +9,25 @@ import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
-
-const renderNFT = (nft: EvmNft) => {
-    console.log('NFT: ', nft.name, nft)
-    return <NFTCard
-        key={nft.tokenHash}
-        nft={nft}
-    />
-}
+import { useEffect } from 'react';
 
 const NFTView = () => {
 
     const { chainId, account, active, library} = useWeb3React<Web3Provider>()
 
-    const { data, cursor, page, pageSize, total} = useEvmWalletNFTs({
+    const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: chainId,
         address: account || '0x0'
     })
+
+    const renderNFT = (nft: EvmNft) => {
+        console.log('NFT: ', nft.name, nft)
+        return <NFTCard
+            key={nft.tokenHash}
+            nft={nft}
+            nftReFetch={fetch}
+        />
+    }
 
     const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== nftpContractAddress.toLowerCase() )
     const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase() )
