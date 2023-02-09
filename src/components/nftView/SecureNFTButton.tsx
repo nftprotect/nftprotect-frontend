@@ -4,7 +4,7 @@ import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { Sandbox } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import NFTProtectABI from '../../abi/NFTProtectABI';
-import { nftpContractAddress } from '../../utils/config' 
+import { nftpContractAddress, dialogsTimeout } from '../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../dialogs/DidRequiredDialog';
 import ERC721ABI from '../../abi/ERC721ABI';
@@ -21,7 +21,6 @@ import {
     Modal,
     ModalOverlay,
     ModalBody,
-    ModalCloseButton,
     ModalContent,
     ModalHeader,
     Spinner,
@@ -59,23 +58,40 @@ const secureNFTButton = (props: ButtonInitialData) => {
     }
 
     const handleError = (error: any) => {
-        const errorMessage = error.error?.data?.originalError?.message
-        if (errorMessage) {
-            if (errorMessage.includes('NFTProtect: user must be registered')) {
-                // Must register DID
-                didDialogDisclosure.onOpen()
-            } else if (errorMessage.includes('NFTProtect: invalid referrer')) {
-                // Invalid referrer address
-                console.log('Invalid referrer!')
-                setNextStep(stepMapping.error)
-            } else {
-                console.error(error)
-                setNextStep(stepMapping.error)
-            }
-        } else {
+        // Provider errors
+        const onUnknownError = (error: any) => {
             console.error(error)
             setNextStep(stepMapping.error)
+            setTimeout(onClose, dialogsTimeout)
         }
+        if (error.code === 'ACTION_REJECTED') {
+            // Transaction declined
+            setNextStep(stepMapping.canceled)
+            setTimeout(onClose, dialogsTimeout)
+        } else {
+            // Other errors
+            const errorMessage = error.error?.data?.originalError?.message
+            if (errorMessage) {
+                const findTerm = (term: String) => errorMessage.includes(term) ? term : '';
+                switch(errorMessage) {
+                    case findTerm('NFTProtect: user must be registered'):
+                        // Must register DID
+                        didDialogDisclosure.onOpen();
+                        break;
+                    case findTerm('NFTProtect: invalid referrer'):
+                    default:
+                        onUnknownError(error)
+                }
+            } else {
+                onUnknownError(error)
+            }
+        }
+    }
+
+    const handleTransactionFailed = (tx: any) => {
+        setNextStep(stepMapping.requestWrap)
+        console.log("Transaction failed", tx.hash);
+        setTimeout(onClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
@@ -86,17 +102,14 @@ const secureNFTButton = (props: ButtonInitialData) => {
                     // after mined fire wrap
                     setNextStep(stepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
+                    setTimeout(onClose, dialogsTimeout)
                 } else {
-                    setNextStep(stepMapping.error)
-                    console.log("Transaction failed", tx.hash);
-                    setTimeout(onClose, 3000)
+                    handleTransactionFailed(tx);
                 }
             })
         }
     }
     
-    
-
     const secureNFT = (
         tokenContract: Contract,
         checkApprovedMethodCall: Function,
@@ -104,6 +117,7 @@ const secureNFTButton = (props: ButtonInitialData) => {
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
+        setNextStep(stepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
             .then((result: any) => {
@@ -131,9 +145,7 @@ const secureNFTButton = (props: ButtonInitialData) => {
                                         .then( finalTransactionSent(tokenContract) )
                                         .catch( handleError )
                                 } else {
-                                    setNextStep(stepMapping.requestWrap)
-                                    console.log("Transaction failed", tx.hash);
-                                    setTimeout(onClose, 3000)
+                                    handleTransactionFailed(tx);
                                 }
                             })
                         })
@@ -192,8 +204,7 @@ const secureNFTButton = (props: ButtonInitialData) => {
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
             >
-                <ModalHeader>Login with wallet</ModalHeader>
-                <ModalCloseButton />
+                <ModalHeader>Securing your NFT</ModalHeader>
                 <ModalBody>
                     <StepWizard initialStep={ stepMapping.checkPermission }>
                         <Box>

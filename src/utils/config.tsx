@@ -34,3 +34,5 @@ export const libraryPollingInterval = 12000
 export const nftpContractAddress = '0xC9e3a16f869C159DA241FC9c73A0B68b763d4A7d'
 export const couponsContractAddress = '0x0cbFAC30A803A90e4FE052A323AA42D47498CA96'
 export const userDidDummyContractAddress = '0x88bfc2c04f66FBE5Fa6bc58504F3823b70e97fC9'
+
+export const dialogsTimeout = 3000
