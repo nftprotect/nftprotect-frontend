@@ -27,8 +27,8 @@ const ChooseWalletCard = ({nextStep}: any) => {
                         Available wallets
                     </Heading>
                     
-                    <ConnectMetamask nextStep={nextStep} />
-                    <ConnectWalletConnect />
+                    <ConnectMetamask/>
+                    <ConnectWalletConnect/>
 
                     <Box
                         justify-self="end"

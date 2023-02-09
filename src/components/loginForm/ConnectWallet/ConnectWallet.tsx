@@ -9,7 +9,7 @@ import {
     Text,
 } from '@chakra-ui/react'
 
-const ConnectWallet = ({nextStep}: any) => {
+const ConnectWallet = () => {
 
     return (
         <Flex
@@ -31,7 +31,7 @@ const ConnectWallet = ({nextStep}: any) => {
                 </CardBody>
             </Card>
             
-            <ChooseWalletCard nextStep={nextStep} />
+            <ChooseWalletCard/>
 
         </Flex>
 )}

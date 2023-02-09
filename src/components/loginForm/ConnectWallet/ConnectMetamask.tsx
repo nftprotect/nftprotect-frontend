@@ -5,15 +5,15 @@ import { UserRejectedRequestError } from '@web3-react/injected-connector'
 import { formatAddress } from '../../../utils/helpers'
 import { Button } from '@chakra-ui/react'
 import {Metamask} from '@web3uikit/icons'
+import { useWizard } from 'react-use-wizard';
 
-const ConnectMetamask = ({nextStep}: any) => {
+const ConnectMetamask = () => {
 
     const { chainId, account, activate, deactivate, setError, active,library ,connector} = useWeb3React<Web3Provider>()
-
+    const { nextStep } = useWizard()
     const onClickConnect = async () => {
         
         nextStep()
-        
         
         activate(injected,(error) => {
             if (error instanceof UserRejectedRequestError) {

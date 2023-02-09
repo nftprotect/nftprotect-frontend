@@ -26,7 +26,8 @@ import {
     Spinner,
     useDisclosure,
 } from '@chakra-ui/react'
-import StepWizard from 'react-step-wizard';
+import { Wizard } from 'react-use-wizard';
+import SwitchableOutside from '../wizardHelpers/SwitchableOutside';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -43,19 +44,19 @@ const SecureNFTButton = (props: ButtonInitialData) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const referrer = '0x0000000000000000000000000000000000000000' // should be replaced by real referrer
     const nftProtect: Contract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
-    const [ nextStep, setNextStep ] = useState<Number>()
+    const [ nextStep, setNextStep ] = useState<number>(0)
 
     const stepMapping = {
-        'checkPermission': 1,
-        'requestConcrete': 2,
-        'requestAll': 3,
-        'requestWrap': 4,
-        'waitingForAllow': 5,
-        'waitingForFinal': 6,
-        'finalCompleted': 7,
-        'canceled': 8,
-        'error': 9,
-        'timeout': 10
+        'checkPermission': 0,
+        'requestConcrete': 1,
+        'requestAll': 2,
+        'requestWrap': 3,
+        'waitingForAllow': 4,
+        'waitingForFinal': 5,
+        'finalCompleted': 6,
+        'canceled': 7,
+        'error': 8,
+        'timeout': 9
     }
 
     const handleError = (error: any) => {
@@ -208,55 +209,62 @@ const SecureNFTButton = (props: ButtonInitialData) => {
             >
                 <ModalHeader>Securing your NFT</ModalHeader>
                 <ModalBody>
-                    <StepWizard initialStep={ stepMapping.checkPermission }>
-                        <Box>
-                            Checking permission to transfer token...
-                        </Box>
-                        <Box>
-                            Allow access to and transfer of your {metadata?.name || nft.name}? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
-                        </Box>
-                        <Box>
-                            Allow access to and transfer of ALL YOUR NFTs? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
-                        </Box>
-                        <Box>
-                            Allow transfer of your {metadata?.name || nft.name} to complete process.
-                        </Box>
-                        <Box>
-                            { "Waiting for transaction to complete. After that you'll be asked for confirmation for wrapping." }
-                        </Box>
-                        <Box>
-                            Waiting for transaction to complete. After it will be completed, your NFT {metadata?.name || nft.name} will be protected.
-                        </Box>
-                        <Box>
-                            Transaction complete! Your {metadata?.name || nft.name} is now secured.
-                        </Box>
-                        <Box>
-                            You canceled the transaction in your wallet.
-                        </Box>
-                        <Box>
-                            Some error occured. Transaction failed.
-                        </Box>
-                        <Box>
-                            Transaction is still in progress.
-                        </Box>
-                        <StepSwitcher nextStepNumber={nextStep}/>
-                    </StepWizard>
+                    <Wizard>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Checking permission to transfer token...
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Allow access to and transfer of your {metadata?.name || nft.name}? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Allow access to and transfer of ALL YOUR NFTs? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Allow transfer of your {metadata?.name || nft.name} to complete process.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                { "Waiting for transaction to complete. After that you'll be asked for confirmation for wrapping." }
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Waiting for transaction to complete. After it will be completed, your NFT {metadata?.name || nft.name} will be protected.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction complete! Your {metadata?.name || nft.name} is now secured.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                You canceled the transaction in your wallet.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Some error occured. Transaction failed.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction is still in progress.
+                            </Box>
+                        </SwitchableOutside>
+                    </Wizard>
                 </ModalBody>
             </ModalContent>
         </Modal>
     </>)
-}
-
-const StepSwitcher = (props: any) => {
-    const nextStep = props.nextStepNumber
-
-    useEffect(() => {
-        if (nextStep && (nextStep != props.currentStep)) {
-            props.goToStep(nextStep)
-        }
-    }, [nextStep])
-
-    return <div/>
 }
 
 export default SecureNFTButton

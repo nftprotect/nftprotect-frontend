@@ -5,7 +5,7 @@ import ApproveConnection from './ApproveConnection'
 import DIDVerification from './DIDVerification'
 
 import { useEffect, useState } from 'react'
-import StepWizard from 'react-step-wizard';
+import { Wizard } from 'react-use-wizard';
 import {
     Button,
     Card, 
@@ -27,8 +27,6 @@ const LoginForm = () => {
 
     const { active } = useWeb3React<Web3Provider>()
     const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const [nextStep] = useState()
 
     useEffect(() => {
         if (active) {
@@ -68,11 +66,11 @@ const LoginForm = () => {
                 <ModalHeader>Login with wallet</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <StepWizard>
-                        <ConnectWallet nextStep={nextStep} />
-                        <ApproveConnection nextStep={nextStep} active={active} />
+                    <Wizard>
+                        <ConnectWallet/>
+                        <ApproveConnection active={active} />
                         <DIDVerification />
-                    </StepWizard>
+                    </Wizard>
                 </ModalBody>
             </ModalContent>
         </Modal>

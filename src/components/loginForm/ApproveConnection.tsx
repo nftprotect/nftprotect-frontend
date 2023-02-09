@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
+import { useWizard } from 'react-use-wizard';
 
 import {
     Card, 
@@ -12,23 +13,18 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 
-const ApproveConnection = ({nextStep, active}: any) => {
+const ApproveConnection = ({ active }: {active: Boolean}) => {
 
+    const { nextStep } = useWizard()
     // const { onClose } = useDisclosure()
-    if(active) {
-        nextStep()
-    }
     
-    // useEffect(() => {
-    //     console.log('Active status', active)
-    //     if (active) {
-    //         nextStep()
-    //         onClose()
-    //     }
-    // })
-
-    
-
+    useEffect(() => {
+        console.log('Active status', active)
+        if (active) {
+            nextStep()
+        //    onClose()
+        }
+    }, [])
 
     return (
         <Flex

@@ -8,7 +8,7 @@ import { nftpContractAddress, dialogsTimeout } from '../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import ERC721ABI from '../../abi/ERC721ABI';
 import ERC1155ABI from '../../abi/ERC1155ABI';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -25,7 +25,8 @@ import {
     Spinner,
     useDisclosure,
 } from '@chakra-ui/react'
-import StepWizard from 'react-step-wizard';
+import { Wizard } from 'react-use-wizard';
+import SwitchableOutside from '../wizardHelpers/SwitchableOutside';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -40,15 +41,15 @@ const UnSecureNFTButton = (props: ButtonInitialData) => {
     const { chainId, account, setError, library, connector } = useWeb3React<Web3Provider>()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const nftProtect: Contract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
-    const [ nextStep, setNextStep ] = useState<Number>()
+    const [ nextStep, setNextStep ] = useState<number>(0)
 
     const stepMapping = {
-        'requestUnwrap': 1,
-        'waitingForFinal': 2,
-        'finalCompleted': 3,
-        'canceled': 4,
-        'error': 5,
-        'timeout': 6
+        'requestUnwrap': 0,
+        'waitingForFinal': 1,
+        'finalCompleted': 2,
+        'canceled': 3,
+        'error': 4,
+        'timeout': 5
     }
 
     const handleError = (error: any) => {
@@ -104,7 +105,11 @@ const UnSecureNFTButton = (props: ButtonInitialData) => {
         const tokenContractAddress = nft.tokenAddress.format()
         const tokenId = nft.tokenId
         try {
-            const tokenContract: Contract = new Contract(tokenContractAddress, ERC1155ABI, library?.getSigner())
+            const tokenContract: Contract = new Contract(
+                tokenContractAddress, 
+                (nft.contractType === 'ERC721') ? ERC721ABI : ERC1155ABI, 
+                library?.getSigner()
+            )
             setNextStep(stepMapping.requestUnwrap);
             onOpen()
             nftProtect.burn(nft.tokenId, 0)
@@ -133,43 +138,42 @@ const UnSecureNFTButton = (props: ButtonInitialData) => {
             >
                 <ModalHeader>Unsecuring your NFT</ModalHeader>
                 <ModalBody>
-                    <StepWizard initialStep={ stepMapping.requestUnwrap }>
-                        <Box>
-                            Allow unwrapping of your {metadata?.name || nft.name} to complete process.
-                        </Box>
-                        <Box>
-                            Waiting for transaction to complete. After it will be completed, your will receive original NFT {metadata?.name || nft.name} to your wallet.
-                        </Box>
-                        <Box>
-                            Transaction complete! Your {metadata?.name || nft.name} is now in your wallet.
-                        </Box>
-                        <Box>
-                            You canceled the transaction in your wallet.
-                        </Box>
-                        <Box>
-                            Some error occured. Transaction failed.
-                        </Box>
-                        <Box>
-                            Transaction is still in progress.
-                        </Box>
-                        <StepSwitcher nextStepNumber={nextStep}/>
-                    </StepWizard>
+                    <Wizard>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Allow unwrapping of your {metadata?.name || nft.name} to complete process.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Waiting for transaction to complete. After it will be completed, your will receive original NFT {metadata?.name || nft.name} to your wallet.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction complete! Your {metadata?.name || nft.name} is now in your wallet.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                You canceled the transaction in your wallet.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Some error occured. Transaction failed.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction is still in progress.
+                            </Box>
+                        </SwitchableOutside>
+                    </Wizard>
                 </ModalBody>
             </ModalContent>
         </Modal>
     </>)
-}
-
-const StepSwitcher = (props: any) => {
-    const nextStep = props.nextStepNumber
-
-    useEffect(() => {
-        if (nextStep && (nextStep != props.currentStep)) {
-            props.goToStep(nextStep)
-        }
-    }, [nextStep])
-
-    return <div/>
 }
 
 export default UnSecureNFTButton
