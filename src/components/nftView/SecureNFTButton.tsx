@@ -90,7 +90,7 @@ const SecureNFTButton = (props: ButtonInitialData) => {
     }
 
     const handleTransactionFailed = (tx: any) => {
-        setNextStep(stepMapping.requestWrap)
+        setNextStep(stepMapping.error)
         console.log("Transaction failed", tx.hash);
         setTimeout(onClose, dialogsTimeout)
     }

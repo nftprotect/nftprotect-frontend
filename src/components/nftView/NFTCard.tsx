@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { deIpfsUrl } from '../../utils/helpers'
 import SecureNFTButton from './SecureNFTButton';
+import UnSecureNFTButton from './UnSecureNFTButton';
 
 interface NFTInitialData {
     nft: EvmNft,
@@ -65,7 +66,7 @@ const NFTCard = (props: NFTInitialData) => {
     let result = <div />
     let buttons = <div />
     if (isWNFT) {
-        buttons = buttons
+        buttons = <UnSecureNFTButton nft={ nft } metadata={ metadata } nftReFetch={props.nftReFetch} />
     } else {
         buttons = <SecureNFTButton nft={ nft } metadata={ metadata } nftReFetch={props.nftReFetch} />
     }
