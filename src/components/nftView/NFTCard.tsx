@@ -25,29 +25,27 @@ interface NFTInitialData {
     isWNFT: Boolean
 }
 
-async function fetchMetadataUri(uri: string) {  
-    const response = await fetch(uri, {
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    const data = await response.json()
-    return {response, data}
-}
-
 const NFTCard = (props: NFTInitialData) => {
 
     const nft = props.nft
     const isWNFT = props.isWNFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     const [ hasMetadata, setHasMetadata ] = useState(true)
-    const [ fetchEnded, setFetchEnded ] = useState(true)
+    const [ fetchEnded, setFetchEnded ] = useState(false)
+
+    async function fetchMetadataUri(uri: string) {  
+        const response = await fetch(uri, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        const data = await response.json()
+        return {response, data}
+    }
 
     useEffect(() => {
         if (!metadata && hasMetadata) {
             if (nft.tokenUri) {
-                if (fetchEnded) {
-                    setFetchEnded(false)
                     fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
                         if (response.ok) {
                             setMetadata(data)
@@ -56,12 +54,11 @@ const NFTCard = (props: NFTInitialData) => {
                         }
                         setFetchEnded(true)
                     })
-                }
             } else {
                 setHasMetadata(false)
             }
         }
-    })
+    }, [])
 
     let result = <div />
     let buttons = <div />

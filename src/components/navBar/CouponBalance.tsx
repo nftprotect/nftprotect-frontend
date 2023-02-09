@@ -61,11 +61,11 @@ const CouponBalance = () => {
         }
     
         // trigger the effect only on component mount
-    }, [active,account])
+    }, [active, account])
 
     useEffect(() => {
         console.log("COUPONS BALANCE", balance, symbol)
-    })
+    }, [])
 
     return (<>
         { balance ? `${ formatEther(balance) } ${symbol}` : "Fetching balance..." }
