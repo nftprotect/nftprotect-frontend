@@ -11,7 +11,7 @@ interface SwitchableOutsideInitialData {
     nextStepNumber: number
 }
 
-const SwitchableOutside = React.memo(({children, nextStepNumber}: SwitchableOutsideInitialData) => {
+const SwitchableOutside = React.memo( function SwitchableOutside({children, nextStepNumber}: SwitchableOutsideInitialData) {
     const { goToStep, activeStep } = useWizard()
 
     const variants: Variants = {
