@@ -20,7 +20,8 @@ import SecureNFTButton from './SecureNFTButton';
 
 interface NFTInitialData {
     nft: EvmNft,
-    nftReFetch: Function
+    nftReFetch: Function,
+    isWNFT: Boolean
 }
 
 async function fetchMetadataUri(uri: string) {  
@@ -36,6 +37,7 @@ async function fetchMetadataUri(uri: string) {
 const NFTCard = (props: NFTInitialData) => {
 
     const nft = props.nft
+    const isWNFT = props.isWNFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     const [ hasMetadata, setHasMetadata ] = useState(true)
     const [ fetchEnded, setFetchEnded ] = useState(true)
@@ -61,7 +63,12 @@ const NFTCard = (props: NFTInitialData) => {
     })
 
     let result = <div />
-
+    let buttons = <div />
+    if (isWNFT) {
+        buttons = buttons
+    } else {
+        buttons = <SecureNFTButton nft={ nft } metadata={ metadata } nftReFetch={props.nftReFetch} />
+    }
     if (metadata) {
         // Metadata already loaded, showing it
         const img = deIpfsUrl(metadata?.image)
@@ -85,7 +92,7 @@ const NFTCard = (props: NFTInitialData) => {
                     <Text>{ metadata?.name || nft.name }</Text>
                     <Box width="100%" />
                     <Text float="right">x{ nft.amount }</Text>
-                    <SecureNFTButton nft={ nft } metadata={ metadata } nftReFetch={props.nftReFetch} />
+                    { buttons }
                 </Box>
             </CardBody>
         </Card>

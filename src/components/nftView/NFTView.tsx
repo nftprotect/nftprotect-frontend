@@ -20,17 +20,20 @@ const NFTView = () => {
         address: account || '0x0'
     })
 
+    const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
+
     const renderNFT = (nft: EvmNft) => {
         console.log('NFT: ', nft.name, nft)
         return <NFTCard
             key={nft.tokenHash}
             nft={nft}
             nftReFetch={fetch}
+            isWNFT={ nftIsWNFT(nft) }
         />
     }
 
-    const ownNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() !== nftpContractAddress.toLowerCase() )
-    const wNfts = data?.filter(nft => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase() )
+    const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
+    const wNfts = data?.filter(nft => nftIsWNFT(nft) )
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
 
