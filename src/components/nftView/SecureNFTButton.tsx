@@ -33,7 +33,7 @@ interface ButtonInitialData {
     metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
 }
 
-const secureNFTButton = (props: ButtonInitialData) => {
+const SecureNFTButton = (props: ButtonInitialData) => {
 
     const nft = props.nft
     const metadata = props.metadata
@@ -220,7 +220,7 @@ const secureNFTButton = (props: ButtonInitialData) => {
                             Allow transfer of your {metadata?.name || nft.name} to complete process.
                         </Box>
                         <Box>
-                            Waiting for transaction to complete. After that you'll be asked for confirmation for wrapping.
+                            { "Waiting for transaction to complete. After that you'll be asked for confirmation for wrapping." }
                         </Box>
                         <Box>
                             Waiting for transaction to complete. After it will be completed, your NFT {metadata?.name || nft.name} will be protected.
@@ -257,4 +257,4 @@ const StepSwitcher = (props: any) => {
     return <div/>
 }
 
-export default secureNFTButton
+export default SecureNFTButton
