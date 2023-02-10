@@ -66,7 +66,7 @@ const SecureNFTButton = (props: ButtonInitialData) => {
             setNextStep(stepMapping.error)
             setTimeout(onClose, dialogsTimeout)
         }
-        if (error.code === 'ACTION_REJECTED') {
+        if (error.code === 'ACTION_REJECTED' || error.code === 4001) {
             // Transaction declined
             setNextStep(stepMapping.canceled)
             setTimeout(onClose, dialogsTimeout)
