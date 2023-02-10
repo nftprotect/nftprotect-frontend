@@ -13,6 +13,7 @@ const NavBar = () => {
     return (
         <Box 
             maxW="2800px"
+            mt={12}
             p={0}
         >
             <nav key="navBar">
