@@ -9,7 +9,8 @@ import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
-import { useEffect } from 'react';
+import NFTProtectABI from '../../abi/NFTProtectABI';
+import { Contract } from '@ethersproject/contracts';
 
 const NFTView = () => {
 
@@ -19,6 +20,7 @@ const NFTView = () => {
         chain: chainId,
         address: account || '0x0'
     })
+    const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
 
     const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
 
@@ -28,7 +30,9 @@ const NFTView = () => {
             key={nft.tokenHash}
             nft={nft}
             nftReFetch={fetch}
-            isWNFT={ nftIsWNFT(nft) }
+            library={library}
+            account={account}
+            nftProtectContract={nftProtectContract}
         />
     }
 

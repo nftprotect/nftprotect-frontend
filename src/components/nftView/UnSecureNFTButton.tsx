@@ -1,14 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { Sandbox2 } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
-import NFTProtectABI from '../../abi/NFTProtectABI';
-import { nftpContractAddress, dialogsTimeout } from '../../utils/config' 
+import { dialogsTimeout } from '../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
-import ERC721ABI from '../../abi/ERC721ABI';
-import ERC1155ABI from '../../abi/ERC1155ABI';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Box,
@@ -32,15 +27,14 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
+    tokenContract: Contract,
+    nftProtectContract: Contract,
+    account: string | null | undefined
 }
 
-const UnSecureNFTButton = (props: ButtonInitialData) => {
+const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectContract, account}: ButtonInitialData) => {
 
-    const nft = props.nft
-    const metadata = props.metadata
-    const { chainId, account, setError, library, connector } = useWeb3React<Web3Provider>()
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const nftProtect: Contract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     const stepMapping = {
@@ -92,7 +86,7 @@ const UnSecureNFTButton = (props: ButtonInitialData) => {
                     // after mined fire wrap
                     setNextStep(stepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    props.nftReFetch();
+                    nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
@@ -102,17 +96,10 @@ const UnSecureNFTButton = (props: ButtonInitialData) => {
     }
 
     const onClick = () => {
-        const tokenContractAddress = nft.tokenAddress.format()
-        const tokenId = nft.tokenId
         try {
-            const tokenContract: Contract = new Contract(
-                tokenContractAddress, 
-                (nft.contractType === 'ERC721') ? ERC721ABI : ERC1155ABI, 
-                library?.getSigner()
-            )
             setNextStep(stepMapping.requestUnwrap);
             onOpen()
-            nftProtect.burn(nft.tokenId, 0)
+            nftProtectContract.burn(nft.tokenId, 0)
                 .then( finalTransactionSent(tokenContract) )
                 .catch( handleError )
         } catch (err: any) {
