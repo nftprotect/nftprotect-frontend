@@ -8,18 +8,11 @@ import { useEffect, useState } from 'react'
 import { Wizard } from 'react-use-wizard';
 import {
     Button,
-    Card, 
-    CardBody,
-    Flex,
-    Heading,
-    Text,
     Modal,
     ModalOverlay,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalHeader,
-    Spinner,
     useDisclosure,
 } from '@chakra-ui/react'
 
@@ -59,13 +52,13 @@ const LoginForm = () => {
             onClose={onClose}
         >
             <ModalOverlay />
+            
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
             >
-                <ModalHeader>Login with wallet</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody p="0">
                     <Wizard>
                         <ConnectWallet/>
                         <ApproveConnection active={active} />

@@ -3,153 +3,62 @@ import { useEffect, useState } from 'react'
 import {
     Box,
     Button,
-    Card, 
-    CardBody,
     Flex,
     Heading,
     Text,
-    SimpleGrid,
+
     useDisclosure,
 } from '@chakra-ui/react'
 
 const DIDVerification = () => {
-
-    const DIDVerificationOptions = [
-        {
-            id: 'option1',
-            header: 'GTC',
-            content: 'Connect your wallet to confirm GTC possession',
-            buttonTitle: 'Verify ownership'
-        },
-        {   
-            id: 'option2',
-            header: 'GTC Staking',
-            content: 'Connect your wallet to verify your staked amount. This accesses ypur Passport data',
-            buttonTitle: 'Verify account'
-        },
-        {
-            id: 'option3',
-            header: 'Gitcoin Grants',
-            content: 'Connect Github account to review your donation activity on Gitcoin (Up to GR15.)',
-            buttonTitle: 'Connect account'
-        },
-        {   
-            id: 'option4',
-            header: 'Twitter',
-            content: 'Connect your Twitter account to verify stamp details.',
-            buttonTitle: 'Connect account'
-        },
-        {
-            id: 'option5',
-            header: 'Discord',
-            content: 'Connect your Discord account to verify stamp details.',
-            buttonTitle: 'Connect account'
-        },
-        {
-            id: 'option6',
-            header: 'Google',
-            content: 'Connect your Google account to verify stamp details.',
-            buttonTitle: 'Connect account'
-        },
-        {   
-            id: 'option7',
-            header: 'Github',
-            content: 'Connect your Github account to verify stamp details.',
-            buttonTitle: 'Connect account'
-        },
-        {
-            id: 'option8',
-            header: 'Facebook',
-            content: 'Connect your Facebook account to verify stamp details.',
-            buttonTitle: 'Connect account'
-        },
-    ]
-
-    let i=0
+    function goToExternalPage() {
+        window.open('https://passport.gitcoin.co/', '_blank')
+    }
 
     return(
+
         <Flex
             flexDirection="column"
         >
-            <Flex
-                flexDirection="column"
-                mb={[4, 8]}
+            <Heading
+                fontSize={['md', 'lg', 'xl']}
+                mt={["0.5rem"]}
+                mb={[4, 4, 0] }
+                pb={[2]}
+                alignSelf="center"
             >
-                <Heading
-                    as='h4'
-                    fontSize={['md', 'xl', '2xl']}
-                    mb={[2, 4]}
-                    color="#1F2041"
-                >
-                    Пройдите верификацию DID
-                </Heading>
-                <Text
-                    fontSize={['xs', 'sm', 'md']}
-                    my={[2]}
-                >
+                Пройдите верификацию DID
+            </Heading>
+            <Box 
+                fontSize={['xs', 'sm', 'md']}
+                p={[4, 8]}
+            >
+                <Text mb={[2, 4]}>
                     Чтобы воспользоваться всеми функциями приложения, пройдите верификацию DID.
                 </Text>
-                <Text
-                    fontSize={['xs', 'sm', 'md']}
-                    my={[2]}
-                >
+                <Text>
                     Пока вы не прошли DID, единственная доступная функция - запросить права на оригинал при приобретении wNFT.
                 </Text>
-            </Flex>
+            </Box>
 
-            <SimpleGrid
-                minChildWidth={['8em', '10em', '12em']}
-                spacing='1em'
-            >
-                { DIDVerificationOptions.map(({ id, header, content, buttonTitle }) => (
-                    <Card key={`did-card-${id}`}>
-                        <CardBody
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="space-between"
-                        >
-                            <Box>
-                                <Heading 
-                                    as="h5" 
-                                    fontSize={['sm', 'md', 'xl']}
-                                    mb={[2, 4]}
-                                >
-                                    {header}
-                                </Heading>
-                                <Text 
-                                    fontSize={['xs', 'sm', 'md']}
-                                    mb={[2, 4]}
-                                >
-                                    {content}
-                                </Text>
-                            </Box>
-
-                            <Button
-                                fontSize={['xs', 'sm', 'md']}
-                                minW="10em"
-                                bg="none"
-                                border="2px"
-                                borderColor="#BC9CFF"
-                                borderRadius="13px"
-                                _active={{
-                                    borderRadius: "13px",
-                                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                    color: "#FFF"
-                                }}
-                                _hover={{
-                                    borderRadius: "13px",
-                                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                    color: "#FFF"
-                                }}
-                            >
-                                {buttonTitle}
-                            </Button>
-                        </CardBody>
-                    </Card>
-                )) }
-
-            </SimpleGrid>
-
+            <Button 
+                onClick={goToExternalPage}
+                alignSelf="center"
+                border="2px"
+                borderColor="#BC9CFF"
+                borderRadius="13px"
+                fontSize={['xs', 'sm', 'md']}
+                py={[2, 4]}
+                px={[3, 6]}
+                my={[4, 8]}
+                bg="none"
+                w={['15em']}
+                _hover={{
+                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                    color: "#FFF"
+                }}
+            >Proceed to DID
+            </Button>
         </Flex>
     )
 }

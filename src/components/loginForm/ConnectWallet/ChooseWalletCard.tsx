@@ -13,35 +13,44 @@ import {
 const ChooseWalletCard = ({nextStep}: any) => {
 
     return(
-        <Card mb={[4, 8]}>
-            <CardBody>
-                <Flex
-                    m={{base: 0} }
-                    flexDirection="column"
-                >
-                    <Heading
-                        fontSize={['md', 'xl', '2xl']}
-                        mb={2}
-                        color="#1F2041"
-                    >
-                        Available wallets
-                    </Heading>
-                    
-                    <ConnectMetamask/>
-                    <ConnectWalletConnect/>
 
-                    <Box
-                        justify-self="end"
-                    >
-                        <Text
-                            fontSize={['xs', 'sm']}
-                            mt={4}
-                        >Choosing to connect indicates that you have accepted <b><a href='#'>Terms of ServicePrivacy Policy</a></b>
-                        </Text>
-                    </Box>
-                </Flex>
-            </CardBody>
-        </Card>
+        <Flex
+            flexDirection="column"
+            justifyContent="space-between"
+            my={[4, 4, 0] }
+        >
+            <Box w="100%" textAlign="center">
+                <Heading
+                    fontSize={['md', 'lg', 'xl']}
+                    mt={["0.5rem"]}
+                    mb={[4, 4, 0] }
+                    pb={[2]}
+                    alignSelf="center"
+                    borderBottom="2px dotted #C3D4FF"
+                >
+                    Available wallets
+                </Heading>
+            </Box>
+            
+            
+            <Flex 
+                flexDirection="column"
+                alignItems="center"
+                px={[4, 8]}
+            >
+                <ConnectMetamask/>
+                <ConnectWalletConnect/>
+            </Flex>
+            <Text
+                fontSize={['xs', 'sm', 'md']}
+                px={[4, 8]}
+                py={[4, 8]}
+                mt={4}
+            >Choosing to connect indicates that you have accepted <b><a href='#'>Terms of ServicePrivacy Policy</a></b>
+            </Text>
+
+        </Flex>
+
 )}
 
 export default ChooseWalletCard

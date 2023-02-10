@@ -45,7 +45,9 @@ const ConnectMetamask = () => {
             fontSize={['xs', 'sm', 'md', 'lg']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                color: "#FFF"
             }}
+            w={['15em']}
         >
             MetaMask
         </Button>
