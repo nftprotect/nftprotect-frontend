@@ -112,7 +112,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
     // Checks if wNFT has request to transfer
     const loadPendingRequest = () => {
         nftProtectContract.tokenToRequest(nft.tokenId).then((requestId: number) => {
-            setPendingRequest(requestId)
+            (requestId.toString() !== '0') && setPendingRequest(requestId)
         })
     }
 
@@ -147,7 +147,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
         // We can't show buttons for wNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
-            console.log('PENDING REQUEST:', pendingRequest)
+            console.log('PENDING REQUEST:', nft.tokenId, pendingRequest)
             if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() === account?.toLowerCase())) {
                 // Original NFT and wNFT are both belong to user
                 buttons = <UnSecureNFTButton 
