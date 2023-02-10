@@ -34,14 +34,19 @@ interface OriginalNFTData {
 }
 
 const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTInitialData) => {
-
+    // Stores the metadata of NFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
+    // Becomes false if metadata is unawailable for some reason
     const [ hasMetadata, setHasMetadata ] = useState(true)
+    // In case of external metadata fetching it marks if fetch is ended
     const [ fetchEnded, setFetchEnded ] = useState(false)
+    // If our NFT is wNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
+    // Contract of the NFT
     const tokenContract = nft.contractType === 'ERC721' ?
         new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
         new Contract(nft.tokenAddress.format(), ERC1155ABI, library?.getSigner())
+    // Marks if our NFT is wNFT
     const isWNFT = tokenContract.address.toLowerCase() === nftProtectContract.address.toLowerCase()
 
     // Fetching metadata if it's unawailable by default
@@ -99,6 +104,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
     }
 
     useEffect(() => {
+        // If no metadata preloaded trying to load it by tokenUri
         if (!metadata && hasMetadata) {
             if (nft.tokenUri) {
                 fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
@@ -114,12 +120,14 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                 setFetchEnded(true)
             }
         }
+        // Load info about original NFT
         loadOriginalNFTData()
     }, [])
 
     let result = <div />
     let buttons = <div />
     if (isWNFT) {
+        // We can't show buttons for wNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
             if (originalNFTData.owner.toLowerCase() === account?.toLowerCase()) {
