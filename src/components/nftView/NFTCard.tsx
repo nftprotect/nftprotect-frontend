@@ -32,7 +32,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
     const tokenContract = nft.contractType === 'ERC721' ?
         new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
         new Contract(nft.tokenAddress.format(), ERC1155ABI, library?.getSigner())
-    const isWNFT = tokenContract.address === nftProtectContract.address
+    const isWNFT = tokenContract.address.toLowerCase() === nftProtectContract.address.toLowerCase()
 
     async function fetchMetadataUri(uri: string) {  
         const response = await fetch(uri, {
