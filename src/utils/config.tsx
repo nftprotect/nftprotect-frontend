@@ -1,29 +1,32 @@
 export const supportedChains = [
+    // For MVP will be used only Goerli network, others are commented for now
+    // {
+    //     id: 1,
+    //     name: "Ethereum Mainnet",
+    //     symbol: "ETH",
+    //     nodeUrl: "https://1rpc.io/eth",
+    //     explorerUrl: "https://etherscan.io"
+    // },
     {
-        id: 1,
-        name: "Ethereum Mainnet",
-        symbol: "ETH",
-        nodeUrl: "https://1rpc.io/eth",
-        explorerUrl: "https://etherscan.io"
-    }, {
         id: 5,
         name: "Goerli",
         symbol: "ETH",
         nodeUrl: "https://rpc.ankr.com/eth_goerli",
         explorerUrl: "https://goerli.etherscan.io"
-    }, {
-        id: 137,
-        name: "Polygon Mainnet",
-        symbol: "MATIC",
-        nodeUrl: "https://1rpc.io/matic",
-        explorerUrl: "https://polygonscan.com"
-    }, {
-        id: 42161,
-        name: "Arbitrum One",
-        symbol: "ETH",
-        nodeUrl: "https://1rpc.io/arb",
-        explorerUrl: "https://arbiscan.io"
-    }
+    }, 
+    // {
+    //     id: 137,
+    //     name: "Polygon Mainnet",
+    //     symbol: "MATIC",
+    //     nodeUrl: "https://1rpc.io/matic",
+    //     explorerUrl: "https://polygonscan.com"
+    // }, {
+    //     id: 42161,
+    //     name: "Arbitrum One",
+    //     symbol: "ETH",
+    //     nodeUrl: "https://1rpc.io/arb",
+    //     explorerUrl: "https://arbiscan.io"
+    // }
 ]
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 
