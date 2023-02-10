@@ -10,12 +10,14 @@ import {
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { useState, useEffect } from 'react';
 import { deIpfsUrl } from '../../utils/helpers'
-import SecureNFTButton from './SecureNFTButton';
-import UnSecureNFTButton from './UnSecureNFTButton';
+import SecureNFTButton from './nftButtons/SecureNFTButton';
+import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
 import ERC721ABI from '../../abi/ERC721ABI';
 import ERC1155ABI from '../../abi/ERC1155ABI';
 import { Contract } from '@ethersproject/contracts';
-
+import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
+import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
+import { BigNumber } from 'moralis/common-core';
 interface NFTInitialData {
     nft: EvmNft,
     nftReFetch: Function,
@@ -42,12 +44,18 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
     const [ fetchEnded, setFetchEnded ] = useState(false)
     // If our NFT is wNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
+    // Marks if wNFT has request to transfer to a new owner
+    const [ pendingRequest, setPendingRequest ] = useState<number>()
     // Contract of the NFT
     const tokenContract = nft.contractType === 'ERC721' ?
         new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
         new Contract(nft.tokenAddress.format(), ERC1155ABI, library?.getSigner())
     // Marks if our NFT is wNFT
     const isWNFT = tokenContract.address.toLowerCase() === nftProtectContract.address.toLowerCase()
+    // Marks if this is our wNFT on other address
+    const isOnAnotherAddress = isWNFT ? 
+        nft.ownerOf?.format().toLowerCase() !== account?.toLowerCase() :
+        false
 
     // Fetching metadata if it's unawailable by default
     const fetchMetadataUri = async (uri: string) => {  
@@ -62,45 +70,50 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
 
     // If our NFT is wNFT we have to know about the original NFT
     const loadOriginalNFTData = () => {
-        if (isWNFT) {
-            const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
-            nftProtectContract.tokens(nft.tokenId).then(([ 
-                standardId, 
-                contractAddress721, 
-                contractAddress1155,
-                contractAddress20,
-                tokenId,
-                amount,
-                owner,
-                securityLevel
-            ]:any[]) => {
-                const otherParams = {
-                    tokenId: tokenId,
-                    amount: amount,
-                    owner: owner,
-                    securityLevel: securityLevel
-                }
-                if (isNotNullAddress(contractAddress721)) {
-                    setOriginalNFTData({
-                        standard: 'ERC721',
-                        contractAddress: contractAddress721,
-                        ...otherParams
-                    })
-                } else if (isNotNullAddress(contractAddress1155)) {
-                    setOriginalNFTData({
-                        standard: 'ERC1155',
-                        contractAddress: contractAddress1155,
-                        ...otherParams
-                    })
-                } else if (isNotNullAddress(contractAddress20)) {
-                    setOriginalNFTData({
-                        standard: 'ERC20',
-                        contractAddress: contractAddress20,
-                        ...otherParams
-                    })
-                }
-            })
-        }
+        const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
+        nftProtectContract.tokens(nft.tokenId).then(([ 
+            standardId, 
+            contractAddress721, 
+            contractAddress1155,
+            contractAddress20,
+            tokenId,
+            amount,
+            owner,
+            securityLevel
+        ]:any[]) => {
+            const otherParams = {
+                tokenId: tokenId,
+                amount: amount,
+                owner: owner,
+                securityLevel: securityLevel
+            }
+            if (isNotNullAddress(contractAddress721)) {
+                setOriginalNFTData({
+                    standard: 'ERC721',
+                    contractAddress: contractAddress721,
+                    ...otherParams
+                })
+            } else if (isNotNullAddress(contractAddress1155)) {
+                setOriginalNFTData({
+                    standard: 'ERC1155',
+                    contractAddress: contractAddress1155,
+                    ...otherParams
+                })
+            } else if (isNotNullAddress(contractAddress20)) {
+                setOriginalNFTData({
+                    standard: 'ERC20',
+                    contractAddress: contractAddress20,
+                    ...otherParams
+                })
+            }
+        })
+    }
+
+    // Checks if wNFT has request to transfer
+    const loadPendingRequest = () => {
+        nftProtectContract.tokenToRequest(nft.tokenId).then((requestId: number) => {
+            setPendingRequest(requestId)
+        })
     }
 
     useEffect(() => {
@@ -120,8 +133,12 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                 setFetchEnded(true)
             }
         }
-        // Load info about original NFT
-        loadOriginalNFTData()
+        if (isWNFT) {
+            // Load info about original NFT
+            loadOriginalNFTData()
+            // We have to check if there's a request to transfer
+            loadPendingRequest()
+        }
     }, [])
 
     let result = <div />
@@ -130,7 +147,9 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
         // We can't show buttons for wNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
-            if (originalNFTData.owner.toLowerCase() === account?.toLowerCase()) {
+            console.log('PENDING REQUEST:', pendingRequest)
+            if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() === account?.toLowerCase())) {
+                // Original NFT and wNFT are both belong to user
                 buttons = <UnSecureNFTButton 
                     nft={ nft } 
                     metadata={ metadata } 
@@ -139,9 +158,33 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                     tokenContract={ tokenContract }
                     nftProtectContract={ nftProtectContract }
                 />
-            } else {
-                buttons = <Box>NOT OWNER</Box>
+            } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
+                // This wNFT belongs to user but original is not
+                if (!pendingRequest) {
+                    // If no request pending then we can sent it, so showing the button
+                    buttons = <RequestOriginalNFTButton
+                        nft={ nft } 
+                        metadata={ metadata } 
+                        nftReFetch={ nftReFetch } 
+                        tokenContract={ tokenContract }
+                        nftProtectContract={ nftProtectContract }
+                    />
+                } else {
+                    // If request pending we can only wait
+                    buttons = <Text>Pending request...</Text>
+                }
             }
+            else if (isOnAnotherAddress) {
+                // Original NFT belongs to user, but this wNFT is not
+                buttons = <ReleaseOriginalNFTButton
+                    nft={ nft } 
+                    metadata={ metadata } 
+                    nftReFetch={ nftReFetch } 
+                    tokenContract={ tokenContract }
+                    nftProtectContract={ nftProtectContract }
+                    pendingRequest={ pendingRequest }
+                />
+            } 
         }
     } else {
         buttons = <SecureNFTButton 

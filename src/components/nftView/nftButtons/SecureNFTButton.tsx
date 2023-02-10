@@ -1,9 +1,9 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { Sandbox } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
-import { dialogsTimeout } from '../../utils/config' 
+import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../dialogs/DidRequiredDialog';
+import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 import { useState } from 'react';
 import {
     Button,
@@ -22,7 +22,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
-import SwitchableOutside from '../wizardHelpers/SwitchableOutside';
+import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 
 interface ButtonInitialData {
     nft: EvmNft,

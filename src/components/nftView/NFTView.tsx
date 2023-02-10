@@ -5,7 +5,7 @@ import {
     Heading,
     Container,
 } from '@chakra-ui/react'
-import { useEvmWalletNFTs } from '@moralisweb3/next';
+import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
@@ -35,11 +35,17 @@ const NFTView = () => {
             nftProtectContract={nftProtectContract}
         />
     }
+    const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
+        chain: chainId,
+        address: nftpContractAddress,
+        tokenId: '1'
+    })
 
     const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
     const wNfts = data?.filter(nft => nftIsWNFT(nft) )
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
+    const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
 
     return (
         <>
@@ -51,11 +57,14 @@ const NFTView = () => {
                 { ownNftElements }
             </SimpleGrid>
 
-
-
             <Heading>My wNFTs:</Heading>
             <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
                 { wNftElements }
+            </SimpleGrid>
+
+            <Heading>My wNFTs at another adresses:</Heading>
+            <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
+                { transferedWNftElements }
             </SimpleGrid>
         </>
 )}

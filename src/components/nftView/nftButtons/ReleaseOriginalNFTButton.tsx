@@ -1,0 +1,235 @@
+import { EvmNft } from '@moralisweb3/common-evm-utils';
+import { Twitter } from '@web3uikit/icons'
+import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
+import { dialogsTimeout } from '../../../utils/config' 
+import { Contract } from "@ethersproject/contracts";
+import React, { useState } from 'react';
+import {
+    Button,
+    Box,
+    Card, 
+    CardBody,
+    Flex,
+    Heading,
+    Text,
+    Modal,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    ModalHeader,
+    Spinner,
+    useDisclosure,
+} from '@chakra-ui/react'
+import { Wizard } from 'react-use-wizard';
+import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
+import { BigNumber } from 'moralis/common-core';
+
+interface ButtonInitialData {
+    nft: EvmNft,
+    metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
+    nftReFetch: Function // function to update nft list
+    tokenContract: Contract,
+    nftProtectContract: Contract,
+    pendingRequest: number | undefined
+}
+
+const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectContract, pendingRequest}: ButtonInitialData) => {
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [ nextStep, setNextStep ] = useState<number>(0)
+
+    // Naming of wizard step numbers
+    const stepMapping = {
+        requestReleaseOriginal: 0,
+        requestAnswerReleaseOriginal: 1,
+        waitingForFinalSent: 2,
+        waitingForFinalRejected: 3,
+        finalCompletedSent: 4,
+        finalCompletedRejected: 5,
+        canceled: 6,
+        error: 7,
+        timeout: 8
+    }
+
+    const handleError = (error: any) => {
+        // Provider errors
+        const onUnknownError = (error: any) => {
+            console.error(error)
+            setNextStep(stepMapping.error)
+            setTimeout(onClose, dialogsTimeout)
+        }
+        if (error.code === 'ACTION_REJECTED' || error.code === 4001) {
+            // Transaction declined
+            setNextStep(stepMapping.canceled)
+            setTimeout(onClose, dialogsTimeout)
+        } else {
+            // Other errors
+            const errorMessage = error.error?.data?.originalError?.message
+            if (errorMessage) {
+                const findTerm = (term: String) => errorMessage.includes(term) ? term : '';
+                switch(errorMessage) {
+                    default:
+                        onUnknownError(error)
+                }
+            } else {
+                onUnknownError(error)
+            }
+        }
+    }
+
+    const handleTransactionFailed = (tx: any) => {
+        setNextStep(stepMapping.error)
+        console.log("Transaction failed", tx.hash);
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const finalTransactionSent = (tokenContract: Contract, waitingStep: number, completeStep: number) => {
+        return (tx: any) => {
+            setNextStep(waitingStep);
+            tokenContract.provider.once(tx.hash, (receipt) => {
+                if (receipt.status === 1) {
+                    // after mined fire wrap
+                    setNextStep(completeStep)
+                    console.log("Transaction successful", tx.hash);
+                    nftReFetch();
+                    setTimeout(onClose, dialogsTimeout)
+                } else {
+                    handleTransactionFailed(tx);
+                }
+            })
+        }
+    }
+
+    const mainButtonOnClick = () => {
+        pendingRequest ?
+            setNextStep(stepMapping.requestAnswerReleaseOriginal) :
+            setNextStep(stepMapping.requestReleaseOriginal)
+        onOpen()
+    }
+
+    const startButtonOnClick = () => {
+        try {
+            console.log('ADJUST')
+            nftProtectContract.adjustOwnership(nft.tokenId, '')
+            .then( finalTransactionSent(
+                tokenContract,
+                stepMapping.waitingForFinalSent,
+                stepMapping.finalCompletedSent
+            ))
+            .catch( handleError )
+        } catch (err: any) {
+            handleError(err)
+        }
+    }
+
+    const sendButtonOnClick = () => {
+        try {
+            console.log('ANSWER ADJUSTMENT OK')
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0)
+            .then( finalTransactionSent(
+                tokenContract,
+                stepMapping.waitingForFinalSent,
+                stepMapping.finalCompletedSent
+            ))
+            .catch( handleError )
+        } catch (err: any) {
+            handleError(err)
+        }
+    }
+
+    const rejectButtonOnClick = () => {
+        try {
+            console.log('ANSWER ADJUSTMENT REJECT')
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0)
+            .then( finalTransactionSent(
+                tokenContract,
+                stepMapping.waitingForFinalRejected,
+                stepMapping.finalCompletedRejected
+            ))
+            .catch( handleError )
+        } catch (err: any) {
+            handleError(err)
+        }
+    }
+
+    return (<>
+        <Button
+            type='button'
+            onClick={ mainButtonOnClick }
+        >
+            <Twitter fontSize='20px'/>
+        </Button>
+        <Modal 
+            isOpen={isOpen} 
+            onClose={onClose}
+        >
+            <ModalOverlay />
+            <ModalContent
+                w={{base: "90vw", sm: "70vw", xl: "50vw"}}
+                maxW="700px"
+            >
+                <ModalHeader>Transfer original NFT</ModalHeader>
+                <ModalBody>
+                    <Wizard>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Press button to send original NFT {metadata?.name || nft.name} to wNFT owner.
+                                <Button type='button' onClick={ startButtonOnClick }>
+                                    Start
+                                </Button>
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Press "Send" button to send original NFT {metadata?.name || nft.name} to wNFT owner or "Reject" button to reject a request.
+                                <Button type='button' onClick={ sendButtonOnClick }>
+                                    Send
+                                </Button>
+                                <Button type='button' onClick={ rejectButtonOnClick }>
+                                    Reject
+                                </Button>
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Waiting for transaction to complete. After transaction complete your NFT will be trnasfered to new owner.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction complete! You sent {metadata?.name || nft.name} to a new owner.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction complete! You successfully rejected transfer of your NFT.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                You canceled the transaction in your wallet.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Some error occured. Transaction failed.
+                            </Box>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Box>
+                                Transaction is still in progress.
+                            </Box>
+                        </SwitchableOutside>
+                    </Wizard>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
+    </>)
+}
+
+export default ReleaseOriginalNFTButton
