@@ -9,9 +9,7 @@ import {
     Button,
     Card,
     CardBody,
-    Center,
     Flex,
-    Icon,
     Image,
     Menu,
     MenuButton,
@@ -85,7 +83,7 @@ const ShowConnectionState = () => {
 
                 <MenuList 
                     p="0"
-                    w={[200, 300]}
+                    w={[300, 300]}
                 >
                     <Card
                         w="100%"
@@ -98,7 +96,10 @@ const ShowConnectionState = () => {
                                 alignItems="center"
                                 mb={[8]}
                             >
-                                <Flex>
+                                <Flex
+                                    alignItems="center"
+                                    flexWrap="nowrap"
+                                >
                                     <Image
                                         src='/images/noAvatarImage.png' alt='User avatar'
                                         w={['3em']}
@@ -106,18 +107,15 @@ const ShowConnectionState = () => {
                                         border="2px"
                                         borderColor="#BC9CFF"
                                         borderRadius={['1.5em']}
+                                        mr={[4]}
                                     >
                                     </Image>
-                                    <Box ml={[4]}>
-                                        <Text fontSize={['16px']} color="#000">
-                                            maximste
-                                        </Text>
-                                        <Text fontSize={['16px']}>
-                                        { formatAddress(account || '', 4) }
-                                        </Text>
-                                    </Box>
+
+                                    <Text fontSize={['16px']}>
+                                    { formatAddress(account || '', 4) }
+                                    </Text>
                                 </Flex>
-                                
+
                                 <Flex>
                                     <Tooltip label="Copy" bg="none" color="#1A202C">
                                         <Flex
@@ -162,15 +160,15 @@ const ShowConnectionState = () => {
                                 <Text fontSize={['14px']}>
                                     ETH Balance
                                 </Text>
-                                <Text fontSize={['36px']}>
-                                    { ethBalance } ETH
+                                <Text fontSize={['24px']}>
+                                    { ethBalance?.toFixed(4) } ETH
                                 </Text>
                             </Box>
                             <Box textAlign="center">
                                 <Text fontSize={['14px']}>
                                     Coupon Balance
                                 </Text>
-                                <Text fontSize={['36px']}>
+                                <Text fontSize={['24px']}>
                                     <CouponBalance />
                                 </Text>
                             </Box>
