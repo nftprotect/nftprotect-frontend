@@ -198,7 +198,6 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectCo
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
             }}
-            w={['10em']}
         >Protect NFT
         </Button>
 
