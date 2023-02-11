@@ -3,7 +3,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import {
     SimpleGrid,
     Heading,
-    Container,
+    Box,
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
@@ -48,14 +48,28 @@ const NFTView = () => {
     const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
 
     return (
-        <>
-            <Heading>My NFTs:</Heading>
-            <SimpleGrid 
-                minChildWidth={['8em', '10em', '12em']}
-                spacing='1em'
+        <main>
+            <Box
+                borderTop="1px dotted #000"
+                borderBottom="1px dotted #000"
             >
-                { ownNftElements }
-            </SimpleGrid>
+                <Heading
+                    fontSize={['lg', 'xl', '2xl']}
+                    ml={['1em']}
+                    mt={[4]}
+                >My NFTs:
+                </Heading>
+                <SimpleGrid 
+                    minChildWidth={['8em', '10em', '12em']}
+                    spacing={['1em']}
+                    justifyItems="center"
+                    mt={[4, 8]}
+                >
+                    { ownNftElements }
+                </SimpleGrid>
+            </Box>
+            
+            
 
             <Heading>My wNFTs:</Heading>
             <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
@@ -66,7 +80,7 @@ const NFTView = () => {
             <SimpleGrid minChildWidth='12em' spacing='1em' width="100%">
                 { transferedWNftElements }
             </SimpleGrid>
-        </>
+        </main>
 )}
 
 export default NFTView
