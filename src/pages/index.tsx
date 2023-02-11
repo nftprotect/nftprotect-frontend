@@ -22,15 +22,13 @@ const Home: NextPage = () => {
         return (
             <>
                 <CheckUrlPopup />
+                <NavBar />
                 <Container 
                     maxW="2200px"
-                    mx={["10em"]}
-                    p={['10em']}
+                    my={[4, 8]}
+                    px={['1em', '4em', '6em', '8em', '10em']}
                 >
-                    <NavBar />
-                    <main>
-                        <NFTView />
-                    </main>
+                    <NFTView />
                 </Container>
             </>
         )
@@ -38,14 +36,11 @@ const Home: NextPage = () => {
         return (
             <>
                 <CheckUrlPopup />
+                <NavBar />
                 <Container
-                    id="startPageContainer"
-                    mt={12}
                     p={0}
                     maxW="2200px"
                 >
-                    
-                    <NavBar />
                     <Image
                         my={[2, 4]}
                         w="100%"
