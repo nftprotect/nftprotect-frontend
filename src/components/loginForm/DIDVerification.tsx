@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
 import {
     Box,
@@ -7,10 +6,9 @@ import {
     Heading,
     Text,
 
-    useDisclosure,
 } from '@chakra-ui/react'
 
-const DIDVerification = () => {
+const DIDVerification = ({disclosure}: any) => {
     function goToExternalPage() {
         window.open('https://passport.gitcoin.co/', '_blank')
     }

@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+import { useAppContext } from '../../context/AppContextProvider';
 
 interface ProviderError {
     code: number,
@@ -18,8 +19,8 @@ interface ProviderError {
 }
 
 const NetworkMenu = () => {
-    const { chainId, setError, connector } = useWeb3React()
-    const currentNetwork = supportedChains.find(it => it.id == chainId)
+    const { connector } = useWeb3React()
+    const { currentChain } = useAppContext()
     const canSwitchNetwork = !(connector instanceof WalletConnectConnector)
 
     const handleChange = async (e: any) => {
@@ -65,7 +66,7 @@ const NetworkMenu = () => {
                     borderRadius: "13px",
                 }}
             >
-                { (currentNetwork) ? currentNetwork?.name : 'Choose network' }
+                { (currentChain) ? currentChain?.name : 'Choose network' }
             </MenuButton>
             { canSwitchNetwork && <MenuList>
                     { supportedChains.map(({ name, id }) => (

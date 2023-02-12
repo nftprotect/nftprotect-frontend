@@ -4,6 +4,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { libraryPollingInterval } from '../utils/config'
+import { AppContextProvider } from '../context/AppContextProvider'
 
 function getLibrary(provider: any): Web3Provider {
     const library = new Web3Provider(provider)
@@ -14,9 +15,11 @@ function getLibrary(provider: any): Web3Provider {
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <Web3ReactProvider getLibrary={getLibrary}>
+            <AppContextProvider>
                 <ChakraProvider theme={theme}>
                     <Component {...pageProps} />
                 </ChakraProvider>
+            </AppContextProvider>
         </Web3ReactProvider>
     )
 }

@@ -7,8 +7,12 @@ import {
 import ShowConnectionState from './ShowConnectionState'
 import NetworkMenu from './NetworkMenu'
 import MainMenu from './MainMenu'
+import { useAppContext } from '../../context/AppContextProvider'
+import LoginForm from '../loginForm/LoginForm'
 
 const NavBar = () => {
+
+    const { active } = useAppContext()
 
     return (
         <Box 
@@ -30,8 +34,9 @@ const NavBar = () => {
                     />
                     <Flex mx={[0, 0, 6, 10]}>
                         <MainMenu />
-                        <NetworkMenu />
-                        <ShowConnectionState />
+                        <LoginForm/>
+                        { active && <NetworkMenu /> }
+                        { active && <ShowConnectionState /> }
                     </Flex>
                 </Flex>
             </nav>

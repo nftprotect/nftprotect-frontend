@@ -19,12 +19,10 @@ import { Contract } from '@ethersproject/contracts';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
 import { BigNumber } from 'moralis/common-core';
+import { useAppContext } from '../../context/AppContextProvider';
 interface NFTInitialData {
     nft: EvmNft,
-    nftReFetch: Function,
-    library: Web3Provider | undefined,
-    account: string | null | undefined,
-    nftProtectContract: Contract
+    nftReFetch: Function
 }
 
 interface OriginalNFTData {
@@ -36,7 +34,8 @@ interface OriginalNFTData {
     securityLevel: number
 }
 
-const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTInitialData) => {
+const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
+    const { account, library, nftProtectContract } = useAppContext()
     // Stores the metadata of NFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -155,9 +154,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                     nft={ nft } 
                     metadata={ metadata } 
                     nftReFetch={ nftReFetch } 
-                    account={ account }
                     tokenContract={ tokenContract }
-                    nftProtectContract={ nftProtectContract }
                 />
             } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
                 // This wNFT belongs to user but original is not
@@ -168,7 +165,6 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                         metadata={ metadata } 
                         nftReFetch={ nftReFetch } 
                         tokenContract={ tokenContract }
-                        nftProtectContract={ nftProtectContract }
                     />
                 } else {
                     // If request pending we can only wait
@@ -182,7 +178,6 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
                     metadata={ metadata } 
                     nftReFetch={ nftReFetch } 
                     tokenContract={ tokenContract }
-                    nftProtectContract={ nftProtectContract }
                     pendingRequest={ pendingRequest }
                 />
             } 
@@ -192,9 +187,7 @@ const NFTCard = ({ nft, nftReFetch, library, account, nftProtectContract }: NFTI
             nft={ nft } 
             metadata={ metadata }
             nftReFetch={ nftReFetch }
-            account={ account }
             tokenContract={ tokenContract }
-            nftProtectContract={ nftProtectContract }
         />
     }
     if (metadata) {

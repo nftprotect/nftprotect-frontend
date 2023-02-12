@@ -24,21 +24,20 @@ import {
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
+import { useAppContext } from '../../../context/AppContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
     metadata: EvmNftMetadataish, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
-    tokenContract: Contract,
-    nftProtectContract: Contract,
-    account: string | null | undefined
+    tokenContract: Contract
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectContract, account}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
+    const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const referrer = '0x0000000000000000000000000000000000000000' // should be replaced by real referrer
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     const stepMapping = {
@@ -115,6 +114,11 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectCo
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
+        if (!didRegistered) {
+            didDialogDisclosure.onOpen();
+            return
+        }
+
         setNextStep(stepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
@@ -163,7 +167,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectCo
                     () => tokenContract.getApproved(nft.tokenId),
                     (result: any) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrer)
+                    () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrerAddress)
                 )
             } else if (nft.contractType === 'ERC1155') {
                 secureNFT(
@@ -171,7 +175,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectCo
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
                     (result: any) => result,
                     () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrer)
+                    () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrerAddress)
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft.contractType}`)

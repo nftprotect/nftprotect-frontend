@@ -1,5 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import {
     SimpleGrid,
     Heading,
@@ -9,18 +7,16 @@ import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
-import NFTProtectABI from '../../abi/NFTProtectABI';
-import { Contract } from '@ethersproject/contracts';
+import { useAppContext } from '../../context/AppContextProvider';
 
 const NFTView = () => {
 
-    const { chainId, account, active, library} = useWeb3React<Web3Provider>()
+    const { currentChain, account, active, library, nftProtectContract } = useAppContext()
 
     const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
-        chain: chainId,
+        chain: currentChain.id,
         address: account || '0x0'
     })
-    const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
 
     const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
 
@@ -30,13 +26,10 @@ const NFTView = () => {
             key={nft.tokenHash}
             nft={nft}
             nftReFetch={fetch}
-            library={library}
-            account={account}
-            nftProtectContract={nftProtectContract}
         />
     }
     const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
-        chain: chainId,
+        chain: currentChain.id,
         address: nftpContractAddress,
         tokenId: '1'
     })
