@@ -19,6 +19,7 @@ import {
 import { ChevronDownIcon, CopyIcon,  } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
 import CouponBalance from './CouponBalance'
+import Davatar from '@davatar/react'
 
 const ShowConnectionState = () => {
 
@@ -92,16 +93,20 @@ const ShowConnectionState = () => {
                                 alignItems="center"
                                 flexWrap="nowrap"
                             >
-                                <Image
-                                    src='/images/noAvatarImage.png' alt='User avatar'
-                                    w={['3em']}
-                                    h={['3em']}
-                                    border="2px"
-                                    borderColor="#BC9CFF"
-                                    borderRadius={['1.5em']}
+                                <Box
                                     mr={[4]}
+                                    border="4px"
+                                    borderColor="#BC9CFF"
+                                    borderRadius={['2em']}
                                 >
-                                </Image>
+                                    <Davatar
+                                        size={42}
+                                        address={account || ''}
+                                        provider={library?.provider}
+                                        // graphApiKey={apiKey}
+                                        generatedAvatarType='jazzicon' // 'jazzicon' or 'blockies'
+                                    />
+                                </Box>
 
                                 <Text fontSize={['16px']}>
                                 { formatAddress(account || '', 4) }
