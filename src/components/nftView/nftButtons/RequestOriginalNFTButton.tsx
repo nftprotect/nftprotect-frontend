@@ -22,17 +22,18 @@ import {
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
+import { useAppContext } from '../../../context/AppContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
     metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
-    tokenContract: Contract,
-    nftProtectContract: Contract
+    tokenContract: Contract
 }
 
-const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectContract}: ButtonInitialData) => {
+const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
+    const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 

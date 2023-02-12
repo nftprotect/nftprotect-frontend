@@ -23,18 +23,19 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { BigNumber } from 'moralis/common-core';
+import { useAppContext } from '../../../context/AppContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
     metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
     tokenContract: Contract,
-    nftProtectContract: Contract,
     pendingRequest: number | undefined
 }
 
-const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, nftProtectContract, pendingRequest}: ButtonInitialData) => {
+const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pendingRequest}: ButtonInitialData) => {
 
+    const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 

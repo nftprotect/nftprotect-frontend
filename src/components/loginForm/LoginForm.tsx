@@ -1,10 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import ConnectWallet from './ConnectWallet/ConnectWallet'
 import ApproveConnection from './ApproveConnection'
 import DIDVerification from './DIDVerification'
-
-import { useEffect, useState } from 'react'
 import { Wizard } from 'react-use-wizard';
 import {
     Button,
@@ -15,21 +11,16 @@ import {
     ModalContent,
     useDisclosure,
 } from '@chakra-ui/react'
+import { useAppContext } from '../../context/AppContextProvider';
 
 const LoginForm = () => {
-
-    const { active } = useWeb3React<Web3Provider>()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    useEffect(() => {
-        if (active) {
-            onClose()
-        }
-    })
+    const { active } = useAppContext()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
 
     return (
         <>
-        <Button 
+        { !active && <Button 
             onClick={onOpen}
             border="2px"
             borderColor="#BC9CFF"
@@ -44,8 +35,9 @@ const LoginForm = () => {
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
             }}
-        >Connect Wallet
-        </Button>
+        >
+            Connect Wallet
+        </Button> }
         
         <Modal 
             isOpen={isOpen} 
@@ -61,8 +53,8 @@ const LoginForm = () => {
                 <ModalBody p="0">
                     <Wizard>
                         <ConnectWallet/>
-                        <ApproveConnection active={active} />
-                        <DIDVerification />
+                        <ApproveConnection disclosure={disclosure}/>
+                        <DIDVerification disclosure={disclosure}/>
                     </Wizard>
                 </ModalBody>
             </ModalContent>

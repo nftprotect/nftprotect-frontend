@@ -6,10 +6,11 @@ import { formatAddress } from '../../../utils/helpers'
 import { Button } from '@chakra-ui/react'
 import {Metamask} from '@web3uikit/icons'
 import { useWizard } from 'react-use-wizard';
+import { useEffect } from 'react'
 
 const ConnectMetamask = () => {
 
-    const { chainId, account, activate, deactivate, setError, active,library ,connector} = useWeb3React<Web3Provider>()
+    const { activate, deactivate, setError, active } = useWeb3React<Web3Provider>()
     const { nextStep } = useWizard()
     const onClickConnect = async () => {
         
@@ -23,13 +24,17 @@ const ConnectMetamask = () => {
                 setError(error)
             }
         }, false)
-        .then(nextStep)
-        
     }
 
     const onClickDisconnect = () => {
         deactivate()
     }
+
+    useEffect(() => {
+        if (active) {
+            nextStep()
+        }
+    }, [active])
 
     return (
         <Button

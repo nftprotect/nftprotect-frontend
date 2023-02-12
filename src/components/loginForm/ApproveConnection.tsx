@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import { useWizard } from 'react-use-wizard';
 
 import {
@@ -14,19 +12,22 @@ import {
 } from '@chakra-ui/react'
 
 import {Metamask} from '@web3uikit/icons'
+import { useAppContext } from '../../context/AppContextProvider';
 
-const ApproveConnection = ({ active }: {active: Boolean}) => {
-
+const ApproveConnection = ({disclosure}: any) => {
+    const { active, didRegistered } = useAppContext()
     const { nextStep } = useWizard()
-    // const { onClose } = useDisclosure()
+    const { onClose } = disclosure
     
     useEffect(() => {
-        console.log('Active status', active)
         if (active) {
-            nextStep()
-        //    onClose()
+            if (didRegistered === true) {
+                onClose()
+            } else if (didRegistered === false) {
+                nextStep()
+            }
         }
-    }, [])
+    }, [active, didRegistered])
 
     return (
         <Flex

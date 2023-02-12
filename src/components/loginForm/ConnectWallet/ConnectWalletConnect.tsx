@@ -7,7 +7,7 @@ import { Button } from '@chakra-ui/react'
 import { Wallet } from '@web3uikit/icons'
 const ConnectWalletConnect = () => {
 
-    const { chainId, account, activate, deactivate, setError, active,library ,connector} = useWeb3React<Web3Provider>()
+    const { activate, deactivate, setError, active } = useWeb3React<Web3Provider>()
 
     const onClickConnect = () => {
         activate(walletConnect,(error) => {
