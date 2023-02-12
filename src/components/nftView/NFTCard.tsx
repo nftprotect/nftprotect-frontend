@@ -6,6 +6,7 @@ import {
     Box,
     Spinner,
     Image,
+    Flex,
 } from '@chakra-ui/react'
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { useState, useEffect } from 'react';
@@ -202,18 +203,34 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     }
     return (
         <Card 
-            variant='elevated' 
-            width='14em'
-            align="center"
+            variant='elevated'
+            width={['14em']}
         >
-            <CardBody alignItems="center">
-                <Box>{ result }</Box>
-                <Box display="flex">
-                    <Text>{ metadata?.name || nft.name }</Text>
-                    <Box width="100%" />
-                    <Text float="right">x{ nft.amount }</Text>
-                    { buttons }
-                </Box>
+            <CardBody>
+                <Flex
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    h="100%"
+                >
+                    <Flex
+                        flexDirection="column"
+                    >
+                        <Box>{ result }</Box>
+
+                        <Text
+                            my={[2, 4]}
+                            fontSize={['md', 'lg', 'xl']}
+                        >
+                            { metadata?.name || nft.name }
+                        </Text>
+
+                        <Text>x{ nft.amount }</Text>
+                    </Flex>
+
+                    <Box>
+                        { buttons }
+                    </Box>
+                </Flex>
             </CardBody>
         </Card>
     )

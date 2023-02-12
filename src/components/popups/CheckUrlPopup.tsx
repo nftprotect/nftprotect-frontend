@@ -14,6 +14,7 @@ const CheckUrlPopup = () => {
         <Slide
             direction='top'
             in={!isOpen}
+            style={ {zIndex: 10 } }
         >
             <Box
                 backgroundColor="rgba(0, 0, 0, .8)"

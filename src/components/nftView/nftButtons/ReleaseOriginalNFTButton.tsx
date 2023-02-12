@@ -157,8 +157,20 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         <Button
             type='button'
             onClick={ mainButtonOnClick }
-        >
-            <Twitter fontSize='20px'/>
+            my={2}
+            justifyContent="flex-start"
+            leftIcon={<Twitter fontSize='20px'/>}
+            w="100%"
+            bg="none"
+            border="2px"
+            borderColor="#BC9CFF"
+            borderRadius="12px"
+            fontSize={['xs', 'sm', 'md', 'lg']}
+            _hover={{
+                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                color: "#FFF"
+            }}
+        >Release original
         </Button>
         <Modal 
             isOpen={isOpen} 

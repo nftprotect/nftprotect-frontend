@@ -1,6 +1,6 @@
 import {
     Box,
-    Container,
+    Text,
     Flex,
     Image,
 } from '@chakra-ui/react'
@@ -24,16 +24,15 @@ const NavBar = () => {
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
-                    my={[3, 6]}
+                    flexWrap={{base: 'wrap', md: 'nowrap'}}
+                    m={[3, 6]}
                 >
-                    <Flex ml={[2, 4, 6, 10]}>
-                        <Image
-                            src='/images/logo.svg'
-                            alt='Logo'
-                            minW="40px"
-                        />
-                    </Flex>
-                    <Flex mx={[2, 4, 6, 10]}>
+                    <Image
+                        src='/images/logo.svg'
+                        alt='Logo'
+                        h={{base: '30px', md: 'auto'}}
+                    />
+                    <Flex mx={[0, 0, 6, 10]}>
                         <MainMenu />
                         <LoginForm/>
                         { active && <NetworkMenu /> }

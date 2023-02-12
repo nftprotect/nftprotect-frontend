@@ -18,6 +18,7 @@ import {
     ModalBody,
     ModalContent,
     ModalHeader,
+    ModalCloseButton,
     Spinner,
     useDisclosure,
 } from '@chakra-ui/react'
@@ -188,9 +189,22 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         <Button
             type='button'
             onClick={ onClick }
-        >
-            <Sandbox fontSize='20px'/>
+            my={2}
+            justifyContent="flex-start"
+            leftIcon={<Sandbox fontSize='20px'/>}
+            w="100%"
+            bg="none"
+            border="2px"
+            borderColor="#BC9CFF"
+            borderRadius="12px"
+            fontSize={['xs', 'sm', 'md', 'lg']}
+            _hover={{
+                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                color: "#FFF"
+            }}
+        >Protect NFT
         </Button>
+
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
         <Modal 
             isOpen={isOpen} 
@@ -202,17 +216,39 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 maxW="700px"
             >
                 <ModalHeader>Securing your NFT</ModalHeader>
+                <ModalCloseButton />
                 <ModalBody>
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Checking permission to transfer token...
-                            </Box>
+                            <Flex 
+                                flexDirection="column"
+                            >
+                                <Text>
+                                    Checking permission to transfer token...
+                                </Text>
+                                <Spinner 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='blue.500'
+                                    size='xl'
+                                    my={[8]}
+                                    alignSelf="center"
+                                />
+                            </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Allow access to and transfer of your {metadata?.name || nft.name}? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
-                            </Box>
+                            <Flex 
+                                flexDirection="column"
+                            >
+                                <Text>
+                                    Allow access to and transfer of your <i>{metadata?.name || nft.name}</i>?
+                                </Text>
+                                <Text>
+                                    This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                                </Text>
+                                
+                            </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
