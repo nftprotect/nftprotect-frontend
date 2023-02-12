@@ -34,7 +34,7 @@ interface ButtonInitialData {
 
 const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
-    const {account, nftProtectContract, referrerAddress} = useAppContext()
+    const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -113,6 +113,11 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
+        if (!didRegistered) {
+            didDialogDisclosure.onOpen();
+            return
+        }
+
         setNextStep(stepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()

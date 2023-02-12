@@ -38,7 +38,7 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    useEffect(setDidState, [active])
+    useEffect(setDidState, [active, account, chainId])
 
     return (
         <AppContext.Provider value={{
