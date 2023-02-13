@@ -196,7 +196,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
-                                Press "Send" button to send original NFT {metadata?.name || nft.name} to wNFT owner or "Reject" button to reject a request.
+                                {'Press "Send" button to send original NFT {metadata?.name || nft.name} to wNFT owner or "Reject" button to reject a request.'}
                                 <Button type='button' onClick={ sendButtonOnClick }>
                                     Send
                                 </Button>
