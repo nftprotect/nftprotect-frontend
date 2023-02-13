@@ -44,7 +44,7 @@ const ShowConnectionState = () => {
 
     return (
         <>
-        <input id='addressHolder' value={account || ''} width='1px' style={{opacity: 0}}></input>
+        <input id='addressHolder' value={account || ''} style={{opacity: 0, width: '1px'}}></input>
         <Menu>
             <MenuButton 
                 as={Button} 
