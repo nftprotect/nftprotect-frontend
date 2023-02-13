@@ -15,8 +15,9 @@ import {
     MenuList,
     Text,
     Tooltip,
+    VisuallyHiddenInput
 } from '@chakra-ui/react'
-import { ChevronDownIcon, CopyIcon,  } from '@chakra-ui/icons'
+import { ChevronDownIcon, CopyIcon  } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
 import CouponBalance from './CouponBalance'
 import Davatar from '@davatar/react'
@@ -44,7 +45,7 @@ const ShowConnectionState = () => {
 
     return (
         <>
-        <input id='addressHolder' value={account || ''} style={{opacity: 0, width: '1px'}}></input>
+        <VisuallyHiddenInput id='addressHolder' value={account || ''}></VisuallyHiddenInput>
         <Menu>
             <MenuButton 
                 as={Button} 
