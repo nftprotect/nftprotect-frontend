@@ -99,13 +99,13 @@ const ShowConnectionState = () => {
                                     borderColor="#BC9CFF"
                                     borderRadius={['2em']}
                                 >
-                                    <Davatar
+                                    { active && <Davatar
                                         size={42}
                                         address={account || ''}
-                                        provider={library?.provider}
+                                        // provider={library?.provider}
                                         // graphApiKey={apiKey}
                                         generatedAvatarType='jazzicon' // 'jazzicon' or 'blockies'
-                                    />
+                                    /> }
                                 </Box>
 
                                 <Text fontSize={['16px']}>

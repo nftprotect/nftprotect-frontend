@@ -23,6 +23,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
+import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -47,30 +48,16 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
         timeout: 5
     }
 
-    const handleError = (error: any) => {
-        // Provider errors
-        const onUnknownError = (error: any) => {
-            console.error(error)
-            setNextStep(stepMapping.error)
-            setTimeout(onClose, dialogsTimeout)
-        }
-        if (error.code === 'ACTION_REJECTED' || error.code === 4001) {
-            // Transaction declined
-            setNextStep(stepMapping.canceled)
-            setTimeout(onClose, dialogsTimeout)
-        } else {
-            // Other errors
-            const errorMessage = error.error?.data?.originalError?.message
-            if (errorMessage) {
-                const findTerm = (term: String) => errorMessage.includes(term) ? term : '';
-                switch(errorMessage) {
-                    default:
-                        onUnknownError(error)
-                }
-            } else {
-                onUnknownError(error)
-            }
-        }
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(stepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(stepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
@@ -105,9 +92,14 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
         try {
             nftProtectContract.askOwnershipAdjustment(nft.tokenId)
                 .then( finalTransactionSent(tokenContract) )
-                .catch( handleError )
+                .catch( 
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    }) 
+                )
         } catch (err: any) {
-            handleError(err)
+            handleUnknownError(err)
         }
     }
 

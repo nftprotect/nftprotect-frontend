@@ -24,6 +24,7 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../../context/AppContextProvider';
+import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -52,30 +53,16 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         timeout: 8
     }
 
-    const handleError = (error: any) => {
-        // Provider errors
-        const onUnknownError = (error: any) => {
-            console.error(error)
-            setNextStep(stepMapping.error)
-            setTimeout(onClose, dialogsTimeout)
-        }
-        if (error.code === 'ACTION_REJECTED' || error.code === 4001) {
-            // Transaction declined
-            setNextStep(stepMapping.canceled)
-            setTimeout(onClose, dialogsTimeout)
-        } else {
-            // Other errors
-            const errorMessage = error.error?.data?.originalError?.message
-            if (errorMessage) {
-                const findTerm = (term: String) => errorMessage.includes(term) ? term : '';
-                switch(errorMessage) {
-                    default:
-                        onUnknownError(error)
-                }
-            } else {
-                onUnknownError(error)
-            }
-        }
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(stepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(stepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
@@ -112,14 +99,19 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         try {
             console.log('ADJUST')
             nftProtectContract.adjustOwnership(nft.tokenId, '')
-            .then( finalTransactionSent(
-                tokenContract,
-                stepMapping.waitingForFinalSent,
-                stepMapping.finalCompletedSent
-            ))
-            .catch( handleError )
+                .then( finalTransactionSent(
+                    tokenContract,
+                    stepMapping.waitingForFinalSent,
+                    stepMapping.finalCompletedSent
+                ))
+                .catch(
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    })
+                )
         } catch (err: any) {
-            handleError(err)
+            handleUnknownError(err)
         }
     }
 
@@ -132,9 +124,14 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                 stepMapping.waitingForFinalSent,
                 stepMapping.finalCompletedSent
             ))
-            .catch( handleError )
+            .catch(
+                handleContractError({
+                    'ACTION_REJECTED': handleRejected,
+                    default: handleUnknownError
+                })
+            )
         } catch (err: any) {
-            handleError(err)
+            handleUnknownError(err)
         }
     }
 
@@ -147,9 +144,14 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                 stepMapping.waitingForFinalRejected,
                 stepMapping.finalCompletedRejected
             ))
-            .catch( handleError )
+            .catch(
+                handleContractError({
+                    'ACTION_REJECTED': handleRejected,
+                    default: handleUnknownError
+                })
+            )
         } catch (err: any) {
-            handleError(err)
+            handleUnknownError(err)
         }
     }
 
