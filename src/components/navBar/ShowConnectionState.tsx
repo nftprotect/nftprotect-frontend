@@ -39,11 +39,12 @@ const ShowConnectionState = () => {
     }
 
     const copyAccountToClipboard = () => {
-        copyTextToClipboard(account || '')
-        alert('Copied!')
+        copyTextToClipboard(account || '', '#addressHolder').then(() => alert('Copied!'))
     }
 
     return (
+        <>
+        <input id='addressHolder' value={account || ''} width='1px' style={{opacity: 0}}></input>
         <Menu>
             <MenuButton 
                 as={Button} 
@@ -173,6 +174,7 @@ const ShowConnectionState = () => {
                 </Card>
             </MenuList>
         </Menu>
+    </>
     )
 }
 
