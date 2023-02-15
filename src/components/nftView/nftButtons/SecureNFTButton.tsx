@@ -25,6 +25,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
+import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -53,35 +54,16 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         'timeout': 9
     }
 
-    const handleError = (error: any) => {
-        // Provider errors
-        const onUnknownError = (error: any) => {
-            console.error(error)
-            setNextStep(stepMapping.error)
-            setTimeout(onClose, dialogsTimeout)
-        }
-        if (error.code === 'ACTION_REJECTED' || error.code === 4001) {
-            // Transaction declined
-            setNextStep(stepMapping.canceled)
-            setTimeout(onClose, dialogsTimeout)
-        } else {
-            // Other errors
-            const errorMessage = error.error?.data?.originalError?.message
-            if (errorMessage) {
-                const findTerm = (term: String) => errorMessage.includes(term) ? term : '';
-                switch(errorMessage) {
-                    case findTerm('NFTProtect: user must be registered'):
-                        // Must register DID
-                        didDialogDisclosure.onOpen();
-                        break;
-                    case findTerm('NFTProtect: invalid referrer'):
-                    default:
-                        onUnknownError(error)
-                }
-            } else {
-                onUnknownError(error)
-            }
-        }
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(stepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(stepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
@@ -123,13 +105,21 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         onOpen()
         checkApprovedMethodCall()
             .then((result: any) => {
+                const wrapErrorMapping = {
+                    'NFTProtect: user must be registered': didDialogDisclosure.onOpen,
+                    'NFTProtect: invalid referrer': handleUnknownError,
+                    'ACTION_REJECTED': handleRejected,
+                    default: handleUnknownError
+                }
                 // check if transfer already approved 
                 if (checkApproved(result)) {
                     setNextStep(stepMapping.requestWrap);
                     console.log('Token transfer already approved')
                     wrapMethodCall()
                         .then( finalTransactionSent(tokenContract) )
-                        .catch( handleError )
+                        .catch( 
+                            handleContractError(wrapErrorMapping)
+                        )
                 } else {
                     setNextStep(stepMapping.requestConcrete)
                     console.log('Asking to approve token transfer')
@@ -145,16 +135,22 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     console.log("Transaction successful", tx.hash);
                                     wrapMethodCall()
                                         .then( finalTransactionSent(tokenContract) )
-                                        .catch( handleError )
+                                        .catch(
+                                            handleContractError(wrapErrorMapping)
+                                        )
                                 } else {
                                     handleTransactionFailed(tx);
                                 }
                             })
                         })
-                        .catch( handleError )
+                        .catch(
+                            handleContractError({
+                                'ACTION_REJECTED': handleRejected,
+                                default: handleUnknownError
+                            })
+                        )
                 }
             })
-            .catch( handleError )
     }
 
     const onClick = () => {
@@ -181,7 +177,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 console.log(`Unknown NFT contract type: ${nft.contractType}`)
             }
         } catch (err: any) {
-            handleError(err)
+            handleUnknownError(err)
         }
     }
 
