@@ -16,7 +16,7 @@ import {
     Text,
     Tooltip,
 } from '@chakra-ui/react'
-import { ChevronDownIcon, CopyIcon,  } from '@chakra-ui/icons'
+import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
 import CouponBalance from './CouponBalance'
 
