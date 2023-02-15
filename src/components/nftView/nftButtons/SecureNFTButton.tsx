@@ -190,14 +190,14 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             type='button'
             onClick={ onClick }
             my={2}
-            justifyContent="flex-start"
-            leftIcon={<Sandbox fontSize='20px'/>}
+            leftIcon={<Sandbox />}
             w="100%"
+            h={[8, 10]}
             bg="none"
             border="2px"
             borderColor="#BC9CFF"
             borderRadius="12px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
+            fontSize={['2xs', 'sm', 'md', 'lg']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"

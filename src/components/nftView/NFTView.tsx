@@ -1,8 +1,15 @@
 import {
+    Container,
+    Grid,
     SimpleGrid,
     Heading,
     Box,
+    Button,
+    Flex,
+    Collapse,
+    useDisclosure,
 } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
@@ -12,6 +19,7 @@ import { useAppContext } from '../../context/AppContextProvider';
 const NFTView = () => {
 
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
+    const { isOpen, onToggle } = useDisclosure()
 
     const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: currentChain.id,
@@ -41,61 +49,112 @@ const NFTView = () => {
     const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
 
     return (
-        <main>
+        <>
             <Box
-                borderBottom="1px dotted #000"
+                bgColor="#1A202C"
+                px={['1rem', '3rem']}
+                pb={['2rem']}
             >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My NFTs:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { ownNftElements }
-                </SimpleGrid>
+                    <Flex 
+                        pt={[4]}
+                        alignItems="center"
+                        color="#FFF"
+                    >
+                        <Heading
+                            fontSize={['lg', 'xl', '2xl']}
+                        >
+                            My NFTs
+                        </Heading>
+                        <Button 
+                            onClick={onToggle} 
+                            fontSize={['lg', 'xl', '2xl']}
+                            bg="none"
+                            _hover= {{
+                                bg: 'none'
+                            }}
+                        > 
+                            { isOpen ? <ChevronDownIcon /> : <ChevronRightIcon/> }
+                        </Button>
+                    </Flex>
+                    
+                    <Collapse in={!isOpen} animateOpacity>
+                        <Grid
+                            templateColumns={{
+                                base: "repeat(auto-fill, minmax(6em, 1fr))",
+                                sm: "repeat(auto-fill, 10em)",
+                                md: "repeat(auto-fill, 10em)",
+                                lg: "repeat(auto-fill, 14em)", 
+                                xl: "repeat(auto-fill, 16em)"
+                            }}
+                            gap={[6]}
+                            my={[4, 8]}
+                        >
+                            { ownNftElements }
+                        </Grid>
+                    </Collapse>
             </Box>
 
             <Box
-                borderBottom="1px dotted #000"
+                px={['1rem', '3rem']}
+                pb={['2rem']}
             >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My wNFTs:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { wNftElements }
-                </SimpleGrid>
+                    <Flex 
+                        pt={[4]}
+                        alignItems="center"
+                        color="#FFF"
+                    >
+                        <Heading
+                            fontSize={['lg', 'xl', '2xl']}
+                        >My wNFTs
+                        </Heading>
+                    </Flex>
+
+                    <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, minmax(6em, 1fr))",
+                            sm: "repeat(auto-fill, 10em)",
+                            md: "repeat(auto-fill, 10em)",
+                            lg: "repeat(auto-fill, 14em)", 
+                            xl: "repeat(auto-fill, 16em)"
+                        }}
+                        gap={[6]}
+                        my={[4, 8]}
+                    >
+                        { wNftElements }
+                    </Grid>
             </Box>
 
             <Box
-                borderBottom="1px dotted #000"
+                bgColor="#1A202C"
+                px={['1rem', '3rem']}
+                pb={['2rem']}
             >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My wNFTs at another adresses:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { transferedWNftElements }
-                </SimpleGrid>
+                    <Flex 
+                        pt={[4]}
+                        alignItems="center"
+                        color="#FFF"
+                    >
+                        <Heading
+                            fontSize={['lg', 'xl', '2xl']}
+                        >
+                            My wNFTs at another adresses
+                        </Heading>
+                    </Flex>
+                <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, minmax(6em, 1fr))",
+                            sm: "repeat(auto-fill, 10em)",
+                            md: "repeat(auto-fill, 10em)",
+                            lg: "repeat(auto-fill, 14em)", 
+                            xl: "repeat(auto-fill, 16em)"
+                        }}
+                        gap={[6]}
+                        my={[4, 8]}
+                    >
+                        { transferedWNftElements }
+                    </Grid>
             </Box>
-        </main>
+        </>
 )}
 
 export default NFTView

@@ -113,18 +113,19 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             onClick={ onClick }
             my={2}
             justifyContent="flex-start"
-            leftIcon={<Sandbox2 fontSize='20px'/>}
+            leftIcon={<Sandbox2 />}
             w="100%"
+            h={[8, 10]}
             bg="none"
             border="2px"
             borderColor="#BC9CFF"
             borderRadius="12px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
+            fontSize={['2xs', 'sm', 'md', 'lg']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
             }}
-        >Unpack original
+        >Unsecure
         </Button>
         <Modal 
             isOpen={isOpen} 

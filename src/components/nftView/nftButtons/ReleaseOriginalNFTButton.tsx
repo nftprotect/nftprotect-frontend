@@ -159,8 +159,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             onClick={ mainButtonOnClick }
             my={2}
             justifyContent="flex-start"
-            leftIcon={<Twitter fontSize='20px'/>}
+            leftIcon={<Twitter />}
             w="100%"
+            h={[8, 10]}
             bg="none"
             border="2px"
             borderColor="#BC9CFF"
