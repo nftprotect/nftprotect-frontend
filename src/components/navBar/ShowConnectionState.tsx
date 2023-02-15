@@ -15,10 +15,12 @@ import {
     MenuList,
     Text,
     Tooltip,
+    VisuallyHiddenInput
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
 import CouponBalance from './CouponBalance'
+import Davatar from '@davatar/react'
 
 const ShowConnectionState = () => {
 
@@ -38,11 +40,12 @@ const ShowConnectionState = () => {
     }
 
     const copyAccountToClipboard = () => {
-        copyTextToClipboard(account || '')
-        alert('Copied!')
+        copyTextToClipboard(account || '', '#addressHolder').then(() => alert('Copied!'))
     }
 
     return (
+        <>
+        <VisuallyHiddenInput id='addressHolder' value={account || ''}></VisuallyHiddenInput>
         <Menu>
             <MenuButton 
                 as={Button} 
@@ -92,16 +95,20 @@ const ShowConnectionState = () => {
                                 alignItems="center"
                                 flexWrap="nowrap"
                             >
-                                <Image
-                                    src='/images/noAvatarImage.png' alt='User avatar'
-                                    w={['3em']}
-                                    h={['3em']}
-                                    border="2px"
-                                    borderColor="#BC9CFF"
-                                    borderRadius={['1.5em']}
+                                <Box
                                     mr={[4]}
+                                    border="4px"
+                                    borderColor="#BC9CFF"
+                                    borderRadius={['2em']}
                                 >
-                                </Image>
+                                    { active && <Davatar
+                                        size={42}
+                                        address={account || ''}
+                                        // provider={library?.provider}
+                                        // graphApiKey={apiKey}
+                                        generatedAvatarType='jazzicon' // 'jazzicon' or 'blockies'
+                                    /> }
+                                </Box>
 
                                 <Text fontSize={['16px']}>
                                 { formatAddress(account || '', 4) }
@@ -168,6 +175,7 @@ const ShowConnectionState = () => {
                 </Card>
             </MenuList>
         </Menu>
+    </>
     )
 }
 

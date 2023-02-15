@@ -39,7 +39,7 @@ const NFTView = () => {
     const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
         chain: currentChain.id,
         address: nftpContractAddress,
-        tokenId: '1'
+        tokenId: '11'
     })
 
     const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
