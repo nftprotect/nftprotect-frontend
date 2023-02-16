@@ -43,7 +43,10 @@ const LoginForm = () => {
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay 
+                bg='blackAlpha.800'
+                backdropFilter='blur(10px)'
+            />
             
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
