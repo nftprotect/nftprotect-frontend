@@ -112,7 +112,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             border="2px"
             borderColor="#BC9CFF"
             borderRadius="12px"
-            fontSize={['2xs', 'sm', 'md', 'lg']}
+            whiteSpace="break-spaces"
+            fontSize={['2xs', 'xs', 'sm', 'md']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
@@ -123,7 +124,10 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay 
+                bg='blackAlpha.800'
+                backdropFilter='blur(10px)'
+            />
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"

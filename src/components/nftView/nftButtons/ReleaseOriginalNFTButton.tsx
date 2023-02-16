@@ -168,7 +168,8 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             border="2px"
             borderColor="#BC9CFF"
             borderRadius="12px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
+            whiteSpace="break-spaces"
+            fontSize={['2xs', 'xs', 'sm', 'md']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
@@ -179,7 +180,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay 
+                bg='blackAlpha.800'
+                backdropFilter='blur(10px)'
+            />
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
