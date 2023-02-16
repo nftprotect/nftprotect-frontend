@@ -1,15 +1,18 @@
 import {
-    Container,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionIcon,
+    AccordionPanel,
     Grid,
-    SimpleGrid,
     Heading,
-    Box,
-    Button,
+    InputGroup,
+    Input,
+    IconButton,
     Flex,
-    Collapse,
-    useDisclosure,
+    useDisclosure
 } from '@chakra-ui/react'
-import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
@@ -49,66 +52,69 @@ const NFTView = () => {
     const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
 
     return (
-        <>
-            <Box
-                bgColor="#1A202C"
-                px={['1rem', '3rem']}
-                pb={['2rem']}
-            >
-                    <Flex 
-                        pt={[4]}
-                        alignItems="center"
-                        color="#FFF"
+        <Accordion defaultIndex={[0, 1, 2]} allowMultiple>
+            <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                <Flex color="#FFF" alignItems="center" justifyContent="space-between">
+                    <AccordionButton 
+                        fontSize={['lg', 'xl', '2xl']} 
+                        px="0" py={[2, 4]}
+                        w="15em"
                     >
-                        <Heading
-                            fontSize={['lg', 'xl', '2xl']}
-                        >
+                        <AccordionIcon mr={[2]} />
+                        <Heading fontSize={['lg', 'xl', '2xl']}>
                             My NFTs
                         </Heading>
-                        <Button 
-                            onClick={onToggle} 
-                            fontSize={['lg', 'xl', '2xl']}
-                            bg="none"
-                            _hover= {{
-                                bg: 'none'
-                            }}
-                        > 
-                            { isOpen ? <ChevronDownIcon /> : <ChevronRightIcon/> }
-                        </Button>
+                    </AccordionButton>
+                    <Flex>
+                        <InputGroup my={4} >
+                            <Input 
+                                type='text' 
+                                placeholder='Search'
+                                mr={2}
+                                _focus={{
+                                    border: "1px solid #BC9CFF"
+                                }}
+                            />
+                            <IconButton
+                                bg="none"
+                                border="1px solid"
+                                aria-label='Search database'
+                                icon={<SearchIcon />}
+                                _hover={{
+                                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                    color: "#FFF"
+                                }}
+                            />
+                        </InputGroup>
                     </Flex>
-                    
-                    <Collapse in={!isOpen} animateOpacity>
-                        <Grid
-                            templateColumns={{
-                                base: "repeat(auto-fill, minmax(6em, 1fr))",
-                                sm: "repeat(auto-fill, 10em)",
-                                md: "repeat(auto-fill, 10em)",
-                                lg: "repeat(auto-fill, 14em)", 
-                                xl: "repeat(auto-fill, 16em)"
-                            }}
-                            gap={[6]}
-                            my={[4, 8]}
-                        >
-                            { ownNftElements }
-                        </Grid>
-                    </Collapse>
-            </Box>
+                </Flex>
 
-            <Box
-                px={['1rem', '3rem']}
-                pb={['2rem']}
-            >
-                    <Flex 
-                        pt={[4]}
-                        alignItems="center"
-                        color="#FFF"
+                <AccordionPanel pb={4}>
+                    <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, minmax(6em, 1fr))",
+                            sm: "repeat(auto-fill, 10em)",
+                            md: "repeat(auto-fill, 10em)",
+                            lg: "repeat(auto-fill, 14em)", 
+                            xl: "repeat(auto-fill, 16em)"
+                        }}
+                        gap={[6]}
+                        my={[4, 8]}
                     >
-                        <Heading
-                            fontSize={['lg', 'xl', '2xl']}
-                        >My wNFTs
-                        </Heading>
-                    </Flex>
-
+                        { ownNftElements }
+                    </Grid>
+                </AccordionPanel>
+            </AccordionItem>
+            
+            <AccordionItem px={['1rem', '3rem']}>
+                 <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
+                 <AccordionIcon mr={[2]} />
+                    <Heading fontSize={['lg', 'xl', '2xl']}>
+                        My wNFTs
+                    </Heading>
+                 </AccordionButton>
+                    
+                <AccordionPanel pb={4}>
                     <Grid
                         templateColumns={{
                             base: "repeat(auto-fill, minmax(6em, 1fr))",
@@ -122,25 +128,19 @@ const NFTView = () => {
                     >
                         { wNftElements }
                     </Grid>
-            </Box>
-
-            <Box
-                bgColor="#1A202C"
-                px={['1rem', '3rem']}
-                pb={['2rem']}
-            >
-                    <Flex 
-                        pt={[4]}
-                        alignItems="center"
-                        color="#FFF"
-                    >
-                        <Heading
-                            fontSize={['lg', 'xl', '2xl']}
-                        >
-                            My wNFTs at another adresses
-                        </Heading>
-                    </Flex>
-                <Grid
+                </AccordionPanel>
+            </AccordionItem>
+                    
+            <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                 <AccordionButton fontSize={['lg', 'xl', '2xl']} color="#FFF" px="0">
+                 <AccordionIcon mr={[2]} />
+                    <Heading fontSize={['lg', 'xl', '2xl']}>
+                        My wNFTs at another adresses
+                    </Heading>
+                 </AccordionButton>
+                    
+                <AccordionPanel pb={4}>
+                    <Grid
                         templateColumns={{
                             base: "repeat(auto-fill, minmax(6em, 1fr))",
                             sm: "repeat(auto-fill, 10em)",
@@ -153,8 +153,9 @@ const NFTView = () => {
                     >
                         { transferedWNftElements }
                     </Grid>
-            </Box>
-        </>
+                </AccordionPanel>
+            </AccordionItem>
+        </Accordion>
 )}
 
 export default NFTView
