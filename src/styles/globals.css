@@ -106,3 +106,12 @@ a {
     color-scheme: dark;
   }
 }
+
+.loading-icon-shield {
+    animation: crescendo 1.0s alternate infinite ease-in-out;
+}
+
+@keyframes crescendo {
+    0%   {transform: scale(.8);}
+    100% {transform: scale(1.1);}
+}

@@ -189,8 +189,11 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             const imgUrl = deIpfsUrl(metadata.image)
             nftImage = <Image 
                         src={ imgUrl } 
-                        maxW={ {base: "6em", sm: "10em", md: "9em"} }
-                        my={[4, 8]}
+                        my={[4]}
+                        border="1px solid rgba(255, 255, 255, 0.5)"
+                        borderRadius={["20px"]}
+                        h="auto"
+                        w="60%" 
                     />
             }
         return nftImage
@@ -222,219 +225,151 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             onClose={onClose}
         >
             <ModalOverlay 
-                bg='blackAlpha.800'
-                backdropFilter='blur(10px)'
+                bg='blackAlpha.900'
             />
             <ModalContent
-                w={['15em', '20em']}
-                //w={{base: "90vw", sm: "50vw", xl: "30vw"}}
-                maxW="700px"
+                w={["15rem", "20rem", "25rem"]}
+                h={["32rem","35rem", "38rem", "45rem"]}
+                bg="rgba(255, 255, 255, 0.11)"
+                backdropFilter="blur(10px)"
+                border="1px solid rgba(255, 255, 255, 0.5)"
+                borderRadius="30px"
+                color="#FFF"
+                py={[4, 8]}
             >
-                <ModalHeader textAlign="center" bgColor="#C3D4FF" w="100%" >Securing your NFT</ModalHeader>
+                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl", "3xl"]} fontWeight="700">Protecting your asset...</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Wizard>
                          <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                            >
-                                <Text textAlign="center">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
                                     Checking permission to transfer token...
                                 </Text>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Text textAlign="center">
-                                    Allow access to and transfer of your <b>{metadata?.name || nft.name}</b>?
-                                </Text>
-                                
-                                <Box>
-                                    { getNftImage() }
-                                </Box>
 
-                                <Text textAlign="center">
-                                    This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+
+                                { getNftImage() }
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
                                 </Text>
-                                
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Allow access to and transfer
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
-                        </SwitchableOutside> 
+                        </SwitchableOutside>  
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex 
                                 flexDirection="column"
-                                mb={[4, 8]}
                             >
-                                <Text mb={[4, 8]} textAlign="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500" mb={[8]} textAlign="center" >
                                     Allow access to and transfer of <b>ALL YOUR NFTs </b>???
                                 </Text>
                                 
-                                <Text>
+                                <Text fontSize={["sm", "md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
                                 </Text>
                             </Flex>
                         </SwitchableOutside> 
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Text my={[4, 8]} textAlign="center">
-                                    Allow transfer of your <b>{metadata?.name || nft.name}</b> to complete process.
+                         <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+
+                                { getNftImage() }
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
                                 </Text>
-                                <Box>
-                                    { getNftImage() }
-                                </Box>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Allow transfer to complete the process
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Text mb={[4, 8]} textAlign="center">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[4, 8]} textAlign="center">
                                     Waiting for transaction to complete.
                                 </Text>
-                                <Text textAlign="center">
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
                                     After that you'll be asked for confirmation for wrapping.
                                 </Text>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Text mb={[4, 8]} textAlign="center">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[4, 8]} textAlign="center">
                                     Waiting for transaction to complete.
                                 </Text>
-                                <Text textAlign="center">
-                                    After it will be completed, your NFT <b> {metadata?.name || nft.name} </b>will be protected.
+                                { getNftImage() }
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" >
+                                    After it will be completed, your NFT will be protected.
                                 </Text>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]}  fontWeight="500">
                                     Success!
                                 </Heading>
-                                <Image 
-                                    src="/images/statusIcons/confirm.png" 
-                                    alt="Success"
-                                >
+                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
                                 </Image>
-                                <Text my={[4, 8]} textAlign="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
                                     Your asset is now protected!
                                 </Text>
-                                <Text textAlign="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
                                     Enjoy your new life in protected world!
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep} >
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
                                     Fail!
                                 </Heading>
-                                <Image 
-                                    src="/images/statusIcons/fail.png" 
-                                    alt="Fail"
-                                >
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
-                                <Text my={[4, 8]} textAlign="center" fontSize={['md', 'lg', 'xl']}>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
                                     You cancelled a transaction
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                                mb={[4, 8]}
-                            >
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={['md', 'lg', 'xl']}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
                                     Some error occured
                                 </Heading>
-                                <Image 
-                                    src="/images/statusIcons/fail.png" 
-                                    alt="Fail"
-                                >
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
-                                <Text my={[4, 8]} textAlign="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
                                     Transaction failed.
                                 </Text>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside>*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
 
-                            <Flex 
-                                flexDirection="column"
-                                alignItems="center"
-                            >
-                                <Text my={[4, 8]} textAlign="center">
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
                                     Transaction is still in progress...
                                 </Text>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside> 
                     </Wizard>
                 </ModalBody>
             </ModalContent>
