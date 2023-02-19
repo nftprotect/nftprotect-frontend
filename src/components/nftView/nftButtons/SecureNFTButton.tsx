@@ -225,20 +225,18 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             onClose={onClose}
         >
             <ModalOverlay 
-                bg='blackAlpha.900'
+                bg='blackAlpha.700'
             />
             <ModalContent
                 w={["15rem", "20rem", "25rem"]}
-                h={["32rem","35rem", "38rem", "45rem"]}
-                bg="rgba(255, 255, 255, 0.11)"
-                backdropFilter="blur(10px)"
-                border="1px solid rgba(255, 255, 255, 0.5)"
+                // h={["32rem","35rem", "38rem", "45rem"]}
+                bg="#FFF"
+                border="2px solid #000"
                 borderRadius="30px"
-                color="#FFF"
                 py={[4, 8]}
             >
-                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl", "3xl"]} fontWeight="700">Protecting your asset...</ModalHeader>
-                <ModalCloseButton />
+                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl", "3xl"]} fontWeight="700">Protecting <br /> your asset...</ModalHeader>
+                <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
                          <SwitchableOutside nextStepNumber={nextStep}>
@@ -320,7 +318,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside> 
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]}  fontWeight="500">
@@ -328,15 +326,17 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
                                 </Image>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
-                                    Your asset is now protected!
-                                </Text>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
-                                    Enjoy your new life in protected world!
-                                </Text>
+                                <Box w="80%">
+                                    <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                        Your asset is now protected!
+                                    </Text>
+                                    <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
+                                        Enjoy your new life in protected world!
+                                    </Text>
+                                </Box>
                             </Flex>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep} >
+                         <SwitchableOutside nextStepNumber={nextStep} >
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
                                     Fail!
@@ -359,7 +359,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     Transaction failed.
                                 </Text>
                             </Flex>
-                        </SwitchableOutside>*/}
+                        </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
 
                             <Flex flexDirection="column" alignItems="center">
@@ -369,7 +369,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                             </Flex>
-                        </SwitchableOutside> 
+                        </SwitchableOutside>
                     </Wizard>
                 </ModalBody>
             </ModalContent>
