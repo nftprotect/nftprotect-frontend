@@ -229,7 +229,6 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             />
             <ModalContent
                 w={["15rem", "20rem", "25rem"]}
-                // h={["32rem","35rem", "38rem", "45rem"]}
                 bg="#FFF"
                 border="2px solid #000"
                 borderRadius="30px"
