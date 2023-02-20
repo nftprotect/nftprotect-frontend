@@ -8,8 +8,6 @@ import React, { useState } from 'react';
 import {
     Button,
     Box,
-    Card, 
-    CardBody,
     Flex,
     Heading,
     Text,
@@ -160,7 +158,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
-                        {/*<SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
                                     my={[4]} 
@@ -223,7 +221,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     After it will be completed, your will receive original NFT <b>{metadata?.name || nft.name}</b> to your wallet.
                                 </Text>
                             </Flex>
-                        </SwitchableOutside>  */}
+                        </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
