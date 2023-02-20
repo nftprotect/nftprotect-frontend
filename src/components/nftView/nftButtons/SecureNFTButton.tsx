@@ -21,8 +21,7 @@ import {
     ModalContent,
     ModalHeader,
     ModalCloseButton,
-    Spinner,
-    useDisclosure,
+    useDisclosure
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
@@ -211,7 +210,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             borderColor="#BC9CFF"
             borderRadius="12px"
             whiteSpace="break-spaces"
-            fontSize={['2xs', 'xs', 'sm', 'md']}
+            fontSize={['xs', 'sm', 'md']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
@@ -234,7 +233,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 borderRadius="30px"
                 py={[4, 8]}
             >
-                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl", "3xl"]} fontWeight="700">Protecting <br /> your asset...</ModalHeader>
+                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Protecting <br /> your asset...</ModalHeader>
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
@@ -277,7 +276,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 </Text>
                             </Flex>
                         </SwitchableOutside> 
-                         <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
 
                                 { getNftImage() }
