@@ -12,14 +12,62 @@ import {
 } from '@chakra-ui/react'
 import { useAppContext } from '../context/AppContextProvider'
 import NFTView from '../components/nftView/NFTView'
+import ShowNotifications from '../components/notifications/ShowNotifications'
+import { useNotificationContext } from '../context/NotificationContextProvider'
+import { useEffect } from 'react'
 
 const Home: NextPage = () => {
 
     const { active } = useAppContext()
+    const {
+        addNotifications, 
+        notificationsCount
+    } = useNotificationContext()
+
+    useEffect(() => {
+        addNotifications([
+            {
+                id:'cccc', 
+                children:<div>000000</div>, 
+                severity: 0,
+                dateCreated: new Date()
+            }, {
+                id:'aaaz', 
+                children:<div>11111</div>, 
+                severity: 1,
+                dateCreated: new Date(),
+                closeable: false
+            }, {
+                id:'fdfs', 
+                children:<div>2222</div>, 
+                severity: 2,
+                dateCreated: new Date(),
+                closeable: false
+            }, {
+                id:'fdsf', 
+                children:<div>3333</div>, 
+                severity: 3,
+                dateCreated: new Date()
+            }, {
+                id:';doksf', 
+                children:<div>4444</div>, 
+                severity: 4,
+                dateCreated: new Date()
+            }, {
+                id:'vklsndn', 
+                children:<div>5555</div>, 
+                severity: 5,
+                dateCreated: new Date()
+            }
+        ])
+    }, [])
 
     let innerPart = <div/>
     if ( active ) {
-        innerPart = <NFTView />
+        innerPart = <>
+            { notificationsCount && <ShowNotifications/> }
+            <NFTView />
+        </>
     } else {
         innerPart = (
             <>
