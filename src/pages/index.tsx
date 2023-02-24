@@ -13,44 +13,67 @@ import {
 } from '@chakra-ui/react'
 import { useAppContext } from '../context/AppContextProvider'
 import NFTView from '../components/nftView/NFTView'
+import ShowNotifications from '../components/notifications/ShowNotifications'
+import { useNotificationContext } from '../context/NotificationContextProvider'
+import { useEffect } from 'react'
+import { MultipleFilesUpload } from '../components/MultipleFilesUpload'
+import { useState } from 'react'
 
 const Home: NextPage = () => {
 
     const { active } = useAppContext()
+    const {
+        addNotifications, 
+        notificationsCount
+    } = useNotificationContext()
+    const [url, setUrl] = useState()
 
-    // let innerPart = <div/>
-    // if ( active ) {
-    //     innerPart = <NFTView />
-    // } else {
-    //     innerPart = ( 
-    //         <Container centerContent>
-    //             <Heading
-    //                 as='h3'
-    //                 textAlign="center"
-    //                 fontSize={['lg']}
-    //                 mb={4}
-    //                 color="#1F2041"
-    //             >
-    //                 Please connect your wallet
-    //             </Heading>
-    //             <Text
-    //                 fontSize={['xs', 'sm', 'md']}
-    //                 textAlign="center"
-    //                 color="rgba(31, 32, 65, .9)"
-    //             >
-    //                 Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)
-    //             </Text>
-    //             <Text
-    //                 fontSize={['xs', 'sm', 'md']} 
-    //                 textAlign="center"
-    //                 color="rgba(31, 32, 65, .9)"
-    //                 mb={[4, 6]}
-    //             >
-    //                 View only permissions. We will never do anything without your permission
-    //             </Text>
-    //         </Container >
-    //     )
-    // }
+    useEffect(() => {
+        addNotifications([
+            {
+                id:'cccc', 
+                children:<div>000000</div>, 
+                severity: 0,
+                dateCreated: new Date()
+            }, {
+                id:'aaaz', 
+                children:<div>11111</div>, 
+                severity: 1,
+                dateCreated: new Date(),
+                closeable: false
+            }, {
+                id:'fdfs', 
+                children:<div>2222</div>, 
+                severity: 2,
+                dateCreated: new Date(),
+                closeable: false
+            }, {
+                id:'fdsf', 
+                children:<div>3333</div>, 
+                severity: 3,
+                dateCreated: new Date()
+            }, {
+                id:';doksf', 
+                children:<div>4444</div>, 
+                severity: 4,
+                dateCreated: new Date()
+            }, {
+                id:'vklsndn', 
+                children:<div>5555</div>, 
+                severity: 5,
+                dateCreated: new Date()
+            }
+        ])
+    }, [])
+
+    let innerPart = <div/>
+    if ( active ) {
+        innerPart = <>
+            { notificationsCount && <ShowNotifications/> }
+            <MultipleFilesUpload setUrl={setUrl}/>
+            <NFTView />
+        </>
+    }
 
     return (
         <>
@@ -116,7 +139,7 @@ const Home: NextPage = () => {
 
             </Box>
             <main>
-                {/* {innerPart} */}
+                {innerPart}
                 { active && <NFTView />}
             </main>
         </Container>
