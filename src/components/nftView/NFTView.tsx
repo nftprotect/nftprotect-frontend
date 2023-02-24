@@ -64,7 +64,7 @@ const NFTView = () => {
                         >
                             <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
-                                My NFTs
+                                Your NFT
                             </Heading>
                         </AccordionButton>
                         <Flex>
@@ -107,39 +107,16 @@ const NFTView = () => {
                         </Grid>
                     </AccordionPanel>
                 </AccordionItem>
-                
+
                 <AccordionItem px={['1rem', '3rem']}>
-                    <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
-                    <AccordionIcon mr={[2]} />
-                        <Heading fontSize={['lg', 'xl', '2xl']}>
-                            My pNFTs
-                        </Heading>
-                    </AccordionButton>
-                        
-                    <AccordionPanel pb={4}>
-                        <Grid
-                            templateColumns={{
-                                base: "repeat(auto-fill, minmax(6em, 1fr))",
-                                sm: "repeat(auto-fill, 10em)",
-                                md: "repeat(auto-fill, 10em)",
-                                lg: "repeat(auto-fill, 14em)", 
-                                xl: "repeat(auto-fill, 16em)"
-                            }}
-                            gap={[6]}
-                            my={[4, 8]}
-                        >
-                            { wNftElements }
-                        </Grid>
-                    </AccordionPanel>
-                </AccordionItem>
-                        
-                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
-                    <AccordionButton fontSize={['lg', 'xl', '2xl']} color="#FFF" px="0">
-                    <AccordionIcon mr={[2]} />
-                        <Heading fontSize={['lg', 'xl', '2xl']}>
-                            My wNFTs at another adresses
-                        </Heading>
-                    </AccordionButton>
+                    <Flex alignItems="center" justifyContent="space-between">
+                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
+                        <AccordionIcon mr={[2]} />
+                            <Heading fontSize={['lg', 'xl', '2xl']}>
+                                NFT without pNFT
+                            </Heading>
+                        </AccordionButton>
+                    </Flex>
                         
                     <AccordionPanel pb={4}>
                         <Grid
@@ -154,6 +131,33 @@ const NFTView = () => {
                             my={[4, 8]}
                         >
                             { transferedWNftElements }
+                        </Grid>
+                    </AccordionPanel>
+                </AccordionItem>
+                
+                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                    <Flex color="#FFF" alignItems="center" justifyContent="space-between">
+                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
+                            <AccordionIcon mr={[2]} />
+                            <Heading fontSize={['lg', 'xl', '2xl']}>
+                                Your pNFT
+                            </Heading>
+                        </AccordionButton>
+                    </Flex>
+                        
+                    <AccordionPanel pb={4}>
+                        <Grid
+                            templateColumns={{
+                                base: "repeat(auto-fill, minmax(6em, 1fr))",
+                                sm: "repeat(auto-fill, 10em)",
+                                md: "repeat(auto-fill, 10em)",
+                                lg: "repeat(auto-fill, 14em)", 
+                                xl: "repeat(auto-fill, 16em)"
+                            }}
+                            gap={[6]}
+                            my={[4, 8]}
+                        >
+                            { wNftElements }
                         </Grid>
                     </AccordionPanel>
                 </AccordionItem>
