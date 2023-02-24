@@ -213,28 +213,30 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
 
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
-                                <Flex flexDirection="column">
+                                <Flex flexDirection="column" alignItems="center">
                                     <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                         Press button to send original NFT {metadata?.name || nft.name} to wNFT owner.
                                     </Text>
-                                    <Button 
-                                        type='button' 
-                                        onClick={ startButtonOnClick } 
-                                        my={2}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="#BC9CFF"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
-                                        w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
-                                    >Start
-                                    </Button>
+                                    <Box w="50%">
+                                        <Button 
+                                            type='button' 
+                                            onClick={ startButtonOnClick } 
+                                            my={2}
+                                            h={[8, 10]}
+                                            bg="none"
+                                            border="2px"
+                                            borderColor="#BC9CFF"
+                                            borderRadius="12px"
+                                            whiteSpace="break-spaces"
+                                            fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                            w="100%"
+                                            _hover={{
+                                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                                color: "#FFF"
+                                            }}
+                                        >Start
+                                        </Button>
+                                    </Box>
                                 </Flex>
                             </Box>
                         </SwitchableOutside>
