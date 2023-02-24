@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
-import styles from '../styles/Home.module.css'
 import LoginForm from '../components/loginForm/LoginForm'
 import NavBar from '../components/navBar/NavBar'
+import DIDVerificationRequiredCard from '../components/nftView/DidVerificationRequiredCard'
 import CheckUrlPopup from '../components/popups/CheckUrlPopup'
 import {
     Container,
@@ -21,7 +21,7 @@ import { useState } from 'react'
 
 const Home: NextPage = () => {
 
-    const { active } = useAppContext()
+    const { active, didRegistered } = useAppContext()
     const {
         addNotifications, 
         notificationsCount
@@ -71,7 +71,6 @@ const Home: NextPage = () => {
         innerPart = <>
             { notificationsCount && <ShowNotifications/> }
             <MultipleFilesUpload setUrl={setUrl}/>
-            <NFTView />
         </>
     }
 
@@ -123,6 +122,7 @@ const Home: NextPage = () => {
                             <LoginForm />
                         </>
                     }
+                    {active && !didRegistered && <DIDVerificationRequiredCard /> }
                 </Flex>
                 <Box 
                     p="0"

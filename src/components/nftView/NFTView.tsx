@@ -16,7 +16,6 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
-import DIDVerificationRequiredCard from './didVerificationRequiredCard'
 import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 
