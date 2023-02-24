@@ -1,5 +1,4 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Sandbox } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { deIpfsUrl } from '../../../utils/helpers'
@@ -201,7 +200,6 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             type='button'
             onClick={ onClick }
             my={2}
-            leftIcon={<Sandbox />}
             w="100%"
             h={[8, 10]}
             bg="none"
