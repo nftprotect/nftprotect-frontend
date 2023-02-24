@@ -20,7 +20,6 @@ import DIDVerificationRequiredCard from './didVerificationRequiredCard'
 import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 
-
 const NFTView = () => {
 
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
@@ -55,8 +54,6 @@ const NFTView = () => {
 
     return (
         <>
-            <DIDVerificationRequiredCard />
-            
             <Accordion border="none" defaultIndex={[0, 1, 2]} allowMultiple>
                 <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
@@ -115,7 +112,7 @@ const NFTView = () => {
                     <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
                     <AccordionIcon mr={[2]} />
                         <Heading fontSize={['lg', 'xl', '2xl']}>
-                            My wNFTs
+                            My pNFTs
                         </Heading>
                     </AccordionButton>
                         

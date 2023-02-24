@@ -9,11 +9,9 @@ import { useState } from 'react';
 import {
     Button,
     Box,
-    Card, 
-    CardBody,
     Flex,
-    Heading,
     Image,
+    Heading,
     Text,
     Modal,
     ModalOverlay,
@@ -30,7 +28,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: EvmNftMetadataish, // metadata of EvmNft can be empty, so passing it separately
+    metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     tokenContract: Contract
 }
@@ -185,18 +183,19 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = deIpfsUrl(metadata.image)
+            const imgUrl = deIpfsUrl(metadata?.image || '')
             nftImage = <Image 
-                        src={ imgUrl } 
+                        src={ imgUrl }
                         my={[4]}
                         border="1px solid rgba(255, 255, 255, 0.5)"
                         borderRadius={["20px"]}
                         h="auto"
-                        w="60%" 
+                        w="60%"
                     />
             }
         return nftImage
     }
+
     return (<>
         <Button
             type='button'
@@ -304,6 +303,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[4, 8]} textAlign="center">
@@ -358,6 +358,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
 
                             <Flex flexDirection="column" alignItems="center">

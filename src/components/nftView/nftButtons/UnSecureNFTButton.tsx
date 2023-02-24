@@ -8,10 +8,10 @@ import React, { useState } from 'react';
 import {
     Button,
     Box,
+    Image,
     Flex,
     Heading,
     Text,
-    Image,
     Modal,
     ModalOverlay,
     ModalBody,
@@ -41,12 +41,15 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     const stepMapping = {
-        'requestUnwrap': 0,
-        'waitingForFinal': 1,
-        'finalCompleted': 2,
-        'canceled': 3,
-        'error': 4,
-        'timeout': 5
+        'checkPermission': 0,
+        'requestUnwrap': 1,
+        'waitingForAllow': 2,
+        'waitingForFinal': 3,
+        'finalCompleted': 4,
+        'success': 5,
+        'canceled': 6,
+        'error': 7,
+        'timeout': 8
     }
 
     const handleUnknownError = (error: any) => {
@@ -131,7 +134,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             borderColor="#BC9CFF"
             borderRadius="12px"
             whiteSpace="break-spaces"
-            fontSize={['2xs', 'xs', 'sm', 'md']}
+            fontSize={['xs', 'sm', 'md']}
             _hover={{
                 bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
                 color: "#FFF"
@@ -160,6 +163,9 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Checking permission to transfer token...
+                                </Text>
                                 <Spinner 
                                     my={[4]} 
                                     thickness='4px'
@@ -168,9 +174,21 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     color='#BC9CFF'
                                     size={['lg', 'xl']}>
                                 </Spinner>
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Allow access and transfer of your NFT
+                            </Flex>
+                        </SwitchableOutside>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Checking permission to transfer token...
                                 </Text>
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
@@ -188,6 +206,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -203,6 +222,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                          <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -222,6 +242,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
@@ -245,7 +266,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                         h={[8, 10]}
                                         bg="none"
                                         border="2px"
-                                        borderColor="#BC9CFF"
+                                        borderColor="gray.800"
                                         borderRadius="12px"
                                         whiteSpace="break-spaces"
                                         fontSize={['xs', 'sm', 'md']}
@@ -259,7 +280,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Box>
                             </Flex>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
+
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
                                     Fail!
@@ -271,6 +293,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                          <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
@@ -283,6 +306,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
@@ -297,7 +321,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     size={['lg', 'xl']}>
                                 </Spinner>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
                     </Wizard>
                 </ModalBody>
             </ModalContent>

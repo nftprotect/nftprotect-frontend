@@ -1,12 +1,14 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Twitter } from '@web3uikit/icons'
+import { Twitter } from '@web3uikit/icons';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
+import { deIpfsUrl } from '../../../utils/helpers';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
 import {
     Button,
     Box,
+    Image,
     Card, 
     CardBody,
     Flex,
@@ -155,6 +157,17 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         }
     }
 
+    function getNftImage() {
+        if (metadata) {
+            let imgUrl = deIpfsUrl(metadata.image)
+            return (<Image 
+                    src={ imgUrl } 
+                    alt="NFT image" 
+                    w="100%"
+                />)
+        }
+    }
+
     return (<>
         <Button
             type='button'
@@ -181,16 +194,20 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             onClose={onClose}
         >
             <ModalOverlay 
-                bg='blackAlpha.800'
-                backdropFilter='blur(10px)'
+                bg='blackAlpha.700' 
+                backdropFilter='blur(10px)' 
             />
             <ModalContent
-                w={{base: "90vw", sm: "70vw", xl: "50vw"}}
-                maxW="700px"
+                w={["15rem", "20rem", "25rem"]}
+                bg="#FFF"
+                border="2px solid #000"
+                borderRadius="30px"
+                py={[4, 8]}
             >
-                <ModalHeader>Transfer original NFT</ModalHeader>
+                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Transfer the original NFT to the new NFT owner</ModalHeader>
                 <ModalBody>
                     <Wizard>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Press button to send original NFT {metadata?.name || nft.name} to wNFT owner.
@@ -199,52 +216,112 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 </Button>
                             </Box>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                {'Press "Send" button to send original NFT {metadata?.name || nft.name} to wNFT owner or "Reject" button to reject a request.'}
-                                <Button type='button' onClick={ sendButtonOnClick }>
-                                    Send
-                                </Button>
-                                <Button type='button' onClick={ rejectButtonOnClick }>
-                                    Reject
-                                </Button>
-                            </Box>
+
+                         <SwitchableOutside nextStepNumber={nextStep} >
+                            <Flex 
+                                flexDirection="column"
+                                alignItems="center"
+                            >
+                                <Box
+                                    my={[4]}
+                                    border="1px solid rgba(255, 255, 255, 0.5)"
+                                    borderRadius={["20px"]}
+                                    w="60%" 
+                                    overflow="hidden"
+                                >  
+                                    { getNftImage() }
+                                </Box>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Press "Send" button to send original NFT <b>{metadata?.name || nft.name}</b> to wNFT owner or "Reject" button to reject a request.
+                                </Text>
+                                
+                                <Flex
+                                    flexDirection="row"
+                                    flexWrap="nowrap"
+                                    alignSelf="flex-start"
+                                    
+                                >
+                                    <Button 
+                                        type='button' 
+                                        onClick={ sendButtonOnClick }
+                                        my={2}
+                                        h={[8, 10]}
+                                        bg="none"
+                                        border="2px"
+                                        borderColor="#BC9CFF"
+                                        borderRadius="12px"
+                                        whiteSpace="break-spaces"
+                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                        _hover={{
+                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                            color: "#FFF"
+                                        }}
+                                    >Send
+                                    </Button>
+
+                                    <Button
+                                        type='button'
+                                        onClick={ rejectButtonOnClick }
+                                        my={2}
+                                        h={[8, 10]}
+                                        bg="none"
+                                        border="2px"
+                                        borderColor="gray.800"
+                                        borderRadius="12px"
+                                        whiteSpace="break-spaces"
+                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                        _hover={{
+                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                            color: "#FFF"
+                                        }}
+                                    >
+                                        Reject
+                                    </Button>
+                                </Flex>
+                            </Flex>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
+
+                        {/*<SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Waiting for transaction to complete. After transaction complete your NFT will be trnasfered to new owner.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Transaction complete! You sent {metadata?.name || nft.name} to a new owner.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Transaction complete! You successfully rejected transfer of your NFT.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 You canceled the transaction in your wallet.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Some error occured. Transaction failed.
                             </Box>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Box>
                                 Transaction is still in progress.
                             </Box>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
                     </Wizard>
                 </ModalBody>
             </ModalContent>

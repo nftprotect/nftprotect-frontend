@@ -19,23 +19,21 @@ const MainMenu = () => {
                 icon={<HamburgerIcon />}
                 variant='outline'
                 bg="none"
+                border="1px solid #FFF"
                 borderRadius="13px"
                 py={[2, 4]}
                 px={[3, 6]}
-                my={2}
-                mr={2}
+                mr={4}
                 _hover={{
-                    border: "2px",
-                    borderColor: "#BC9CFF",
-                    borderRadius: "13px",
+                    bgColor: "rgba(255, 255, 255, 0.15)"
                 }}
                 _active={{
-                    borderRadius: "13px",
-                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                    bgColor: "rgba(255, 255, 255, 0.15)"
                 }}
             />
             <MenuList
                 fontSize={['xs', 'sm', 'md']}
+                bgColor="#000"
             >
                 <MenuGroup 
                     title='Resources'
@@ -44,8 +42,9 @@ const MainMenu = () => {
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
                         pl={[8]}
+                        bg="none"
                         _hover={{
-                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                            bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
                         Whitepaper
@@ -53,14 +52,15 @@ const MainMenu = () => {
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
                         pl={[8]}
+                        bg="none"
                         _hover={{
-                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                            bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
                         Security audits
                     </MenuItem>
                 </MenuGroup>
-                <MenuDivider />
+                <MenuDivider color="#FFF" />
                 <MenuGroup 
                     title='Legal Documents'
                     fontSize={['xs', 'sm', 'md']}
@@ -68,8 +68,9 @@ const MainMenu = () => {
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
                         pl={[8]}
+                        bg="none"
                         _hover={{
-                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                            bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
                         Terms of service
@@ -77,8 +78,9 @@ const MainMenu = () => {
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
                         pl={[8]}
+                        bg="none"
                         _hover={{
-                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                            bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
                         Privacy policy
