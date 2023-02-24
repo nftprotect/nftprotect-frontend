@@ -30,7 +30,7 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
-    tokenContract: Contract,
+    tokenContract: Contract
 }
 
 const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
@@ -189,7 +189,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Spinner>
                             </Flex>
                         </SwitchableOutside>
-                        
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
