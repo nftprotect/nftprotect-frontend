@@ -1,5 +1,4 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Sandbox2 } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config'
 import { deIpfsUrl } from '../../../utils/helpers'
@@ -29,7 +28,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
+    metadata: any // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
     tokenContract: Contract,
 }
@@ -125,8 +124,6 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             type='button'
             onClick={ onClick }
             my={2}
-            justifyContent="flex-start"
-            leftIcon={<Sandbox2 />}
             w="100%"
             h={[8, 10]}
             bg="none"
@@ -176,6 +173,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Spinner>
                             </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
@@ -191,6 +189,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 </Spinner>
                             </Flex>
                         </SwitchableOutside>
+                        
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -281,7 +280,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside>
 
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
                                     Fail!
@@ -321,7 +320,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     size={['lg', 'xl']}>
                                 </Spinner>
                             </Flex>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
                     </Wizard>
                 </ModalBody>
             </ModalContent>
