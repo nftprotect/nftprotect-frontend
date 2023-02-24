@@ -36,3 +36,6 @@ export const userRegistryContractAddress = '0xe2A88A01D215C34B00F9Eb371ce77ECa5F
 export const couponsContractAddress = '0x0cbFAC30A803A90e4FE052A323AA42D47498CA96'
 
 export const dialogsTimeout = 3000
+
+export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'
+export const ipfsUrlMask = 'https://{HASH}.ipfs.cf-ipfs.com'

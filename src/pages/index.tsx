@@ -15,6 +15,8 @@ import NFTView from '../components/nftView/NFTView'
 import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotificationContext } from '../context/NotificationContextProvider'
 import { useEffect } from 'react'
+import { MultipleFilesUpload } from '../components/MultipleFilesUpload'
+import { useState } from 'react'
 
 const Home: NextPage = () => {
 
@@ -23,6 +25,7 @@ const Home: NextPage = () => {
         addNotifications, 
         notificationsCount
     } = useNotificationContext()
+    const [url, setUrl] = useState()
 
     useEffect(() => {
         addNotifications([
@@ -66,6 +69,7 @@ const Home: NextPage = () => {
     if ( active ) {
         innerPart = <>
             { notificationsCount && <ShowNotifications/> }
+            <MultipleFilesUpload setUrl={setUrl}/>
             <NFTView />
         </>
     } else {
