@@ -38,21 +38,12 @@ const ConnectMetamask = () => {
 
     return (
         <Button
-            my={2}
-            justifyContent="flex-start"
-            type="button" 
+            variant='monochrome-transparent'
             onClick={active ? onClickDisconnect : onClickConnect}
             leftIcon={<Metamask fontSize='20px'/>}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="22px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
             w={['15em']}
+            mb={[4, 8]}
+            justifyContent="flex-start"
         >
             MetaMask
         </Button>

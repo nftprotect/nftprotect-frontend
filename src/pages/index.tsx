@@ -119,7 +119,9 @@ const Home: NextPage = () => {
                                 mb={[4, 6]}
                             >View only permissions. We will never do anything without your permission
                             </Text>
-                            <LoginForm />
+                            <Box w={["15rem"]}>
+                                <LoginForm />
+                            </Box>
                         </>
                     }
                     {active && !didRegistered && <DIDVerificationRequiredCard /> }

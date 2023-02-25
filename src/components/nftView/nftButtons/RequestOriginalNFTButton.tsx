@@ -120,23 +120,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
 
     return (<>
         <Button
-            type='button'
             onClick={ mainButtonOnClick }
+            variant="primary-solid"
             my={2}
-            justifyContent="flex-start"
-            leftIcon={<SpeedyNode />}
             w="100%"
-            h={[8, 10]}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            whiteSpace="break-spaces"
-            fontSize={['2xs', 'xs', 'sm', 'md']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
         >Request original
         </Button>
         <Modal 
@@ -177,21 +164,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                                 </Text>
                                 <Box w="100%">
                                     <Button 
-                                        type='button' 
                                         onClick={ startButtonOnClick }
+                                        variant="primary-solid"
                                         my={2}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="#BC9CFF"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
                                         w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
                                     >Request original
                                     </Button>
                                 </Box>
@@ -206,23 +182,12 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                                     </Flex>
                                 </Flex>
                                 <Button 
-                                        type='button'
-                                        onClick={onClose}
-                                        mt={[4, 8]}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="gray.800"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
-                                        w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
-                                    >Close
-                                    </Button>
+                                    onClick={onClose}
+                                    variant="monochrome-transparent"
+                                    w="100%"
+                                    mt={[4, 8]}
+                                >Close
+                                </Button>
                             </Flex>
                         </SwitchableOutside> 
 
@@ -309,21 +274,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                                     The button to open a dispute will appear on the DApp's main page
                                 </Text>
                                 <Box w="50%" my={[8]}>
-                                    <Button 
-                                        type='button'
+                                    <Button
                                         onClick={onClose}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="gray.800"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                        variant="monochrome-transparent"
                                         w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
                                     >Close
                                     </Button>
                                 </Box>

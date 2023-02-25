@@ -120,23 +120,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     }
 
     return (<>
-        <Button
-            type='button'
-            onClick={ onClick }
-            my={2}
-            w="100%"
-            h={[8, 10]}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            whiteSpace="break-spaces"
-            fontSize={['xs', 'sm', 'md']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
-        >Unsecure
+        <Button onClick={ onClick } variant="primary-solid" w="100%">
+            Unsecure
         </Button>
         <Modal 
             isOpen={isOpen} 
@@ -158,22 +143,6 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                    Checking permission to transfer token...
-                                </Text>
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                            </Flex>
-                        </SwitchableOutside>
-
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
@@ -258,21 +227,11 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     </Text>
                                     <SecureNFTButton metadata={metadata} nft={nft} nftReFetch={nftReFetch} tokenContract={tokenContract} />
                                     <Button
-                                        type='button'
                                         onClick={ onClose }
                                         my={2}
                                         w="100%"
                                         h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="gray.800"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={['xs', 'sm', 'md']}
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
+                                        variant="monochrome-transparent"
                                     >
                                         Cancel
                                     </Button>

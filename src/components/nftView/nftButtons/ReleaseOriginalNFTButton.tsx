@@ -174,22 +174,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
 
     return (<>
         <Button
-            type='button'
             onClick={ mainButtonOnClick }
-            my={2}
-            justifyContent="center"
+            variant="primary-solid"
             w="100%"
-            h={[8, 10]}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            whiteSpace="break-spaces"
-            fontSize={['2xs', 'xs', 'sm', 'md']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
         >Transfer original
         </Button>
         <Modal 
@@ -218,21 +205,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 </Text>
                                 <Box w="50%">
                                     <Button 
-                                        type='button' 
-                                        onClick={ startButtonOnClick } 
+                                        onClick={ startButtonOnClick }
+                                        variant='primary-solid'
                                         my={2}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="#BC9CFF"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
-                                        w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
                                     >Start
                                     </Button>
                                 </Box>
@@ -265,42 +240,20 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 >
                                     <Box minW="40%">
                                         <Button 
-                                            type='button' 
                                             onClick={ sendButtonOnClick }
-                                            my={2}
-                                            h={[8, 10]}
-                                            bg="none"
-                                            border="2px"
-                                            borderColor="#BC9CFF"
-                                            borderRadius="12px"
-                                            whiteSpace="break-spaces"
-                                            fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                            variant='primary-solid'
                                             w="100%"
-                                            _hover={{
-                                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                                color: "#FFF"
-                                            }}
+                                            my={2}
                                         >Yes
                                         </Button>
                                     </Box>
                                     
                                     <Box minW="40%">
                                         <Button
-                                            type='button'
                                             onClick={ rejectButtonOnClick }
+                                            variant="monochrome-transparent"
                                             my={2}
-                                            h={[8, 10]}
-                                            bg="none"
-                                            border="2px"
-                                            borderColor="gray.800"
-                                            borderRadius="12px"
-                                            whiteSpace="break-spaces"
-                                            fontSize={[ 'xs', 'sm', 'md', 'lg']}
                                             w="100%"
-                                            _hover={{
-                                                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                                color: "#FFF"
-                                            }}
                                         >No
                                         </Button>
                                     </Box>
@@ -413,20 +366,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 </Text>
                                 <Box w="50%" my={[2, 4]}>
                                     <Button 
-                                        type='button'
                                         onClick={onClose}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="gray.800"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                        variant="monochrome-transparent"
                                         w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
                                     >Close
                                     </Button>
                                 </Box>
@@ -444,20 +386,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 </Text>
                                 <Box w="50%" my={[2, 4]}>
                                     <Button 
-                                        type='button'
                                         onClick={onClose}
-                                        h={[8, 10]}
-                                        bg="none"
-                                        border="2px"
-                                        borderColor="gray.800"
-                                        borderRadius="12px"
-                                        whiteSpace="break-spaces"
-                                        fontSize={[ 'xs', 'sm', 'md', 'lg']}
+                                        variant="monochrome-transparent"
                                         w="100%"
-                                        _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            color: "#FFF"
-                                        }}
                                     >Close
                                     </Button>
                                 </Box>

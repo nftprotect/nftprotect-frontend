@@ -197,21 +197,9 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
 
     return (<>
         <Button
-            type='button'
             onClick={ onClick }
-            my={2}
+            variant="primary-solid"
             w="100%"
-            h={[8, 10]}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            whiteSpace="break-spaces"
-            fontSize={['xs', 'sm', 'md']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
         >Protect NFT
         </Button>
 
@@ -234,7 +222,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
-                         <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
                                     Checking permission to transfer token...
@@ -259,7 +247,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                             </Flex>
-                        </SwitchableOutside>  
+        </SwitchableOutside>  
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex 
                                 flexDirection="column"

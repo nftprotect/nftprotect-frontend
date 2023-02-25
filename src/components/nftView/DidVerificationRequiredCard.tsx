@@ -26,29 +26,11 @@ return (
             </Text>
         </Flex>
 
-        <Box>
+        <Box w={['15em']}>
             <Button 
                 onClick={ () => (window.open('https://passport.gitcoin.co/', '_blank')) }
-                textTransform="uppercase"
-                borderRadius="16px"
-                boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)"
-                fontSize={['sm', 'md', 'lg', 'xl']}
-                py={[2, 4]}
-                px={[3, 6]}
+                variant='danger'
                 mt={[4]}
-                color="#FFF"
-                bgColor="#FF0000"
-                w={['15em']}
-                _hover={{
-                    border: "2px solid #FF0000",
-                    bg: "none",
-                    color: "#000"
-                }}
-                _active={{
-                    border: "2px solid #FF0000",
-                    bg: "none",
-                    color: "#000"
-                }}
             >Proceed to DID
             </Button>
         </Box>

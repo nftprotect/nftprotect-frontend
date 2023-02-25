@@ -21,38 +21,29 @@ const LoginForm = () => {
 
     return (
         <>
-        { !active && <Button 
-            onClick={onOpen}
-            leftIcon={<Wallet fontSize='20px'/>}
-            border="1px solid #FFF"
-            borderRadius="16px"
-            fontSize={['xs', 'sm', 'md']}
-            py={[2, 4]}
-            px={[3, 6]}
-            mr={2}
-            bg="none"
-            _hover={{
-                bgColor: "rgba(255, 255, 255, 0.15)"
-            }}
-            _active={{
-                bgColor: "rgba(255, 255, 255, 0.15)"
-            }}
-        >
-            Connect Wallet
-        </Button> }
+        { !active && 
+            <Button 
+                variant='monochrome-transparent'
+                onClick={onOpen}
+                leftIcon={<Wallet fontSize='20px'/>}
+            >Connect Wallet
+            </Button> 
+        }
         
         <Modal 
             isOpen={isOpen} 
             onClose={onClose}
         >
             <ModalOverlay 
-                bg='blackAlpha.800'
+                bg='blackAlpha.700'
                 backdropFilter='blur(10px)'
             />
-            
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
+                border="2px solid #000"
+                borderRadius="30px"
+                overflow="hidden"
             >
                 <ModalCloseButton />
                 <ModalBody p="0">

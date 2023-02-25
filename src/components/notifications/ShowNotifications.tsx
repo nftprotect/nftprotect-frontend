@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useNotificationContext } from "../../context/NotificationContextProvider"
+import {Bell} from '@web3uikit/icons'
 
 const severityMapping: {
     status: 'success'|'info'|'warning'|'error'

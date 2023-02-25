@@ -3,7 +3,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { walletConnect } from '../../../utils/connectors'
 import { UserRejectedRequestError } from '@web3-react/walletconnect-connector'
 import { formatAddress } from '../../../utils/helpers'
-import { Button } from '@chakra-ui/react'
+import { Button, Box } from '@chakra-ui/react'
 import { Wallet } from '@web3uikit/icons'
 const ConnectWalletConnect = () => {
 
@@ -26,23 +26,11 @@ const ConnectWalletConnect = () => {
 
     return (
         <Button
-            py={2}
-            px={4}
-            my={2}
-            justifyContent="flex-start"
-            type="button" 
             onClick={active ? onClickDisconnect : onClickConnect}
-            leftIcon={<Wallet fontSize='20px'/>}
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="22px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
+            variant='monochrome-transparent'
             w={['15em']}
+            leftIcon={<Wallet fontSize='20px'/>}
+            justifyContent="flex-start"
         >
             WalletConnect
         </Button>

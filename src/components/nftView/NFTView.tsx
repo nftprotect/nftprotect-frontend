@@ -12,7 +12,6 @@ import {
     Flex,
     useDisclosure
 } from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
@@ -66,28 +65,6 @@ const NFTView = () => {
                                 Your NFT
                             </Heading>
                         </AccordionButton>
-                        <Flex>
-                            <InputGroup my={4} >
-                                <Input 
-                                    type='text' 
-                                    placeholder='Search'
-                                    mr={2}
-                                    _focus={{
-                                        border: "1px solid #BC9CFF"
-                                    }}
-                                />
-                                <IconButton
-                                    bg="none"
-                                    border="1px solid"
-                                    aria-label='Search database'
-                                    icon={<SearchIcon />}
-                                    _hover={{
-                                        bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                        color: "#FFF"
-                                    }}
-                                />
-                            </InputGroup>
-                        </Flex>
                     </Flex>
 
                     <AccordionPanel pb={4}>

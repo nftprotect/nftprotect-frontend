@@ -41,20 +41,9 @@ const DIDVerification = ({disclosure}: any) => {
 
             <Button 
                 onClick={goToExternalPage}
+                variant="primary-solid"
                 alignSelf="center"
-                border="2px"
-                borderColor="#BC9CFF"
-                borderRadius="13px"
-                fontSize={['xs', 'sm', 'md']}
-                py={[2, 4]}
-                px={[3, 6]}
-                my={[4, 8]}
-                bg="none"
                 w={['15em']}
-                _hover={{
-                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                    color: "#FFF"
-                }}
             >Proceed to DID
             </Button>
         </Flex>
