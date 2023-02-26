@@ -20,6 +20,8 @@ import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
+import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
+
 interface NFTInitialData {
     nft: EvmNft,
     nftReFetch: Function
@@ -34,8 +36,26 @@ interface OriginalNFTData {
     securityLevel: number
 }
 
+export interface ActionRequest {
+    id: number,
+    reqtype: number,
+    tokenId: number,
+    newowner: string,
+    timeout: number,
+    status: RequestStatus,
+    arbitrator: string,
+    disputeId: number
+}
+
+export enum RequestStatus {
+    Initial,
+    Accepted,
+    Rejected,
+    Disputed
+}
+
 const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
-    const { account, library, nftProtectContract } = useAppContext()
+    const { account, library, nftProtectContract, currentBlock } = useAppContext()
     // Stores the metadata of NFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -44,8 +64,10 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const [ fetchEnded, setFetchEnded ] = useState(false)
     // If our NFT is wNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
-    // Marks if wNFT has request to transfer to a new owner
-    const [ pendingRequest, setPendingRequest ] = useState<number>()
+    // Stores pending request data if available
+    const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
+    // Marks if request is timed out (if exists)
+    const [ requestTimedOut, setRequestTimedOut] = useState(false)
     // Stores original NFT's owner address
     const [ originalOwner, setOriginalOwner ] = useState<string>()
     // Contract of the NFT
@@ -114,7 +136,11 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     // Checks if wNFT has request to transfer
     const loadPendingRequest = () => {
         nftProtectContract.tokenToRequest(nft.tokenId).then((requestId: number) => {
-            (requestId.toString() !== '0') && setPendingRequest(requestId)
+            if (requestId.toString() !== '0') {
+                nftProtectContract.requests(requestId).then((request: any) => {
+                    setPendingRequest({id: requestId, ...request})
+                })
+            }
         })
     }
 
@@ -152,6 +178,17 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         }
     }, [])
 
+    // Check request timeout on every block
+    useEffect(() => {
+        if (pendingRequest && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+            library.getBlock(currentBlock).then((blockData: any) => {
+                if (blockData.timestamp >= pendingRequest.timeout) {
+                    setRequestTimedOut(true)
+                }
+            })
+        }
+    }, [currentBlock])
+
     let result = <div />
     let buttons = <div />
     if (isWNFT) {
@@ -179,8 +216,22 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                         originalOwner={ originalOwner || '' }
                     />
                 } else {
-                    // If request pending we can only wait
-                    buttons = <Text>Pending request...</Text>
+                    // If request is timed out or rejected we can create a court
+                    if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
+                        buttons = <ArbitrateOwnershipAdjustmentButton
+                            nft={ nft } 
+                            metadata={ metadata } 
+                            nftReFetch={ nftReFetch } 
+                            pendingRequest={ pendingRequest }
+                            originalOwner={ originalOwner || '' }
+                            loadPendingRequest={ loadPendingRequest }
+                        />
+                    // Otherwise we can only wait
+                    } else if (pendingRequest.status === RequestStatus.Initial) {
+                        buttons = <Text>Pending request...</Text>
+                    } else if (pendingRequest.status === RequestStatus.Disputed) {
+                        buttons = <Text>Uder dispute {pendingRequest.disputeId}...</Text>
+                    }
                 }
             }
             else if (isOnAnotherAddress) {
@@ -190,7 +241,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                     metadata={ metadata } 
                     nftReFetch={ nftReFetch } 
                     tokenContract={ tokenContract }
-                    pendingRequest={ pendingRequest }
+                    pendingRequest={ pendingRequest?.id }
                 />
             } 
         }

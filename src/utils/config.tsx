@@ -37,5 +37,15 @@ export const couponsContractAddress = '0x0cbFAC30A803A90e4FE052A323AA42D47498CA9
 
 export const dialogsTimeout = 3000
 
+// IPFS
 export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'
 export const ipfsUrlMask = 'https://{HASH}.ipfs.cf-ipfs.com'
+
+// Arbitrators
+export enum Arbitrators {
+    Dummy,
+    Kleros
+}
+
+// Kleros
+export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'

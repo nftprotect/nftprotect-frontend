@@ -12,7 +12,8 @@ export interface AppContextInterface {
     currentChain: any | undefined,
     nftProtectContract: Contract,
     referrerAddress: string,
-    didRegistered: boolean | null
+    didRegistered: boolean | null,
+    currentBlock: number
 }
 
 const AppContext = createContext<AppContextInterface|null>(null);
@@ -26,6 +27,7 @@ export function AppContextProvider({ children }:any) {
     const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
     // Зарегистрировал ли пользователь DID
     const [ didRegistered, setDidRegistered ] = useState<boolean|null>(null)
+    const [ currentBlock, setCurrentBlock] = useState<number>(0)
 
     const setDidState = () => {
         if (active) {
@@ -38,7 +40,20 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
+    const subscribeBlockUpdates = () => {
+        if (library) {
+            library.on('block', (blockNumber: number) => {
+                setCurrentBlock(blockNumber)
+            })
+            // remove listener when the component is unmounted
+            return () => {
+                library.removeAllListeners('block')
+            }
+        }
+    }
+
     useEffect(setDidState, [active, account, chainId])
+    useEffect(subscribeBlockUpdates, [active])
 
     return (
         <AppContext.Provider value={{
@@ -48,7 +63,8 @@ export function AppContextProvider({ children }:any) {
             currentChain,
             nftProtectContract,
             referrerAddress,
-            didRegistered
+            didRegistered,
+            currentBlock
         }}>
             {children}
         </AppContext.Provider>

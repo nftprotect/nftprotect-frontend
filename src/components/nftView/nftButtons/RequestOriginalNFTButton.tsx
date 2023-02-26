@@ -1,6 +1,4 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { SpeedyNode } from '@web3uikit/icons'
-import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';

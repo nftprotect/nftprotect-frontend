@@ -6,6 +6,7 @@ import {
     AccordionPanel,
     Grid,
     Heading,
+    Text,
     InputGroup,
     Input,
     IconButton,
@@ -68,6 +69,7 @@ const NFTView = () => {
                     </Flex>
 
                     <AccordionPanel pb={4}>
+                        { ownNftElements && (ownNftElements.length > 0) ? 
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, minmax(6em, 1fr))",
@@ -80,7 +82,8 @@ const NFTView = () => {
                             my={[4, 8]}
                         >
                             { ownNftElements }
-                        </Grid>
+                        </Grid> : 
+                        <Text color={'white'}>You have no NFTs in your wallet.</Text> }
                     </AccordionPanel>
                 </AccordionItem>
 
@@ -95,6 +98,7 @@ const NFTView = () => {
                     </Flex>
                         
                     <AccordionPanel pb={4}>
+                        { transferedWNftElements && (transferedWNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, minmax(6em, 1fr))",
@@ -107,7 +111,8 @@ const NFTView = () => {
                             my={[4, 8]}
                         >
                             { transferedWNftElements }
-                        </Grid>
+                        </Grid> :
+                        <Text>You have no pNFTs transfered to third parties.</Text> }
                     </AccordionPanel>
                 </AccordionItem>
                 
@@ -122,6 +127,7 @@ const NFTView = () => {
                     </Flex>
                         
                     <AccordionPanel pb={4}>
+                        { wNftElements && (wNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, minmax(6em, 1fr))",
@@ -134,7 +140,8 @@ const NFTView = () => {
                             my={[4, 8]}
                         >
                             { wNftElements }
-                        </Grid>
+                        </Grid> :
+                        <Text color={'white'}>You have no protected NFTs yet</Text> }
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
