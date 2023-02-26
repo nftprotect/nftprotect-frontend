@@ -24,10 +24,11 @@ import {
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
-import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import {AlertCircle} from '@web3uikit/icons'
+import { CopyIcon } from '@chakra-ui/icons';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -161,6 +162,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         }
     }
 
+    const copyNewOwnerToClipboard = () => {
+        copyTextToClipboard(nft.ownerOf?.format() || '', '#newOwnerAddressHolder').then(() => alert('Copied!'))
+    }
+
     function getNftImage() {
         if (metadata) {
             let imgUrl = deIpfsUrl(metadata.image)
@@ -239,7 +244,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     Are you sure you want to transfer original NFT to a new owner?
                                 </Text>
-                                
+                                <Text id='newOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    { formatAddress(nft.ownerOf?.format() || '', 4) }
+                                    <CopyIcon onClick={ copyNewOwnerToClipboard } />
+                                </Text>
                                 <Flex
                                     flexWrap="nowrap"
                                     justifyContent="space-around"

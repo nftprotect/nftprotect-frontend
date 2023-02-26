@@ -25,15 +25,18 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import {AlertCircle} from '@web3uikit/icons'
+import { CopyIcon } from '@chakra-ui/icons'
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: any // metadata of EvmNft can be empty, so passing it separately
-    nftReFetch: Function // function to update nft list
-    tokenContract: Contract
+    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nftReFetch: Function, // function to update nft list
+    tokenContract: Contract,
+    originalOwner: string // Owner address of original NFT
 }
 
-const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -107,6 +110,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
         }
     }
 
+    const copyOriginalOwnerToClipboard = () => {
+        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+    }
+
     function getNftImage() {
         if (metadata) {
             let imgUrl = deIpfsUrl(metadata.image)
@@ -151,6 +158,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     To obtain the original NFT, please send a request to the owner
+                                </Text>
+                                <Text id='originalOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    { formatAddress(originalOwner, 4) }
+                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } />
                                 </Text>
                                 <Box
                                     my={[4]}

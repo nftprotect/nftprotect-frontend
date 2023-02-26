@@ -46,6 +46,8 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
     // Marks if wNFT has request to transfer to a new owner
     const [ pendingRequest, setPendingRequest ] = useState<number>()
+    // Stores original NFT's owner address
+    const [ originalOwner, setOriginalOwner ] = useState<string>()
     // Contract of the NFT
     const tokenContract = nft.contractType === 'ERC721' ?
         new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
@@ -116,6 +118,13 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         })
     }
 
+    // Checks if wNFT has request to transfer
+    const loadOriginalOwner = () => {
+        nftProtectContract.originalOwnerOf(nft.tokenId).then((address: string) => {
+            setOriginalOwner(address)
+        })
+    }
+
     useEffect(() => {
         // If no metadata preloaded trying to load it by tokenUri
         if (!metadata && hasMetadata) {
@@ -136,6 +145,8 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         if (isWNFT) {
             // Load info about original NFT
             loadOriginalNFTData()
+            // Load original owner address
+            loadOriginalOwner()
             // We have to check if there's a request to transfer
             loadPendingRequest()
         }
@@ -165,6 +176,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                         metadata={ metadata } 
                         nftReFetch={ nftReFetch } 
                         tokenContract={ tokenContract }
+                        originalOwner={ originalOwner || '' }
                     />
                 } else {
                     // If request pending we can only wait
