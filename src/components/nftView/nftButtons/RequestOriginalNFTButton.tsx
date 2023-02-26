@@ -40,43 +40,43 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     // Naming of wizard step numbers
-    const stepMapping = {
-        requestAskOnwership: 0,
-        waitingForAllow: 1,
-        waitingForFinal: 2,
-        waitingForConfirm: 3,
-        waitingForFinalSent: 4,
-        finalCompleted: 5,
-        canceled: 6,
-        error: 7,
-        timeout: 8
+    enum StepMapping {
+        start,
+        waitingForAllow,
+        waitingForFinal,
+        waitingForConfirm,
+        waitingForFinalSent,
+        finalCompleted,
+        canceled,
+        error,
+        timeout
     }
 
     const handleUnknownError = (error: any) => {
         console.error(error)
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
-        setNextStep(stepMapping.canceled)
+        setNextStep(StepMapping.canceled)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
         setTimeout(onClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
         return (tx: any) => {
-            setNextStep(stepMapping.waitingForFinal);
+            setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
-                    setNextStep(stepMapping.finalCompleted)
+                    setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
@@ -88,7 +88,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
     }
 
     const mainButtonOnClick = () => {
-        setNextStep(stepMapping.requestAskOnwership);
+        setNextStep(StepMapping.start);
         onOpen()
     }
 
@@ -128,7 +128,10 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
         </Button>
         <Modal 
             isOpen={isOpen} 
-            onClose={onClose}
+            onClose={() => {
+                setNextStep(StepMapping.start)
+                onClose()
+            }}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

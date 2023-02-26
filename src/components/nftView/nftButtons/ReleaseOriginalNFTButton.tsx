@@ -44,35 +44,35 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     // Naming of wizard step numbers
-    const stepMapping = {
-        requestReleaseOriginal: 0,
-        requestAnswerReleaseOriginal: 1,
-        waitingForAllow: 2,
-        waitingForFinal: 3,
-        waitingForConfirm: 4,
-        waitingForFinalSent: 5,
-        waitingForFinalRejected: 6,
-        finalCompletedSent: 7,
-        finalCompletedRejected: 8,
-        canceled: 9,
-        error: 10,
-        timeout: 11
+    enum StepMapping {
+        startReleaseOriginal,
+        startAnswerReleaseOriginal,
+        waitingForAllow,
+        waitingForFinal,
+        waitingForConfirm,
+        waitingForFinalSent,
+        waitingForFinalRejected,
+        finalCompletedSent,
+        finalCompletedRejected,
+        canceled,
+        error,
+        timeout
     }
 
     const handleUnknownError = (error: any) => {
         console.error(error)
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
-        setNextStep(stepMapping.canceled)
+        setNextStep(StepMapping.canceled)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
         setTimeout(onClose, dialogsTimeout)
     }
@@ -96,8 +96,8 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
 
     const mainButtonOnClick = () => {
         pendingRequest ?
-            setNextStep(stepMapping.requestAnswerReleaseOriginal) :
-            setNextStep(stepMapping.requestReleaseOriginal)
+            setNextStep(StepMapping.startAnswerReleaseOriginal) :
+            setNextStep(StepMapping.startReleaseOriginal)
         onOpen()
     }
 
@@ -107,8 +107,8 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             nftProtectContract.adjustOwnership(nft.tokenId, '')
                 .then( finalTransactionSent(
                     tokenContract,
-                    stepMapping.waitingForFinalSent,
-                    stepMapping.finalCompletedSent
+                    StepMapping.waitingForFinalSent,
+                    StepMapping.finalCompletedSent
                 ))
                 .catch(
                     handleContractError({
@@ -127,8 +127,8 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0)
             .then( finalTransactionSent(
                 tokenContract,
-                stepMapping.waitingForFinalSent,
-                stepMapping.finalCompletedSent
+                StepMapping.waitingForFinalSent,
+                StepMapping.finalCompletedSent
             ))
             .catch(
                 handleContractError({
@@ -147,8 +147,8 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0)
             .then( finalTransactionSent(
                 tokenContract,
-                stepMapping.waitingForFinalRejected,
-                stepMapping.finalCompletedRejected
+                StepMapping.waitingForFinalRejected,
+                StepMapping.finalCompletedRejected
             ))
             .catch(
                 handleContractError({
@@ -181,7 +181,14 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         </Button>
         <Modal 
             isOpen={isOpen} 
-            onClose={onClose}
+            onClose={() => {
+                setNextStep(
+                    pendingRequest ? 
+                        StepMapping.startReleaseOriginal :
+                        StepMapping.startAnswerReleaseOriginal
+                )
+                onClose()
+            }}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

@@ -25,6 +25,7 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import SecureNFTButton from './SecureNFTButton'
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
+import { AlertCircle } from '@web3uikit/icons'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -39,43 +40,44 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
-    const stepMapping = {
-        'checkPermission': 0,
-        'requestUnwrap': 1,
-        'waitingForAllow': 2,
-        'waitingForFinal': 3,
-        'finalCompleted': 4,
-        'success': 5,
-        'canceled': 6,
-        'error': 7,
-        'timeout': 8
+    enum StepMapping {
+        start,
+        checkPermission,
+        requestUnwrap,
+        waitingForAllow,
+        waitingForFinal,
+        finalCompleted,
+        success,
+        canceled,
+        error,
+        timeout
     }
 
     const handleUnknownError = (error: any) => {
         console.error(error)
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
-        setNextStep(stepMapping.canceled)
+        setNextStep(StepMapping.canceled)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
         setTimeout(onClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
         return (tx: any) => {
-            setNextStep(stepMapping.waitingForFinal);
+            setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
-                    setNextStep(stepMapping.finalCompleted)
+                    setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
@@ -86,9 +88,9 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
         }
     }
 
-    const onClick = () => {
+    const startButtonOnClick = () => {
         try {
-            setNextStep(stepMapping.requestUnwrap);
+            setNextStep(StepMapping.requestUnwrap);
             onOpen()
             nftProtectContract.burn(nft.tokenId, 0)
                 .then( finalTransactionSent(tokenContract) )
@@ -101,6 +103,11 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
         } catch (err: any) {
             handleUnknownError(err)
         }
+    }
+
+    const mainButtonOnClick = () => {
+        setNextStep(StepMapping.start)
+        onOpen()
     }
 
     function getNftImage() {
@@ -120,13 +127,15 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     }
 
     return (<>
-        <Button onClick={ onClick } variant="primary-solid" w="100%">
+        <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
             Unsecure
         </Button>
         <Modal 
             isOpen={isOpen} 
-            onClose={onClose}
-        >
+            onClose={() => {
+                setNextStep(StepMapping.start)
+                onClose()
+            }}        >
             <ModalOverlay 
                 bg='blackAlpha.700'
                 backdropFilter='blur(10px)'
@@ -143,6 +152,55 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column">
+                                <Box
+                                    my={[4]}
+                                    border="1px solid rgba(255, 255, 255, 0.5)"
+                                    borderRadius={["20px"]}
+                                    w="50%" 
+                                    overflow="hidden"
+                                    alignSelf="center"
+                                >  
+                                    { getNftImage() }
+                                </Box>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
+                                </Text>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    pNFT will be burned and original NFT will be sent to your wallet
+                                </Text>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    are you sure?
+                                </Text>
+                                <Flex
+                                    flexWrap="nowrap"
+                                    justifyContent="space-around"
+                                    my={[4, 8]}
+                                >
+                                    <Box minW="40%">
+                                        <Button 
+                                            onClick={ startButtonOnClick }
+                                            variant='primary-solid'
+                                            w="100%"
+                                            my={2}
+                                        >Yes
+                                        </Button>
+                                    </Box>
+                                    
+                                    <Box minW="40%">
+                                        <Button
+                                            onClick={ onClose }
+                                            variant="monochrome-transparent"
+                                            my={2}
+                                            w="100%"
+                                        >No
+                                        </Button>
+                                    </Box>
+                                </Flex>
+                            </Flex>
+                        </SwitchableOutside> 
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">

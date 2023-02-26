@@ -24,6 +24,7 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
+import { AlertCircle } from '@web3uikit/icons'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -39,44 +40,45 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
-    const stepMapping = {
-        'checkPermission': 0,
-        'requestConcrete': 1,
-        'requestAll': 2,
-        'requestWrap': 3,
-        'waitingForAllow': 4,
-        'waitingForFinal': 5,
-        'finalCompleted': 6,
-        'canceled': 7,
-        'error': 8,
-        'timeout': 9
+    enum StepMapping {
+        start,
+        checkPermission,
+        requestConcrete,
+        requestAll,
+        requestWrap,
+        waitingForAllow,
+        waitingForFinal,
+        finalCompleted,
+        canceled,
+        error,
+        timeout
     }
 
     const handleUnknownError = (error: any) => {
         console.error(error)
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
-        setNextStep(stepMapping.canceled)
+        setNextStep(StepMapping.canceled)
         setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
-        setNextStep(stepMapping.error)
+        setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
         setTimeout(onClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
         return (tx: any) => {
-            setNextStep(stepMapping.waitingForFinal);
+            setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
-                    setNextStep(stepMapping.finalCompleted)
+                    setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
@@ -99,7 +101,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             return
         }
 
-        setNextStep(stepMapping.checkPermission);
+        setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
             .then((result: any) => {
@@ -111,7 +113,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 }
                 // check if transfer already approved 
                 if (checkApproved(result)) {
-                    setNextStep(stepMapping.requestWrap);
+                    setNextStep(StepMapping.requestWrap);
                     console.log('Token transfer already approved')
                     wrapMethodCall()
                         .then( finalTransactionSent(tokenContract) )
@@ -119,17 +121,17 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                             handleContractError(wrapErrorMapping)
                         )
                 } else {
-                    setNextStep(stepMapping.requestConcrete)
+                    setNextStep(StepMapping.requestConcrete)
                     console.log('Asking to approve token transfer')
                     setApproveMethodCall()
                         .then((tx: any) => {
-                            setNextStep(stepMapping.waitingForAllow)
+                            setNextStep(StepMapping.waitingForAllow)
                             console.log('Waiting for TX', tx.hash);
                             // Waiting for transaction to complete
                             tokenContract.provider.once(tx.hash, (receipt) => {
                                 if (receipt.status === 1) {
                                     // after mined fire wrap
-                                    setNextStep(stepMapping.requestWrap)
+                                    setNextStep(StepMapping.requestWrap)
                                     console.log("Transaction successful", tx.hash);
                                     wrapMethodCall()
                                         .then( finalTransactionSent(tokenContract) )
@@ -151,7 +153,12 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             })
     }
 
-    const onClick = () => {
+    const mainButtonOnClick = () => {
+        setNextStep(StepMapping.start)
+        onOpen()
+    }
+
+    const startButtonOnClick = () => {
         const tokenContractAddress = nft.tokenAddress.format()
         const tokenId = nft.tokenId
         try {
@@ -197,7 +204,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
 
     return (<>
         <Button
-            onClick={ onClick }
+            onClick={ mainButtonOnClick }
             variant="primary-solid"
             w="100%"
         >Protect NFT
@@ -206,7 +213,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
         <Modal 
             isOpen={isOpen} 
-            onClose={onClose}
+            onClose={() => {
+                setNextStep(StepMapping.start)
+                onClose()
+            }}
         >
             <ModalOverlay 
                 bg='blackAlpha.700'
@@ -222,6 +232,40 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
+                    <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Box
+                                    my={[4]}
+                                    border="1px solid rgba(255, 255, 255, 0.5)"
+                                    borderRadius={["20px"]}
+                                    w="50%" 
+                                    overflow="hidden"
+                                    alignSelf="center"
+                                >  
+                                    { getNftImage() }
+                                </Box>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
+                                </Text>
+                                <Box w="100%">
+                                    <Button 
+                                        onClick={ startButtonOnClick }
+                                        variant="primary-solid"
+                                        my={2}
+                                        w="100%"
+                                    >PROTECT NFT
+                                    </Button>
+                                </Box>
+                                <Button 
+                                    onClick={onClose}
+                                    variant="monochrome-transparent"
+                                    w="100%"
+                                    mt={[4, 8]}
+                                >Close
+                                </Button>
+                            </Flex>
+                        </SwitchableOutside> 
+
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
@@ -247,7 +291,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                             </Flex>
-        </SwitchableOutside>  
+                        </SwitchableOutside>  
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex 
                                 flexDirection="column"
