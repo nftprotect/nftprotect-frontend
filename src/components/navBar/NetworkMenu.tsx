@@ -51,33 +51,33 @@ const NetworkMenu = () => {
                 rightIcon={canSwitchNetwork && <ChevronDownIcon />}
                 py={[2, 4]}
                 px={[3, 6]}
-                my={2}
-                mr={2}
+                mr={4}
                 fontSize={['xs', 'sm', 'md']}
                 bg="none"
-                _active={{
-                    borderRadius: "13px",
-                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                    color: "#FFF"
-                }}
+                border="1px solid #FFF"
+                borderRadius="13px"
                 _hover={{
-                    border: "2px",
-                    borderColor: "#BC9CFF",
-                    borderRadius: "13px",
+                    bgColor: "rgba(255, 255, 255, 0.15)"
+                }}
+                _active={{
+                    bgColor: "rgba(255, 255, 255, 0.15)"
                 }}
             >
                 { (currentChain) ? currentChain?.name : 'Choose network' }
             </MenuButton>
-            { canSwitchNetwork && <MenuList>
+            { canSwitchNetwork && <MenuList bgColor="#000">
                     { supportedChains.map(({ name, id }) => (
                             <MenuItem
                                 key={id}
                                 value={id} 
                                 onClick={handleChange}
-                                borderRadius="13px"
                                 fontSize={['xs', 'sm', 'md']}
+                                bg="none"
                                 _hover={{
-                                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                    bgColor: "rgba(255, 255, 255, 0.15)"
+                                }}
+                                _active={{
+                                    bgColor: "rgba(255, 255, 255, 0.15)"
                                 }}
                             >
                                 { name }

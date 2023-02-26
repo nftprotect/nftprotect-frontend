@@ -1,12 +1,14 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Twitter } from '@web3uikit/icons'
+import { Twitter } from '@web3uikit/icons';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
+import { deIpfsUrl } from '../../../utils/helpers';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
 import {
     Button,
     Box,
+    Image,
     Card, 
     CardBody,
     Flex,
@@ -25,10 +27,11 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
+import {AlertCircle} from '@web3uikit/icons'
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: EvmNftMetadataish // metadata of EvmNft can be empty, so passing it separately
+    metadata: any // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function // function to update nft list
     tokenContract: Contract,
     pendingRequest: number | undefined
@@ -44,13 +47,16 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
     const stepMapping = {
         requestReleaseOriginal: 0,
         requestAnswerReleaseOriginal: 1,
-        waitingForFinalSent: 2,
-        waitingForFinalRejected: 3,
-        finalCompletedSent: 4,
-        finalCompletedRejected: 5,
-        canceled: 6,
-        error: 7,
-        timeout: 8
+        waitingForAllow: 2,
+        waitingForFinal: 3,
+        waitingForConfirm: 4,
+        waitingForFinalSent: 5,
+        waitingForFinalRejected: 6,
+        finalCompletedSent: 7,
+        finalCompletedRejected: 8,
+        canceled: 9,
+        error: 10,
+        timeout: 11
     }
 
     const handleUnknownError = (error: any) => {
@@ -155,90 +161,280 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
         }
     }
 
+    function getNftImage() {
+        if (metadata) {
+            let imgUrl = deIpfsUrl(metadata.image)
+            return (<Image 
+                    src={ imgUrl } 
+                    alt="NFT image" 
+                    w="100%"
+                />)
+        }
+    }
+
     return (<>
         <Button
-            type='button'
             onClick={ mainButtonOnClick }
-            my={2}
-            justifyContent="flex-start"
-            leftIcon={<Twitter fontSize='20px'/>}
+            variant="primary-solid"
             w="100%"
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
-        >Release original
+        >Transfer original
         </Button>
         <Modal 
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay 
+                bg='blackAlpha.700' 
+                backdropFilter='blur(10px)' 
+            />
             <ModalContent
-                w={{base: "90vw", sm: "70vw", xl: "50vw"}}
-                maxW="700px"
+                w={["15rem", "20rem", "25rem"]}
+                bg="#FFF"
+                border="2px solid #000"
+                borderRadius="30px"
+                py={[4, 8]}
             >
-                <ModalHeader>Transfer original NFT</ModalHeader>
+                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Transfer the original NFT to the new NFT owner</ModalHeader>
                 <ModalBody>
                     <Wizard>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Press button to send original NFT {metadata?.name || nft.name} to wNFT owner.
-                                <Button type='button' onClick={ startButtonOnClick }>
-                                    Start
-                                </Button>
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Press button to send original NFT {metadata?.name || nft.name} to wNFT owner.
+                                </Text>
+                                <Box w="50%">
+                                    <Button 
+                                        onClick={ startButtonOnClick }
+                                        variant='primary-solid'
+                                        my={2}
+                                    >Start
+                                    </Button>
+                                </Box>
+                            </Flex>
                         </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                {'Press "Send" button to send original NFT {metadata?.name || nft.name} to wNFT owner or "Reject" button to reject a request.'}
-                                <Button type='button' onClick={ sendButtonOnClick }>
-                                    Send
-                                </Button>
-                                <Button type='button' onClick={ rejectButtonOnClick }>
-                                    Reject
-                                </Button>
-                            </Box>
+
+                        <SwitchableOutside nextStepNumber={nextStep} >
+                            <Flex flexDirection="column">
+                                <Box
+                                    my={[4]}
+                                    border="1px solid rgba(255, 255, 255, 0.5)"
+                                    borderRadius={["20px"]}
+                                    w="50%" 
+                                    overflow="hidden"
+                                    alignSelf="center"
+                                >  
+                                    { getNftImage() }
+                                </Box>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
+                                </Text>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Are you sure you want to transfer original NFT to a new owner?
+                                </Text>
+                                
+                                <Flex
+                                    flexWrap="nowrap"
+                                    justifyContent="space-around"
+                                    my={[4, 8]}
+                                >
+                                    <Box minW="40%">
+                                        <Button 
+                                            onClick={ sendButtonOnClick }
+                                            variant='primary-solid'
+                                            w="100%"
+                                            my={2}
+                                        >Yes
+                                        </Button>
+                                    </Box>
+                                    
+                                    <Box minW="40%">
+                                        <Button
+                                            onClick={ rejectButtonOnClick }
+                                            variant="monochrome-transparent"
+                                            my={2}
+                                            w="100%"
+                                        >No
+                                        </Button>
+                                    </Box>
+                                </Flex>
+                                <Flex flexWrap="nowrap" alignItems="center" border="1px solid red" borderRadius={["20px"]} p={[2, 4]}>
+                                    <Box color="red" mr={[2, 4]} fontSize={['30px', '50px']}>
+                                        <AlertCircle />
+                                    </Box>
+                                    <Flex flexDirection="column">
+                                            <Heading textTransform="uppercase" fontSize={["md", "lg", "xl"]} mb={[2, 4]}>
+                                                Warning!
+                                            </Heading>
+                                            <Text fontSize={["sm", "md", "lg"]}>
+                                                Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is <b>irreversible</b>!
+                                            </Text>
+                                    </Flex>
+                                </Flex>
+                            </Flex>
                         </SwitchableOutside>
+                        
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Waiting for transaction to complete. After transaction complete your NFT will be trnasfered to new owner.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Please allow access and transfer of your NFT
+                                </Text>
+                            </Flex>
+                        </SwitchableOutside> 
+                        
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Wait for transaction to confirm
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
+
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Confirm the transaction in the wallet
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Transaction complete! You sent {metadata?.name || nft.name} to a new owner.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Waiting for transaction to complete. After transaction complete your NFT will be trnasfered to new owner.
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Transaction complete! You successfully rejected transfer of your NFT.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                You canceled the transaction in your wallet.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
+                                    Transaction complete!
+                                </Heading>
+                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    You sent <b>{metadata?.name || nft.name}</b> to a new owner.
+                                </Text>
+                                <Box w="50%" my={[2, 4]}>
+                                    <Button 
+                                        onClick={onClose}
+                                        variant="monochrome-transparent"
+                                        w="100%"
+                                    >Close
+                                    </Button>
+                                </Box>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Some error occured. Transaction failed.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
+                                    Transaction complete!
+                                </Heading>
+                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    You successfully rejected transfer of your NFT.
+                                </Text>
+                                <Box w="50%" my={[2, 4]}>
+                                    <Button 
+                                        onClick={onClose}
+                                        variant="monochrome-transparent"
+                                        w="100%"
+                                    >Close
+                                    </Button>
+                                </Box>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Transaction is still in progress.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
+                                    Fail!
+                                </Heading>
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                    You canceled the transaction in your wallet.
+                                </Text>
+                            </Flex>
+                        </SwitchableOutside>
+
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
+                                    Some error occured
+                                </Heading>
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
+                                    Transaction failed.
+                                </Text>
+                            </Flex>
+                        </SwitchableOutside>
+
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
+                                    Transaction is still in progress...
+                                </Text>
+                                <Spinner 
+                                    my={[4]} 
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='#BC9CFF'
+                                    size={['lg', 'xl']}>
+                                </Spinner>
+                            </Flex>
                         </SwitchableOutside>
                     </Wizard>
                 </ModalBody>

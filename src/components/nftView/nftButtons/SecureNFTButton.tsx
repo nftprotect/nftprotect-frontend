@@ -1,16 +1,15 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Sandbox } from '@web3uikit/icons'
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
+import { deIpfsUrl } from '../../../utils/helpers'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 import { useState } from 'react';
 import {
     Button,
     Box,
-    Card, 
-    CardBody,
     Flex,
+    Image,
     Heading,
     Text,
     Modal,
@@ -19,8 +18,7 @@ import {
     ModalContent,
     ModalHeader,
     ModalCloseButton,
-    Spinner,
-    useDisclosure,
+    useDisclosure
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
@@ -29,7 +27,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: EvmNftMetadataish, // metadata of EvmNft can be empty, so passing it separately
+    metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     tokenContract: Contract
 }
@@ -88,7 +86,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             })
         }
     }
-    
+
     const secureNFT = (
         tokenContract: Contract,
         checkApprovedMethodCall: Function,
@@ -181,23 +179,27 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
         }
     }
 
+    function getNftImage() {
+        let nftImage = <div />
+        if (metadata) {
+            const imgUrl = deIpfsUrl(metadata?.image || '')
+            nftImage = <Image 
+                        src={ imgUrl }
+                        my={[4]}
+                        border="1px solid rgba(255, 255, 255, 0.5)"
+                        borderRadius={["20px"]}
+                        h="auto"
+                        w="60%"
+                    />
+            }
+        return nftImage
+    }
+
     return (<>
         <Button
-            type='button'
             onClick={ onClick }
-            my={2}
-            justifyContent="flex-start"
-            leftIcon={<Sandbox fontSize='20px'/>}
+            variant="primary-solid"
             w="100%"
-            bg="none"
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="12px"
-            fontSize={['xs', 'sm', 'md', 'lg']}
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
         >Protect NFT
         </Button>
 
@@ -206,85 +208,152 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
+            <ModalOverlay 
+                bg='blackAlpha.700'
+            />
             <ModalContent
-                w={{base: "90vw", sm: "70vw", xl: "50vw"}}
-                maxW="700px"
+                w={["15rem", "20rem", "25rem"]}
+                bg="#FFF"
+                border="2px solid #000"
+                borderRadius="30px"
+                py={[4, 8]}
             >
-                <ModalHeader>Securing your NFT</ModalHeader>
-                <ModalCloseButton />
+                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Protecting <br /> your asset...</ModalHeader>
+                <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex 
-                                flexDirection="column"
-                            >
-                                <Text>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
                                     Checking permission to transfer token...
                                 </Text>
-                                <Spinner 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='blue.500'
-                                    size='xl'
-                                    my={[8]}
-                                    alignSelf="center"
-                                />
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
                         </SwitchableOutside>
+
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+
+                                { getNftImage() }
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
+                                </Text>
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Allow access to and transfer
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
+                            </Flex>
+        </SwitchableOutside>  
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex 
                                 flexDirection="column"
                             >
-                                <Text>
-                                    Allow access to and transfer of your <i>{metadata?.name || nft.name}</i>?
-                                </Text>
-                                <Text>
-                                    This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500" mb={[8]} textAlign="center" >
+                                    Allow access to and transfer of <b>ALL YOUR NFTs </b>???
                                 </Text>
                                 
+                                <Text fontSize={["sm", "md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                    This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
+                                </Text>
+                            </Flex>
+                        </SwitchableOutside> 
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+
+                                { getNftImage() }
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
+                                    {metadata?.name || nft.name}
+                                </Text>
+
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
+                                    Allow transfer to complete the process
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
                             </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Allow access to and transfer of ALL YOUR NFTs? This allows a third party to access and transfer the following NFTs without further notice until you revoke its access.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[4, 8]} textAlign="center">
+                                    Waiting for transaction to complete.
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
+                                    After that you'll be asked for confirmation for wrapping.
+                                </Text>
+                            </Flex>
+                        </SwitchableOutside>
+
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[4, 8]} textAlign="center">
+                                    Waiting for transaction to complete.
+                                </Text>
+                                { getNftImage() }
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" >
+                                    After it will be completed, your NFT will be protected.
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
+                            </Flex>
+                        </SwitchableOutside> 
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]}  fontWeight="500">
+                                    Success!
+                                </Heading>
+                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
+                                </Image>
+                                <Box w="80%">
+                                    <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                        Your asset is now protected!
+                                    </Text>
+                                    <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
+                                        Enjoy your new life in protected world!
+                                    </Text>
+                                </Box>
+                            </Flex>
+                        </SwitchableOutside>
+                         <SwitchableOutside nextStepNumber={nextStep} >
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
+                                    Fail!
+                                </Heading>
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                    You cancelled a transaction
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Allow transfer of your {metadata?.name || nft.name} to complete process.
-                            </Box>
+                            <Flex flexDirection="column" alignItems="center">
+                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
+                                    Some error occured
+                                </Heading>
+                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
+                                </Image>
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                    Transaction failed.
+                                </Text>
+                            </Flex>
                         </SwitchableOutside>
+
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                { "Waiting for transaction to complete. After that you'll be asked for confirmation for wrapping." }
-                            </Box>
-                        </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Waiting for transaction to complete. After it will be completed, your NFT {metadata?.name || nft.name} will be protected.
-                            </Box>
-                        </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Transaction complete! Your {metadata?.name || nft.name} is now secured.
-                            </Box>
-                        </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                You canceled the transaction in your wallet.
-                            </Box>
-                        </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Some error occured. Transaction failed.
-                            </Box>
-                        </SwitchableOutside>
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Box>
-                                Transaction is still in progress.
-                            </Box>
+
+                            <Flex flexDirection="column" alignItems="center">
+                                <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
+                                    Transaction is still in progress...
+                                </Text>
+                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
+                                </Image>
+                            </Flex>
                         </SwitchableOutside>
                     </Wizard>
                 </ModalBody>

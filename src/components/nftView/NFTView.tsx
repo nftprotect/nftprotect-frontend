@@ -1,7 +1,16 @@
 import {
-    SimpleGrid,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionIcon,
+    AccordionPanel,
+    Grid,
     Heading,
-    Box,
+    InputGroup,
+    Input,
+    IconButton,
+    Flex,
+    useDisclosure
 } from '@chakra-ui/react'
 import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
@@ -12,6 +21,7 @@ import { useAppContext } from '../../context/AppContextProvider';
 const NFTView = () => {
 
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
+    const { isOpen, onToggle } = useDisclosure()
 
     const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: currentChain.id,
@@ -41,61 +51,94 @@ const NFTView = () => {
     const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
 
     return (
-        <main>
-            <Box
-                borderBottom="1px dotted #000"
-            >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My NFTs:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { ownNftElements }
-                </SimpleGrid>
-            </Box>
+        <>
+            <Accordion border="none" defaultIndex={[0, 1, 2]} allowMultiple>
+                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                    <Flex color="#FFF" alignItems="center" justifyContent="space-between">
+                        <AccordionButton 
+                            fontSize={['lg', 'xl', '2xl']} 
+                            px="0" py={[2, 4]}
+                            w="15em"
+                        >
+                            <AccordionIcon mr={[2]} />
+                            <Heading fontSize={['lg', 'xl', '2xl']}>
+                                Your NFT
+                            </Heading>
+                        </AccordionButton>
+                    </Flex>
 
-            <Box
-                borderBottom="1px dotted #000"
-            >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My wNFTs:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { wNftElements }
-                </SimpleGrid>
-            </Box>
+                    <AccordionPanel pb={4}>
+                        <Grid
+                            templateColumns={{
+                                base: "repeat(auto-fill, minmax(6em, 1fr))",
+                                sm: "repeat(auto-fill, 10em)",
+                                md: "repeat(auto-fill, 10em)",
+                                lg: "repeat(auto-fill, 14em)", 
+                                xl: "repeat(auto-fill, 16em)"
+                            }}
+                            gap={[6]}
+                            my={[4, 8]}
+                        >
+                            { ownNftElements }
+                        </Grid>
+                    </AccordionPanel>
+                </AccordionItem>
 
-            <Box
-                borderBottom="1px dotted #000"
-            >
-                <Heading
-                    fontSize={['lg', 'xl', '2xl']}
-                    ml={['1em']}
-                    mt={[4]}
-                >My wNFTs at another adresses:
-                </Heading>
-                <SimpleGrid 
-                    minChildWidth={['8em', '10em', '12em']}
-                    spacing={['1em']}
-                    mt={[4, 8]}
-                >
-                    { transferedWNftElements }
-                </SimpleGrid>
-            </Box>
-        </main>
+                <AccordionItem px={['1rem', '3rem']}>
+                    <Flex alignItems="center" justifyContent="space-between">
+                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
+                        <AccordionIcon mr={[2]} />
+                            <Heading fontSize={['lg', 'xl', '2xl']}>
+                                NFT without pNFT
+                            </Heading>
+                        </AccordionButton>
+                    </Flex>
+                        
+                    <AccordionPanel pb={4}>
+                        <Grid
+                            templateColumns={{
+                                base: "repeat(auto-fill, minmax(6em, 1fr))",
+                                sm: "repeat(auto-fill, 10em)",
+                                md: "repeat(auto-fill, 10em)",
+                                lg: "repeat(auto-fill, 14em)", 
+                                xl: "repeat(auto-fill, 16em)"
+                            }}
+                            gap={[6]}
+                            my={[4, 8]}
+                        >
+                            { transferedWNftElements }
+                        </Grid>
+                    </AccordionPanel>
+                </AccordionItem>
+                
+                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                    <Flex color="#FFF" alignItems="center" justifyContent="space-between">
+                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
+                            <AccordionIcon mr={[2]} />
+                            <Heading fontSize={['lg', 'xl', '2xl']}>
+                                Your pNFT
+                            </Heading>
+                        </AccordionButton>
+                    </Flex>
+                        
+                    <AccordionPanel pb={4}>
+                        <Grid
+                            templateColumns={{
+                                base: "repeat(auto-fill, minmax(6em, 1fr))",
+                                sm: "repeat(auto-fill, 10em)",
+                                md: "repeat(auto-fill, 10em)",
+                                lg: "repeat(auto-fill, 14em)", 
+                                xl: "repeat(auto-fill, 16em)"
+                            }}
+                            gap={[6]}
+                            my={[4, 8]}
+                        >
+                            { wNftElements }
+                        </Grid>
+                    </AccordionPanel>
+                </AccordionItem>
+            </Accordion>
+        </>
 )}
 
 export default NFTView

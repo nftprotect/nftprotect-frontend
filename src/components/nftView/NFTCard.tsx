@@ -193,10 +193,13 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     if (metadata) {
         // Metadata already loaded, showing it
         const img = deIpfsUrl(metadata?.image)
-        result = <Image src={ img } height='12em'/>
+        result = <Image 
+                    src={ img } 
+                    minH={ {base: "6em", sm: "10em", md: "9em", lg: "13em", xl: "15em"} }
+                />
     } else if (!fetchEnded) {
         // Metadata is still loading, showing loading
-        result = <Spinner size='xl' />
+        result = <Spinner size='xl' mt={4} />
     } else {
         // No metadata, showing the plug
         result = <Image src={'/download.png'} height='12em'/>
@@ -204,9 +207,11 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     return (
         <Card 
             variant='elevated'
-            width={['14em']}
+            mb={[2, 4]}
         >
-            <CardBody>
+            <CardBody
+                p={[2, 5]}
+            >
                 <Flex
                     flexDirection="column"
                     justifyContent="space-between"
@@ -215,16 +220,15 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                     <Flex
                         flexDirection="column"
                     >
-                        <Box>{ result }</Box>
+                        <Box alignSelf="center" >{ result }</Box>
 
-                        <Text
-                            my={[2, 4]}
-                            fontSize={['md', 'lg', 'xl']}
-                        >
+                        <Text my={[2, 4]} fontSize={['xs', 'sm', 'md', 'lg']}>
                             { metadata?.name || nft.name }
                         </Text>
 
-                        <Text>x{ nft.amount }</Text>
+                        <Text fontSize={['2xs', 'sm', 'md']} >
+                            { nft.name }
+                        </Text>
                     </Flex>
 
                     <Box>

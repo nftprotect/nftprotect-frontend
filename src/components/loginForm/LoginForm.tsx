@@ -2,6 +2,7 @@ import ConnectWallet from './ConnectWallet/ConnectWallet'
 import ApproveConnection from './ApproveConnection'
 import DIDVerification from './DIDVerification'
 import { Wizard } from 'react-use-wizard';
+import { Wallet } from '@web3uikit/icons'
 import {
     Button,
     Modal,
@@ -20,34 +21,29 @@ const LoginForm = () => {
 
     return (
         <>
-        { !active && <Button 
-            onClick={onOpen}
-            border="2px"
-            borderColor="#BC9CFF"
-            borderRadius="13px"
-            fontSize={['xs', 'sm', 'md']}
-            py={[2, 4]}
-            px={[3, 6]}
-            my={2}
-            mr={2}
-            bg="none"
-            _hover={{
-                bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                color: "#FFF"
-            }}
-        >
-            Connect Wallet
-        </Button> }
+        { !active && 
+            <Button 
+                variant='monochrome-transparent'
+                onClick={onOpen}
+                leftIcon={<Wallet fontSize='20px'/>}
+            >Connect Wallet
+            </Button> 
+        }
         
         <Modal 
             isOpen={isOpen} 
             onClose={onClose}
         >
-            <ModalOverlay />
-            
+            <ModalOverlay 
+                bg='blackAlpha.700'
+                backdropFilter='blur(10px)'
+            />
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
+                border="2px solid #000"
+                borderRadius="30px"
+                overflow="hidden"
             >
                 <ModalCloseButton />
                 <ModalBody p="0">

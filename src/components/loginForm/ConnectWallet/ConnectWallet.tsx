@@ -21,11 +21,12 @@ const ConnectWallet = () => {
                 w={{base: '100%', md: '50%'}}
                 px={[4, 8]}
                 py={[4, 8]}
-                bgColor="#C3D4FF"
+                bgColor="#5F38C8"
+                color="#FFF"
                 boxSizing="border-box"
             >
                 <Image 
-                    src='/images/logo-blue.svg' 
+                    src='/images/logomark.svg' 
                     alt='Logo' 
                     w={['45px', '45px', '75px']}
                     mb={[2, 4]}

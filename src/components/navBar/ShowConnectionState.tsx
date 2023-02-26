@@ -17,7 +17,7 @@ import {
     Tooltip,
     VisuallyHiddenInput
 } from '@chakra-ui/react'
-import { ChevronDownIcon, CopyIcon  } from '@chakra-ui/icons'
+import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
 import CouponBalance from './CouponBalance'
 import Davatar from '@davatar/react'
@@ -50,23 +50,18 @@ const ShowConnectionState = () => {
             <MenuButton 
                 as={Button} 
                 rightIcon={<ChevronDownIcon />}
-                borderRadius="22px"
+                border="1px solid #FFF"
+                borderRadius="13px"
                 textTransform="uppercase"
                 fontSize={['xs', 'sm', 'md']}
                 py={[2, 4]}
                 px={[3, 6]}
-                my={2}
-                mr={2}
                 bg="none"
                 _hover={{
-                    border: "2px",
-                    borderColor: "#BC9CFF",
-                    borderRadius: "13px",
+                    bgColor: "rgba(255, 255, 255, 0.15)"
                 }}
                 _active={{
-                    borderRadius: "13px",
-                    bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                    color: "#FFF"
+                    bgColor: "rgba(255, 255, 255, 0.15)"
                 }}
             >
                 {active && typeof account === 'string' ? (
@@ -97,7 +92,7 @@ const ShowConnectionState = () => {
                             >
                                 <Box
                                     mr={[4]}
-                                    border="4px"
+                                    border="2px"
                                     borderColor="#BC9CFF"
                                     borderRadius={['2em']}
                                 >
@@ -124,7 +119,7 @@ const ShowConnectionState = () => {
                                         h="2em"
                                         p={[1]}
                                         borderRadius="1em"
-                                        bgColor="rgba(211, 211, 211, .6)"
+                                        bgColor="gray.200"
                                         cursor="pointer"
                                         _hover={{
                                             bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
@@ -143,7 +138,7 @@ const ShowConnectionState = () => {
                                         p={[1]}
                                         mx={[1]}
                                         borderRadius="1em"
-                                        bgColor="rgba(211, 211, 211, .6)"
+                                        bgColor="gray.200"
                                         cursor="pointer"
                                         _hover={{
                                             bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",

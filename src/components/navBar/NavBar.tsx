@@ -15,24 +15,36 @@ const NavBar = () => {
     const { active } = useAppContext()
 
     return (
-        <Box 
+        <Box
+            bgColor="#000"
+            color="#FFF"
             maxW="2800px"
-            mt={12}
-            p={0}
+            p={[3, 6]}
         >
             <nav key="navBar">
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
                     flexWrap={{base: 'wrap', md: 'nowrap'}}
-                    m={[3, 6]}
+                    
                 >
-                    <Image
-                        src='/images/logo.svg'
-                        alt='Logo'
-                        h={{base: '30px', md: 'auto'}}
-                    />
-                    <Flex mx={[0, 0, 6, 10]}>
+                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                        <Image
+                            src='/images/logomark.svg'
+                            alt='Logo'
+                            h={{base: '48px', sm: 'auto'}}
+                        />
+                        <Image
+                            src='/images/logotype.svg'
+                            alt='Brand'
+                            display={{base: 'none', md: 'flex'}}
+                            h={{base: '48px', sm: 'auto'}}
+                        />
+                    </Flex>
+                    
+                    <Flex 
+                        py={[4, 0]}
+                    >
                         <MainMenu />
                         <LoginForm/>
                         { active && <NetworkMenu /> }
