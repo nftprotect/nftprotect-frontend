@@ -274,7 +274,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                                     If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court.
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    The button to open a dispute will appear on the DApp's main page
+                                    {"The button to open a dispute will appear on the DApp's main page"}
                                 </Text>
                                 <Box w="50%" my={[8]}>
                                     <Button
@@ -286,11 +286,11 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract}: Bu
                                 </Box>
                                 <Flex flexWrap="nowrap" alignItems="center" border="1px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]}>
                                     <Box color="#2D7BD6" mr={[2, 4]} fontSize={['30px', '50px']}>
-                                        <a href="https://kleros.io/" target="_blank" color="#2D7BD6"><Image src='/images/kleros_logo.png' alt="Kleros logo" w="150px"/></a>
+                                        <a href="https://kleros.io/" target="_blank" rel="noreferrer" color="#2D7BD6"><Image src='/images/kleros_logo.png' alt="Kleros logo" w="150px"/></a>
                                     </Box>
                                     <Flex flexDirection="column">
                                         <Text fontSize={["sm", "md", "lg"]}>
-                                            <a href="https://kleros.io/" target="_blank" color="#2D7BD6">Kleros</a> is an open source online dispute resolution protocolthat uses blockchain and crowdsourcing to resolve disputes fairly.
+                                            <a href="https://kleros.io/" target="_blank" rel="noreferrer" color="#2D7BD6">Kleros</a> is an open source online dispute resolution protocolthat uses blockchain and crowdsourcing to resolve disputes fairly.
                                         </Text>
                                     </Flex>
                                 </Flex>

@@ -109,7 +109,7 @@ const ShowNotifications = () => {
                         overflowY={'scroll'}
                     >
                         { listNotifications().map((notification:any) => {
-                            return <NotificationAlert notification={notification}/>
+                            return <NotificationAlert key={notification.id} notification={notification}/>
                         }) }
                     </Box>
                 </AccordionPanel>

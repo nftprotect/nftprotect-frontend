@@ -329,7 +329,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center">
-                                    After that you'll be asked for confirmation for wrapping.
+                                    {"After that you'll be asked for confirmation for wrapping."}
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
