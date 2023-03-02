@@ -16,9 +16,13 @@ const NavBar = () => {
 
     return (
         <Box
+            position="sticky"
+            top="0"
+            zIndex="1"
             bgColor="#000"
             color="#FFF"
-            maxW="2800px"
+            w="100%"
+            maxW="2200px"
             p={[3, 6]}
         >
             <nav key="navBar">
