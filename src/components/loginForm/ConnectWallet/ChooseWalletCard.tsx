@@ -28,7 +28,7 @@ const ChooseWalletCard = ({nextStep}: any) => {
                     alignSelf="center"
                     borderBottom="2px dotted #C3D4FF"
                 >
-                    Available wallets
+                    Available wallets 2
                 </Heading>
             </Box>
             
