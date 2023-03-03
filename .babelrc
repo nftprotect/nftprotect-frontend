@@ -1,0 +1,35 @@
+{
+    
+    "presets": [
+      "@babel/preset-next",
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          },
+          "modules": false
+        }
+      ],
+      "@babel/preset-react",
+      "@babel/preset-flow",
+      "@lingui/babel-preset-react"
+    ],
+    "plugins": [
+        ["@babel/plugin-transform-react-jsx", {
+            "runtime": "automatic"
+        }],
+        "@babel/plugin-proposal-export-default-from",
+        "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        ["@babel/plugin-proposal-decorators", { "legacy": true }]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "@babel/plugin-transform-modules-commonjs"
+        ]
+      }
+    }
+  }

@@ -17,6 +17,7 @@ import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotificationContext } from '../context/NotificationContextProvider'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { Trans } from '@lingui/react'
 
 const Home: NextPage = () => {
 
@@ -108,7 +109,7 @@ const Home: NextPage = () => {
                                 mt={[4, 6]}
                                 fontSize={['xs', 'sm', 'md']}
                                 color="rgba(31, 32, 65, .9)"
-                            > Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)
+                            > <Trans id='collect-wallet'>Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)</Trans>
                             </Text>
                             <Text
                                 fontSize={['xs', 'sm', 'md']} 
