@@ -25,6 +25,7 @@ import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../NFTCard';
 import { generateArbitratorExtraData, KlerosCourts } from '../../../utils/kleros';
+import { Trans } from '@lingui/react'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -153,7 +154,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                 borderRadius="30px"
                 py={[4, 8]}
             >
-                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Open case in Kleros</ModalHeader>
+                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans id='Arbitrare-modalhead'> Open case in Kleros</Trans></ModalHeader>
                 <ModalBody>
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
@@ -191,7 +192,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                         variant="primary-solid"
                                         my={2}
                                         w="100%"
-                                    >Initiate a dispute
+                                    >
+                                        <Trans id='button-initiateDispute'>Initiate a dispute</Trans>
                                     </Button>
                                 </Box>
                                 <Button 
@@ -199,7 +201,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     variant="monochrome-transparent"
                                     w="100%"
                                     mt={[4, 8]}
-                                >Close
+                                >
+                                    <Trans id='button-close'>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
@@ -207,7 +210,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Welcome to Kleros,
+                                <Trans id='Arbitrare-step8-desc'> Welcome to Kleros,
                                     <br></br>
                                     where you can resolve disputes fairly and transparently. 
                                     <br></br>
@@ -217,7 +220,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     <br></br>
                                     Test network is free, 
                                     <br></br>
-                                    main network costs money.
+                                    main network costs money.</Trans>
                                 </Text>
                                 
                                 <Box w="100%">
@@ -226,7 +229,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                         variant="primary-solid"
                                         my={2}
                                         w="100%"
-                                    >Initiate a dispute
+                                    >
+                                        <Trans id='button-initiateDispute'>Initiate a dispute</Trans>
                                     </Button>
                                 </Box>
                                 <Button 
@@ -234,7 +238,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     variant="monochrome-transparent"
                                     w="100%"
                                     mt={[4, 8]}
-                                >Close
+                                >
+                                    <Trans id='button-close'>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside> 
@@ -250,7 +255,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Confirm the transaction in the wallet
+                                <Trans id='Arbitrare-step14'>Confirm the transaction in the wallet</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -266,7 +271,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Waiting for transaction to confirm...
+                                <Trans id='Arbitrare-step15'>Wait for transaction to confirm...</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -274,24 +279,25 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                    Your case sent to Kleros
+                                <Trans id='Arbitrare-step16-head'>Your case sent to Kleros</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    If you want to attach any additional evidence, you can do it int the next 48 hours by this link:
+                                <Trans id='Arbitrare-step16-desc'>If you want to attach any additional evidence, you can do it int the next 48 hours by this link:</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    case {pendingRequest.disputeId}
+                                <Trans id='Arbitrare-step16-case'>case {pendingRequest.disputeId}</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Follow the status of the case through our app or at the Kleros website.
+                                <Trans id='Arbitrare-step16-desc2'>Follow the status of the case through our app or at the Kleros website.</Trans>
                                 </Text>
                                 <Box w="50%" my={[8]}>
                                     <Button
                                         onClick={onClose}
                                         variant="monochrome-transparent"
                                         w="100%"
-                                    >Close
+                                    >
+                                        <Trans id='button-close'>Close</Trans>
                                     </Button>
                                 </Box>
                             </Flex>
@@ -300,12 +306,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
-                                    Fail!
+                                    <Trans id='error-head-fail'>Fail!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
-                                    You canceled the transaction in your wallet.
+                                    <Trans id='error-desc-fail'>You canceled the transaction in your wallet.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -313,12 +319,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
-                                    Some error occured
+                                    <Trans id='error-head-occured'>Some error occured</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    Transaction failed.
+                                    <Trans id='error-head-occured'>Transaction failed.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -326,7 +332,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    Transaction is still in progress...
+                                    <Trans id='error-head-occured'>Transaction is still in progress...</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

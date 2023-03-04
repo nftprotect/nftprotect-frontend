@@ -10,6 +10,8 @@ import {
     Text,
 } from '@chakra-ui/react'
 
+import { Trans } from '@lingui/react'
+
 const ConnectWallet = () => {
 
     return (
@@ -34,16 +36,19 @@ const ConnectWallet = () => {
                 <Heading
                     fontSize={['lg', 'xl', '2xl']}
                     mb={[4, 8]}
-                >Get Started
+                >
+                    <Trans id='CW-getStarted'>Get Started</Trans>
                 </Heading>
                 <Heading
                     fontSize={['md', 'lg', 'xl']}
                     mb={2}
-                >Connect your wallet
+                >
+                    <Trans id='CW-step1-head'>Connect your wallet</Trans>
                 </Heading>
                 <Text
                     fontSize={['xs', 'sm', 'md']}
-                >Connecting your wallet is like “logging in” to Web3. Select your wallet from the options to get started.
+                >
+                    <Trans id='CW-step1-desc'>Connecting your wallet is like “logging in” to Web3. Select your wallet from the options to get started.</Trans>
                 </Text>
             </Flex>
             
