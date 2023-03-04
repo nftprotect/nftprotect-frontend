@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "extract": "lingui extract --babel-config ./babel.config.js"
+    "extract": "NODE_ENV=development lingui extract"
   },
   "dependencies": {
     "@babel/core": "^7.21.0",
