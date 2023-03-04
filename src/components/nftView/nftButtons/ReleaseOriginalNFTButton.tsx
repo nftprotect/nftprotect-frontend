@@ -29,7 +29,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 import {AlertCircle} from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -184,7 +184,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             variant="primary-solid"
             w="100%"
         >
-            <Trans id='button-transferOriginal'>Transfer original</Trans>
+            <Trans>Transfer original</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
@@ -208,14 +208,14 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                 borderRadius="30px"
                 py={[4, 8]}
             >
-                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans id='ReleaseOriginal-modalHead'> Transfer the original NFT to a new owner?</Trans></ModalHeader>
+                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans> Transfer the original NFT to a new owner?</Trans></ModalHeader>
                 <ModalBody>
                     <Wizard>
 
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-pressButton'> Press button to send original NFT to pNFT owner.</Trans>
+                                <Trans>Press button to send original NFT to pNFT owner.</Trans>
                                 </Text>
                                 <Box w="50%">
                                     <Button 
@@ -223,7 +223,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                         variant='primary-solid'
                                         my={2}
                                     >
-                                        <Trans id='button-start'> Start</Trans>
+                                        <Trans>Start</Trans>
                                     </Button>
                                 </Box>
                             </Flex>
@@ -245,7 +245,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-step1-desc'>Are you sure want to transfer original nft to 0x12...3456?</Trans>.
+                                    <Trans>Are you sure want to transfer original nft to 0x12...3456?</Trans>
                                 </Text>
                                 <Text id='newOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     { formatAddress(nft.ownerOf?.format() || '', 4) }
@@ -284,10 +284,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     </Box>
                                     <Flex flexDirection="column">
                                             <Heading textTransform="uppercase" fontSize={["md", "lg", "xl"]} mb={[2, 4]}>
-                                            <Trans id='ReleaseOriginal-step1-noteHead'> Warning!</Trans>
+                                                <Trans>Warning!</Trans>
                                             </Heading>
                                             <Text fontSize={["sm", "md", "lg"]}>
-                                            <Trans id='ReleaseOriginal-step1-noteDesc'>Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!</Trans>.
+                                                <Trans>Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!</Trans>
                                             </Text>
                                     </Flex>
                                 </Flex>
@@ -305,7 +305,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-step2'>Please, allow access and transfer of your NFT</Trans>
+                                    <Trans>Please, allow access and transfer of your NFT</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside> 
@@ -321,7 +321,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-step3'> Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm...</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -338,7 +338,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-step4'> Confirm the transaction in the wallet</Trans>
+                                    <Trans>Confirm the transaction in the wallet</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -354,7 +354,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-step5'>Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm...</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -370,7 +370,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReleaseOriginal-waiting'> Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.</Trans>
+                                    <Trans>Waiting for transaction to complete. After transaction complete request to transfer your NFT will be rejected.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -378,7 +378,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                <Trans id='ReleaseOriginal-step6-head'>The original NFT was transfered to new owner</Trans>
+                                    <Trans>The original NFT was transfered to new owner</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
                                 <Box w="50%" my={[2, 4]}>
@@ -387,7 +387,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                         variant="monochrome-transparent"
                                         w="100%"
                                     >
-                                        <Trans id='button-close'>Close</Trans>
+                                        <Trans>Close</Trans>
                                     </Button>
                                 </Box>
                             </Flex>
@@ -396,12 +396,12 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
-                                    <Trans id='error-head-fail'>Fail!</Trans>
+                                    <Trans>Fail!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
-                                    <Trans id='error-desc-fail'>You canceled the transaction in your wallet.</Trans>
+                                    <Trans>You canceled the transaction in your wallet.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -409,12 +409,12 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
-                                <Trans id='error-head-occured'>Some error occured</Trans>
+                                    <Trans>Some error occured</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                <Trans id='error-head-occured'>Transaction failed.</Trans>
+                                    <Trans>Transaction failed.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -422,7 +422,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                <Trans id='error-head-occured'>Transaction is still in progress...</Trans>
+                                    <Trans>Transaction is still in progress...</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

@@ -9,7 +9,7 @@ import {
     Heading,
     Text,
 } from '@chakra-ui/react'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 const ChooseWalletCard = ({nextStep}: any) => {
 
@@ -29,7 +29,7 @@ const ChooseWalletCard = ({nextStep}: any) => {
                     alignSelf="center"
                     borderBottom="2px dotted #C3D4FF"
                 >
-                    <Trans id='choosewallet-avalable'> Available wallets</Trans>
+                    <Trans>Available wallets</Trans>
                 </Heading>
             </Box>
             
@@ -48,7 +48,7 @@ const ChooseWalletCard = ({nextStep}: any) => {
                 py={[4, 8]}
                 mt={4}
             >
-                <Trans id='choosewallet-terms'> Choosing to connect indicates that you have accepted <b><a href='#'>Terms of Service or Privacy Policy</a></b></Trans>
+                <Trans>Choosing to connect indicates that you have accepted <b><a href='#'>Terms of Service or Privacy Policy</a></b></Trans>
             </Text>
 
         </Flex>
