@@ -18,6 +18,7 @@ import ERC1155ABI from '../../abi/ERC1155ABI';
 import { Contract } from '@ethersproject/contracts';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
+import LostPNFTButton from './nftButtons/LostPNFTButton';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
@@ -296,6 +297,12 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
 
                     <Box>
                         { buttons }
+                        <LostPNFTButton 
+                            nft={ nft } 
+                            metadata={ metadata }
+                            nftReFetch={ nftReFetch }
+                            tokenContract={ tokenContract }
+                        />
                     </Box>
                 </Flex>
             </CardBody>
