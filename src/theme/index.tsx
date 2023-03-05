@@ -18,6 +18,7 @@ const nftProtectTheme = extendTheme({
                 bg: "none",
                 textTransform: "uppercase",
                 fontSize: ['xs', 'sm', 'md', 'lg'],
+                whiteSpace: "break-spaces",
                 _hover: {
                     border: "2px solid rgba(0, 0, 0, 0.8)",
                     borderRadius: "8px",
