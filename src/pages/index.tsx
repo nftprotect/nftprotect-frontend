@@ -106,10 +106,13 @@ const Home: NextPage = () => {
             maxW="2200px"
         >
             <NavBar />
-            <Box 
-                position="relative" 
+            <Box
                 px={[3, 6]}
                 mb={["4em"]}
+                bgImage={{base: "none", sm: "url('/images/logo_banner.png')"}}
+                bgPosition="100% 0%"
+                bgRepeat="no-repeat"
+                bgSize="auto 100%"
             >
                 <Flex 
                     flexDirection="column" 
@@ -118,7 +121,7 @@ const Home: NextPage = () => {
                     maxW={{base: "100%", sm: "50%"}}
                 >
                     <Heading 
-                        mt={["2em"]}
+                        mt={["1em"]}
                         fontSize={{sm:"2em", md: "3em", lg: "4rem"}} 
                         lineHeight={["28px", "36px", "42px", "58px"]} 
                     >Protect your digital assets from bad actors
@@ -151,19 +154,6 @@ const Home: NextPage = () => {
                     }
                     {active && !didRegistered && <DIDVerificationRequiredCard /> }
                 </Flex>
-                <Box 
-                    p="0"
-                    m="0"
-                    w={["sm", "md", "lg"]}
-                    position="absolute" 
-                    top="0" 
-                    right="0"
-                    maxW="50%"
-                    display={{ base: 'none', sm: 'flex'}}
-                >
-                    <Image src="/images/logo_banner.png" alt="Banner" />
-                </Box>
-
             </Box>
             <main>
                 {innerPart}

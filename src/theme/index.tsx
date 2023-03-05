@@ -12,11 +12,15 @@ const nftProtectTheme = extendTheme({
       variants: {
             'monochrome-transparent': {
                 border: "2px solid rgba(0, 0, 0, 0.8)",
-                borderRadius: "16px",
+                borderRadius: "8px",
                 py: [2, 4],
                 px: [3, 6],
                 bg: "none",
+                textTransform: "uppercase",
+                fontSize: ['xs', 'sm', 'md', 'lg'],
                 _hover: {
+                    border: "2px solid rgba(0, 0, 0, 0.8)",
+                    borderRadius: "8px",
                     bgColor: "rgba(255, 255, 255, 0.15)",
                     transform: "scale(1.03)"
                 },
