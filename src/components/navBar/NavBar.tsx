@@ -16,9 +16,13 @@ const NavBar = () => {
 
     return (
         <Box
+            position="sticky"
+            top="0"
+            zIndex="1"
             bgColor="#000"
             color="#FFF"
-            maxW="2800px"
+            w="100%"
+            maxW="2200px"
             p={[3, 6]}
         >
             <nav key="navBar">
@@ -32,13 +36,15 @@ const NavBar = () => {
                         <Image
                             src='/images/logomark.svg'
                             alt='Logo'
-                            h={{base: '48px', sm: 'auto'}}
+                            mr={[2]}
+                            h='48px'
                         />
                         <Image
                             src='/images/logotype.svg'
                             alt='Brand'
                             display={{base: 'none', md: 'flex'}}
-                            h={{base: '48px', sm: 'auto'}}
+                            mt={["5px"]}
+                            h='30px'
                         />
                     </Flex>
                     
