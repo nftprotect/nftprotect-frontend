@@ -158,14 +158,14 @@ const ShowConnectionState = () => {
                                 { ethBalance?.toFixed(4) } ETH
                             </Text>
                         </Box>
-                        <Box textAlign="center">
+                        {/* <Box textAlign="center">
                             <Text fontSize={['14px']}>
                                 Coupon Balance
                             </Text>
                             <Text fontSize={['24px']}>
                                 <CouponBalance />
                             </Text>
-                        </Box>
+                        </Box> */}
                     </CardBody>
                 </Card>
             </MenuList>

@@ -13,7 +13,7 @@ import {
 
 import {Metamask} from '@web3uikit/icons'
 import { useAppContext } from '../../context/AppContextProvider';
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 const ApproveConnection = ({disclosure}: any) => {
     const { active, didRegistered } = useAppContext()
@@ -53,18 +53,18 @@ const ApproveConnection = ({disclosure}: any) => {
                     fontSize={['lg', 'xl', '2xl']}
                     mb={[4, 8]}
                 >
-                    <Trans id='CW-getStarted'>Get Started</Trans>
+                    <Trans>Get Started</Trans>
                 </Heading>
                 <Heading
                     fontSize={['md', 'lg', 'xl']}
                     mb={2}
                 >
-                    <Trans id='CW-step2-head'>Approve connection</Trans>
+                    <Trans>Approve connection</Trans>
                 </Heading>
                 <Text
                     fontSize={['xs', 'sm', 'md']}
                 >
-                    <Trans id='CW-step2-desc'>Please approve the connection in your wallet and authorize access to continue.</Trans>
+                    <Trans>Please approve the connection in your wallet and authorize access to continue.</Trans>
                 </Text>
             </Flex>
             
@@ -81,7 +81,7 @@ const ApproveConnection = ({disclosure}: any) => {
                         alignSelf="center"
                         borderBottom="2px dotted #C3D4FF"
                     >
-                        <Trans id='CW-step2-subtitle'>Connecting to Metamask</Trans>
+                        <Trans>Connecting to Metamask</Trans>
                     </Heading>
                 </Box>
                 
@@ -107,13 +107,13 @@ const ApproveConnection = ({disclosure}: any) => {
                             fontSize={['md', 'lg', 'xl']}
                             mb={2} 
                         >
-                            <Trans id='CW-step2-boxhead'>Connecting...</Trans>
+                            <Trans>Connecting...</Trans>
                         </Heading>
                         <Text 
                             fontSize={['xs', 'sm', 'md']}
                             mb={[2]}
                         >
-                            <Trans id='CW-step2-boxdesc'>Make sure to select all accounts that you want to grant access to.</Trans>
+                            <Trans>Make sure to select all accounts that you want to grant access to.</Trans>
                         </Text>
                     </Flex>
                 </Flex>

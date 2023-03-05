@@ -25,7 +25,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 import {AlertCircle} from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -131,7 +131,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
             my={2}
             w="100%"
         >
-            <Trans id='button-requestOriginal'> Request original</Trans>
+            <Trans>Request original</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
@@ -151,13 +151,15 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                 borderRadius="30px"
                 py={[4, 8]}
             >
-                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans id='ReuestOriginal-modalHead'> Restore your <br />original nft?</Trans></ModalHeader>
+                <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">
+                    <Trans> Restore your <br/>original nft?</Trans>
+                </ModalHeader>
                 <ModalBody>
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step1-nettakogo'> To obtain the original NFT, please send a request to the owner</Trans>
+                                <Trans>To obtain the original NFT, please send a request to the owner</Trans>
                                 </Text>
                                 <Text id='originalOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     { formatAddress(originalOwner, 4) }
@@ -183,7 +185,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                         my={2}
                                         w="100%"
                                     >
-                                        <Trans id='button-reuestOriginal'> Request original</Trans>
+                                        <Trans> Request original</Trans>
                                     </Button>
                                 </Box>
                                 <Flex flexWrap="nowrap" alignItems="center" border="1px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]} mt={[4, 8]}>
@@ -192,7 +194,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     </Box>
                                     <Flex flexDirection="column">
                                             <Text fontSize={["sm", "md", "lg"]}>
-                                            <Trans id='ReuestOriginal-step1-note'>pNFT will be burned and the original NFT will be sent to you.</Trans>
+                                            <Trans>pNFT will be burned and the original NFT will be sent to you.</Trans>
                                             </Text>
                                     </Flex>
                                 </Flex>
@@ -202,7 +204,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     w="100%"
                                     mt={[4, 8]}
                                 >
-                                   <Trans id='button-close'>  Close</Trans>
+                                   <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside> 
@@ -218,7 +220,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step2'>Please, allow access and transfer of your NFT</Trans>
+                                    <Trans>Please, allow access and transfer of your NFT</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -234,7 +236,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step3'> Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm...</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -250,7 +252,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step4'> Confirm the transaction in the wallet</Trans>
+                                    <Trans>Confirm the transaction in the wallet</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -266,7 +268,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step5'>Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm...</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -274,17 +276,17 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                <Trans id='ReuestOriginal-step6-head'>Original nft restored succesfully!</Trans>
+                                    <Trans>Original nft restored succesfully!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step6-desc1'>You can protect your NFT again</Trans>
+                                    <Trans>You can protect your NFT again</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans id='ReuestOriginal-step6-desc2'>We recommend always keep your assets secure</Trans>
+                                    <Trans>We recommend always keep your assets secure</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    {"The button to open a dispute will appear on the DApp's main page"}
+                                    <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>
                                 </Text>
                                 <Box w="50%" my={[8]}>
                                     <Button
@@ -292,7 +294,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                         variant="monochrome-transparent"
                                         w="100%"
                                     >
-                                        <Trans id='button-protectNFT'> Protect NFT</Trans>
+                                        <Trans>Protect NFT</Trans>
                                     </Button>
                                 </Box>
                                 <Flex flexWrap="nowrap" alignItems="center" border="1px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]}>
@@ -311,12 +313,12 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
-                                    <Trans id='error-head-fail'>Fail!</Trans>
+                                    <Trans>Fail!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} textAlign="center" my={[4]}>
-                                    <Trans id='error-desc-fail'>You canceled the transaction in your wallet.</Trans>
+                                    <Trans>You canceled the transaction in your wallet.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -324,12 +326,12 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
-                                    <Trans id='error-head-occured'>Some error occured</Trans>
+                                    <Trans>Some error occured</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans id='error-head-occured'>Transaction failed.</Trans>
+                                    <Trans>Transaction failed.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -337,7 +339,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans id='error-head-occured'>Transaction is still in progress...</Trans>
+                                    <Trans>Transaction is still in progress...</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

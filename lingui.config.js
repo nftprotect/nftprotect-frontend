@@ -1,9 +1,9 @@
 module.exports = {
-    locales: ['en', 'ru', 'pseudo'],
+    locales: ['en-US', 'ru-RU', 'pseudo'],
     pseudoLocale: 'pseudo',
-    sourceLocale: 'en',
+    sourceLocale: 'en-US',
     fallbackLocales: {
-        default: 'en'
+        default: 'en-US'
     },
     catalogs: [
         {
@@ -13,9 +13,6 @@ module.exports = {
     ],
     extractBabelOptions: {
         plugins: ["@lingui/babel-plugin-transform-js", "@lingui/babel-plugin-transform-react"],
-    },
-    compilerBabelOptions: {
-        plugins: ["@lingui/babel-plugin-transform-react"],
     },
     format: 'po'
 }
