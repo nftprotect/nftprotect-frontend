@@ -70,7 +70,6 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:311
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:399
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:316
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:371
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:304
 msgid "Fail!"
 msgstr ""
@@ -109,7 +108,7 @@ msgstr ""
 msgid "Please approve the connection in your wallet and authorize access to continue."
 msgstr ""
 
-#: src/pages/index.tsx:139
+#: src/pages/index.tsx:142
 msgid "Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)"
 msgstr ""
 
@@ -146,7 +145,6 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:324
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:412
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:329
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:383
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:317
 msgid "Some error occured"
 msgstr ""
@@ -170,7 +168,6 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:329
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:417
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:334
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:388
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:322
 msgid "Transaction failed."
 msgstr ""
@@ -178,7 +175,6 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:337
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:425
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:342
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:397
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:330
 msgid "Transaction is still in progress..."
 msgstr ""
