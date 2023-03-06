@@ -27,6 +27,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { AlertCircle } from '@web3uikit/icons'
 import { Trans } from '@lingui/macro';
+import { Trans } from '@lingui/react'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -129,7 +130,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
 
     return (<>
         <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
-            Unsecure
+        <Trans>Restore</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
@@ -149,7 +150,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                 py={[4, 8]}
             >
 
-                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">Unpack <br /> your original NFT</ModalHeader>
+                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans>Restore your <br /> original NFT</Trans></ModalHeader>
                 <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
@@ -169,10 +170,10 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    pNFT will be burned and original NFT will be sent to your wallet
+                                <Trans>pNFT will be burned and original NFT will be sent to your wallet</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    are you sure?
+                                <Trans> are you sure?</Trans>
                                 </Text>
                                 <Flex
                                     flexWrap="nowrap"
@@ -185,7 +186,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                             variant='primary-solid'
                                             w="100%"
                                             my={2}
-                                        >Yes
+                                        >
+                                            <Trans>Yes</Trans>
                                         </Button>
                                     </Box>
                                     
@@ -195,7 +197,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                             variant="monochrome-transparent"
                                             my={2}
                                             w="100%"
-                                        >No
+                                        >
+                                            <Trans>No</Trans>
                                         </Button>
                                     </Box>
                                 </Flex>
@@ -205,7 +208,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                    Checking permission to transfer token...
+                                <Trans> Checking permission to transfer token...</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 
@@ -229,7 +232,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Wait for transaction to confirm
+                                <Trans> Wait for transaction to confirm</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -245,7 +248,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    Confirm the transaction in the wallet
+                                <Trans>Confirm the transaction in the wallet</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -261,11 +264,11 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    Waiting for transaction to complete.
+                                <Trans> Waiting for transaction to complete.</Trans>
                                 </Text>
 
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    After it will be completed, your will receive original NFT <b>{metadata?.name || nft.name}</b> to your wallet.
+                                <Trans>  After it will be completed, your will receive original NFT <b>{metadata?.name || nft.name}</b> to your wallet.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -273,16 +276,16 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                    Original NFT restored in your wallet
+                                <Trans> Original NFT restored succesfully!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
                                 </Image>
                                 <Box w="80%">
                                     <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                        You can protect your NFT <b>{metadata?.name || nft.name}</b> again.
+                                    <Trans>You can protect your NFT <b>{metadata?.name || nft.name}</b> again.</Trans>
                                     </Text>
                                     <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                        We recomend always keeping your assets in a secure place.
+                                    <Trans> We recomend always keeping your assets in a secure place.</Trans>
                                     </Text>
                                     <SecureNFTButton metadata={metadata} nft={nft} nftReFetch={nftReFetch} tokenContract={tokenContract} />
                                     <Button
@@ -292,7 +295,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                         h={[8, 10]}
                                         variant="monochrome-transparent"
                                     >
-                                        Cancel
+                                        <Trans> Cancel</Trans>
                                     </Button>
                                 </Box>
                             </Flex>
@@ -306,7 +309,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    You cancelled a transaction
+                                <Trans> You cancelled a transaction</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
