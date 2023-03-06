@@ -18,6 +18,7 @@ import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
+import { Trans } from '@lingui/react'
 
 const NFTView = () => {
 
@@ -63,7 +64,7 @@ const NFTView = () => {
                         >
                             <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
-                                Your NFT
+                            <Trans> Your NFT<Trans> 
                             </Heading>
                         </AccordionButton>
                     </Flex>
@@ -83,7 +84,7 @@ const NFTView = () => {
                         >
                             { ownNftElements }
                         </Grid> : 
-                        <Text color={'white'}>You have no NFTs in your wallet.</Text> }
+                        <Text color={'white'}><Trans> You have no NFTs in your wallet.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
 
@@ -92,7 +93,7 @@ const NFTView = () => {
                         <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
                         <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
-                                NFT without pNFT
+                            <Trans> It's all your!</Trans>
                             </Heading>
                         </AccordionButton>
                     </Flex>
@@ -112,7 +113,7 @@ const NFTView = () => {
                         >
                             { transferedWNftElements }
                         </Grid> :
-                        <Text>You have no pNFTs transfered to third parties.</Text> }
+                        <Text><Trans> You have no pNFTs transfered to third parties.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
                 
@@ -121,7 +122,7 @@ const NFTView = () => {
                         <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
                             <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
-                                Your pNFT
+                            <Trans> Your pNFT</Trans>
                             </Heading>
                         </AccordionButton>
                     </Flex>
@@ -141,7 +142,7 @@ const NFTView = () => {
                         >
                             { wNftElements }
                         </Grid> :
-                        <Text color={'white'}>You have no protected NFTs yet</Text> }
+                        <Text color={'white'}><Trans> You have no protected NFTs yet</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>

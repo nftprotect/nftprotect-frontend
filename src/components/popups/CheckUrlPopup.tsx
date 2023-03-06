@@ -5,6 +5,7 @@ import {
     useDisclosure,  
 } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
+import { Trans } from '@lingui/react'
 
 const CheckUrlPopup = () => {
 
@@ -26,7 +27,7 @@ const CheckUrlPopup = () => {
                     fontSize={['2xs', 'sm', 'md']}
                     p={2}
                 >
-                    Always make sure the URL is...
+                    <Trans> Always make sure the URL is nftprotect.app</Trans>
                 </Text>
                 <CloseIcon
                     onClick={onOpen}

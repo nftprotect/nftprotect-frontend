@@ -8,6 +8,7 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import { AlertTriangle } from '@web3uikit/icons'
+import { Trans } from '@lingui/react'
 
 const DIDVerificationRequiredCard = () => {
 
@@ -22,7 +23,7 @@ return (
                 <AlertTriangle fontSize='4em' />
             </Box>
             <Text fontSize={['sm', 'md', 'lg', 'xl']} color="#FF0000" fontWeight="600">
-                Unless DID verification is done the only option available is to <i>request original NFT</i>
+            <Trans> Unless DID verification is done the only option available is to <i>request original NFT</i></Trans>
             </Text>
         </Flex>
 
@@ -31,7 +32,8 @@ return (
                 onClick={ () => (window.open('https://passport.gitcoin.co/', '_blank')) }
                 variant='danger'
                 mt={[4]}
-            >Proceed to DID
+            >
+               <Trans> Proceed to DID</Trans>
             </Button>
         </Box>
     </Flex>

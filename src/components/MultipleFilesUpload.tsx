@@ -15,6 +15,7 @@ import {
   } from '@chakra-ui/react'
 import { Form, Field, Formik } from 'formik'
 import all from 'it-all'
+import { Trans } from '@lingui/react'
 
 export const MultipleFilesUpload = ({ setUrl }:{ setUrl: Function }) => {
     const { ipfs, getCentralizedUrl } = useIPFSContext()
@@ -71,7 +72,7 @@ export const MultipleFilesUpload = ({ setUrl }:{ setUrl: Function }) => {
                         ) : (
                             <div>
                                 <Button type='submit'>
-                                    Upload Files
+                                <Trans> Upload Files</Trans>
                                 </Button>
 
                                 <List className='mb-3'>
@@ -98,9 +99,9 @@ export const MultipleFilesUpload = ({ setUrl }:{ setUrl: Function }) => {
             } else {
                 return (
                     <Container>
-                        <h4>Uploading Files</h4>
+                        <h4><Trans> Uploading Files</Trans></h4>
                         <Progress />
-                        <h4>Please Wait ...</h4>
+                        <h4><Trans> Please Wait...</Trans></h4>
                     </Container>
                 )
             }
