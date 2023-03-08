@@ -154,7 +154,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    Targeted by an intruder or made a mistake and lost access to your pNFT, don't worry. We can work together to recover your asset and restore it to your wallet.
+                                    {"Targeted by an intruder or made a mistake and lost access to your pNFT, don't worry. We can work together to recover your asset and restore it to your wallet."}
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center" fontWeight="600">
                                     Select reason for losing pNFT
@@ -182,7 +182,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                     </Box>
                                     <Flex flexDirection="column">
                                         <Text fontSize={["sm", "md", "lg"]}>
-                                            If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause
+                                            {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -209,10 +209,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT (0x12...3456) before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them. 
+                                    {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT (0x12...3456) before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don't have evidence of an attempt to resolve the issue outside of court.
+                                   {"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don't have evidence of an attempt to resolve the issue outside of court."}
                                 </Text>
 
                                 <Flex flexDirection="row" flexWrap={{base: "wrap", sm: "nowrap"}} justifyContent="space-between" mb={[8]}>
