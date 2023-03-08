@@ -26,6 +26,7 @@ import SecureNFTButton from './SecureNFTButton'
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { AlertCircle } from '@web3uikit/icons'
+import { defaultArbitrator } from '../../../utils/config';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -36,7 +37,7 @@ interface ButtonInitialData {
 
 const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
-    const { nftProtectContract } = useAppContext()
+    const { nftProtectContract, account } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
@@ -92,7 +93,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
         try {
             setNextStep(StepMapping.requestUnwrap);
             onOpen()
-            nftProtectContract.burn(nft.tokenId, 0)
+            nftProtectContract.burn(nft.tokenId, 0, '', account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(tokenContract) )
                 .catch(
                     handleContractError({
