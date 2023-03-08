@@ -2,13 +2,18 @@ const UserRegistryABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IArbitrator",
-				"name": "arb",
+				"internalType": "address",
+				"name": "areg",
 				"type": "address"
 			},
 			{
 				"internalType": "contract IUserDID",
 				"name": "did",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "nftprotectaddr",
 				"type": "address"
 			}
 		],
@@ -19,13 +24,57 @@ const UserRegistryABI = [
 		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amountWei",
+				"type": "uint256"
+			}
+		],
+		"name": "AffiliatePayment",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "userPercent",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "partnerPercent",
+				"type": "uint256"
+			}
+		],
+		"name": "AffiliatePercentChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "arbitrator",
+				"name": "areg",
 				"type": "address"
 			}
 		],
-		"name": "ArbitratorChanged",
+		"name": "ArbitratorRegistryChanged",
 		"type": "event"
 	},
 	{
@@ -71,6 +120,87 @@ const UserRegistryABI = [
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "contract IArbitrator",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "_disputeID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_metaEvidenceID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_evidenceGroupID",
+				"type": "uint256"
+			}
+		],
+		"name": "Dispute",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "contract IArbitrator",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "_evidenceGroupID",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_party",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_evidence",
+				"type": "string"
+			}
+		],
+		"name": "Evidence",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "_metaEvidenceID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_evidence",
+				"type": "string"
+			}
+		],
+		"name": "MetaEvidence",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "previousOwner",
 				"type": "address"
@@ -84,6 +214,100 @@ const UserRegistryABI = [
 		],
 		"name": "OwnershipTransferred",
 		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "partnet",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "state",
+				"type": "bool"
+			}
+		],
+		"name": "PartnerSet",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "referrer",
+				"type": "address"
+			}
+		],
+		"name": "processPayment",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "referrer",
+				"type": "address"
+			}
+		],
+		"name": "ReferrerSet",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IUserDID",
+				"name": "did",
+				"type": "address"
+			}
+		],
+		"name": "registerDID",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "disputeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ruling",
+				"type": "uint256"
+			}
+		],
+		"name": "rule",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -109,6 +333,73 @@ const UserRegistryABI = [
 		],
 		"name": "Ruling",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "userPercent",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "partnerPercent",
+				"type": "uint256"
+			}
+		],
+		"name": "setAffiliatePercent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "areg",
+				"type": "address"
+			}
+		],
+		"name": "setArbitratorRegistry",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "partner",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "state",
+				"type": "bool"
+			}
+		],
+		"name": "setPartner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "disputeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			}
+		],
+		"name": "submitEvidence",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -156,6 +447,58 @@ const UserRegistryABI = [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "arbitratorId",
+				"type": "uint256"
+			}
+		],
+		"name": "successorRequest",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "disputeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
+			}
+		],
+		"name": "successorRequestAppeal",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -181,17 +524,75 @@ const UserRegistryABI = [
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "arbitratorId",
+				"type": "uint256"
 			}
 		],
 		"name": "SuccessorRequested",
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IUserDID",
+				"name": "did",
+				"type": "address"
+			}
+		],
+		"name": "unregisterDID",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
-		"name": "arbitrator",
+		"name": "affiliatePartnerPercent",
 		"outputs": [
 			{
-				"internalType": "contract IArbitrator",
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "affiliateUserPercent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "arbitratorRegistry",
+		"outputs": [
+			{
+				"internalType": "contract ArbitratorRegistry",
 				"name": "",
 				"type": "address"
 			}
@@ -237,6 +638,16 @@ const UserRegistryABI = [
 				"internalType": "address",
 				"name": "successor",
 				"type": "address"
+			},
+			{
+				"internalType": "contract IArbitrator",
+				"name": "arbitrator",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "evidenceId",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -306,6 +717,32 @@ const UserRegistryABI = [
 	},
 	{
 		"inputs": [],
+		"name": "metaEvidenceCounter",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nftprotect",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "owner",
 		"outputs": [
 			{
@@ -320,39 +757,39 @@ const UserRegistryABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IUserDID",
-				"name": "did",
+				"internalType": "address",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "registerDID",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "partners",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "ruling",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
-		"name": "rule",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "referrers",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -372,19 +809,6 @@ const UserRegistryABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrator",
-				"name": "arb",
-				"type": "address"
-			}
-		],
-		"name": "setArbitrator",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -410,48 +834,6 @@ const UserRegistryABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "successorRequest",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "successorRequestAppeal",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
@@ -465,32 +847,6 @@ const UserRegistryABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IUserDID",
-				"name": "did",
-				"type": "address"
-			}
-		],
-		"name": "unregisterDID",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

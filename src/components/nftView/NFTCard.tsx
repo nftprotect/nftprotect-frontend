@@ -297,12 +297,12 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
 
                     <Box>
                         { buttons }
-                        <LostPNFTButton 
+                        {/* <LostPNFTButton 
                             nft={ nft } 
                             metadata={ metadata }
                             nftReFetch={ nftReFetch }
                             tokenContract={ tokenContract }
-                        />
+                        /> */}
                     </Box>
                 </Flex>
             </CardBody>
