@@ -4,7 +4,7 @@ import { dialogsTimeout } from '../../../utils/config'
 import { deIpfsUrl } from '../../../utils/helpers'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
-import { MultipleFilesUpload } from '../../MultipleFilesUpload'
+// import { MultipleFilesUpload } from '../../MultipleFilesUpload'
 import { useState } from 'react';
 import {
     Button,
