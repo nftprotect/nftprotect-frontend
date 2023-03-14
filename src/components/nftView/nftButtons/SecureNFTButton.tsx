@@ -24,7 +24,7 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { AlertCircle } from '@web3uikit/icons'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -209,7 +209,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             variant="primary-solid"
             w="100%"
         >
-           <Trans> Protect NFT</Trans>
+           <Trans>Protect NFT</Trans>
         </Button>
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
@@ -241,7 +241,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
 
                                 { getNftImage() }
@@ -250,10 +250,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center">
-                                <Trans> Fee for Protection your NFT:</Trans>
+                                <Trans>Fee for Protection your NFT:</Trans>
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="500" color="green">
-                                <Trans> Free on test chain</Trans>
+                                <Trans>Free on test chain</Trans>
                                 </Text>
                                 <Button 
                                     onClick={ startButtonOnClick }
@@ -262,7 +262,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     w="100%"
                                     textTransform="uppercase"
                                 >
-                                    <Trans> Protect NFT</Trans>
+                                    <Trans>Protect NFT</Trans>
                                 </Button>
                                 <Button 
                                     onClick={onClose}
@@ -270,7 +270,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     border="none"
                                     w="100%"
                                 >
-                                    <Trans> Close</Trans>
+                                    <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside> 
@@ -284,10 +284,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                <Trans> Checking permission to transfer token...</Trans>
+                                <Trans>Checking permission to transfer token...</Trans>
                                 </Text>
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
@@ -303,14 +303,14 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans> Please, allow access and transfer of your NFT</Trans>
+                                <Trans>Please, allow access and transfer of your NFT</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -324,14 +324,14 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans> Please allow access to and transfer of <b>ALL YOUR NFTs </b></Trans>
+                                <Trans>Please allow access to and transfer of <b>ALL YOUR NFTs </b></Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -345,12 +345,12 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>  Allow transfer to complete the process</Trans>
+                                <Trans>Allow transfer to complete the process</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -364,11 +364,11 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans> Wait for transaction to confirm...</Trans>
+                                <Trans>Wait for transaction to confirm...</Trans>
                                 </Text>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
@@ -389,18 +389,18 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset...</Trans>
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>  Waiting for transaction to complete.</Trans>
+                                <Trans>Waiting for transaction to complete.</Trans>
                                 </Text>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans> After it will be completed, your NFT will be protected.</Trans>
+                                <Trans>After it will be completed, your NFT will be protected.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -414,18 +414,18 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans> Success!</Trans>
+                                    <Trans>Success!</Trans>
                                 </Heading>
 
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
                                 </Image>
 
                                 <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>  Your asset is now protected!</Trans>
+                                <Trans>Your asset is now protected!</Trans>
                                 </Text>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>  Enjoy your new life in protected world!</Trans>
+                                <Trans>Enjoy your new life in protected world!</Trans>
                                 </Text>
 
                                 <Button 
@@ -434,7 +434,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     border="none"
                                     w="100%"
                                 >
-                                    <Trans> Close</Trans>
+                                    <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
@@ -449,12 +449,12 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     mb="4"
                                     color="red"
                                 >
-                                    <Trans> Fail!</Trans>
+                                    <Trans>Fail!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
                                 <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans> You cancelled a transaction</Trans>
+                                <Trans>You cancelled a transaction</Trans>
                                 </Text>
                                 <Button 
                                     onClick={onClose}
@@ -462,7 +462,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     border="none"
                                     w="100%"
                                 >
-                                    <Trans> Close</Trans>
+                                    <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
@@ -477,14 +477,14 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     mb="4"
                                     textAlign="center"
                                 >
-                                    <Trans> Some error occured</Trans>
+                                    <Trans>Some error occured</Trans>
                                 </Heading>
 
                                 <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
                                 </Image>
 
                                 <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>  Transaction failed.</Trans>
+                                <Trans>Transaction failed.</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -499,7 +499,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     mb="4"
                                     textAlign="center"
                                 >
-                                    <Trans> Transaction is still in progress...</Trans>
+                                    <Trans>Transaction is still in progress...</Trans>
                                 </Heading>
 
                                 <Spinner 

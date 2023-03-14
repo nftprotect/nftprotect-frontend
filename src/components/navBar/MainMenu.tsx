@@ -7,6 +7,7 @@ import {
     MenuItem,
     IconButton,
 } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 import { HamburgerIcon } from '@chakra-ui/icons'
 
@@ -47,7 +48,7 @@ const MainMenu = () => {
                             bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
-                        Whitepaper
+                        <Trans>Whitepaper</Trans>
                     </MenuItem>
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
@@ -57,7 +58,7 @@ const MainMenu = () => {
                             bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
-                        Security audits
+                        <Trans>Security audits</Trans>
                     </MenuItem>
                 </MenuGroup>
                 <MenuDivider color="#FFF" />
@@ -73,7 +74,7 @@ const MainMenu = () => {
                             bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
-                        Terms of service
+                        <Trans>Terms of service</Trans>
                     </MenuItem>
                     <MenuItem
                         fontSize={['xs', 'sm', 'md']}
@@ -83,7 +84,7 @@ const MainMenu = () => {
                             bgColor: "rgba(255, 255, 255, 0.15)"
                         }}
                     >
-                        Privacy policy
+                        <Trans>Privacy policy</Trans>
                     </MenuItem>
                 </MenuGroup>
             </MenuList>

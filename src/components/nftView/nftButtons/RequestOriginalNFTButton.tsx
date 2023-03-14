@@ -152,7 +152,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                 py={[4, 8]}
             >
                 <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">
-                    <Trans> Restore your <br/>original nft?</Trans>
+                    <Trans>Restore your <br/>original nft?</Trans>
                 </ModalHeader>
                 <ModalBody>
                     <Wizard>
@@ -185,7 +185,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                         my={2}
                                         w="100%"
                                     >
-                                        <Trans> Request original</Trans>
+                                        <Trans>Request original</Trans>
                                     </Button>
                                 </Box>
                                 <Flex flexWrap="nowrap" alignItems="center" border="1px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]} mt={[4, 8]}>
@@ -286,7 +286,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     <Trans>We recommend always keep your assets secure</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>
+                                    <Trans>The button to open a dispute will appear on the DApp&rsquo;s main page</Trans>
                                 </Text>
                                 <Box w="50%" my={[8]}>
                                     <Button
@@ -303,7 +303,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     </Box>
                                     <Flex flexDirection="column">
                                         <Text fontSize={["sm", "md", "lg"]}>
-                                            <a href="https://kleros.io/" target="_blank" rel="noreferrer" color="#2D7BD6">Kleros</a> is an open source online dispute resolution protocolthat uses blockchain and crowdsourcing to resolve disputes fairly.
+                                            <a href="https://kleros.io/" target="_blank" rel="noreferrer" color="#2D7BD6">Kleros</a> <Trans>is an open source online dispute resolution protocolthat uses blockchain and crowdsourcing to resolve disputes fairly.</Trans>
                                         </Text>
                                     </Flex>
                                 </Flex>

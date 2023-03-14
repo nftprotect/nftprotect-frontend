@@ -139,13 +139,15 @@ const Home: NextPage = () => {
                                 mt={[4, 6]}
                                 fontSize={['xs', 'sm', 'md']}
                                 color="rgba(31, 32, 65, .9)"
-                            > <Trans>Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)</Trans>
+                            >
+                                <Trans>Please connect your wallet to see your NFT and pNFT (or ... to protect your NFT)</Trans>
                             </Text>
                             <Text
                                 fontSize={['xs', 'sm', 'md']} 
                                 color="rgba(31, 32, 65, .9)"
                                 mb={[4, 6]}
-                            >View only permissions. We will never do anything without your permission
+                            >
+                                <Trans>View only permissions. We will never do anything without your permission</Trans>
                             </Text>
                             <Box w={["15rem"]}>
                                 <LoginForm />

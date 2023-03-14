@@ -8,7 +8,7 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import { AlertTriangle } from '@web3uikit/icons'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 const DIDVerificationRequiredCard = () => {
 
@@ -23,7 +23,7 @@ return (
                 <AlertTriangle fontSize='4em' />
             </Box>
             <Text fontSize={['sm', 'md', 'lg', 'xl']} color="#FF0000" fontWeight="600">
-            <Trans> Unless DID verification is done the only option available is to <i>request original NFT</i></Trans>
+            <Trans>Unless DID verification is done the only option available is to <i>request original NFT</i></Trans>
             </Text>
         </Flex>
 
@@ -33,7 +33,7 @@ return (
                 variant='danger'
                 mt={[4]}
             >
-               <Trans> Proceed to DID</Trans>
+               <Trans>Proceed to DID</Trans>
             </Button>
         </Box>
     </Flex>
