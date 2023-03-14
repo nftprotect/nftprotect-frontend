@@ -124,7 +124,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(
                     subcourtID.toString(), numberOfVotes.toString()
-                ), fileIPFSUrl, {value:  ethers.utils.parseEther(DISPUTE_PRICE)})//{value: DISPUTE_PRICE})
+                ), fileIPFSUrl, {value: ethers.utils.parseEther(DISPUTE_PRICE)})
                     .then( finalTransactionSent() )
                     .catch( 
                         handleContractError({
