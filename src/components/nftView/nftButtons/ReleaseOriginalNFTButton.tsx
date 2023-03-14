@@ -322,7 +322,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm&mldr;</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -355,7 +355,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>Wait for transaction to confirm...</Trans>
+                                    <Trans>Wait for transaction to confirm&mldr;</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -423,7 +423,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>Transaction is still in progress...</Trans>
+                                    <Trans>Transaction is still in progress&mldr;</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

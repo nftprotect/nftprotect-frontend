@@ -48,7 +48,7 @@ const ChooseWalletCard = ({nextStep}: any) => {
                 py={[4, 8]}
                 mt={4}
             >
-                <Trans>Choosing to connect indicates that you have accepted <b><a href='#'>Terms of Service or Privacy Policy</a></b></Trans>
+                <Trans>Choosing to connect indicates that you have accepted <a href='https://go.nftprotect.app/terms'>Terms of Service</a> and <a href='https://go.nftprotect.app/policy'>Privacy Policy</a></Trans>
             </Text>
 
         </Flex>

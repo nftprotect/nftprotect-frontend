@@ -53,6 +53,7 @@
     "babel-runtime": "^6.26.0",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
+    "ethers": "5.7.2",
     "formik": "^2.2.9",
     "framer-motion": "^8.4.3",
     "ipfs-http-client": "^60.0.0",

@@ -40,6 +40,8 @@ import { AlertCircle, Info } from '@web3uikit/icons'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { AuthErrorCode } from 'moralis/common-core';
 import { NextComponentType } from 'next';
+import { t } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -209,10 +211,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT (0x12...3456) before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
+                                    <Trans>If you&apos;ve lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them.</Trans>
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                   {"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don't have evidence of an attempt to resolve the issue outside of court."}
+                                   <Trans>Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It&apos;s important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court.</Trans>
                                 </Text>
 
                                 <Flex flexDirection="row" flexWrap={{base: "wrap", sm: "nowrap"}} justifyContent="space-between" mb={[8]}>
@@ -221,14 +223,14 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                         variant="monochrome-transparent"
                                         m={[4]}
                                         w="100%"
-                                    >Close
+                                    ><Trans>Close</Trans>
                                     </Button>
                                     <Button 
                                         variant="monochrome-transparent"
                                         m={[4]}
                                         w="100%"
                                         onClick={openCaseInKleros}
-                                    >Open case in Kleros
+                                    ><Trans>Open case in Kleros</Trans>
                                     </Button>
                                 </Flex>
 
@@ -238,8 +240,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                     </Box>
                                     <Flex flexDirection="column">
                                         <Text fontSize={["sm", "md", "lg"]}>
-                                            Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
-                                            to resolve disputes fairly. <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6">To learn more<ExternalLinkIcon mx='2px' /></Link>
+                                        <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
+                                            to resolve disputes fairly.</Trans> <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6"><Trans>To learn more</Trans><ExternalLinkIcon mx='2px' /></Link>
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -255,14 +257,15 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                     fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
-                                >Open case in Kleros
+                                >
+                                    <Trans>Open case in Kleros</Trans>
                                 </Heading>
 
                                  <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="400">
                                     { lostReason }
                                 </Text>
                                 <Textarea 
-                                    placeholder="Describe the situation in details..." 
+                                    placeholder={t`Describe the situation in details…`}
                                     mb={[8]}
                                     _hover={{
                                         border: "2px solid #2D7BD6"
@@ -273,11 +276,12 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                 />
                                 
                                 <Text fontSize={["sm", "md"]} mb={[2]}>
-                                    Upload all available evidence: 
+                                    <Trans>Upload all available evidence:</Trans>
                                 </Text>
                                 <OrderedList fontSize={["sm", "md"]} mb={[8]}>
-                                    <ListItem>Evidence of attempts to solve the problem on your own
-                                        <Tooltip label="Details" bg="none" color="#1A202C">
+                                    <ListItem>
+                                        <Trans>Evidence of attempts to solve the problem on your own</Trans>
+                                        <Tooltip label={t`Details`} bg="none" color="#1A202C">
                                         <Flex
                                             justifyContent="center"
                                             alignItems="center"
@@ -297,7 +301,9 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                     </Tooltip>
                                         
                                     </ListItem>
-                                    <ListItem>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</ListItem>
+                                    <ListItem>
+                                        <Trans>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</Trans>
+                                    </ListItem>
                                 </OrderedList>
 
                                 {/* <MultipleFilesUpload /> */}
@@ -307,7 +313,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                         <Info fontSize='20px' />
                                     </Box>
                                     <Text fontSize={["sm", "md"]}>
-                                        You can add an external file in PDF or add multiple files in a single .zip file.
+                                        <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
                                     </Text>
                                 </Flex>
                                 <Flex flexDirection="column" alignItems="center">
@@ -316,7 +322,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                         m={[4]}
                                         w="50%"
                                         textTransform="uppercase"
-                                    >Open dispute
+                                    >
+                                        <Trans>Open dispute</Trans>
                                     </Button>
                                     <Button 
                                         onClick={onClose}

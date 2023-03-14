@@ -241,7 +241,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
 
                                 { getNftImage() }
@@ -284,10 +284,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                <Trans>Checking permission to transfer token...</Trans>
+                                <Trans>Checking permission to transfer token&mldr;</Trans>
                                 </Text>
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
@@ -303,7 +303,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
@@ -324,7 +324,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
@@ -345,7 +345,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
@@ -364,11 +364,11 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Wait for transaction to confirm...</Trans>
+                                <Trans>Wait for transaction to confirm&mldr;</Trans>
                                 </Text>
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
@@ -389,7 +389,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Protecting <br /> your asset...</Trans>
+                                    <Trans>Protecting <br /> your asset&mldr;</Trans>
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
@@ -499,7 +499,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     mb="4"
                                     textAlign="center"
                                 >
-                                    <Trans>Transaction is still in progress...</Trans>
+                                    <Trans>Transaction is still in progress&mldr;</Trans>
                                 </Heading>
 
                                 <Spinner 

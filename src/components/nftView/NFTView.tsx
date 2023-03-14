@@ -93,7 +93,7 @@ const NFTView = () => {
                         <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
                         <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
-                            <Trans>It's all your!</Trans>
+                                <Trans>It&rsquo;s all yours!</Trans>
                             </Heading>
                         </AccordionButton>
                     </Flex>

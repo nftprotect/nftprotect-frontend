@@ -48,7 +48,7 @@ const ConnectWallet = () => {
                 <Text
                     fontSize={['xs', 'sm', 'md']}
                 >
-                    <Trans>Connecting your wallet is like “logging in” to Web3. Select your wallet from the options to get started.</Trans>
+                    <Trans>Connecting your wallet is like &ldquo;logging in&rdquo; to Web3. Select your wallet from the options to get started.</Trans>
                 </Text>
             </Flex>
             

@@ -107,7 +107,7 @@ const ApproveConnection = ({disclosure}: any) => {
                             fontSize={['md', 'lg', 'xl']}
                             mb={2} 
                         >
-                            <Trans>Connecting...</Trans>
+                            <Trans>Connecting&mldr;</Trans>
                         </Heading>
                         <Text 
                             fontSize={['xs', 'sm', 'md']}

@@ -124,13 +124,14 @@ const Home: NextPage = () => {
                         mt={["1em"]}
                         fontSize={{sm:"2em", md: "3em", lg: "4rem"}} 
                         lineHeight={["28px", "36px", "42px", "58px"]} 
-                    >Protect your digital assets from bad actors
+                    ><Trans>Protect your digital assets from bad actors</Trans>
                     </Heading>
                     <Text 
                         fontSize={["1em", "1.5em"]} 
                         mt={[8]}
                         lineHeight={["1em", "1.2em"]}
-                    >Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise
+                    >
+                        <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
                     </Text>
 
                     { !active &&

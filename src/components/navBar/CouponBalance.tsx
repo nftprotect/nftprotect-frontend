@@ -68,7 +68,7 @@ const CouponBalance = () => {
     }, [])
 
     return (<>
-        { balance ? `${ formatEther(balance) } ${symbol}` : "Fetching balance..." }
+        { balance ? `${ formatEther(balance) } ${symbol}` : "Fetching balance…" }
     </>)
 }
 
