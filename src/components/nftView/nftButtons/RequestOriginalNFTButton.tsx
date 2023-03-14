@@ -26,6 +26,7 @@ import {AlertCircle} from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
+import { defaultArbitrator } from '../../../utils/config';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -37,7 +38,7 @@ interface ButtonInitialData {
 
 const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
 
-    const { nftProtectContract } = useAppContext()
+    const { nftProtectContract, account } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
@@ -96,7 +97,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
 
     const startButtonOnClick = () => {
         try {
-            nftProtectContract.askOwnershipAdjustment(nft.tokenId)
+            nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(tokenContract) )
                 .catch( 
                     handleContractError({

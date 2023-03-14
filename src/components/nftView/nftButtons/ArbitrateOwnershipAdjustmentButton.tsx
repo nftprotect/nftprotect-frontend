@@ -15,6 +15,16 @@ import {
     ModalContent,
     ModalHeader,
     Spinner,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Container,
+    Badge,
+    Progress,
+    List,
+    ListItem,
+    ListIcon,
+    Input,
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
@@ -24,8 +34,12 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../NFTCard';
-import { generateArbitratorExtraData, KlerosCourts } from '../../../utils/kleros';
 import { Trans } from '@lingui/macro'
+import { generateArbitratorExtraData, KlerosCourts, klerosCases } from '../../../utils/kleros';
+import { Form, Field, Formik } from 'formik'
+import KlerosCaseForm from './steps/KlerosCaseForm';
+import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { ethers } from 'ethers';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -38,18 +52,23 @@ interface ButtonInitialData {
 
 const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
-    const { nftProtectContract } = useAppContext()
+    const { nftProtectContract, account, library } = useAppContext()
+    const { ipfs, getCentralizedUrl, getIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const [url, setUrl] = useState<string>()
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
+    const DISPUTE_PRICE = '0.03'
 
     // Naming of wizard step numbers
     enum StepMapping {
         start,
         klerosInfo,
-        waitingForFinal,
-        finalCompleted,
+        klerosForm,
+        confirmTransaction,
+        waitingForTransaction,
+        caseSent,
         canceled,
         error,
         timeout
@@ -75,12 +94,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
 
     const finalTransactionSent = () => {
         return (tx: any) => {
-            setNextStep(StepMapping.waitingForFinal);
+            setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     loadPendingRequest()
                     // after mined fire wrap
-                    setNextStep(StepMapping.finalCompleted)
+                    setNextStep(StepMapping.caseSent)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
@@ -96,20 +115,39 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
         onOpen()
     }
 
-    const startButtonOnClick = () => {
-        try {
-            nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(
-                subcourtID.toString(), numberOfVotes.toString()
-            ))
-                .then( finalTransactionSent() )
-                .catch( 
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    }) 
-                )
-        } catch (err: any) {
-            handleUnknownError(err)
+    const klerosFormSubmit = (metaEvidence: any) => {
+        uploadMetaEvidence(metaEvidence).then((result:any) => {
+            console.log('FFFFFFFF', result, library)
+            setNextStep(StepMapping.confirmTransaction)
+            const dirHash = result.uploadResult.cid.toV1().toString()
+            const dirUrl = getCentralizedUrl(dirHash)
+            const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
+            try {
+                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(
+                    subcourtID.toString(), numberOfVotes.toString()
+                ), fileIPFSUrl, {value: ethers.utils.parseEther(DISPUTE_PRICE)})
+                    .then( finalTransactionSent() )
+                    .catch( 
+                        handleContractError({
+                            'ACTION_REJECTED': handleRejected,
+                            default: handleUnknownError
+                        }) 
+                    )
+            } catch (err: any) {
+                handleUnknownError(err)
+            }
+        })
+    }
+
+    const uploadMetaEvidence = async (metaEvidence: any) => {
+        console.log('METAEVIDENCE', metaEvidence)
+        // const file = new File([JSON.stringify(metaEvidence)], "metaEvidence.json", {
+        //     type: "text/plain",
+        // });
+        const result = await ipfs.add(JSON.stringify(metaEvidence), {wrapWithDirectory: true})
+        return {
+            fileName: "metaEvidence.json",
+            uploadResult: result
         }
     }
 
@@ -157,6 +195,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                 <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans>Open case in Kleros</Trans></ModalHeader>
                 <ModalBody>
                     <Wizard>
+                        {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
@@ -206,7 +245,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Kleros info */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
@@ -227,7 +266,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 
                                 <Box w="100%">
                                     <Button 
-                                        onClick={ startButtonOnClick }
+                                        onClick={ () => setNextStep(StepMapping.klerosForm) }
                                         variant="primary-solid"
                                         my={2}
                                         w="100%"
@@ -244,8 +283,20 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     <Trans>Close</Trans>
                                 </Button>
                             </Flex>
-                        </SwitchableOutside> 
-
+                        </SwitchableOutside>
+                        {/* Kleros form */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Flex flexDirection="column" alignItems="center">
+                                <KlerosCaseForm
+                                    onClose={onClose}
+                                    onSubmit={klerosFormSubmit}
+                                    claimant={account || ''}
+                                    defendant={originalOwner}
+                                    {...klerosCases.arbitrateOwnershipAdjustment}
+                                />
+                            </Flex>
+                        </SwitchableOutside>
+                        {/* Confirm transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -261,7 +312,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Waiting for transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -277,7 +328,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Case sent to Kleros */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
@@ -304,7 +355,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Box>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Transaction canceled */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
@@ -317,7 +368,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Error occured */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
@@ -330,7 +381,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        {/* Transaction timeout */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>

@@ -31,9 +31,9 @@ export const supportedChains = [
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 
 export const libraryPollingInterval = 12000
-export const nftpContractAddress = '0xC9e3a16f869C159DA241FC9c73A0B68b763d4A7d'
-export const userRegistryContractAddress = '0xe2A88A01D215C34B00F9Eb371ce77ECa5Fc0e43F'
-export const couponsContractAddress = '0x0cbFAC30A803A90e4FE052A323AA42D47498CA96'
+export const nftpContractAddress = '0x25debaab06be555b861b97bde7682415961c1b58'
+export const userRegistryContractAddress = '0xb22376D9fa05efFe958027236E873efD5eF6EA5D'
+export const couponsContractAddress = '0xa90502454a9C18bD722bd400D1ABA8d571EDD804'
 
 export const dialogsTimeout = 3000
 
@@ -46,6 +46,7 @@ export enum Arbitrators {
     Dummy,
     Kleros
 }
+export const defaultArbitrator = 2
 
 // Kleros
 export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'

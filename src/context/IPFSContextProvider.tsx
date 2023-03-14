@@ -20,8 +20,8 @@ export function IPFSContextProvider({ children }:any) {
     const ipfs = ipfsClient(config)
 
     // Returns ipfs url by hash
-    const getIpfsUrl = (hash: string) => {
-        return `ipfs://${hash}/`
+    const getIpfsUrl = (hash: string, fileName:string|undefined = undefined) => {
+        return `ipfs://${hash}/` + (fileName || '')
     }
 
     // Returns url with defined IPFS provider by hash
@@ -32,7 +32,7 @@ export function IPFSContextProvider({ children }:any) {
     // Makes centralized url from ipfs:// url
     const centalizeIpfsUrl = (url: string) => {
         if (url.startsWith('ipfs://')) {
-            const hash = url.replace('ipfs://','').replaceAll('/','')
+            const hash = url.replace('ipfs://','').split('/')[0]
             return getCentralizedUrl(hash)
         } else {
             return url

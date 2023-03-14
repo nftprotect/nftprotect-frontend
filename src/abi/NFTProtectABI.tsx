@@ -1,47 +1,19 @@
 const NFTProtectABI = [
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "from",
+				"name": "areg",
 				"type": "address"
 			},
 			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "to",
+				"name": "ureg",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amountWei",
-				"type": "uint256"
 			}
 		],
-		"name": "AffiliatePayment",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "userPercent",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "partnerPercent",
-				"type": "uint256"
-			}
-		],
-		"name": "AffiliatePercentChanged",
-		"type": "event"
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"anonymous": false,
@@ -99,11 +71,11 @@ const NFTProtectABI = [
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "arbitrator",
+				"name": "areg",
 				"type": "address"
 			}
 		],
-		"name": "ArbitratorChanged",
+		"name": "ArbitratorRegistryChanged",
 		"type": "event"
 	},
 	{
@@ -136,9 +108,27 @@ const NFTProtectABI = [
 			},
 			{
 				"indexed": false,
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "arbitrator",
+				"type": "address"
 			}
 		],
 		"name": "BurnArbitrateAsked",
@@ -168,6 +158,68 @@ const NFTProtectABI = [
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "contract IArbitrator",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "_disputeID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_metaEvidenceID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_evidenceGroupID",
+				"type": "uint256"
+			}
+		],
+		"name": "Dispute",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "contract IArbitrator",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "_evidenceGroupID",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_party",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_evidence",
+				"type": "string"
+			}
+		],
+		"name": "Evidence",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"internalType": "enum NFTProtect.Security",
 				"name": "level",
 				"type": "uint8"
@@ -187,6 +239,25 @@ const NFTProtectABI = [
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "uint256",
+				"name": "_metaEvidenceID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_evidence",
+				"type": "string"
+			}
+		],
+		"name": "MetaEvidence",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "newowner",
 				"type": "address"
@@ -198,7 +269,7 @@ const NFTProtectABI = [
 				"type": "address"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
@@ -262,9 +333,27 @@ const NFTProtectABI = [
 			},
 			{
 				"indexed": false,
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "arbitrator",
+				"type": "address"
 			}
 		],
 		"name": "OwnershipAdjustmentArbitrateAsked",
@@ -296,6 +385,12 @@ const NFTProtectABI = [
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "arbitrator",
+				"type": "address"
 			}
 		],
 		"name": "OwnershipAdjustmentAsked",
@@ -330,6 +425,25 @@ const NFTProtectABI = [
 				"type": "uint256"
 			},
 			{
+				"indexed": false,
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
+			}
+		],
+		"name": "OwnershipRestoreAppealed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
+			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "newowner",
@@ -346,6 +460,12 @@ const NFTProtectABI = [
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "arbitrator",
+				"type": "address"
 			}
 		],
 		"name": "OwnershipRestoreAsked",
@@ -368,44 +488,6 @@ const NFTProtectABI = [
 			}
 		],
 		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "partnet",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "state",
-				"type": "bool"
-			}
-		],
-		"name": "PartnerSet",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "referrer",
-				"type": "address"
-			}
-		],
-		"name": "ReferrerSet",
 		"type": "event"
 	},
 	{
@@ -477,7 +559,7 @@ const NFTProtectABI = [
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "owner",
+				"name": "dst",
 				"type": "address"
 			},
 			{
@@ -631,6 +713,16 @@ const NFTProtectABI = [
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "arbitratorId",
+				"type": "uint256"
 			}
 		],
 		"name": "adjustOwnership",
@@ -654,6 +746,11 @@ const NFTProtectABI = [
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
 			}
 		],
 		"name": "answerOwnershipAdjustment",
@@ -680,10 +777,33 @@ const NFTProtectABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "arbitratorRegistry",
+		"outputs": [
+			{
+				"internalType": "contract ArbitratorRegistry",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
 				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "arbitratorId",
 				"type": "uint256"
 			}
 		],
@@ -703,6 +823,11 @@ const NFTProtectABI = [
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
 			}
 		],
 		"name": "askOwnershipAdjustmentArbitrate",
@@ -721,440 +846,26 @@ const NFTProtectABI = [
 				"internalType": "bytes",
 				"name": "extraData",
 				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "arbitratorId",
+				"type": "uint256"
 			}
 		],
 		"name": "askOwnershipRestoreArbitrate",
 		"outputs": [],
 		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "burn",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "ownershipAdjustmentAppeal",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "ruling",
-				"type": "uint256"
-			}
-		],
-		"name": "rule",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "userPercent",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "partnerPercent",
-				"type": "uint256"
-			}
-		],
-		"name": "setAffiliatePercent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "arb",
-				"type": "address"
-			}
-		],
-		"name": "setArbitrator",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "b",
-				"type": "string"
-			}
-		],
-		"name": "setBase",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bool",
-				"name": "boa",
-				"type": "bool"
-			}
-		],
-		"name": "setBurnOnAction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "enum NFTProtect.Security",
-				"name": "level",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint256",
-				"name": "fw",
-				"type": "uint256"
-			}
-		],
-		"name": "setFee",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "partner",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "state",
-				"type": "bool"
-			}
-		],
-		"name": "setPartner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "threshold",
-				"type": "uint256"
-			}
-		],
-		"name": "setScoreThreshold",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "ureg",
-				"type": "address"
-			}
-		],
-		"name": "setUserRegistry",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC1155",
-				"name": "contr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "enum NFTProtect.Security",
-				"name": "level",
-				"type": "uint8"
-			},
-			{
-				"internalType": "address payable",
-				"name": "referrer",
-				"type": "address"
-			}
-		],
-		"name": "wrap1155",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "contr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "enum NFTProtect.Security",
-				"name": "level",
-				"type": "uint8"
-			},
-			{
-				"internalType": "address payable",
-				"name": "referrer",
-				"type": "address"
-			}
-		],
-		"name": "wrap20",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC721",
-				"name": "contr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "enum NFTProtect.Security",
-				"name": "level",
-				"type": "uint8"
-			},
-			{
-				"internalType": "address payable",
-				"name": "referrer",
-				"type": "address"
-			}
-		],
-		"name": "wrap721",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "arb",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "ureg",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "affiliatePartnerPercent",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "affiliateUserPercent",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "arbitrator",
-		"outputs": [
-			{
-				"internalType": "contract IArbitrator",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -1187,6 +898,39 @@ const NFTProtectABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "arbitratorId",
+				"type": "uint256"
+			}
+		],
+		"name": "burn",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -1315,6 +1059,19 @@ const NFTProtectABI = [
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "metaEvidenceCounter",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -1499,39 +1256,44 @@ const NFTProtectABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "partners",
-		"outputs": [
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
 			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
 			}
 		],
-		"stateMutability": "view",
+		"name": "ownershipAdjustmentAppeal",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "referrers",
-		"outputs": [
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
 			{
-				"internalType": "address payable",
-				"name": "",
-				"type": "address"
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
 			}
 		],
-		"stateMutability": "view",
+		"name": "ownershipRestoreAppeal",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1570,8 +1332,18 @@ const NFTProtectABI = [
 				"type": "uint8"
 			},
 			{
+				"internalType": "contract IArbitrator",
+				"name": "arbitrator",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
 				"name": "disputeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "evidenceId",
 				"type": "uint256"
 			}
 		],
@@ -1592,6 +1364,75 @@ const NFTProtectABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "disputeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ruling",
+				"type": "uint256"
+			}
+		],
+		"name": "rule",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "scoreThreshold",
 		"outputs": [
@@ -1602,6 +1443,125 @@ const NFTProtectABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "areg",
+				"type": "address"
+			}
+		],
+		"name": "setArbitratorRegistry",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "b",
+				"type": "string"
+			}
+		],
+		"name": "setBase",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "boa",
+				"type": "bool"
+			}
+		],
+		"name": "setBurnOnAction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "enum NFTProtect.Security",
+				"name": "level",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fw",
+				"type": "uint256"
+			}
+		],
+		"name": "setFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "threshold",
+				"type": "uint256"
+			}
+		],
+		"name": "setScoreThreshold",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "ureg",
+				"type": "address"
+			}
+		],
+		"name": "setUserRegistry",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "evidence",
+				"type": "string"
+			}
+		],
+		"name": "submitEvidence",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1626,6 +1586,44 @@ const NFTProtectABI = [
 	{
 		"inputs": [],
 		"name": "symbol",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenToRequest",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenURI",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -1706,39 +1704,37 @@ const NFTProtectABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenToRequest",
-		"outputs": [
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
 			}
 		],
-		"name": "tokenURI",
-		"outputs": [
+		"name": "transferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
 			}
 		],
-		"stateMutability": "view",
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1752,6 +1748,95 @@ const NFTProtectABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract ERC1155",
+				"name": "contr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum NFTProtect.Security",
+				"name": "level",
+				"type": "uint8"
+			},
+			{
+				"internalType": "address payable",
+				"name": "referrer",
+				"type": "address"
+			}
+		],
+		"name": "wrap1155",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "contr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum NFTProtect.Security",
+				"name": "level",
+				"type": "uint8"
+			},
+			{
+				"internalType": "address payable",
+				"name": "referrer",
+				"type": "address"
+			}
+		],
+		"name": "wrap20",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract ERC721",
+				"name": "contr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum NFTProtect.Security",
+				"name": "level",
+				"type": "uint8"
+			},
+			{
+				"internalType": "address payable",
+				"name": "referrer",
+				"type": "address"
+			}
+		],
+		"name": "wrap721",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	}
 ]

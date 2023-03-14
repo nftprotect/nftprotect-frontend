@@ -30,6 +30,7 @@ import {AlertCircle} from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
+import { defaultArbitrator } from '../../../utils/config';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -106,7 +107,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
     const startButtonOnClick = () => {
         try {
             console.log('ADJUST')
-            nftProtectContract.adjustOwnership(nft.tokenId, '')
+            nftProtectContract.adjustOwnership(nft.tokenId, 0, '', defaultArbitrator)
                 .then( finalTransactionSent(
                     tokenContract,
                     StepMapping.waitingForFinalSent,
@@ -126,7 +127,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
     const sendButtonOnClick = () => {
         try {
             console.log('ANSWER ADJUSTMENT OK')
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0)
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0, '')
             .then( finalTransactionSent(
                 tokenContract,
                 StepMapping.waitingForFinalSent,
@@ -146,7 +147,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
     const rejectButtonOnClick = () => {
         try {
             console.log('ANSWER ADJUSTMENT REJECT')
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0)
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0, '')
             .then( finalTransactionSent(
                 tokenContract,
                 StepMapping.waitingForFinalRejected,
