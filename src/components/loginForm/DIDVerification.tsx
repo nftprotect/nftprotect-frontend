@@ -7,6 +7,7 @@ import {
     Text,
 
 } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 const DIDVerification = ({disclosure}: any) => {
     function goToExternalPage() {
@@ -25,17 +26,17 @@ const DIDVerification = ({disclosure}: any) => {
                 pb={[2]}
                 alignSelf="center"
             >
-                Пройдите верификацию DID
+                <Trans>Please complete DID verification</Trans>
             </Heading>
             <Box 
                 fontSize={['xs', 'sm', 'md']}
                 p={[4, 8]}
             >
                 <Text mb={[2, 4]}>
-                    Чтобы воспользоваться всеми функциями приложения, пройдите верификацию DID.
+                <Trans>To access all the features of the application, please complete DID verification.</Trans>
                 </Text>
                 <Text>
-                    Пока вы не прошли DID, единственная доступная функция - запросить права на оригинал при приобретении wNFT.
+                <Trans>Until you complete DID verification, the only available function is to request rights to the original when purchasing pNFT.</Trans>
                 </Text>
             </Box>
 
@@ -44,7 +45,7 @@ const DIDVerification = ({disclosure}: any) => {
                 variant="primary-solid"
                 alignSelf="center"
                 w={['15em']}
-            >Proceed to DID
+            ><Trans>Proceed to DID</Trans>
             </Button>
         </Flex>
     )

@@ -63,7 +63,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const [ hasMetadata, setHasMetadata ] = useState(true)
     // In case of external metadata fetching it marks if fetch is ended
     const [ fetchEnded, setFetchEnded ] = useState(false)
-    // If our NFT is wNFT it stores the info about original NFT
+    // If our NFT is pNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
     // Stores pending request data if available
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
@@ -75,9 +75,9 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const tokenContract = nft.contractType === 'ERC721' ?
         new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
         new Contract(nft.tokenAddress.format(), ERC1155ABI, library?.getSigner())
-    // Marks if our NFT is wNFT
+    // Marks if our NFT is pNFT
     const isWNFT = tokenContract.address.toLowerCase() === nftProtectContract.address.toLowerCase()
-    // Marks if this is our wNFT on other address
+    // Marks if this is our pNFT on other address
     const isOnAnotherAddress = isWNFT ? 
         nft.ownerOf?.format().toLowerCase() !== account?.toLowerCase() :
         false
@@ -93,7 +93,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         return {response, data}
     }
 
-    // If our NFT is wNFT we have to know about the original NFT
+    // If our NFT is pNFT we have to know about the original NFT
     const loadOriginalNFTData = () => {
         const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
         nftProtectContract.tokens(nft.tokenId).then(([ 
@@ -134,7 +134,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         })
     }
 
-    // Checks if wNFT has request to transfer
+    // Checks if pNFT has request to transfer
     const loadPendingRequest = () => {
         nftProtectContract.tokenToRequest(nft.tokenId).then((requestId: number) => {
             if (requestId.toString() !== '0') {
@@ -145,7 +145,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         })
     }
 
-    // Checks if wNFT has request to transfer
+    // Checks if pNFT has request to transfer
     const loadOriginalOwner = () => {
         nftProtectContract.originalOwnerOf(nft.tokenId).then((address: string) => {
             setOriginalOwner(address)
@@ -193,12 +193,12 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     let result = <div />
     let buttons = <div />
     if (isWNFT) {
-        // We can't show buttons for wNFT before we have info about original NFT
+        // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
             console.log('PENDING REQUEST:', nft.tokenId, pendingRequest)
             if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() === account?.toLowerCase())) {
-                // Original NFT and wNFT are both belong to user
+                // Original NFT and pNFT are both belong to user
                 buttons = <UnSecureNFTButton 
                     nft={ nft } 
                     metadata={ metadata } 
@@ -206,7 +206,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                     tokenContract={ tokenContract }
                 />
             } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
-                // This wNFT belongs to user but original is not
+                // This pNFT belongs to user but original is not
                 if (!pendingRequest) {
                     // If no request pending then we can sent it, so showing the button
                     buttons = <RequestOriginalNFTButton
@@ -236,7 +236,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                 }
             }
             else if (isOnAnotherAddress) {
-                // Original NFT belongs to user, but this wNFT is not
+                // Original NFT belongs to user, but this pNFT is not
                 buttons = <ReleaseOriginalNFTButton
                     nft={ nft } 
                     metadata={ metadata } 

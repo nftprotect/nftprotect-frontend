@@ -19,7 +19,7 @@ import {
 import { useEffect } from "react"
 import { useNotificationContext } from "../../context/NotificationContextProvider"
 import {Bell} from '@web3uikit/icons'
-
+import { Trans } from '@lingui/macro'
 
 const severityMapping: {
     status: 'success'|'info'|'warning'|'error'
@@ -90,7 +90,7 @@ const ShowNotifications = () => {
                                 fontSize={["1em", "1.2em"]} 
                                 lineHeight={["1em", "1.2em"]}
                             >
-                                Notifications
+                                <Trans>Notifications</Trans>
                             </Text>
                         </Flex>
                         <Flex 
@@ -101,7 +101,7 @@ const ShowNotifications = () => {
                             fontWeight="600"
                         >
                             <Text>
-                                Show all
+                            <Trans>Show all</Trans>
                             </Text>
                             <AccordionIcon />
                         </Flex>
@@ -159,7 +159,7 @@ const NotificationAlert = ({
                     mr={[4]}
                     textTransform="uppercase"
                 >
-                    Read more
+                    <Trans>Read more</Trans>
                 </Button>
                 <Flex justifyContent="center" >
                     {

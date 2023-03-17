@@ -13,6 +13,7 @@ import {
 
 import {Metamask} from '@web3uikit/icons'
 import { useAppContext } from '../../context/AppContextProvider';
+import { Trans } from '@lingui/macro'
 
 const ApproveConnection = ({disclosure}: any) => {
     const { active, didRegistered } = useAppContext()
@@ -51,16 +52,19 @@ const ApproveConnection = ({disclosure}: any) => {
                 <Heading
                     fontSize={['lg', 'xl', '2xl']}
                     mb={[4, 8]}
-                >Get Started
+                >
+                    <Trans>Get Started</Trans>
                 </Heading>
                 <Heading
                     fontSize={['md', 'lg', 'xl']}
                     mb={2}
-                >Approve connection
+                >
+                    <Trans>Approve connection</Trans>
                 </Heading>
                 <Text
                     fontSize={['xs', 'sm', 'md']}
-                >Please approve the connection in your wallet and authorize access to continue.
+                >
+                    <Trans>Please approve the connection in your wallet and authorize access to continue.</Trans>
                 </Text>
             </Flex>
             
@@ -77,7 +81,7 @@ const ApproveConnection = ({disclosure}: any) => {
                         alignSelf="center"
                         borderBottom="2px dotted #C3D4FF"
                     >
-                        Connecting to Metamask
+                        <Trans>Connecting to Metamask</Trans>
                     </Heading>
                 </Box>
                 
@@ -103,13 +107,13 @@ const ApproveConnection = ({disclosure}: any) => {
                             fontSize={['md', 'lg', 'xl']}
                             mb={2} 
                         >
-                            Connecting...
+                            <Trans>Connecting&mldr;</Trans>
                         </Heading>
                         <Text 
                             fontSize={['xs', 'sm', 'md']}
                             mb={[2]}
                         >
-                            Make sure to select all accounts that you want to grant access to.
+                            <Trans>Make sure to select all accounts that you want to grant access to.</Trans>
                         </Text>
                     </Flex>
                 </Flex>

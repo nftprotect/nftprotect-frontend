@@ -17,6 +17,34 @@ import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotificationContext } from '../context/NotificationContextProvider'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { Trans } from '@lingui/macro'
+import { GetStaticProps } from 'next'
+
+async function loadTranslation(locale: string, isProduction = true) {
+    let data
+    if (isProduction) {
+        data = await import(`../locales/${locale}/messages`)
+    } else {
+        data = await import(
+            `@lingui/loader!../locales/${locale}/messages.po`
+        )
+    }
+  
+    return data.messages
+}
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+    const translation = await loadTranslation(
+        ctx.locale!,
+        process.env.NODE_ENV === 'production'
+    )
+  
+    return {
+        props: {
+            translation
+        }
+    }
+}
 
 const Home: NextPage = () => {
 
@@ -96,13 +124,14 @@ const Home: NextPage = () => {
                         mt={["1em"]}
                         fontSize={{sm:"2em", md: "3em", lg: "4rem"}} 
                         lineHeight={["28px", "36px", "42px", "58px"]} 
-                    >Protect your digital assets from bad actors
+                    ><Trans>Protect your digital assets from bad actors</Trans>
                     </Heading>
                     <Text 
                         fontSize={["1em", "1.5em"]} 
                         mt={[8]}
                         lineHeight={["1em", "1.2em"]}
-                    >Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise
+                    >
+                        <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
                     </Text>
 
                     { !active &&
@@ -111,13 +140,15 @@ const Home: NextPage = () => {
                                 mt={[4, 6]}
                                 fontSize={['xs', 'sm', 'md']}
                                 color="rgba(31, 32, 65, .9)"
-                            > Please connect your wallet to see your NFT and wNFT (or ... to protect your NFT)
+                            >
+                                <Trans>Please connect your wallet to see your NFT and pNFT (or ... to protect your NFT)</Trans>
                             </Text>
                             <Text
                                 fontSize={['xs', 'sm', 'md']} 
                                 color="rgba(31, 32, 65, .9)"
                                 mb={[4, 6]}
-                            >View only permissions. We will never do anything without your permission
+                            >
+                                <Trans>View only permissions. We will never do anything without your permission</Trans>
                             </Text>
                             <Box w={["15rem"]}>
                                 <LoginForm />

@@ -13,6 +13,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { useAppContext } from '../../context/AppContextProvider';
+import { Trans } from '@lingui/macro'
 
 const LoginForm = () => {
     const { active } = useAppContext()
@@ -26,7 +27,8 @@ const LoginForm = () => {
                 variant='monochrome-transparent'
                 onClick={onOpen}
                 leftIcon={<Wallet fontSize='20px'/>}
-            >Connect Wallet
+            >
+                <Trans>Connect Wallet</Trans>
             </Button> 
         }
         

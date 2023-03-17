@@ -9,6 +9,7 @@ import NetworkMenu from './NetworkMenu'
 import MainMenu from './MainMenu'
 import { useAppContext } from '../../context/AppContextProvider'
 import LoginForm from '../loginForm/LoginForm'
+import { LocaleMenu } from './LocaleMenu'
 
 const NavBar = () => {
 
@@ -51,6 +52,7 @@ const NavBar = () => {
                     <Flex 
                         py={[4, 0]}
                     >
+                        <LocaleMenu/>
                         <MainMenu />
                         <LoginForm/>
                         { active && <NetworkMenu /> }
