@@ -24,7 +24,8 @@ const NavBar = () => {
             color="#FFF"
             w="100%"
             maxW="2200px"
-            p={[3, 6]}
+            px={[3, 6]}
+            py="0.375rem"
         >
             <nav key="navBar">
                 <Flex
@@ -50,11 +51,11 @@ const NavBar = () => {
                     </Flex>
                     
                     <Flex 
-                        py={[4, 0]}
+                        // py={[4, 0]}
                     >
                         <LocaleMenu/>
                         <MainMenu />
-                        <LoginForm/>
+                        <LoginForm buttonVariant={'monochrome-transparent'} />
                         { active && <NetworkMenu /> }
                         { active && <ShowConnectionState /> }
                     </Flex>
