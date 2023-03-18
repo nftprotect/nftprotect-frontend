@@ -14,6 +14,9 @@ import { en, ru } from 'make-plural/plurals'
 import { useRouter } from 'next/router'
 import { useRef, useEffect } from 'react'
 import { I18nProvider } from '@lingui/react'
+import '@fontsource/lexend/400.css'
+import '@fontsource/lexend/600.css'
+import '@fontsource/lexend/700.css'
 
 function initTranslation(i18n: I18n): void {
     i18n.loadLocaleData({
