@@ -182,9 +182,9 @@ const Home: NextPage = () => {
                     <Box
                         position="absolute"
                         display={{base: "none", sm: "block"}}
-                        right={{base: "1rem",lg: "1rem"}}
-                        top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem"}}
-                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%"}}
+                        right={{base: "1rem", lg: "1rem", '2xl': "16rem"}}
+                        top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem", '2xl': "-3rem"}}
+                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "25%"}}
                         zIndex="0"
                     >
                         <Image src="/images/phone.png" alt="Phone"></Image>
