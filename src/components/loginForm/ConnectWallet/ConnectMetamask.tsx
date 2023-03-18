@@ -38,7 +38,7 @@ const ConnectMetamask = () => {
 
     return (
         <Button
-            variant='monochrome-transparent'
+            variant='primary-outline'
             onClick={active ? onClickDisconnect : onClickConnect}
             leftIcon={<Metamask fontSize='20px'/>}
             w={['15em']}
