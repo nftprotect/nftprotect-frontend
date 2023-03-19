@@ -262,7 +262,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Text>
                                 <Button 
                                     onClick={ startButtonOnClick }
-                                    variant="primary-solid"
+                                    variant="monochrome-lightBackground"
                                     my={2}
                                     w="100%"
                                     textTransform="uppercase"

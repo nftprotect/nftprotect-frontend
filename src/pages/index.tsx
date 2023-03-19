@@ -97,7 +97,7 @@ const Home: NextPage = () => {
                 position="relative"
                 top="0" 
                 left="0"
-                mb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
+                pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
                 bgImage={active ? "none" : "url('/images/banner.png')"}
                 bgRepeat="no-repeat"
                 bgSize="cover"
@@ -106,7 +106,8 @@ const Home: NextPage = () => {
                     flexDirection="column" 
                     justifyContent="center"
                     pt={{base:"2.5rem", md:"5.25rem", xl: "8.25rem" }}
-                    pl={{base: "1rem", sm: "2rem", md: "4rem", lg: "5rem", xl: "10rem"}}
+                    // pl={{base: "1rem", sm: "2rem", md: "4rem", lg: "5rem", xl: "10rem"}}
+                    px={['1rem', '3rem']}
                     pb={{base: "2rem"}}
                 >
                     {active &&
@@ -115,7 +116,7 @@ const Home: NextPage = () => {
                                 fontSize={{base: "1.5rem", md: "2.625rem"}}
                                 lineHeight={{base: "1.75rem", md: "2.625rem"}}
                             >
-                                <Trans>Protect your digital assets from bad actors</Trans>
+                                <Trans>Protect your digital <br />assets from bad<br /> actors</Trans>
                             </Heading>
                             <Text 
                                 pt="1.25rem"
@@ -170,7 +171,7 @@ const Home: NextPage = () => {
                         display={{base: "none", sm: "block"}}
                         right={{base: "1rem", lg: "1rem", '2xl': "16rem"}}
                         top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem", '2xl': "-3rem"}}
-                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "2%"}}
+                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "20%"}}
                         zIndex="0"
                     >
                         <Image src="/images/phone.png" alt="Phone"></Image>

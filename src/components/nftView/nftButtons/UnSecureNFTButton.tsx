@@ -129,7 +129,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
     }
 
     return (<>
-        <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
+        <Button onClick={ mainButtonOnClick } variant="monochrome-lightBackground" w="100%">
             <Trans>Restore original</Trans>
         </Button>
         <Modal 
@@ -186,7 +186,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                     <Box minW="40%">
                                         <Button 
                                             onClick={ startButtonOnClick }
-                                            variant='primary-solid'
+                                            variant='monochrome-lightBackground'
                                             w="100%"
                                             my={2}
                                         >
@@ -197,7 +197,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                     <Box minW="40%">
                                         <Button
                                             onClick={ onClose }
-                                            variant="monochrome-transparent"
+                                            variant="monochrome-lightBackground"
                                             my={2}
                                             w="100%"
                                         >
@@ -268,7 +268,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                         my={2}
                                         w="100%"
                                         h={[8, 10]}
-                                        variant="monochrome-transparent"
+                                        variant="monochrome-lightBackground"
                                     >
                                         <Trans>Cancel</Trans>
                                     </Button>
