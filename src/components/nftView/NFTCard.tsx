@@ -361,7 +361,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                         flexDirection="column"
                         justifyContent="space-between"
                     >
-                        <Box mb={{base: "1.25rem"}}>{ result }</Box>
+                        <Flex mb={{base: "1.25rem"}} justifyContent="center">{ result }</Flex>
 
                         <Text 
                             fontWeight="700"
