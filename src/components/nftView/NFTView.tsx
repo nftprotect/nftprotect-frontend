@@ -134,7 +134,7 @@ const NFTView = () => {
 
     return (
         <>
-            <Accordion border="none" defaultIndex={[0, 1, 2]} allowMultiple>
+            <Accordion border="none" defaultIndex={[0, 1, 2]}>
                 <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
                         <AccordionButton 
@@ -168,8 +168,8 @@ const NFTView = () => {
                     </AccordionPanel>
                 </AccordionItem>
 
-                <AccordionItem px={['1rem', '3rem']}>
-                    <Flex alignItems="center" justifyContent="space-between">
+                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                    <Flex color="#FFF" alignItems="center" justifyContent="space-between">
                         <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
                         <AccordionIcon mr={[2]} />
                             <Heading fontSize={['lg', 'xl', '2xl']}>
