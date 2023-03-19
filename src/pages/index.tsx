@@ -82,7 +82,7 @@ const Home: NextPage = () => {
     let innerPart = <div/>
     if ( active ) {
         innerPart = <>
-            { notificationsCount && <ShowNotifications/> }
+            { notificationsCount ? <ShowNotifications/> : <></> }
         </>
     }
 

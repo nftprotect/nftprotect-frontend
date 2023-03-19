@@ -29,7 +29,8 @@ import { formatAddress } from '../../utils/helpers';
 
 interface NFTInitialData {
     nft: EvmNft,
-    nftReFetch: Function
+    nftReFetch: Function,
+    setRefreshPaused: Function
 }
 
 interface OriginalNFTData {
@@ -59,7 +60,7 @@ export enum RequestStatus {
     Disputed
 }
 
-const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
+const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
     const {
@@ -247,7 +248,8 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                 buttons = <UnSecureNFTButton 
                     nft={ nft } 
                     metadata={ metadata } 
-                    nftReFetch={ nftReFetch } 
+                    nftReFetch={ nftReFetch }
+                    setRefreshPaused = { setRefreshPaused }
                     tokenContract={ tokenContract }
                 />
             } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
@@ -257,7 +259,8 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                     buttons = <RequestOriginalNFTButton
                         nft={ nft } 
                         metadata={ metadata } 
-                        nftReFetch={ nftReFetch } 
+                        nftReFetch={ nftReFetch }
+                        setRefreshPaused = { setRefreshPaused }
                         tokenContract={ tokenContract }
                         originalOwner={ originalOwner || '' }
                     />
@@ -267,16 +270,17 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                         buttons = <ArbitrateOwnershipAdjustmentButton
                             nft={ nft } 
                             metadata={ metadata } 
-                            nftReFetch={ nftReFetch } 
+                            nftReFetch={ nftReFetch }
+                            setRefreshPaused = { setRefreshPaused }
                             pendingRequest={ pendingRequest }
                             originalOwner={ originalOwner || '' }
                             loadPendingRequest={ loadPendingRequest }
                         />
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
-                        buttons = <Text>Pending request...</Text>
+                        buttons = <Text><Trans>{"Pending request…"}</Trans></Text>
                     } else if (pendingRequest.status === RequestStatus.Disputed) {
-                        buttons = <Text>Uder dispute {pendingRequest.disputeId}...</Text>
+                        buttons = <Text>{`Under dispute ${pendingRequest.disputeId}…`}</Text>
                     }
                 }
             }
@@ -286,7 +290,8 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                     <ReleaseOriginalNFTButton
                         nft={ nft } 
                         metadata={ metadata } 
-                        nftReFetch={ nftReFetch } 
+                        nftReFetch={ nftReFetch }
+                        setRefreshPaused = { setRefreshPaused }
                         tokenContract={ tokenContract }
                         pendingRequest={ pendingRequest?.id }
                     />
@@ -294,6 +299,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                         nft={ nft } 
                         metadata={ metadata }
                         nftReFetch={ nftReFetch }
+                        setRefreshPaused = { setRefreshPaused }
                         tokenContract={ tokenContract }
                     />
                 </>)
@@ -304,6 +310,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
             nft={ nft } 
             metadata={ metadata }
             nftReFetch={ nftReFetch }
+            setRefreshPaused={ setRefreshPaused }
             tokenContract={ tokenContract }
         />
     }

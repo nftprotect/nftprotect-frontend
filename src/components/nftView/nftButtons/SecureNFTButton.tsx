@@ -30,10 +30,11 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -101,7 +102,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             didDialogDisclosure.onOpen();
             return
         }
-
+        setRefreshPaused(true)
         setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
@@ -157,6 +158,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start)
         onOpen()
+        setRefreshPaused(true)
     }
 
     const startButtonOnClick = () => {
@@ -220,6 +222,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 

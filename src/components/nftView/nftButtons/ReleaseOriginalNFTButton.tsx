@@ -34,13 +34,14 @@ import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: any // metadata of EvmNft can be empty, so passing it separately
-    nftReFetch: Function // function to update nft list
+    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
     pendingRequest: number | undefined
 }
 
-const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pendingRequest}: ButtonInitialData) => {
+const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, pendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -100,6 +101,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
             setNextStep(StepMapping.startAnswerReleaseOriginal) :
             setNextStep(StepMapping.startReleaseOriginal)
         onOpen()
+        setRefreshPaused(true)
     }
 
     const startButtonOnClick = () => {
@@ -196,6 +198,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                         StepMapping.startAnswerReleaseOriginal
                 )
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 

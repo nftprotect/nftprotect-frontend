@@ -32,11 +32,12 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
     originalOwner: string // Owner address of original NFT
 }
 
-const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
+const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -94,6 +95,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start);
         onOpen()
+        setRefreshPaused(true)
     }
 
     const startButtonOnClick = () => {
@@ -140,6 +142,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 

@@ -25,6 +25,9 @@ const NFTView = () => {
 
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
     const { isOpen, onToggle } = useDisclosure()
+    // Holds component data refresh while refreshPaused
+    const [ refreshPaused, setRefreshPaused ] = useState(false)
+    const [ refreshNeeded, setRefreshNeeded ] = useState(false)
 
     const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: currentChain.id,
@@ -33,12 +36,21 @@ const NFTView = () => {
 
     const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
 
+    const reFetch = (force = false) => {
+        if (refreshPaused && !force) {
+            setRefreshNeeded(true)
+        } else if (!refreshNeeded) {
+            fetch()
+        }
+    }
+
     const renderNFT = (nft: EvmNft) => {
         console.log('NFT: ', nft.name, nft)
         return <NFTCard
             key={nft.tokenHash}
             nft={nft}
-            nftReFetch={fetch}
+            nftReFetch={reFetch}
+            setRefreshPaused={setRefreshPaused}
         />
     }
     const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
@@ -83,6 +95,16 @@ const NFTView = () => {
     })
     // Ends here
     const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
+
+    useEffect(() => {
+        // Update data when refresh unpaused if needed
+        if (!refreshPaused) {
+            if (refreshNeeded) {
+                fetch()
+                setRefreshNeeded(false)
+            }
+        }
+    }, [refreshPaused])
 
     return (
         <>

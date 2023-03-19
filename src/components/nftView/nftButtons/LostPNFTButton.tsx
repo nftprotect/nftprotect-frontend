@@ -47,10 +47,11 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
-    tokenContract: Contract
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
+    tokenContract: Contract,
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -77,6 +78,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start)
         onOpen()
+        setRefreshPaused(true)
     }
 
     function getNftImage() {
@@ -112,7 +114,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
             onClick={ mainButtonOnClick }
             variant="primary-solid"
             w="100%"
-        >Lost pNFT
+        >
+            <Trans>Lost pNFT</Trans>
         </Button>
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
@@ -122,6 +125,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 

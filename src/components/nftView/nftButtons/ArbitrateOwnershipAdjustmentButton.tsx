@@ -45,12 +45,13 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function // Function to pause/unpause nft list updating
     pendingRequest: ActionRequest,
-    originalOwner: string // Owner address of original NFT,
-    loadPendingRequest: Function // Function to reload a pending request
+    originalOwner: string, // Owner address of original NFT,
+    loadPendingRequest: Function, // Function to reload a pending request
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library } = useAppContext()
     const { ipfs, getCentralizedUrl, getIpfsUrl, centralizeIpfsUrl } = useIPFSContext()
@@ -115,11 +116,11 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start);
         onOpen()
+        setRefreshPaused(true)
     }
 
     const klerosFormSubmit = (metaEvidence: any) => {
         uploadMetaEvidence(metaEvidence).then((result:any) => {
-            console.log('FFFFFFFF', result, library)
             setNextStep(StepMapping.confirmTransaction)
             const dirHash = result.uploadResult.cid.toString()//toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
@@ -174,13 +175,15 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
             variant="primary-solid"
             my={2}
             w="100%"
-        ><Trans>Open dispute</Trans>
+        >
+            <Trans>Open dispute</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 
