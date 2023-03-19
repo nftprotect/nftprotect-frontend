@@ -36,7 +36,7 @@ interface ButtonInitialData {
 const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -190,7 +190,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = centalizeIpfsUrl(metadata?.image || '')
+            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
             nftImage = <Box
                             my={[4]}
                             border="2px solid rgba(255, 255, 255, 0.5)"

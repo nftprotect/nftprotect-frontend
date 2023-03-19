@@ -53,7 +53,7 @@ interface ButtonInitialData {
 const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library } = useAppContext()
-    const { ipfs, getCentralizedUrl, getIpfsUrl, centalizeIpfsUrl } = useIPFSContext()
+    const { ipfs, getCentralizedUrl, getIpfsUrl, centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [url, setUrl] = useState<string>()
@@ -159,7 +159,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
 
     function getNftImage() {
         if (metadata) {
-            let imgUrl = centalizeIpfsUrl(metadata.image)
+            let imgUrl = centralizeIpfsUrl(metadata.image)
             return (<Image 
                     src={ imgUrl } 
                     alt={t`NFT image`} 

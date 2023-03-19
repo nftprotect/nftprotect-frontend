@@ -39,7 +39,7 @@ interface ButtonInitialData {
 const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
@@ -117,7 +117,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
 
     function getNftImage() {
         if (metadata) {
-            let imgUrl = centalizeIpfsUrl(metadata.image)
+            let imgUrl = centralizeIpfsUrl(metadata.image)
             return (<Image 
                     src={ imgUrl } 
                     alt="NFT image" 

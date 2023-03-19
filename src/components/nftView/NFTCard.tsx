@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import {
+    Heading,
     Card, 
     CardBody, 
     Text,
@@ -22,6 +23,9 @@ import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
 import { useIPFSContext } from '../../context/IPFSContextProvider';
+import { useNotificationContext } from '../../context/NotificationContextProvider';
+import { Trans } from '@lingui/macro';
+import { formatAddress } from '../../utils/helpers';
 
 interface NFTInitialData {
     nft: EvmNft,
@@ -57,7 +61,11 @@ export enum RequestStatus {
 
 const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
+    const {
+        addNotifications, 
+        notificationsCount
+    } = useNotificationContext()
     // Stores the metadata of NFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -141,6 +149,42 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
             if (requestId.toString() !== '0') {
                 nftProtectContract.requests(requestId).then((request: any) => {
                     setPendingRequest({id: requestId, ...request})
+                    const newOwnerAddressFormatted = formatAddress(request.newowner, 4)
+                    // Temporarily workaround
+                    if (isWNFT && isOnAnotherAddress && originalNFTData && 
+                        (originalNFTData.owner.toLowerCase() !== account?.toLowerCase()) &&
+                        nft.ownerOf && (nft.ownerOf.format().toLowerCase() !== account?.toLowerCase())) {
+                            return
+                        }
+                    return // temporary disable notification creating
+                    if (isOnAnotherAddress) {
+                        addNotifications([
+                            {
+                                id:'request-'+requestId,
+                                image: metadata && {
+                                    url: centralizeIpfsUrl(metadata.image),
+                                    text: metadata.name || nft.name
+                                },
+                                callback: () => {alert('Pressed!')},
+                                children:
+                                    <div>
+                                        <Heading 
+                                            fontSize={{base: "0.875rem"}}
+                                            mb={{base: "0.625rem"}}
+                                        >
+                                            <Trans values={{newOwnerAddressFormatted}}>User {newOwnerAddressFormatted} is requesting the original NFT.</Trans>
+                                        </Heading>
+                                        <Text
+                                            fontSize={{base: "0.625rem"}}
+                                        > 
+                                            <Trans>Do you want to transfer the original to them?</Trans>
+                                        </Text>
+                                    </div>, 
+                                severity: 0,
+                                dateCreated: new Date()
+                            }
+                        ])
+                    }
                 })
             }
         })
@@ -257,7 +301,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     }
     if (metadata) {
         // Metadata already loaded, showing it
-        const img = centalizeIpfsUrl(metadata?.image)
+        const img = centralizeIpfsUrl(metadata?.image)
         result = <Image 
                     src={ img }
                     borderRadius="1rem"
