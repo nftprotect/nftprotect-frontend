@@ -67,7 +67,7 @@ const nftProtectTheme = extendTheme({
                 textTransform: "uppercase",
                 fontSize: {md: "0.75rem", lg: "0.875rem"},
                 filter: "drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))",
-                h: [8, 10],
+                // h: [8, 10],
                 _hover: {
                     bgColor: "linear-gradient(-90deg, #4E22CE 5%, #5C2DBA 50%, #AF1893 100%)",
                     transform: "scale(1.03)"
@@ -77,7 +77,7 @@ const nftProtectTheme = extendTheme({
                 textTransform: "uppercase",
                 type: 'button',
                 justifyContent: "center",
-                h: [8, 10],
+                // h: [8, 10],
                 bg: "none",
                 border: "2px solid #BC9CFF",
                 borderRadius: "16px",
