@@ -185,6 +185,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                 onClose()
                 setRefreshPaused(false)
             }}
+            closeOnOverlayClick={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

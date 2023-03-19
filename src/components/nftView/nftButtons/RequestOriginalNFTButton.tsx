@@ -144,6 +144,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                 onClose()
                 setRefreshPaused(false)
             }}
+            closeOnOverlayClick={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

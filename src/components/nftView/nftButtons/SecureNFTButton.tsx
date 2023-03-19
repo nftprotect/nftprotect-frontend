@@ -223,6 +223,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                 onClose()
                 setRefreshPaused(false)
             }}
+            closeOnOverlayClick={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700'

@@ -138,7 +138,9 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                 setNextStep(StepMapping.start)
                 onClose()
                 setRefreshPaused(false)
-            }}        >
+            }}
+            closeOnOverlayClick={false}
+        >
             <ModalOverlay 
                 bg='blackAlpha.700'
                 backdropFilter='blur(10px)'
