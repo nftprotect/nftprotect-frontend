@@ -51,22 +51,36 @@ const NFTView = () => {
     const wNfts = data?.filter(nft => nftIsWNFT(nft) )
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
-    const transferedWNfts: EvmNft[] = []
+    //const transferedWNfts: EvmNft[] = []
 
     // Following block is for testing purposes only
     // Remove after The Graph integration
-    const from = 13
-    const to = 30
-    for (let id = from; id <= to; id++) {
-        const { data } = useEvmNFTMetadata({ 
-            chain: currentChain.id,
-            address: nftpContractAddress,
-            tokenId: id.toString()
-        })
-        if (data && data.ownerOf?.format()?.toLowerCase() !== account?.toLowerCase()) {
-            transferedWNfts.push(data)
-        }
+    const restOfParams = {
+        chain: currentChain.id,
+        address: nftpContractAddress
     }
+    const transferedWNfts: any[] = [
+        useEvmNFTMetadata({tokenId: '13', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '14', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '15', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '16', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '17', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '18', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '19', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '20', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '21', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '22', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '23', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '24', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '25', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '26', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '27', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '28', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '29', ...restOfParams}).data,
+        useEvmNFTMetadata({tokenId: '30', ...restOfParams}).data,
+    ].filter((item: EvmNft|undefined) => {
+        return item && item.ownerOf?.format().toLowerCase() !== account?.toLowerCase()
+    })
     // Ends here
     const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
 
