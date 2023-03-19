@@ -128,10 +128,6 @@ const ShowNotifications = () => {
 const NotificationAlert = ({
     notification
 }: any) => {
-    const alertProps = {
-        key: notification.id,
-        ...severityMapping[notification.severity]
-    }
     const { deleteNotifications } = useNotificationContext()
 
     return (
@@ -152,7 +148,7 @@ const NotificationAlert = ({
                     w={{base: "70px", sm: "100px", md: "3.375rem"}}
                     h={{base: "70px", sm: "100px", md: "3.375rem"}}
                 >
-                    <Image src="./images/notificationImageExample.png" alt="example" w="100%"/>
+                    <Image src={ notification.image?.url || "./images/notificationImageExample.png"} alt={ notification.image?.text || "example" } w="100%"/>
                 </Box>
                 <Box mr={[4]}>
                     <Text fontSize={{base: "0.875rem"}}>
@@ -165,7 +161,7 @@ const NotificationAlert = ({
                 alignItems= "center"
                 
             >
-                <Button 
+                { notification.callback && <Button 
                     variant="monochrome-lightBackground"
                     fontSize={{base: "0.875rem"}}
                     mr={{base: "0.875rem"}}
@@ -174,9 +170,10 @@ const NotificationAlert = ({
                     px={{base:"2.25rem"}}
                     w={{base: "80%", md: "auto"}}
                     minW="170px"
+                    onClick={notification.callback}
                 >
                     <Trans>Read more</Trans>
-                </Button>
+                </Button> }
                 <Flex justifyContent="center" minW="2rem">
                     {
                         notification.closeable && 

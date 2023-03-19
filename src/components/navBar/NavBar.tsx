@@ -50,7 +50,7 @@ const NavBar = () => {
                     </Flex>
                     
                     <Flex flexWrap="wrap">
-                        <LocaleMenu/>
+                        {/* <LocaleMenu/> */}
                         <MainMenu />
                         <LoginForm buttonVariant={'monochrome-transparent'} />
                         { active && <NetworkMenu /> }

@@ -13,7 +13,9 @@ export type Notification = {
     children: React.ReactElement,
     severity: SeverityLevel,
     dateCreated: Date,
-    closeable: boolean
+    closeable: boolean,
+    callback: Function|undefined,
+    image: {url: string, text: string}|undefined
 }
 
 export enum SeverityLevel {
@@ -39,7 +41,9 @@ export function NotificationContextProvider({ children }:any) {
         children: React.ReactElement,
         severity: SeverityLevel|undefined,
         dateCreated: Date|undefined,
-        closeable: boolean|undefined
+        closeable: boolean|undefined,
+        callback: Function|undefined,
+        image: {url: string, text: string}|undefined
     }[]) => {
         const updatingData:{[P in string]: Notification} = {}
         newNotifications.forEach((notification) => {
@@ -48,7 +52,9 @@ export function NotificationContextProvider({ children }:any) {
                 children: notification.children,
                 severity: (notification.severity === undefined) ? SeverityLevel.Info : notification.severity,
                 dateCreated: notification.dateCreated || new Date(),
-                closeable: (notification.closeable === undefined) ? true : notification.closeable
+                closeable: (notification.closeable === undefined) ? true : notification.closeable,
+                callback: notification.callback,
+                image: notification.image
             }
         })
         setNotifications({

@@ -47,13 +47,14 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
-    tokenContract: Contract
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
+    tokenContract: Contract,
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -77,12 +78,13 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start)
         onOpen()
+        setRefreshPaused(true)
     }
 
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = centalizeIpfsUrl(metadata?.image || '')
+            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
             nftImage = <Box
                             my={[4]}
                             border="2px solid rgba(255, 255, 255, 0.5)"
@@ -112,7 +114,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
             onClick={ mainButtonOnClick }
             variant="primary-solid"
             w="100%"
-        >Lost pNFT
+        >
+            <Trans>Lost pNFT</Trans>
         </Button>
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
@@ -122,6 +125,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 

@@ -30,13 +30,14 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -78,7 +79,6 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
@@ -101,7 +101,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             didDialogDisclosure.onOpen();
             return
         }
-
+        setRefreshPaused(true)
         setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
@@ -157,6 +157,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start)
         onOpen()
+        setRefreshPaused(true)
     }
 
     const startButtonOnClick = () => {
@@ -190,7 +191,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = centalizeIpfsUrl(metadata?.image || '')
+            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
             nftImage = <Box
                             my={[4]}
                             border="2px solid rgba(255, 255, 255, 0.5)"
@@ -220,7 +221,9 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
+            closeOnOverlayClick={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700'

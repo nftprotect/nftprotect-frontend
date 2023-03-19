@@ -35,7 +35,7 @@ export const nftpContractAddress = '0x25debaab06be555b861b97bde7682415961c1b58'
 export const userRegistryContractAddress = '0xb22376D9fa05efFe958027236E873efD5eF6EA5D'
 export const couponsContractAddress = '0xa90502454a9C18bD722bd400D1ABA8d571EDD804'
 
-export const dialogsTimeout = 3000
+export const dialogsTimeout = 5000
 
 // IPFS
 export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'

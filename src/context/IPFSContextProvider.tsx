@@ -6,7 +6,7 @@ export interface IPFSContextInterface {
     ipfs: IPFSHTTPClient,
     getIpfsUrl: Function,
     getCentralizedUrl: Function,
-    centalizeIpfsUrl: Function
+    centralizeIpfsUrl: Function
 }
 
 const IPFSContext = createContext<IPFSContextInterface|null>(null);
@@ -30,7 +30,7 @@ export function IPFSContextProvider({ children }:any) {
     }
 
     // Makes centralized url from ipfs:// url
-    const centalizeIpfsUrl = (url: string) => {
+    const centralizeIpfsUrl = (url: string) => {
         if (url.startsWith('ipfs://')) {
             const splitted = url.replace('ipfs://','').split('/')
             const hash = splitted[0]
@@ -51,7 +51,7 @@ export function IPFSContextProvider({ children }:any) {
             ipfs,
             getIpfsUrl,
             getCentralizedUrl,
-            centalizeIpfsUrl
+            centralizeIpfsUrl
         }}>
             {children}
         </IPFSContext.Provider>

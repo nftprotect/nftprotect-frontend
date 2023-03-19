@@ -25,6 +25,9 @@ const NFTView = () => {
 
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
     const { isOpen, onToggle } = useDisclosure()
+    // Holds component data refresh while refreshPaused
+    const [ refreshPaused, setRefreshPaused ] = useState(false)
+    const [ refreshNeeded, setRefreshNeeded ] = useState(false)
 
     const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
         chain: currentChain.id,
@@ -33,12 +36,26 @@ const NFTView = () => {
 
     const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
 
+    const reFetch = (force = false) => {
+        if (force) {
+            fetch()
+        } else {
+            if (refreshPaused) {
+                setRefreshNeeded(true)
+            } else if (!refreshNeeded) {
+                fetch()
+                console.log('FETCH STR!!!')
+            }
+        }
+    }
+
     const renderNFT = (nft: EvmNft) => {
         console.log('NFT: ', nft.name, nft)
         return <NFTCard
             key={nft.tokenHash}
             nft={nft}
-            nftReFetch={fetch}
+            nftReFetch={reFetch}
+            setRefreshPaused={setRefreshPaused}
         />
     }
     const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
@@ -46,6 +63,24 @@ const NFTView = () => {
         address: nftpContractAddress,
         tokenId: '1'
     })
+
+    const subscribeNftTransfers = () => {
+        const nftEventReceived = () => {
+            reFetch()
+        }
+        let fromMe:any 
+        let toMe:any
+        if (account && active) {
+            fromMe = nftProtectContract.filters.Transfer(account, null)
+            toMe = nftProtectContract.filters.Transfer(null, account)
+            nftProtectContract.on(fromMe, nftEventReceived)
+            nftProtectContract.on(toMe, nftEventReceived)
+        }
+        return () => {
+            fromMe && nftProtectContract.removeAllListeners(toMe)
+            toMe && nftProtectContract.removeAllListeners(fromMe)
+        }
+    }
 
     const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
     const wNfts = data?.filter(nft => nftIsWNFT(nft) )
@@ -83,6 +118,19 @@ const NFTView = () => {
     })
     // Ends here
     const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
+
+    useEffect(() => {
+        // Update data when refresh unpaused if needed
+        if (!refreshPaused) {
+            if (refreshNeeded) {
+                fetch()
+                setRefreshNeeded(false)
+                console.log('FETCH EFF!!!')
+            }
+        }
+    }, [refreshPaused, refreshNeeded])
+
+    useEffect(subscribeNftTransfers, [account, active])
 
     return (
         <>

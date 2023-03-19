@@ -32,14 +32,15 @@ interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
     originalOwner: string // Owner address of original NFT
 }
 
-const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
+const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
@@ -94,6 +95,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start);
         onOpen()
+        setRefreshPaused(true)
     }
 
     const startButtonOnClick = () => {
@@ -117,7 +119,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
 
     function getNftImage() {
         if (metadata) {
-            let imgUrl = centalizeIpfsUrl(metadata.image)
+            let imgUrl = centralizeIpfsUrl(metadata.image)
             return (<Image 
                     src={ imgUrl } 
                     alt="NFT image" 
@@ -140,7 +142,9 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
+                setRefreshPaused(false)
             }}
+            closeOnOverlayClick={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 
@@ -285,7 +289,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page</Trans>
+                                    <Trans>{"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page"}</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>

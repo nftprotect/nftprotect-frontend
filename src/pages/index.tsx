@@ -55,61 +55,34 @@ const Home: NextPage = () => {
         notificationsCount
     } = useNotificationContext()
 
-    useEffect(() => {
-        addNotifications([
-            {
-                id:'cccc', 
-                children:
-                    <div>
-                        <Heading 
-                            fontSize={{base: "0.875rem"}}
-                            mb={{base: "0.625rem"}}
-                        >
-                            <Trans>{"You're being sued. Case #1231 Who should own the original NFT"}</Trans>
-                        </Heading>
-                        <Text
-                            fontSize={{base: "0.625rem"}}
-                        > 
-                            <Trans>In 48 hours it will move to the Voting stage. We advise you to upload your proofs</Trans>
-                        </Text>
-                    </div>, 
-                severity: 0,
-                dateCreated: new Date()
-            }, {
-                id:'aaaz', 
-                children:<div>11111</div>, 
-                severity: 1,
-                dateCreated: new Date(),
-                closeable: false
-            }, {
-                id:'fdfs', 
-                children:<div>2222</div>, 
-                severity: 2,
-                dateCreated: new Date(),
-                closeable: false
-            }, {
-                id:'fdsf', 
-                children:<div>3333</div>, 
-                severity: 3,
-                dateCreated: new Date()
-            }, {
-                id:';doksf', 
-                children:<div>4444</div>, 
-                severity: 4,
-                dateCreated: new Date()
-            }, {
-                id:'vklsndn', 
-                children:<div>5555</div>, 
-                severity: 5,
-                dateCreated: new Date()
-            }
-        ])
-    }, [])
+    // useEffect(() => {
+    //     addNotifications([
+    //         {
+    //             id:'cccc', 
+    //             children:
+    //                 <div>
+    //                     <Heading 
+    //                         fontSize={{base: "0.875rem"}}
+    //                         mb={{base: "0.625rem"}}
+    //                     >
+    //                         <Trans>{"You're being sued. Case #1231 Who should own the original NFT"}</Trans>
+    //                     </Heading>
+    //                     <Text
+    //                         fontSize={{base: "0.625rem"}}
+    //                     > 
+    //                         <Trans>In 48 hours it will move to the Voting stage. We advise you to upload your proofs</Trans>
+    //                     </Text>
+    //                 </div>, 
+    //             severity: 0,
+    //             dateCreated: new Date()
+    //         }
+    //     ])
+    // }, [])
 
     let innerPart = <div/>
     if ( active ) {
         innerPart = <>
-            { notificationsCount && <ShowNotifications/> }
+            { notificationsCount ? <ShowNotifications/> : <></> }
         </>
     }
 

@@ -15,7 +15,6 @@ import {
     ModalBody,
     ModalContent,
     ModalHeader,
-    ModalCloseButton,
     Spinner,
     useDisclosure
 } from '@chakra-ui/react';
@@ -31,26 +30,24 @@ import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
-    metadata: any // metadata of EvmNft can be empty, so passing it separately
-    nftReFetch: Function // function to update nft list
+    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract
 }
 
-const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
+const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
-    const { centalizeIpfsUrl } = useIPFSContext()
+    const { centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const name = metadata?.name || nft.name
 
     enum StepMapping {
         start,
-        checkPermission,
-        requestUnwrap,
-        waitingForAllow,
-        waitingForFinal,
-        finalCompleted,
+        confirmTransaction,
+        pendingTransaction,
         success,
         canceled,
         error,
@@ -77,11 +74,11 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
 
     const finalTransactionSent = (tokenContract: Contract) => {
         return (tx: any) => {
-            setNextStep(StepMapping.waitingForFinal);
+            setNextStep(StepMapping.pendingTransaction);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
-                    setNextStep(StepMapping.finalCompleted)
+                    setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                     setTimeout(onClose, dialogsTimeout)
@@ -94,7 +91,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
 
     const startButtonOnClick = () => {
         try {
-            setNextStep(StepMapping.requestUnwrap);
+            setNextStep(StepMapping.confirmTransaction);
             onOpen()
             nftProtectContract.burn(nft.tokenId, 0, '', account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(tokenContract) )
@@ -112,12 +109,13 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     const mainButtonOnClick = () => {
         setNextStep(StepMapping.start)
         onOpen()
+        setRefreshPaused(true)
     }
 
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = centalizeIpfsUrl(metadata.image)
+            const imgUrl = centralizeIpfsUrl(metadata.image)
             nftImage = <Image 
                         src={ imgUrl } 
                         my={[4]}
@@ -132,14 +130,17 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
 
     return (<>
         <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
-        <Trans>Restore original</Trans>
+            <Trans>Restore original</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-            }}        >
+                setRefreshPaused(false)
+            }}
+            closeOnOverlayClick={false}
+        >
             <ModalOverlay 
                 bg='blackAlpha.700'
                 backdropFilter='blur(10px)'
@@ -153,9 +154,9 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
             >
 
                 <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans>Restore your <br /> original NFT</Trans></ModalHeader>
-                <ModalCloseButton size={["sm", "md"]} border="2px solid #000" borderRadius="15px" top={[3, 4]} right={[3, 4]} />
                 <ModalBody>
                     <Wizard>
+                        {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column">
                                 <Box
@@ -207,38 +208,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside> 
 
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                <Trans>Please, allow access and transfer of your pNFT</Trans>
-                                </Text>
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                            </Flex>
-                        </SwitchableOutside>
-
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans>Wait for transaction to confirm...</Trans>
-                                </Text>
-                            </Flex>
-                        </SwitchableOutside>
-
+                        {/* Confirm transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
@@ -255,7 +225,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside>
 
-                         <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* Waiting for transaction confirmation */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Spinner 
                                     my={[4]} 
@@ -265,14 +236,13 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     color='#BC9CFF'
                                     size={['lg', 'xl']}>
                                 </Spinner>
-                                <Text fontSize={["md", "lg", "xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                <Trans>Wait for transaction to confirm...</Trans>
+                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                <Trans>{"Wait for transaction to confirm…"}</Trans>
                                 </Text>
-
-                               
                             </Flex>
                         </SwitchableOutside>
 
+                        {/* Restored succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
@@ -287,7 +257,12 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                                     <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
                                         <Trans>We recomend always keep your assets secure</Trans>
                                     </Text>
-                                    <SecureNFTButton metadata={metadata} nft={nft} nftReFetch={nftReFetch} tokenContract={tokenContract} />
+                                    <SecureNFTButton 
+                                        metadata={metadata} 
+                                        nft={nft} 
+                                        nftReFetch={nftReFetch}
+                                        setRefreshPaused={setRefreshPaused}
+                                        tokenContract={tokenContract} />
                                     <Button
                                         onClick={ onClose }
                                         my={2}
@@ -301,6 +276,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside>
 
+                        {/* Canceled */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
@@ -314,7 +290,8 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside>
 
-                         <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* Error */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
                                     <Trans>Some error occured</Trans>
@@ -327,6 +304,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                             </Flex>
                         </SwitchableOutside>
 
+                        {/* Timeout */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
