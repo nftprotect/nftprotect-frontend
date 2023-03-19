@@ -284,7 +284,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                     }
                 }
             }
-            else if (!isOnAnotherAddress) {
+            else if (isOnAnotherAddress) {
                 // Original NFT belongs to user, but this pNFT is not
                 buttons = (<>
                     <Box mb={[4]}>
