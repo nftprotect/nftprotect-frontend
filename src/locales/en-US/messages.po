@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-03-19 23:49+0700\n"
+"POT-Creation-Date: 2023-03-20 00:38+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -230,8 +230,8 @@ msgid "Please connect your wallet to see your digital <0/>assets and protect the
 msgstr "Please connect your wallet to see your digital <0/>assets and protect them"
 
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:203
-msgid "Please note that when you receive the original nft, pnft will be burned."
-msgstr "Please note that when you receive the original nft, pnft will be burned."
+msgid "Please note that when you receive the original NFT, pNFT will be burned."
+msgstr "Please note that when you receive the original NFT, pNFT will be burned."
 
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:229
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:318
