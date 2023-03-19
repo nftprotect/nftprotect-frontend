@@ -67,7 +67,7 @@ const nftProtectTheme = extendTheme({
                 bg: "linear-gradient(90deg, #4E22CE 5%, #5C2DBA 25%, #AF1893 100%)",
                 color: "#FFF",
                 textTransform: "uppercase",
-                fontSize: ['xs', 'sm', 'md', 'lg'],
+                fontSize: {base: "0.5rem", sm: "0.75rem", lg: "0.875rem"},
                 filter: "drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))",
                 h: [8, 10],
                 _hover: {
