@@ -273,6 +273,14 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         // No metadata, showing the plug
         result = <Image src={'/download.png'} height='12em'/>
     }
+
+    // Temporarily workaround
+    if (isWNFT && isOnAnotherAddress && originalNFTData && 
+        (originalNFTData.owner.toLowerCase() !== account?.toLowerCase()) &&
+        nft.ownerOf && (nft.ownerOf.format().toLowerCase() !== account?.toLowerCase())) {
+            return <></>
+        }
+
     return (
         <Card 
             // variant='elevated'

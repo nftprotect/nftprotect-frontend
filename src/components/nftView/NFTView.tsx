@@ -19,6 +19,7 @@ import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
+import { useState, useEffect } from 'react';
 
 const NFTView = () => {
 
@@ -50,7 +51,24 @@ const NFTView = () => {
     const wNfts = data?.filter(nft => nftIsWNFT(nft) )
     const ownNftElements = ownNfts?.map(renderNFT)
     const wNftElements = wNfts?.map(renderNFT)
-    const transferedWNftElements = [ dummyOriginalNFT && renderNFT(dummyOriginalNFT) ]
+    const transferedWNfts: EvmNft[] = []
+
+    // Following block is for testing purposes only
+    // Remove after The Graph integration
+    const from = 13
+    const to = 30
+    for (let id = from; id <= to; id++) {
+        const { data } = useEvmNFTMetadata({ 
+            chain: currentChain.id,
+            address: nftpContractAddress,
+            tokenId: id.toString()
+        })
+        if (data && data.ownerOf?.format()?.toLowerCase() !== account?.toLowerCase()) {
+            transferedWNfts.push(data)
+        }
+    }
+    // Ends here
+    const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
 
     return (
         <>
