@@ -15,7 +15,7 @@ import {
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 
-const LoginForm = () => {
+const LoginForm = ( {buttonVariant}: any) => {
     const { active } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
@@ -24,9 +24,9 @@ const LoginForm = () => {
         <>
         { !active && 
             <Button 
-                variant='monochrome-transparent'
+                variant={ buttonVariant }
                 onClick={onOpen}
-                leftIcon={<Wallet fontSize='20px'/>}
+                leftIcon={<Wallet fontSize="1.375rem" />}
             >
                 <Trans>Connect Wallet</Trans>
             </Button> 

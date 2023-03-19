@@ -27,7 +27,7 @@ const ConnectWalletConnect = () => {
     return (
         <Button
             onClick={active ? onClickDisconnect : onClickConnect}
-            variant='monochrome-transparent'
+            variant='primary-outline'
             w={['15em']}
             leftIcon={<Wallet fontSize='20px'/>}
             justifyContent="flex-start"

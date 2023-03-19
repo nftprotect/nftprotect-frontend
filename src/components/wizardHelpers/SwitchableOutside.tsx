@@ -15,24 +15,24 @@ const SwitchableOutside = React.memo( function SwitchableOutside({children, next
     const { goToStep, activeStep } = useWizard()
 
     const variants: Variants = {
-        enter: (direction: number) => {
-          return {
-            x: direction > 0 ? 800 : -800,
-            opacity: 0,
-          };
-        },
-        center: {
-          zIndex: 1,
-          x: 0,
-          opacity: 1,
-        },
-        exit: (direction: number) => {
-          return {
-            zIndex: 0,
-            x: direction < 0 ? 800 : -800,
-            opacity: 0,
-          };
-        },
+        // enter: (direction: number) => {
+        //   return {
+        //     x: direction > 0 ? 800 : -800,
+        //     opacity: 0,
+        //   };
+        // },
+        // center: {
+        //   zIndex: 1,
+        //   x: 0,
+        //   opacity: 1,
+        // },
+        // exit: (direction: number) => {
+        //   return {
+        //     zIndex: 0,
+        //     x: direction < 0 ? 800 : -800,
+        //     opacity: 0,
+        //   };
+        // },
       };
 
     useEffect(() => {

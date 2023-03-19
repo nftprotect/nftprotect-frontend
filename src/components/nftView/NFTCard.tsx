@@ -258,8 +258,12 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         // Metadata already loaded, showing it
         const img = deIpfsUrl(metadata?.image)
         result = <Image 
-                    src={ img } 
-                    minH={ {base: "6em", sm: "10em", md: "9em", lg: "13em", xl: "15em"} }
+                    src={ img }
+                    borderRadius="1rem"
+                    mb={{base: "1.25rem"}}
+                    h="100%"
+                    w="auto"
+                    minH={ {base: "6rem", sm: "10rem", md: "9rem", lg: "13rem", xl: "15em"} }
                 />
     } else if (!fetchEnded) {
         // Metadata is still loading, showing loading
@@ -270,11 +274,15 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     }
     return (
         <Card 
-            variant='elevated'
+            // variant='elevated'
             mb={[2, 4]}
+            border="2px solid #000000"
+            borderRadius="1rem"
         >
             <CardBody
-                p={[2, 5]}
+                px={{base: "0.5rem"}}
+                py={{base: "0.625rem"}}
+                borderRadius="1rem"
             >
                 <Flex
                     flexDirection="column"
@@ -283,14 +291,26 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
                 >
                     <Flex
                         flexDirection="column"
+                        justifyContent="space-between"
                     >
-                        <Box alignSelf="center" >{ result }</Box>
+                        <Box mb={{base: "1.25rem"}}>{ result }</Box>
 
-                        <Text my={[2, 4]} fontSize={['xs', 'sm', 'md', 'lg']}>
+                        <Text 
+                            fontWeight="700"
+                            fontSize={{base: "0.875rem"}}
+                            lineHeight={{base: "1.125rem"}}
+                            textTransform="uppercase"
+                            mb={{base: "0.625rem"}}
+                        >
                             { metadata?.name || nft.name }
                         </Text>
 
-                        <Text fontSize={['2xs', 'sm', 'md']} >
+                        <Text
+                            fontWeight="400"
+                            fontSize={{base: "0.625rem"}}
+                            lineHeight={{base: "0.75rem"}}
+                            mb={{base: "1.25rem"}}
+                        >
                             { nft.name }
                         </Text>
                     </Flex>

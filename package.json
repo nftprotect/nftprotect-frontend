@@ -28,6 +28,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/units": "^5.7.0",
+    "@fontsource/lexend": "^4.5.15",
     "@lingui/babel-plugin-transform-js": "^2.9.2",
     "@lingui/babel-plugin-transform-react": "^2.9.2",
     "@lingui/babel-preset-react": "^2.9.2",

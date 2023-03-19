@@ -19,6 +19,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
+import { NodeNextRequest } from 'next/dist/server/base-http/node'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -58,7 +59,18 @@ const Home: NextPage = () => {
         addNotifications([
             {
                 id:'cccc', 
-                children:<div>000000</div>, 
+                children:
+                    <div>
+                        <Heading 
+                            fontSize={{base: "0.875rem"}}
+                            mb={{base: "0.625rem"}}
+                        >You're being sued. Case #1231 Who should own the original NFT
+                        </Heading>
+                        <Text
+                            fontSize={{base: "0.625rem"}}
+                        > In 48 hours it will move to the Voting stage. We advise you to upload your proofs
+                        </Text>
+                    </div>, 
                 severity: 0,
                 dateCreated: new Date()
             }, {
@@ -107,57 +119,90 @@ const Home: NextPage = () => {
         >
             <NavBar />
             <Box
-                px={[3, 6]}
-                mb={["4em"]}
-                bgImage={{base: "none", sm: "url('/images/logo_banner.png')"}}
-                bgPosition="100% 0%"
+                position="relative"
+                top="0" 
+                left="0"
+                mb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
+                bgImage={active ? "none" : "url('/images/banner.png')"}
                 bgRepeat="no-repeat"
-                bgSize="auto 100%"
+                bgSize="cover"
             >
                 <Flex 
                     flexDirection="column" 
                     justifyContent="center"
-                    pl={{base: 0, lg: '6rem'}}
-                    maxW={{base: "100%", sm: "50%"}}
+                    pt={{base:"2.5rem", md:"5.25rem", xl: "8.25rem" }}
+                    pl={{base: "1rem", sm: "2rem", md: "4rem", lg: "5rem", xl: "10rem"}}
+                    pb={{base: "2rem"}}
                 >
-                    <Heading 
-                        mt={["1em"]}
-                        fontSize={{sm:"2em", md: "3em", lg: "4rem"}} 
-                        lineHeight={["28px", "36px", "42px", "58px"]} 
-                    ><Trans>Protect your digital assets from bad actors</Trans>
-                    </Heading>
-                    <Text 
-                        fontSize={["1em", "1.5em"]} 
-                        mt={[8]}
-                        lineHeight={["1em", "1.2em"]}
-                    >
-                        <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
-                    </Text>
+                    {active &&
+                        <Box w={{base: "100%", sm: "50%"}}>
+                            <Heading 
+                                fontSize={{base: "1.5rem", md: "2.625rem"}}
+                                lineHeight={{base: "1.75rem", md: "2.625rem"}}
+                            >
+                                <Trans>Protect your digital assets from bad actors</Trans>
+                            </Heading>
+                            <Text 
+                                pt="1.25rem"
+                                pb="2rem"
+                                fontSize={{base: "1rem", md: "1.125rem", lg: "1.375rem"}}
+                                lineHeight={{base: "1.25rem", md: "1.5rem", lg: "1.75rem"}}
+                            >
+                                <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
+                            </Text>
+                        </Box>
+                    }
 
                     { !active &&
                         <>
-                            <Text
-                                mt={[4, 6]}
-                                fontSize={['xs', 'sm', 'md']}
-                                color="rgba(31, 32, 65, .9)"
+                            <Heading
+                                fontSize={{base: "1.5rem", md: "2.75rem", lg: "3.875rem"}}
+                                lineHeight={{base: "1.75rem", md: "3.25rem", lg: "3.875rem"}}
                             >
-                                <Trans>Please connect your wallet to see your NFT and pNFT (or ... to protect your NFT)</Trans>
-                            </Text>
+                                <Trans>Connect your wallet<br></br>& get protected</Trans>
+                            </Heading>
+                                
                             <Text
-                                fontSize={['xs', 'sm', 'md']} 
-                                color="rgba(31, 32, 65, .9)"
-                                mb={[4, 6]}
+                                pt="1.25rem"
+                                pb="2rem"
+                                fontSize={{base: "1rem", md: "1.125rem", lg: "1.375rem"}}
+                                lineHeight={{base: "1.25rem", md: "1.5rem", lg: "1.75rem"}}
                             >
-                                <Trans>View only permissions. We will never do anything without your permission</Trans>
+                                <Trans>Please connect your wallet to see your digital <br></br>assets and protect them</Trans>
                             </Text>
-                            <Box w={["15rem"]}>
-                                <LoginForm />
+                            <Box>
+                                <LoginForm buttonVariant={'primary-solid-wide'} />
                             </Box>
                         </>
                     }
-                    {active && !didRegistered && <DIDVerificationRequiredCard /> }
+                    {/* {active && !didRegistered && <DIDVerificationRequiredCard /> } */}
                 </Flex>
-            </Box>
+                {!active && 
+                    <Box
+                        position="absolute"
+                        display={{base: "none", md: "block"}}
+                        right={{base: "1rem",lg: "1rem"}}
+                        top={{base: "10rem", sm: "5.25rem", md: "4rem"}}
+                        w={{base: "100%",  md: "60%"}}
+                        zIndex="0"
+                    >
+                        <Image src="/images/phone.png" alt="Phone"></Image>
+                    </Box>
+                }
+                {active && 
+                    <Box
+                        position="absolute"
+                        display={{base: "none", sm: "block"}}
+                        right={{base: "1rem", lg: "1rem", '2xl': "16rem"}}
+                        top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem", '2xl': "-3rem"}}
+                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "2%"}}
+                        zIndex="0"
+                    >
+                        <Image src="/images/phone.png" alt="Phone"></Image>
+                    </Box>
+                }
+
+                </Box>
             <main>
                 {innerPart}
                 { active && <NFTView />}
