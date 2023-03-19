@@ -196,7 +196,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     </Box>
                                     <Flex flexDirection="column">
                                             <Text fontSize={["sm", "md", "lg"]}>
-                                            <Trans>Please note that when you receive the original nft, pnft will be burned.</Trans>
+                                            <Trans>Please note that when you receive the original NFT, pNFT will be burned.</Trans>
                                             </Text>
                                     </Flex>
                                 </Flex>
