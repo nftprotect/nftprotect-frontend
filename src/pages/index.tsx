@@ -98,9 +98,7 @@ const Home: NextPage = () => {
                 top="0" 
                 left="0"
                 pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
-                bgImage={active ? "none" : "url('/images/banner.png')"}
-                bgRepeat="no-repeat"
-                bgSize="cover"
+                bg={active ? "url('/images/phone.png') top right no-repeat" : "url('/images/banner.png') top left / cover no-repeat"}
             >
                 <Flex 
                     flexDirection="column" 
@@ -165,7 +163,7 @@ const Home: NextPage = () => {
                         <Image src="/images/phone.png" alt="Phone"></Image>
                     </Box>
                 }
-                {active && 
+                {/* {active && 
                     <Box
                         position="absolute"
                         display={{base: "none", sm: "block"}}
@@ -176,7 +174,7 @@ const Home: NextPage = () => {
                     >
                         <Image src="/images/phone.png" alt="Phone"></Image>
                     </Box>
-                }
+                } */}
 
                 </Box>
             <main>
