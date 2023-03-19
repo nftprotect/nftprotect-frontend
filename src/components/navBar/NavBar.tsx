@@ -38,14 +38,14 @@ const NavBar = () => {
                             src='/images/logomark.svg'
                             alt='Logo'
                             mr={[2]}
-                            h='48px'
+                            h='35px'
                         />
                         <Image
                             src='/images/logotype.svg'
                             alt='Brand'
                             display={{base: 'none', md: 'flex'}}
                             mt={["5px"]}
-                            h='30px'
+                            h='20px'
                         />
                     </Flex>
                     
