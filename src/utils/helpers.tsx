@@ -11,11 +11,3 @@ export async function copyTextToClipboard(text: string, selector: string|null = 
         return document.execCommand('copy', true);
    }
 }
-
-export function deIpfsUrl(url: string) {
-    if (url.startsWith('ipfs://')) {
-        return `https://${url.replace('ipfs://','').replaceAll('/','')}.ipfs.cf-ipfs.com`
-    } else {
-        return url
-    }
-}

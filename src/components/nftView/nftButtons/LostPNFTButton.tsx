@@ -1,7 +1,6 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
-import { deIpfsUrl } from '../../../utils/helpers'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 // import { MultipleFilesUpload } from '../../MultipleFilesUpload'
@@ -42,6 +41,7 @@ import { AuthErrorCode } from 'moralis/common-core';
 import { NextComponentType } from 'next';
 import { t } from '@lingui/macro';
 import { Trans } from '@lingui/macro';
+import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -53,6 +53,7 @@ interface ButtonInitialData {
 const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
+    const { centalizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -81,7 +82,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = deIpfsUrl(metadata?.image || '')
+            const imgUrl = centalizeIpfsUrl(metadata?.image || '')
             nftImage = <Box
                             my={[4]}
                             border="2px solid rgba(255, 255, 255, 0.5)"

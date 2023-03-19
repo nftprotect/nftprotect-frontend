@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { deIpfsUrl } from '../../../../utils/helpers';
 import {
     Button,
     Box,
