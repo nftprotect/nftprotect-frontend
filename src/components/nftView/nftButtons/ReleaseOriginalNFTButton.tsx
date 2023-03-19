@@ -226,7 +226,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <Box w="50%">
                                     <Button 
                                         onClick={ startButtonOnClick }
-                                        variant='primary-solid'
+                                        variant='monochrome-lightBackground'
                                         my={2}
                                     >
                                         <Trans>Start</Trans>
@@ -269,7 +269,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     <Box minW="40%">
                                         <Button 
                                             onClick={ sendButtonOnClick }
-                                            variant='primary-solid'
+                                            variant='monochrome-lightBackground'
                                             w="100%"
                                             my={2}
                                         >
@@ -280,7 +280,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     <Box minW="40%">
                                         <Button
                                             onClick={ rejectButtonOnClick }
-                                            variant="monochrome-transparent"
+                                            variant="monochrome-lightBackground"
                                             my={2}
                                             w="100%"
                                         >

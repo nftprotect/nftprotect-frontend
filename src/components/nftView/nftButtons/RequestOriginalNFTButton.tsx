@@ -186,7 +186,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <Box w="100%">
                                     <Button 
                                         onClick={ startButtonOnClick }
-                                        variant="primary-solid"
+                                        variant="monochrome-lightBackground"
                                         my={2}
                                         w="100%"
                                     >

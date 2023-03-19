@@ -233,7 +233,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                                 <Box w="100%">
                                     <Button 
                                         onClick={ () => setNextStep(StepMapping.klerosInfo) }
-                                        variant="primary-solid"
+                                        variant="monochrome-lightBackground"
                                         my={2}
                                         w="100%"
                                     >
@@ -272,7 +272,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                                 <Box w="100%">
                                     <Button 
                                         onClick={ () => setNextStep(StepMapping.klerosForm) }
-                                        variant="primary-solid"
+                                        variant="monochrome-lightBackground"
                                         my={2}
                                         w="100%"
                                     >
