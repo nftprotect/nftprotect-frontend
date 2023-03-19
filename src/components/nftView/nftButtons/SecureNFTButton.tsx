@@ -169,7 +169,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                     () => tokenContract.getApproved(nft.tokenId),
                     (result: any) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrerAddress)
+                    () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrerAddress, {value: fee})
                 )
             } else if (nft.contractType === 'ERC1155') {
                 secureNFT(
@@ -177,7 +177,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
                     (result: any) => result,
                     () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrerAddress)
+                    () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft.contractType}`)
