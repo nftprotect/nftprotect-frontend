@@ -246,11 +246,14 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, pen
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>Are you sure want to transfer original nft to 0x12...3456?</Trans>
-                                </Text>
-                                <Text id='newOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    { formatAddress(nft.ownerOf?.format() || '', 4) }
-                                    <CopyIcon onClick={ copyNewOwnerToClipboard } />
+                                    <span>
+                                        <Trans>Are you sure want to transfer original NFT to</Trans>
+                                    </span>
+                                    <span> </span>
+                                    <span id='newOwnerAddressHolder'>
+                                        { formatAddress(nft.ownerOf?.format() || '', 4) }
+                                        <CopyIcon onClick={ copyNewOwnerToClipboard } />
+                                    </span>?
                                 </Text>
                                 <Flex
                                     flexWrap="nowrap"

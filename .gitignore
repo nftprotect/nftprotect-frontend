@@ -36,4 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # lingui compiled files
-/locales/*/messages.js
+/src/locales/*/messages.js

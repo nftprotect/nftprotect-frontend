@@ -39,8 +39,8 @@ import { generateArbitratorExtraData, KlerosCourts, klerosCases } from '../../..
 import { Form, Field, Formik } from 'formik'
 import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
-import { ethers } from 'ethers';
 import { t } from '@lingui/macro';
+import { parseEther } from '@ethersproject/units';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -128,7 +128,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(
                     subcourtID.toString(), numberOfVotes.toString()
-                ), fileIPFSUrl, {value: ethers.utils.parseEther(DISPUTE_PRICE)})
+                ), fileIPFSUrl, {value: parseEther(DISPUTE_PRICE)})
                     .then( finalTransactionSent() )
                     .catch( 
                         handleContractError({
