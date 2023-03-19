@@ -153,7 +153,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                 py={[4, 8]}
             >
                 <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">
-                    <Trans>Restore your <br/>original nft?</Trans>
+                    <Trans>Restore your <br/>original NFT?</Trans>
                 </ModalHeader>
                 <ModalBody>
                     <Wizard>
