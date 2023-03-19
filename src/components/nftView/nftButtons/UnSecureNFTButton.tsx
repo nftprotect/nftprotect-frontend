@@ -131,7 +131,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
 
     return (<>
         <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
-        <Trans>Restore</Trans>
+        <Trans>Restore original</Trans>
         </Button>
         <Modal 
             isOpen={isOpen} 
