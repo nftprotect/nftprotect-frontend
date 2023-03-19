@@ -154,14 +154,14 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                 py={[4, 8]}
             >
                 <ModalHeader textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700">
-                    <Trans>Restore your <br/>original NFT?</Trans>
+                    <Trans>Request the <br/>original NFT?</Trans>
                 </ModalHeader>
                 <ModalBody>
                     <Wizard>
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans>To obtain the original NFT, please send a request to the owner</Trans>
+                                <Trans>To obtain the original NFT, send a request to the owner</Trans>
                                 </Text>
                                 <Text id='originalOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     { formatAddress(originalOwner, 4) }
@@ -196,7 +196,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     </Box>
                                     <Flex flexDirection="column">
                                             <Text fontSize={["sm", "md", "lg"]}>
-                                            <Trans>pNFT will be burned and the original NFT will be sent to you.</Trans>
+                                            <Trans>Please note that when you receive the original nft, pnft will be burned.</Trans>
                                             </Text>
                                     </Flex>
                                 </Flex>
@@ -278,27 +278,18 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                    <Trans>Original nft restored succesfully!</Trans>
+                                    <Trans>Request sent!</Trans>
                                 </Heading>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}/>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>You can protect your NFT again</Trans>
+                                    <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>We recommend always keep your assets secure</Trans>
+                                    <Trans>If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>
                                 </Text>
-                                <Box w="50%" my={[8]}>
-                                    <Button
-                                        onClick={onClose}
-                                        variant="monochrome-transparent"
-                                        w="100%"
-                                    >
-                                        <Trans>Protect NFT</Trans>
-                                    </Button>
-                                </Box>
                                 <Flex flexWrap="nowrap" alignItems="center" border="1px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]}>
                                     <Box color="#2D7BD6" mr={[2, 4]} fontSize={['30px', '50px']}>
                                         <a href="https://kleros.io/" target="_blank" rel="noreferrer" color="#2D7BD6"><Image src='/images/kleros_logo.png' alt="Kleros logo" w="150px"/></a>
