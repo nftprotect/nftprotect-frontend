@@ -327,7 +327,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans>Wait for transaction to confirm&mldr;</Trans>
+                                <Trans>Wait for transaction to confirm{'\u2026'}</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -388,7 +388,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>Transaction is still in progress&mldr;</Trans>
+                                    <Trans>Transaction is still in progress{'\u2026'}</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

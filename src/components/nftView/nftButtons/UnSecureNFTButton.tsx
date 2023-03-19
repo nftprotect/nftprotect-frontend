@@ -209,7 +209,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                <Trans>Checking permission to transfer token&mldr;</Trans>
+                                <Trans>Checking permission to transfer token{'\u2026'}</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 
@@ -331,7 +331,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>Transaction is still in progress&mldr;</Trans>
+                                    <Trans>Transaction is still in progress{'\u2026'}</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 
