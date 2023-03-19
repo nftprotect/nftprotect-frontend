@@ -18,13 +18,14 @@ import {
     ModalBody,
     ModalContent,
     useDisclosure
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { AlertCircle } from '@web3uikit/icons'
-import { Trans } from '@lingui/macro'
+import { AlertCircle } from '@web3uikit/icons';
+import { Trans } from '@lingui/macro';
+import { formatEther } from "@ethersproject/units";
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -35,7 +36,7 @@ interface ButtonInitialData {
 
 const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
-    const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
+    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -232,7 +233,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
             >
                 <ModalBody px="0" py={[8]}>
                     <Wizard>
-                    <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
                                     lineHeight={["1.5rem", "2rem"]}
@@ -251,10 +252,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIniti
                                     {metadata?.name || nft.name}
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center">
-                                <Trans>Fee for Protection your NFT:</Trans>
+                                    <Trans>Fee for Protection your NFT:</Trans>
                                 </Text>
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="500">
-                                    <Trans>Free on test chain</Trans>
+                                <Text fontSize={["xl", "2xl", "3xl"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="500">
+                                    {"Ξ"}{ formatEther(fee || 0) } 
                                 </Text>
                                 <Button 
                                     onClick={ startButtonOnClick }

@@ -12,8 +12,9 @@ export interface AppContextInterface {
     currentChain: any | undefined,
     nftProtectContract: Contract,
     referrerAddress: string,
-    didRegistered: boolean | null,
-    currentBlock: number
+    didRegistered: boolean | undefined,
+    currentBlock: number,
+    fee: number | undefined
 }
 
 const AppContext = createContext<AppContextInterface|null>(null);
@@ -25,8 +26,10 @@ export function AppContextProvider({ children }:any) {
     const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, library?.getSigner())
     const referrerAddress = '0x0000000000000000000000000000000000000000'
     const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
-    // Зарегистрировал ли пользователь DID
-    const [ didRegistered, setDidRegistered ] = useState<boolean|null>(null)
+    // Marks if user has DID registered
+    const [ didRegistered, setDidRegistered ] = useState<boolean>()
+    // Current fee for protecting
+    const [ fee, setFee ] = useState<number>()
     const [ currentBlock, setCurrentBlock] = useState<number>(0)
 
     const setDidState = () => {
@@ -36,7 +39,18 @@ export function AppContextProvider({ children }:any) {
                 setDidRegistered(result)
             })
         } else {
-            setDidRegistered(null)
+            setDidRegistered(undefined)
+        }
+    }
+
+    const setCurrentFee = () => {
+        if (active) {
+            nftProtectContract.feeWei(0).then((result: number) => {
+                console.log('Fee:', result)
+                setFee(result)
+            })
+        } else {
+            setFee(undefined)
         }
     }
 
@@ -53,7 +67,8 @@ export function AppContextProvider({ children }:any) {
     }
 
     useEffect(setDidState, [active, account, chainId])
-    useEffect(subscribeBlockUpdates, [active])
+    useEffect(subscribeBlockUpdates, [active, account, chainId])
+    useEffect(setCurrentFee, [active, chainId])
 
     return (
         <AppContext.Provider value={{
@@ -64,7 +79,8 @@ export function AppContextProvider({ children }:any) {
             nftProtectContract,
             referrerAddress,
             didRegistered,
-            currentBlock
+            currentBlock,
+            fee
         }}>
             {children}
         </AppContext.Provider>
