@@ -59,7 +59,18 @@ const Home: NextPage = () => {
         addNotifications([
             {
                 id:'cccc', 
-                children:<div>000000</div>, 
+                children:
+                    <div>
+                        <Heading 
+                            fontSize={{base: "0.875rem"}}
+                            mb={{base: "0.625rem"}}
+                        >You're being sued. Case #1231 Who should own the original NFT
+                        </Heading>
+                        <Text
+                            fontSize={{base: "0.625rem"}}
+                        > In 48 hours it will move to the Voting stage. We advise you to upload your proofs
+                        </Text>
+                    </div>, 
                 severity: 0,
                 dateCreated: new Date()
             }, {
@@ -184,7 +195,7 @@ const Home: NextPage = () => {
                         display={{base: "none", sm: "block"}}
                         right={{base: "1rem", lg: "1rem", '2xl': "16rem"}}
                         top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem", '2xl': "-3rem"}}
-                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "25%"}}
+                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "2%"}}
                         zIndex="0"
                     >
                         <Image src="/images/phone.png" alt="Phone"></Image>

@@ -30,6 +30,19 @@ const nftProtectTheme = extendTheme({
                     bgColor: "rgba(255, 255, 255, 0.15)"
                 }
             },
+            'monochrome-lightBackground': {
+                border: "2px solid #000",
+                borderRadius: "16px",
+                bg: "none",
+                textTransform: "uppercase",
+                _hover: {
+                    bgColor: "rgba(255, 255, 255, 0.15)",
+                    transform: "scale(1.03)"
+                },
+                _active: {
+                    bgColor: "rgba(255, 255, 255, 0.15)"
+                }
+            },
             'primary-solid-wide': {
                 type: 'button',
                 border: "1px solid rgba(255, 255, 255, 0.5)",

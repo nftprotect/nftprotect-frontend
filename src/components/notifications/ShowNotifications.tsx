@@ -51,7 +51,7 @@ const ShowNotifications = () => {
             py={[4, 8]} 
             bgColor="#000"
         >
-            <Accordion allowMultiple>
+            <Accordion defaultIndex={[0]} allowMultiple>
                 <AccordionItem
                 border="none"
                     borderRadius="15px"
@@ -62,7 +62,8 @@ const ShowNotifications = () => {
                         justifyContent="space-between"
                         border="none"
                         borderRadius="15px"
-                        bgColor="#FFF"
+                        bgColor="#000"
+                        color="#FFF"
                         _hover={{
                             bgColor: "none"
                         }}
@@ -134,45 +135,66 @@ const NotificationAlert = ({
     const { deleteNotifications } = useNotificationContext()
 
     return (
-        // <Alert { ...alertProps }
-        // >
-        //     <AlertIcon />
-            <Grid 
-                templateColumns="1fr 8fr 2fr 1fr" 
-                mb={[2]} 
-                border="4px solid #FF0000"
-                borderRadius="15px"
-                alignItems="center"
-                bgColor="#FFF"
-            >
-                <Box p={[2]} mr={[4]} w={["3rem", "4rem"]}>
-                    <Image src="./images/shieldIcon.svg" alt="example" w="100%"/>
+        <Flex 
+            mb={[2]} 
+            border="4px solid #FF0000"
+            borderRadius="15px"
+            alignItems={{md: "center"}}
+            bgColor="#FFF"
+            h={{base: "auto", md: "80px"}}
+            p={{base: "0.75rem"}}
+            justifyContent={{md: "space-between"}}
+            flexDirection={{base: "column", md: "row"}}
+        >
+            <Flex alignItems={{md: "center"}}>
+                <Box
+                    mr={{base: "1.625rem"}}
+                    w={{base: "70px", sm: "100px", md: "3.375rem"}}
+                    h={{base: "70px", sm: "100px", md: "3.375rem"}}
+                >
+                    <Image src="./images/notificationImageExample.png" alt="example" w="100%"/>
                 </Box>
                 <Box mr={[4]}>
-                    <Text py={4}>
+                    <Text fontSize={{base: "0.875rem"}}>
                         { notification.children }
                     </Text>
                 </Box>
+            </Flex>
+
+            <Flex 
+                alignItems= "center"
+                
+            >
                 <Button 
-                    variant="primary-solid"
-                    fontSize={['xs', 'sm', 'md', 'lg']}
-                    mr={[4]}
+                    variant="monochrome-lightBackground"
+                    fontSize={{base: "0.875rem"}}
+                    mr={{base: "0.875rem"}}
                     textTransform="uppercase"
+                    py={{base: "0.625rem"}}
+                    px={{base:"2.25rem"}}
+                    w={{base: "80%", md: "auto"}}
+                    minW="170px"
                 >
                     <Trans>Read more</Trans>
                 </Button>
-                <Flex justifyContent="center" >
+                <Flex justifyContent="center" minW="2rem">
                     {
-                        notification.closeable && <CloseButton
-                            border="2px solid #000"
-                            mr={[4]}
+                        notification.closeable && 
+                        <CloseButton
                             onClick={ () => deleteNotifications([notification.id]) }
+                            border="2px solid #000"
+                            _hover={{
+                                bgColor: "rgba(255, 255, 255, 0.15)",
+                                transform: "scale(1.03)"
+                            }}
+                            _active={{
+                                bgColor: "rgba(255, 255, 255, 0.15)"
+                            }}
                         />
                     }
                 </Flex>
-                
-            </Grid>
-        // </Alert>
+            </Flex>
+        </Flex>
     )
 }
 
