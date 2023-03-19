@@ -31,8 +31,7 @@ const NavBar = () => {
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
-                    flexWrap={{base: 'wrap', md: 'nowrap'}}
-                    
+                    flexWrap='wrap'
                 >
                     <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
                         <Image
@@ -50,9 +49,7 @@ const NavBar = () => {
                         />
                     </Flex>
                     
-                    <Flex 
-                        // py={[4, 0]}
-                    >
+                    <Flex flexWrap="wrap">
                         <LocaleMenu/>
                         <MainMenu />
                         <LoginForm buttonVariant={'monochrome-transparent'} />
