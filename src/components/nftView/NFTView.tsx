@@ -37,10 +37,15 @@ const NFTView = () => {
     const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
 
     const reFetch = (force = false) => {
-        if (refreshPaused && !force) {
-            setRefreshNeeded(true)
-        } else if (!refreshNeeded) {
+        if (force) {
             fetch()
+        } else {
+            if (refreshPaused) {
+                setRefreshNeeded(true)
+            } else if (!refreshNeeded) {
+                fetch()
+                console.log('FETCH STR!!!')
+            }
         }
     }
 
@@ -58,6 +63,24 @@ const NFTView = () => {
         address: nftpContractAddress,
         tokenId: '1'
     })
+
+    const subscribeNftTransfers = () => {
+        const nftEventReceived = () => {
+            reFetch()
+        }
+        let fromMe:any 
+        let toMe:any
+        if (account && active) {
+            fromMe = nftProtectContract.filters.Transfer(account, null)
+            toMe = nftProtectContract.filters.Transfer(null, account)
+            nftProtectContract.on(fromMe, nftEventReceived)
+            nftProtectContract.on(toMe, nftEventReceived)
+        }
+        return () => {
+            fromMe && nftProtectContract.removeAllListeners(toMe)
+            toMe && nftProtectContract.removeAllListeners(fromMe)
+        }
+    }
 
     const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
     const wNfts = data?.filter(nft => nftIsWNFT(nft) )
@@ -102,9 +125,12 @@ const NFTView = () => {
             if (refreshNeeded) {
                 fetch()
                 setRefreshNeeded(false)
+                console.log('FETCH EFF!!!')
             }
         }
-    }, [refreshPaused])
+    }, [refreshPaused, refreshNeeded])
+
+    useEffect(subscribeNftTransfers, [account, active])
 
     return (
         <>

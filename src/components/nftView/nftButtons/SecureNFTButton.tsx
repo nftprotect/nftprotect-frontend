@@ -79,7 +79,6 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
             setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
