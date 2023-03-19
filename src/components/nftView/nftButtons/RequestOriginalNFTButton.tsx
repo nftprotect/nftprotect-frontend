@@ -285,7 +285,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page</Trans>
+                                    <Trans>{"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page"}</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>
