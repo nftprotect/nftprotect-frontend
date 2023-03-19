@@ -61,7 +61,7 @@ const nftProtectTheme = extendTheme({
             'primary-solid': {
                 type: 'button',
                 border: "1px solid rgba(255, 255, 255, 0.5)",
-                borderRadius: "8px",
+                borderRadius: "16px",
                 bg: "linear-gradient(90deg, #4E22CE 5%, #5C2DBA 25%, #AF1893 100%)",
                 color: "#FFF",
                 textTransform: "uppercase",
