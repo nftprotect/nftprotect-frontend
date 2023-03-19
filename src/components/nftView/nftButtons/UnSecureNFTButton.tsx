@@ -129,7 +129,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
     }
 
     return (<>
-        <Button onClick={ mainButtonOnClick } variant="primary-solid" w="100%">
+        <Button onClick={ mainButtonOnClick } variant="monochrome-lightBackground" w="100%">
             <Trans>Restore original</Trans>
         </Button>
         <Modal 
