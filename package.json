@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "lingui compile; next build",
     "start": "next start",
     "lint": "next lint",
-    "extract": "NODE_ENV=development lingui extract"
+    "extract": "NODE_ENV=development lingui extract",
+    "compile": "lingui compile"
   },
   "dependencies": {
     "@babel/core": "^7.21.0",

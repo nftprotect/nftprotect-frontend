@@ -6,6 +6,7 @@ import { Contract } from "@ethersproject/contracts";
 import { useState, useEffect } from 'react';
 import { formatEther } from "@ethersproject/units";
 import useSWR from 'swr'
+import { t } from '@lingui/macro';
 
 const CouponBalance = () => {
 
@@ -68,7 +69,7 @@ const CouponBalance = () => {
     }, [])
 
     return (<>
-        { balance ? `${ formatEther(balance) } ${symbol}` : "Fetching balance…" }
+        { balance ? `${ formatEther(balance) } ${symbol}` : t`Fetching balance…` }
     </>)
 }
 

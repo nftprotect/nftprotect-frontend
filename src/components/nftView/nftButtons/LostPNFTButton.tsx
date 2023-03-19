@@ -211,10 +211,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitia
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    <Trans>If you&apos;ve lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them.</Trans>
+                                    <Trans>{"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}</Trans>
                                 </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                   <Trans>Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It&apos;s important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court.</Trans>
+                                   <Trans>{"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court."}</Trans>
                                 </Text>
 
                                 <Flex flexDirection="row" flexWrap={{base: "wrap", sm: "nowrap"}} justifyContent="space-between" mb={[8]}>

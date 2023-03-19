@@ -1,23 +1,17 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-03-04 15:11+0700\n"
+"POT-Creation-Date: 2023-03-19 12:56+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pseudo\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:229
 msgid "(Paid separately)"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:403
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:404
 msgid "After it will be completed, your NFT will be protected."
 msgstr ""
 
@@ -25,7 +19,7 @@ msgstr ""
 msgid "After it will be completed, your will receive original NFT <0>{name}</0> to your wallet."
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:353
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:354
 msgid "Allow transfer to complete the process"
 msgstr ""
 
@@ -49,19 +43,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:290
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:291
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:212
-msgid "Checking permission to transfer token&mldr;"
+msgid "Checking permission to transfer token…"
 msgstr ""
-
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:290
-#: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:211
-#~ msgid "Checking permission to transfer token..."
-#~ msgstr ""
-
-#: src/components/loginForm/ConnectWallet/ChooseWalletCard.tsx:51
-#~ msgid "Choosing to connect indicates that you have accepted <0><1>Terms of Service or Privacy Policy</1></0>"
-#~ msgstr ""
 
 #: src/components/loginForm/ConnectWallet/ChooseWalletCard.tsx:51
 msgid "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
@@ -73,9 +58,9 @@ msgstr ""
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:226
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:391
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:208
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:273
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:437
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:465
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:274
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:438
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:466
 msgid "Close"
 msgstr ""
 
@@ -94,6 +79,10 @@ msgstr ""
 msgid "Connect your wallet"
 msgstr ""
 
+#: src/pages/index.tsx:164
+msgid "Connect your wallet<0/>& get protected"
+msgstr ""
+
 #: src/components/loginForm/ApproveConnection.tsx:84
 msgid "Connecting to Metamask"
 msgstr ""
@@ -103,14 +92,10 @@ msgid "Connecting your wallet is like “logging in” to Web3. Select your wall
 msgstr ""
 
 #: src/components/loginForm/ApproveConnection.tsx:110
-msgid "Connecting&mldr;"
+msgid "Connecting..."
 msgstr ""
 
-#: src/components/loginForm/ApproveConnection.tsx:110
-#~ msgid "Connecting..."
-#~ msgstr ""
-
-#: src/pages/index.tsx:134
+#: src/pages/index.tsx:153
 msgid "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 msgstr ""
 
@@ -130,7 +115,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:428
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:429
 msgid "Enjoy your new life in protected world!"
 msgstr ""
 
@@ -141,20 +126,24 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:365
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:400
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:317
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:452
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:453
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:308
 msgid "Fail!"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:253
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:254
 msgid "Fee for Protection your NFT:"
+msgstr ""
+
+#: src/components/navBar/CouponBalance.tsx:72
+msgid "Fetching balance…"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:348
 msgid "Follow the status of the case through our app or at the Kleros website."
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:256
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:257
 msgid "Free on test chain"
 msgstr ""
 
@@ -171,21 +160,21 @@ msgstr ""
 msgid "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."
 msgstr ""
 
+#: src/pages/index.tsx:73
+msgid "In 48 hours it will move to the Voting stage. We advise you to upload your proofs"
+msgstr ""
+
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:238
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:277
 msgid "Initiate a dispute"
 msgstr ""
 
 #: src/components/nftView/NFTView.tsx:96
-#~ msgid "It's all your!"
-#~ msgstr ""
-
-#: src/components/nftView/NFTView.tsx:96
-msgid "It’s all yours!"
+msgid "It's all yours!"
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:217
-msgid "Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don't have evidence of an attempt to resolve the issue outside of court."
+msgid "Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court."
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:243
@@ -204,7 +193,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/components/notifications/ShowNotifications.tsx:93
+#: src/components/notifications/ShowNotifications.tsx:94
 msgid "Notifications"
 msgstr ""
 
@@ -235,11 +224,7 @@ msgstr ""
 msgid "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr ""
 
-#: src/components/MultipleFilesUpload.tsx:104
-#~ msgid "Please Wait..."
-#~ msgstr ""
-
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:334
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:335
 msgid "Please allow access to and transfer of <0>ALL YOUR NFTs </0>"
 msgstr ""
 
@@ -251,17 +236,13 @@ msgstr ""
 msgid "Please complete DID verification"
 msgstr ""
 
-#: src/pages/index.tsx:144
-msgid "Please connect your wallet to see your NFT and pNFT (or ... to protect your NFT)"
+#: src/pages/index.tsx:173
+msgid "Please connect your wallet to see your digital <0/>assets and protect them"
 msgstr ""
-
-#: src/pages/index.tsx:143
-#~ msgid "Please connect your<0/> wallet to see your NFT and pNFT (or ... to protect your NFT)"
-#~ msgstr ""
 
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:309
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:224
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:313
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:314
 msgid "Please, allow access and transfer of your NFT"
 msgstr ""
 
@@ -280,39 +261,29 @@ msgstr ""
 
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:298
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:212
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:265
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:266
 msgid "Protect NFT"
 msgstr ""
 
-#: src/pages/index.tsx:127
+#: src/pages/index.tsx:145
 msgid "Protect your digital assets from bad actors"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:244
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:287
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:306
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:327
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:348
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:367
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:392
-msgid "Protecting <0/> your asset&mldr;"
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:245
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:288
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:307
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:328
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:349
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:368
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:393
+msgid "Protecting <0/> your asset…"
 msgstr ""
-
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:244
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:287
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:306
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:327
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:348
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:367
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:392
-#~ msgid "Protecting <0/> your asset..."
-#~ msgstr ""
 
 #: src/components/navBar/LocaleMenu.tsx:26
 msgid "Pseudo"
 msgstr ""
 
-#: src/components/notifications/ShowNotifications.tsx:162
+#: src/components/notifications/ShowNotifications.tsx:178
 msgid "Read more"
 msgstr ""
 
@@ -322,7 +293,7 @@ msgid "Request original"
 msgstr ""
 
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:134
-msgid "Restore"
+msgid "Restore original"
 msgstr ""
 
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:154
@@ -341,14 +312,14 @@ msgstr ""
 msgid "Security audits"
 msgstr ""
 
-#: src/components/notifications/ShowNotifications.tsx:104
+#: src/components/notifications/ShowNotifications.tsx:105
 msgid "Show all"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:378
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:413
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:330
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:480
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:481
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:321
 msgid "Some error occured"
 msgstr ""
@@ -357,7 +328,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:417
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:418
 msgid "Success!"
 msgstr ""
 
@@ -365,12 +336,8 @@ msgstr ""
 msgid "Terms of service"
 msgstr ""
 
-#: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:289
-#~ msgid "The button to open a dispute will appear on the DApp's main page"
-#~ msgstr ""
-
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:290
-msgid "The button to open a dispute will appear on the DApp’s main page"
+msgid "The button to open a dispute will appear on the DApp's main page"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:382
@@ -392,7 +359,7 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:383
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:418
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:335
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:487
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:488
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:326
 msgid "Transaction failed."
 msgstr ""
@@ -400,18 +367,10 @@ msgstr ""
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:391
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:426
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:343
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:502
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:503
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:334
-msgid "Transaction is still in progress&mldr;"
+msgid "Transaction is still in progress…"
 msgstr ""
-
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:337
-#: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:425
-#: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:342
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:502
-#: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:333
-#~ msgid "Transaction is still in progress..."
-#~ msgstr ""
 
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:188
 msgid "Transfer original"
@@ -433,24 +392,8 @@ msgstr ""
 msgid "Until you complete DID verification, the only available function is to request rights to the original when purchasing pNFT."
 msgstr ""
 
-#: src/components/MultipleFilesUpload.tsx:75
-#~ msgid "Upload Files"
-#~ msgstr ""
-
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:279
 msgid "Upload all available evidence:"
-msgstr ""
-
-#: src/components/MultipleFilesUpload.tsx:102
-#~ msgid "Uploading Files"
-#~ msgstr ""
-
-#: src/pages/index.tsx:150
-#~ msgid "View only permissions. <0>We will</0> never do anything without your permission"
-#~ msgstr ""
-
-#: src/pages/index.tsx:151
-msgid "View only permissions. We will never do anything without your permission"
 msgstr ""
 
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:236
@@ -462,20 +405,11 @@ msgstr ""
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:358
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:240
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:272
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:371
-msgid "Wait for transaction to confirm&mldr;"
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:372
+msgid "Wait for transaction to confirm…"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:276
-#: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:324
-#: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:357
-#: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:239
-#: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:271
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:371
-#~ msgid "Wait for transaction to confirm..."
-#~ msgstr ""
-
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:396
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:397
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:268
 msgid "Waiting for transaction to complete."
 msgstr ""
@@ -530,7 +464,7 @@ msgstr ""
 msgid "You canceled the transaction in your wallet."
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:457
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:458
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:313
 msgid "You cancelled a transaction"
 msgstr ""
@@ -547,11 +481,15 @@ msgstr ""
 msgid "You have no protected NFTs yet"
 msgstr ""
 
+#: src/pages/index.tsx:68
+msgid "You're being sued. Case #1231 Who should own the original NFT"
+msgstr ""
+
 #: src/components/nftView/NFTView.tsx:67
 msgid "Your NFT"
 msgstr ""
 
-#: src/components/nftView/nftButtons/SecureNFTButton.tsx:424
+#: src/components/nftView/nftButtons/SecureNFTButton.tsx:425
 msgid "Your asset is now protected!"
 msgstr ""
 
@@ -566,10 +504,6 @@ msgstr ""
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:177
 msgid "are you sure?"
 msgstr ""
-
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:291
-#~ msgid "case {0}"
-#~ msgstr ""
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:345
 msgid "case {disputeId}"

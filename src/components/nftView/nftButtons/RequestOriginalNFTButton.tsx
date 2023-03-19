@@ -237,7 +237,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>Wait for transaction to confirm{'\u2026'}</Trans>
+                                    <Trans>{"Wait for transaction to confirm…"}</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -269,7 +269,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     size={['lg', 'xl']}>
                                 </Spinner>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>Wait for transaction to confirm{'\u2026'}</Trans>
+                                    <Trans>{"Wait for transaction to confirm…"}</Trans>
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
@@ -287,7 +287,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                                     <Trans>We recommend always keep your assets secure</Trans>
                                 </Text>
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>The button to open a dispute will appear on the DApp&rsquo;s main page</Trans>
+                                    <Trans>{"The button to open a dispute will appear on the DApp's main page"}</Trans>
                                 </Text>
                                 <Box w="50%" my={[8]}>
                                     <Button
@@ -340,7 +340,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>Transaction is still in progress{'\u2026'}</Trans>
+                                    <Trans>{"Transaction is still in progress…"}</Trans>
                                 </Text>
                                 <Spinner 
                                     my={[4]} 

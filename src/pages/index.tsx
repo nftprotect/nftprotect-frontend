@@ -64,11 +64,13 @@ const Home: NextPage = () => {
                         <Heading 
                             fontSize={{base: "0.875rem"}}
                             mb={{base: "0.625rem"}}
-                        >You're being sued. Case #1231 Who should own the original NFT
+                        >
+                            <Trans>{"You're being sued. Case #1231 Who should own the original NFT"}</Trans>
                         </Heading>
                         <Text
                             fontSize={{base: "0.625rem"}}
-                        > In 48 hours it will move to the Voting stage. We advise you to upload your proofs
+                        > 
+                            <Trans>In 48 hours it will move to the Voting stage. We advise you to upload your proofs</Trans>
                         </Text>
                     </div>, 
                 severity: 0,
