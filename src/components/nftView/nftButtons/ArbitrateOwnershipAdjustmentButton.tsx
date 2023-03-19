@@ -173,7 +173,6 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
         <Button
             onClick={ mainButtonOnClick }
             variant="primary-solid"
-            my={2}
             w="100%"
         >
             <Trans>Open dispute</Trans>
