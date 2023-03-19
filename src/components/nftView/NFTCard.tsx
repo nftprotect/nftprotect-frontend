@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { useState, useEffect } from 'react';
-import { deIpfsUrl } from '../../utils/helpers'
 import SecureNFTButton from './nftButtons/SecureNFTButton';
 import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
 import ERC721ABI from '../../abi/ERC721ABI';
@@ -22,6 +21,7 @@ import LostPNFTButton from './nftButtons/LostPNFTButton';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
+import { useIPFSContext } from '../../context/IPFSContextProvider';
 
 interface NFTInitialData {
     nft: EvmNft,
@@ -57,6 +57,7 @@ export enum RequestStatus {
 
 const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
+    const { centalizeIpfsUrl } = useIPFSContext()
     // Stores the metadata of NFT
     const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -256,7 +257,7 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
     }
     if (metadata) {
         // Metadata already loaded, showing it
-        const img = deIpfsUrl(metadata?.image)
+        const img = centalizeIpfsUrl(metadata?.image)
         result = <Image 
                     src={ img }
                     borderRadius="1rem"
@@ -272,6 +273,14 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
         // No metadata, showing the plug
         result = <Image src={'/download.png'} height='12em'/>
     }
+
+    // Temporarily workaround
+    if (isWNFT && isOnAnotherAddress && originalNFTData && 
+        (originalNFTData.owner.toLowerCase() !== account?.toLowerCase()) &&
+        nft.ownerOf && (nft.ownerOf.format().toLowerCase() !== account?.toLowerCase())) {
+            return <></>
+        }
+
     return (
         <Card 
             // variant='elevated'

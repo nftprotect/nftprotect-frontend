@@ -2,7 +2,6 @@ import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
-import { deIpfsUrl } from '../../../utils/helpers';
 import {
     Button,
     Box,
@@ -27,6 +26,7 @@ import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
+import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -39,6 +39,7 @@ interface ButtonInitialData {
 const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
+    const { centalizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
@@ -116,7 +117,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, tokenContract, ori
 
     function getNftImage() {
         if (metadata) {
-            let imgUrl = deIpfsUrl(metadata.image)
+            let imgUrl = centalizeIpfsUrl(metadata.image)
             return (<Image 
                     src={ imgUrl } 
                     alt="NFT image" 

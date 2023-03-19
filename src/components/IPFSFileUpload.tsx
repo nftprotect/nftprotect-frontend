@@ -36,7 +36,7 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
         setLoading(true)
         const result = await uploadFile(file)
         if (result) {
-            const dirHash = result.uploadResult.cid.toV1().toString()
+            const dirHash = result.uploadResult.cid.toString()//.toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
             const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
 

@@ -39,7 +39,7 @@ export const dialogsTimeout = 3000
 
 // IPFS
 export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'
-export const ipfsUrlMask = 'https://{HASH}.ipfs.cf-ipfs.com'
+export const ipfsUrlMask = 'https://cloudflare-ipfs.com/ipfs/{HASH}/{FILENAME}'
 
 // Arbitrators
 export enum Arbitrators {

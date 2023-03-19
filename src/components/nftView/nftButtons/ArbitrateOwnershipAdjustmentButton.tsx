@@ -1,7 +1,6 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import React, { useState } from 'react';
-import { deIpfsUrl } from '../../../utils/helpers';
 import {
     Button,
     Box,
@@ -54,7 +53,7 @@ interface ButtonInitialData {
 const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library } = useAppContext()
-    const { ipfs, getCentralizedUrl, getIpfsUrl } = useIPFSContext()
+    const { ipfs, getCentralizedUrl, getIpfsUrl, centalizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [url, setUrl] = useState<string>()
@@ -122,7 +121,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
         uploadMetaEvidence(metaEvidence).then((result:any) => {
             console.log('FFFFFFFF', result, library)
             setNextStep(StepMapping.confirmTransaction)
-            const dirHash = result.uploadResult.cid.toV1().toString()
+            const dirHash = result.uploadResult.cid.toString()//toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
             const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
             try {
@@ -160,7 +159,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, original
 
     function getNftImage() {
         if (metadata) {
-            let imgUrl = deIpfsUrl(metadata.image)
+            let imgUrl = centalizeIpfsUrl(metadata.image)
             return (<Image 
                     src={ imgUrl } 
                     alt={t`NFT image`} 

@@ -1,7 +1,6 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config';
-import { deIpfsUrl } from '../../../utils/helpers';
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
 import {
@@ -28,6 +27,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import { AlertCircle } from '@web3uikit/icons'
 import { defaultArbitrator } from '../../../utils/config';
+import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -39,6 +39,7 @@ interface ButtonInitialData {
 const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
+    const { centalizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const name = metadata?.name || nft.name
@@ -116,7 +117,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, tokenContract}: ButtonIni
     function getNftImage() {
         let nftImage = <div />
         if (metadata) {
-            const imgUrl = deIpfsUrl(metadata.image)
+            const imgUrl = centalizeIpfsUrl(metadata.image)
             nftImage = <Image 
                         src={ imgUrl } 
                         my={[4]}
