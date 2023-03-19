@@ -282,13 +282,21 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
             }
             else if (isOnAnotherAddress) {
                 // Original NFT belongs to user, but this pNFT is not
-                buttons = <ReleaseOriginalNFTButton
-                    nft={ nft } 
-                    metadata={ metadata } 
-                    nftReFetch={ nftReFetch } 
-                    tokenContract={ tokenContract }
-                    pendingRequest={ pendingRequest?.id }
-                />
+                buttons = (<>
+                    <ReleaseOriginalNFTButton
+                        nft={ nft } 
+                        metadata={ metadata } 
+                        nftReFetch={ nftReFetch } 
+                        tokenContract={ tokenContract }
+                        pendingRequest={ pendingRequest?.id }
+                    />
+                    <LostPNFTButton 
+                        nft={ nft } 
+                        metadata={ metadata }
+                        nftReFetch={ nftReFetch }
+                        tokenContract={ tokenContract }
+                    />
+                </>)
             } 
         }
     } else {
@@ -370,12 +378,6 @@ const NFTCard = ({ nft, nftReFetch }: NFTInitialData) => {
 
                     <Box>
                         { buttons }
-                        {/* <LostPNFTButton 
-                            nft={ nft } 
-                            metadata={ metadata }
-                            nftReFetch={ nftReFetch }
-                            tokenContract={ tokenContract }
-                        /> */}
                     </Box>
                 </Flex>
             </CardBody>
