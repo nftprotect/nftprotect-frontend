@@ -3,8 +3,6 @@ import ConnectWalletConnect from './ConnectWalletConnect'
 
 import {
     Box,
-    Card,
-    CardBody,
     Flex,
     Heading,
     Text,
