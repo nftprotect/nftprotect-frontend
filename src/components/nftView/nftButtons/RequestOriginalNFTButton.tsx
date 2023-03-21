@@ -187,7 +187,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <Box w="100%">
                                     <Button 
                                         onClick={ startButtonOnClick }
-                                        variant="monochrome-lightBackground"
+                                        variant="dark-outline"
                                         my={2}
                                         w="100%"
                                     >
@@ -206,7 +206,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 </Flex>
                                 <Button 
                                     onClick={onClose}
-                                    variant="monochrome-transparent"
+                                    variant="light-outline"
                                     w="100%"
                                     mt={[4, 8]}
                                 >

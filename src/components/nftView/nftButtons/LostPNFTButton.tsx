@@ -195,7 +195,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 </Flex>
                                 <Button 
                                     onClick={onClose}
-                                    variant="monochrome-transparent"
+                                    variant="light-outline"
                                     border="none"
                                     w="100%"
                                 >Close
@@ -225,13 +225,13 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 <Flex flexDirection="row" flexWrap={{base: "wrap", sm: "nowrap"}} justifyContent="space-between" mb={[8]}>
                                     <Button 
                                         onClick={onClose}
-                                        variant="monochrome-lightBackground"
+                                        variant="dark-outline"
                                         m={[4]}
-                                        w="100%"monochrome-lightBackground
+                                        w="100%"dark-outline
                                     ><Trans>Close</Trans>
                                     </Button>
                                     <Button 
-                                        variant="monochrome-lightBackground"
+                                        variant="dark-outline"
                                         m={[4]}
                                         w="100%"
                                         onClick={openCaseInKleros}
@@ -323,7 +323,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 </Flex>
                                 <Flex flexDirection="column" alignItems="center">
                                     <Button 
-                                        variant="monochrome-lightBackground"
+                                        variant="dark-outline"
                                         m={[4]}
                                         w="50%"
                                         textTransform="uppercase"
@@ -332,7 +332,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Button>
                                     <Button 
                                         onClick={onClose}
-                                        variant="monochrome-transparent"
+                                        variant="light-outline"
                                         m={[4]}
                                         textTransform="uppercase"
                                         w="50%"
