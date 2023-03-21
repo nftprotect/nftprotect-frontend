@@ -23,7 +23,7 @@ const NavBar = () => {
             bgColor="#000"
             color="#FFF"
             w="100%"
-            maxW="2200px"
+            maxW="1920px"
             px={[3, 6]}
             py="0.375rem"
         >
@@ -52,7 +52,7 @@ const NavBar = () => {
                     <Flex flexWrap="wrap">
                         {/* <LocaleMenu/> */}
                         <MainMenu />
-                        <LoginForm buttonVariant={'monochrome-transparent'} />
+                        <LoginForm buttonVariant={'light-outline'} />
                         { active && <NetworkMenu /> }
                         { active && <ShowConnectionState /> }
                     </Flex>
