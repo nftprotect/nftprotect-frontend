@@ -319,20 +319,24 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
     if (metadata) {
         // Metadata already loaded, showing it
         const img = centralizeIpfsUrl(metadata?.image)
-        result = <Image 
+        result = <Image
                     src={ img }
+                    position="absolute"
                     borderRadius="1rem"
-                    mb={{base: "1.25rem"}}
                     h="100%"
-                    w="auto"
-                    minH={ {base: "6rem", sm: "10rem", md: "9rem", lg: "13rem", xl: "15em"} }
+                    w="100%"
                 />
     } else if (!fetchEnded) {
         // Metadata is still loading, showing loading
         result = <Spinner size='xl' mt={4} />
     } else {
         // No metadata, showing the plug
-        result = <Image src={'/download.png'} height='12em'/>
+        result = <Image src={'/download.png'} 
+                    position="absolute"
+                    borderRadius="1rem"
+                    h="100%"
+                    w="100%"
+                />
     }
 
     // Temporarily workaround
@@ -344,7 +348,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
 
     return (
         <Card 
-            // variant='elevated'
             mb={[2, 4]}
             border="2px solid #000000"
             borderRadius="1rem"
@@ -363,7 +366,15 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                         flexDirection="column"
                         justifyContent="space-between"
                     >
-                        <Flex mb={{base: "1.25rem"}} justifyContent="center">{ result }</Flex>
+                        <Flex
+                            position="relative"
+                            pb="100%"
+                            overflow="hidden"
+                            mb={{base: "1.25rem"}}
+                            justifyContent="center"
+                        >
+                            { result }
+                        </Flex>
 
                         <Text 
                             fontWeight="700"
