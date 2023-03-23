@@ -103,7 +103,7 @@ const KlerosCaseForm = ({
                     </Box>
                     <Button 
                         onClick={onClose as any}
-                        variant="monochrome-transparent"
+                        variant="light-outline"
                         w="100%"
                         mt={[4, 8]}
                     >

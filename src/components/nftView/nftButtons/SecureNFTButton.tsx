@@ -262,7 +262,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Text>
                                 <Button 
                                     onClick={ startButtonOnClick }
-                                    variant="monochrome-lightBackground"
+                                    variant="dark-outline"
                                     my={2}
                                     w="100%"
                                     textTransform="uppercase"
@@ -271,7 +271,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Button>
                                 <Button 
                                     onClick={onClose}
-                                    variant="monochrome-transparent"
+                                    variant="light-outline"
                                     border="none"
                                     w="100%"
                                 >
@@ -431,7 +431,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
 
                                 <Button 
                                     onClick={onClose}
-                                    variant="monochrome-transparent"
+                                    variant="light-outline"
                                     border="none"
                                     w="100%"
                                 >
@@ -459,7 +459,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Text>
                                 <Button 
                                     onClick={onClose}
-                                    variant="monochrome-transparent"
+                                    variant="light-outline"
                                     border="none"
                                     w="100%"
                                 >

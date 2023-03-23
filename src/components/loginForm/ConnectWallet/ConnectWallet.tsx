@@ -1,9 +1,6 @@
 import ChooseWalletCard from './ChooseWalletCard'
 
 import {
-    Box,
-    Card,
-    CardBody,
     Image,
     Flex,
     Heading,

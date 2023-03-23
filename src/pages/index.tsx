@@ -90,37 +90,34 @@ const Home: NextPage = () => {
         <>
         <Container 
             p={0}
-            maxW="2200px"
+            maxW="1920px"
+            h={active ? "auto" : "calc(100vh - 60px)"}
         >
             <NavBar />
             <Box
                 position="relative"
                 top="0" 
                 left="0"
-                pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
+                h={active ? "auto" : "100%"}
                 bg={active ? "url('/images/phone.png') top right no-repeat" : "url('/images/banner.png') top left / cover no-repeat"}
+                pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
             >
                 <Flex 
                     flexDirection="column" 
                     justifyContent="center"
                     pt={{base:"2.5rem", md:"5.25rem", xl: "8.25rem" }}
-                    // pl={{base: "1rem", sm: "2rem", md: "4rem", lg: "5rem", xl: "10rem"}}
                     px={['1rem', '3rem']}
                     pb={{base: "2rem"}}
                 >
                     {active &&
                         <Box w={{base: "100%", sm: "50%"}}>
-                            <Heading 
-                                fontSize={{base: "1.5rem", md: "2.625rem"}}
-                                lineHeight={{base: "1.75rem", md: "2.625rem"}}
-                            >
+                            <Heading as="h1" fontStyle="h1">
                                 <Trans>Protect your digital <br />assets from bad<br /> actors</Trans>
                             </Heading>
                             <Text 
                                 pt="1.25rem"
                                 pb="2rem"
-                                fontSize={{base: "1rem", md: "1.125rem", lg: "1.375rem"}}
-                                lineHeight={{base: "1.25rem", md: "1.5rem", lg: "1.75rem"}}
+                                textStyle="h3"
                             >
                                 <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
                             </Text>
@@ -129,23 +126,19 @@ const Home: NextPage = () => {
 
                     { !active &&
                         <>
-                            <Heading
-                                fontSize={{base: "1.5rem", md: "2.75rem", lg: "3.875rem"}}
-                                lineHeight={{base: "1.75rem", md: "3.25rem", lg: "3.875rem"}}
-                            >
+                            <Text as="h1" textStyle="h1">
                                 <Trans>Connect your wallet<br></br>& get protected</Trans>
-                            </Heading>
+                            </Text>
                                 
                             <Text
+                                textStyle="h3"
                                 pt="1.25rem"
                                 pb="2rem"
-                                fontSize={{base: "1rem", md: "1.125rem", lg: "1.375rem"}}
-                                lineHeight={{base: "1.25rem", md: "1.5rem", lg: "1.75rem"}}
                             >
                                 <Trans>Please connect your wallet to see your digital <br></br>assets and protect them</Trans>
                             </Text>
-                            <Box>
-                                <LoginForm buttonVariant={'primary-solid-wide'} />
+                            <Box w={{base: "14rem", sm: "16rem"}} >
+                                <LoginForm buttonVariant={'primary-solid'} />
                             </Box>
                         </>
                     }
@@ -163,24 +156,13 @@ const Home: NextPage = () => {
                         <Image src="/images/phone.png" alt="Phone"></Image>
                     </Box>
                 }
-                {/* {active && 
-                    <Box
-                        position="absolute"
-                        display={{base: "none", sm: "block"}}
-                        right={{base: "1rem", lg: "1rem", '2xl': "16rem"}}
-                        top={{base: "0", sm: "0", md: "0", lg: "-1.5rem", xl: "-3rem", '2xl': "-3rem"}}
-                        w={{base: "35%", sm: "35%", md: "35%", lg: "35%", xl: "35%", '2xl': "20%"}}
-                        zIndex="0"
-                    >
-                        <Image src="/images/phone.png" alt="Phone"></Image>
-                    </Box>
-                } */}
-
                 </Box>
-            <main>
-                {innerPart}
-                { active && <NFTView />}
-            </main>
+            {active && 
+                <main>
+                    {innerPart}
+                    { active && <NFTView />}
+                </main>
+            }
         </Container>
     </>
     )
