@@ -24,9 +24,9 @@ import SecureNFTButton from './SecureNFTButton';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
-import { AlertCircle } from '@web3uikit/icons'
 import { defaultArbitrator } from '../../../utils/config';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { t } from '@lingui/macro';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -116,14 +116,21 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
         let nftImage = <div />
         if (metadata) {
             const imgUrl = centralizeIpfsUrl(metadata.image)
-            nftImage = <Image 
-                        src={ imgUrl } 
-                        my={[4]}
-                        border="1px solid rgba(255, 255, 255, 0.5)"
-                        borderRadius={["20px"]}
-                        h="auto"
-                        w="60%" 
-                    />
+            nftImage = <Flex
+                            border="2px solid rgba(255, 255, 255, 0.5)"
+                            borderRadius={["16px"]}
+                            overflow="hidden"
+                            my={{base: "1.25rem"}}
+                            justifyContent="center"
+                            h="150px"
+                            w="150px"
+                        > 
+                            <Image 
+                                src={ imgUrl }
+                                alt={t`NFT image`}
+                                borderRadius="1rem"
+                            />
+                        </Flex>
             }
         return nftImage
     }
@@ -159,19 +166,9 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column">
-                                <Box
-                                    my={[4]}
-                                    border="1px solid rgba(255, 255, 255, 0.5)"
-                                    borderRadius={["20px"]}
-                                    w="50%" 
-                                    overflow="hidden"
-                                    alignSelf="center"
-                                >  
-                                    { getNftImage() }
-                                </Box>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
+
+                                { getNftImage() }
+
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     <Trans>The pNFT will be burned and the original NFT will be sent to you</Trans>
                                 </Text>

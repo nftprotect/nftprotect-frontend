@@ -85,16 +85,21 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
         let nftImage = <div />
         if (metadata) {
             const imgUrl = centralizeIpfsUrl(metadata?.image || '')
-            nftImage = <Box
-                            my={[4]}
+            nftImage = <Flex
                             border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["20px"]}
+                            borderRadius={["16px"]}
                             overflow="hidden"
-                            alignItems="center"
-                            w="60%"
+                            my={{base: "1.25rem"}}
+                            justifyContent="center"
+                            h="150px"
+                            w="150px"
                         > 
-                            <Image src={ imgUrl } />
-                        </Box>
+                            <Image 
+                                src={ imgUrl }
+                                alt={t`NFT image`}
+                                borderRadius="1rem"
+                            />
+                        </Flex>
             }
         return nftImage
     }
@@ -157,9 +162,6 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
                                 { getNftImage() }
 
-                                <Text fontSize={["md", "lg", "xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
                                     {"Targeted by an intruder or made a mistake and lost access to your pNFT, don't worry. We can work together to recover your asset and restore it to your wallet."}
                                 </Text>

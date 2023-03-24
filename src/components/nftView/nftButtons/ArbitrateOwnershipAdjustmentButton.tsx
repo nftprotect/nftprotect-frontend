@@ -161,11 +161,21 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
     function getNftImage() {
         if (metadata) {
             let imgUrl = centralizeIpfsUrl(metadata.image)
-            return (<Image 
-                    src={ imgUrl } 
-                    alt={t`NFT image`} 
-                    w="100%"
-                />)
+            return <Flex
+                        border="2px solid rgba(255, 255, 255, 0.5)"
+                        borderRadius={["16px"]}
+                        overflow="hidden"
+                        my={{base: "1.25rem"}}
+                        justifyContent="center"
+                        h="150px"
+                        w="150px"
+                    > 
+                        <Image 
+                            src={ imgUrl }
+                            alt={t`NFT image`}
+                            borderRadius="1rem"
+                        />
+                    </Flex>
         }
     }
 
@@ -210,19 +220,9 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                                     { formatAddress(originalOwner, 4) }
                                     <CopyIcon onClick={ copyOriginalOwnerToClipboard } />
                                 </Text>
-                                <Box
-                                    my={[4]}
-                                    border="1px solid rgba(255, 255, 255, 0.5)"
-                                    borderRadius={["20px"]}
-                                    w="50%" 
-                                    overflow="hidden"
-                                    alignSelf="center"
-                                >  
-                                    { getNftImage() }
-                                </Box>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
+
+                                { getNftImage() }
+
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     { pendingRequest.status == RequestStatus.Rejected ?
                                         t`Don't agree? Initiate a dispute in the Kleros decentralized court.` :
