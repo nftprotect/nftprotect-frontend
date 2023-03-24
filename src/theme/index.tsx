@@ -48,7 +48,8 @@ const nftProtectTheme = extendTheme({
         Button: {
             baseStyle: {
                 textTransform: 'uppercase',
-                borderRadius: '16px'
+                borderRadius: '16px',
+                w: "100%"
             },
             variants: {
                 'light-outline': {
@@ -85,8 +86,6 @@ const nftProtectTheme = extendTheme({
                     bgGradient: "linear(315deg, accent.dark 0%, accent.light 100%)",
                     color: "#FFF",
                     filter: "drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))",
-                    // py:{base: "1rem", xl: "1.5rem"},
-                    // px:{base: "2rem", xl: "3rem"},
                     _hover: {
                         bgGradient: "linear(315deg, accent.light 0%, accent.dark 100%)",
                         transform: "scale(1.03)"
@@ -108,7 +107,6 @@ const nftProtectTheme = extendTheme({
                     p: [3, 6],
                     color: "#FFF",
                     bgColor: 'danger',
-                    w: "100%",
                     _hover: {
                         transform: "scale(1.03)"
                     },
