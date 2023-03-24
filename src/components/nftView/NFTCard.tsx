@@ -331,7 +331,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
         result = <Spinner size='xl' mt={4} />
     } else {
         // No metadata, showing the plug
-        result = <Image src={'/download.png'} 
+        result = <Image src={'./images/noImage.png'} 
                     position="absolute"
                     borderRadius="1rem"
                     h="100%"
