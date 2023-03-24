@@ -159,7 +159,7 @@ const NFTView = () => {
                         >
                             { ownNftElements }
                         </Grid> : 
-                        <Text color='white'><Trans>You have no NFTs in your wallet.</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no NFTs in your wallet.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
 
@@ -180,7 +180,7 @@ const NFTView = () => {
                         </AccordionButton>
                     </Flex>
                         
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel px="0" pb={4}>
                         { transferedWNftElements && (transferedWNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
@@ -193,12 +193,15 @@ const NFTView = () => {
                         >
                             { transferedWNftElements }
                         </Grid> :
-                        <Text color='white'><Trans>You have no pNFTs transfered to third parties.</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no pNFTs transfered to third parties.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
                 
                 <AccordionItem 
-                    bgGradient="linear(180deg, dark 70%, #FFF 70%)"
+                    bgImage="url('./images/shieldBackground.png'), linear-gradient(180deg, #0D0E14 70%, #FFF 70%)"
+                    bgRepeat="no-repeat"
+                    bgPosition="right 110px top 76px, top left"
+                    bgSize="auto calc(100% - 76px), cover"
                     px={['1rem', '3rem']}
                 >
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
@@ -214,7 +217,7 @@ const NFTView = () => {
                         </AccordionButton>
                     </Flex>
                         
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel px="0" pb={4}>
                         { wNftElements && (wNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
@@ -227,7 +230,7 @@ const NFTView = () => {
                         >
                             { wNftElements }
                         </Grid> :
-                        <Text color={'white'}><Trans>You have no protected NFTs yet</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no protected NFTs yet</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
