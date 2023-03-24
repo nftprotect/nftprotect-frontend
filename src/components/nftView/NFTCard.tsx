@@ -245,37 +245,46 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
             console.log('PENDING REQUEST:', nft.tokenId, pendingRequest)
             if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() === account?.toLowerCase())) {
                 // Original NFT and pNFT are both belong to user
-                buttons = <UnSecureNFTButton 
-                    nft={ nft } 
-                    metadata={ metadata } 
-                    nftReFetch={ nftReFetch }
-                    setRefreshPaused = { setRefreshPaused }
-                    tokenContract={ tokenContract }
-                />
-            } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
-                // This pNFT belongs to user but original is not
-                if (!pendingRequest) {
-                    // If no request pending then we can sent it, so showing the button
-                    buttons = <RequestOriginalNFTButton
-                        nft={ nft } 
-                        metadata={ metadata } 
-                        nftReFetch={ nftReFetch }
-                        setRefreshPaused = { setRefreshPaused }
-                        tokenContract={ tokenContract }
-                        originalOwner={ originalOwner || '' }
-                    />
-                } else {
-                    // If request is timed out or rejected we can create a court
-                    if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
-                        buttons = <ArbitrateOwnershipAdjustmentButton
+                buttons = 
+                    <Box mb={[2]}>
+                        <UnSecureNFTButton 
                             nft={ nft } 
                             metadata={ metadata } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
-                            pendingRequest={ pendingRequest }
-                            originalOwner={ originalOwner || '' }
-                            loadPendingRequest={ loadPendingRequest }
+                            tokenContract={ tokenContract }
                         />
+                    </Box>
+            } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
+                // This pNFT belongs to user but original is not
+                if (!pendingRequest) {
+                    // If no request pending then we can sent it, so showing the button
+                    buttons = 
+                        <Box mb={[2]}>
+                            <RequestOriginalNFTButton
+                                nft={ nft } 
+                                metadata={ metadata } 
+                                nftReFetch={ nftReFetch }
+                                setRefreshPaused = { setRefreshPaused }
+                                tokenContract={ tokenContract }
+                                originalOwner={ originalOwner || '' }
+                            />
+                        </Box>
+                } else {
+                    // If request is timed out or rejected we can create a court
+                    if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
+                        buttons = 
+                            <Box mb={[2]}>
+                                <ArbitrateOwnershipAdjustmentButton
+                                    nft={ nft } 
+                                    metadata={ metadata } 
+                                    nftReFetch={ nftReFetch }
+                                    setRefreshPaused = { setRefreshPaused }
+                                    pendingRequest={ pendingRequest }
+                                    originalOwner={ originalOwner || '' }
+                                    loadPendingRequest={ loadPendingRequest }
+                                />
+                            </Box>
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
                         buttons = <Text><Trans>{"Pending request…"}</Trans></Text>
@@ -287,7 +296,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
             else if (isOnAnotherAddress) {
                 // Original NFT belongs to user, but this pNFT is not
                 buttons = (<>
-                    <Box mb={[4]}>
+                    <Box mb={[2]}>
                         <LostPNFTButton 
                             nft={ nft } 
                             metadata={ metadata }
@@ -296,7 +305,8 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                             tokenContract={ tokenContract }
                         />
                     </Box>
-                    <ReleaseOriginalNFTButton
+                    <Box mb={[2]}>
+                        <ReleaseOriginalNFTButton
                         nft={ nft } 
                         metadata={ metadata } 
                         nftReFetch={ nftReFetch }
@@ -304,17 +314,21 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                         tokenContract={ tokenContract }
                         pendingRequest={ pendingRequest?.id }
                     />
+                    </Box>
                 </>)
             } 
         }
     } else {
-        buttons = <SecureNFTButton 
-            nft={ nft } 
-            metadata={ metadata }
-            nftReFetch={ nftReFetch }
-            setRefreshPaused={ setRefreshPaused }
-            tokenContract={ tokenContract }
-        />
+        buttons = 
+            <Box mb={[2]}>
+                <SecureNFTButton 
+                    nft={ nft } 
+                    metadata={ metadata }
+                    nftReFetch={ nftReFetch }
+                    setRefreshPaused={ setRefreshPaused }
+                    tokenContract={ tokenContract }
+                />
+            </Box>
     }
     if (metadata) {
         // Metadata already loaded, showing it
