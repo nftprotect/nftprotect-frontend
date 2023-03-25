@@ -33,10 +33,11 @@ interface ButtonInitialData {
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract
+    tokenContract: Contract,
+    variant: any
 }
 
-const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
+const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -114,14 +115,19 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
 
     function getNftImage() {
         let nftImage = <div />
+        let imgUrl = ''
         if (metadata) {
-            const imgUrl = centralizeIpfsUrl(metadata.image)
+            imgUrl = centralizeIpfsUrl(metadata.image)
+        } else {
+            imgUrl = './images/noImage.png'
+        }
             nftImage = <Flex
                             border="2px solid rgba(255, 255, 255, 0.5)"
                             borderRadius={["16px"]}
                             overflow="hidden"
                             my={{base: "1.25rem"}}
                             justifyContent="center"
+                            alignSelf="center"
                             h="150px"
                             w="150px"
                         > 
@@ -131,12 +137,12 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                 borderRadius="1rem"
                             />
                         </Flex>
-            }
+            
         return nftImage
     }
 
     return (<>
-        <Button onClick={ mainButtonOnClick } variant="dark-outline" w="100%">
+        <Button onClick={ mainButtonOnClick } variant={variant} w="100%">
             <Trans>Restore original</Trans>
         </Button>
         <Modal 
@@ -159,32 +165,40 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                 borderRadius="30px"
                 py={[4, 8]}
             >
-
-                <ModalHeader  textAlign="center" w="100%" textTransform="uppercase" fontSize={["lg", "xl", "2xl"]} fontWeight="700"><Trans>Restore your <br /> original NFT</Trans></ModalHeader>
                 <ModalBody>
                     <Wizard>
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column">
+                                <Text
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
+                                    textTransform="uppercase"
+                                    fontWeight="700"
+                                    textAlign="center" 
+                                    mb="4"
+                                >
+                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                </Text>
 
                                 { getNftImage() }
 
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
+                                <Text fontSize={["md", "lg", "xl"]} mb={{lg: "23px"}} textAlign="center">
                                     <Trans>The pNFT will be burned and the original NFT will be sent to you</Trans>
                                 </Text>
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    <Trans>ARE YOU SURE?</Trans>
+                                <Text fontSize={["md", "lg", "xl"]} mb={{lg: "32px"}} textAlign="center" textTransform="uppercase">
+                                    <Trans>Are you sure?</Trans>
                                 </Text>
                                 <Flex
                                     flexWrap="nowrap"
                                     justifyContent="space-around"
-                                    my={[4, 8]}
+                                    mb={[4, 8]}
                                 >
                                     <Box minW="40%">
                                         <Button 
                                             onClick={ startButtonOnClick }
                                             variant='dark-outline'
-                                            w="100%"
                                             my={2}
                                         >
                                             <Trans>Yes</Trans>
@@ -196,7 +210,6 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                             onClick={ onClose }
                                             variant="dark-outline"
                                             my={2}
-                                            w="100%"
                                         >
                                             <Trans>No</Trans>
                                         </Button>
@@ -208,6 +221,17 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                         {/* Confirm transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
+                                <Text
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
+                                    textTransform="uppercase"
+                                    fontWeight="700"
+                                    textAlign="center" 
+                                    mb="4"
+                                >
+                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                </Text>
                                 <Spinner 
                                     my={[4]} 
                                     thickness='4px'
@@ -225,7 +249,18 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                         {/* Waiting for transaction confirmation */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
-                                <Spinner 
+                                <Text
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
+                                    textTransform="uppercase"
+                                    fontWeight="700"
+                                    textAlign="center" 
+                                    mb="4"
+                                >
+                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                </Text>
+                                <Spinner
                                     my={[4]} 
                                     thickness='4px'
                                     speed='0.65s'
@@ -241,35 +276,45 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
 
                         {/* Restored succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]}  fontWeight="500">
-                                <Trans>The original NFT restored succesfully!</Trans>
-                                </Heading>
+                            <Flex flexDirection="column" alignItems="center" px={[4, 8, 10]}>
+                                <Text
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
+                                    textTransform="uppercase"
+                                    fontWeight="700"
+                                    textAlign="center" 
+                                    mb="4"
+                                >
+                                    <Trans>The original NFT restored succesfully!</Trans>
+                                </Text>
                                 <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
                                 </Image>
-                                <Box w="80%">
-                                    <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                        <Trans values={{name}}>You can protect your NFT <b>{name}</b> again.</Trans>
-                                    </Text>
-                                    <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                        <Trans>We recomend always keep your assets secure</Trans>
-                                    </Text>
+
+                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={{lg: "32px"}} textTransform="uppercase">
+                                    <Trans values={{name}}>You can protect your NFT <b>{name}</b> again.</Trans>
+                                </Text>
+                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" mb={{lg: "32px"}} textTransform="uppercase">
+                                    <Trans>We recomend always keep your assets secure</Trans>
+                                </Text>
+                                <Flex w="80%" flexDirection="column" alignSelf="center" fontSize="16px">
                                     <SecureNFTButton 
                                         metadata={metadata} 
                                         nft={nft} 
                                         nftReFetch={nftReFetch}
                                         setRefreshPaused={setRefreshPaused}
-                                        tokenContract={tokenContract} />
+                                        tokenContract={tokenContract}
+                                        variant={"dark-outline"}
+                                    />
                                     <Button
                                         onClick={ onClose }
                                         my={2}
-                                        w="100%"
                                         h={[8, 10]}
-                                        variant="dark-outline"
+                                        variant="light-outline"
                                     >
-                                        <Trans>Cancel</Trans>
+                                        <Trans>Close</Trans>
                                     </Button>
-                                </Box>
+                                </Flex>
                             </Flex>
                         </SwitchableOutside>
 

@@ -60,7 +60,7 @@ export enum RequestStatus {
     Disputed
 }
 
-const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
+const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
     const {
@@ -253,6 +253,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
                             tokenContract={ tokenContract }
+                            variant={"dark-outline"}
                         />
                     </Box>
             } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
@@ -319,16 +320,17 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData) => {
             } 
         }
     } else {
-        buttons = 
+        buttons = (
             <Box mb={[2]}>
-                <SecureNFTButton 
+                <LostPNFTButton 
                     nft={ nft } 
                     metadata={ metadata }
                     nftReFetch={ nftReFetch }
-                    setRefreshPaused={ setRefreshPaused }
+                    setRefreshPaused = { setRefreshPaused }
                     tokenContract={ tokenContract }
                 />
             </Box>
+        )
     }
     if (metadata) {
         // Metadata already loaded, showing it
