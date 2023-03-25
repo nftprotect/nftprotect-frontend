@@ -31,10 +31,11 @@ interface ButtonInitialData {
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract
+    tokenContract: Contract,
+    variant: any
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -214,8 +215,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
     return (<>
         <Button
             onClick={ mainButtonOnClick }
-            variant="primary-solid"
-            
+            variant={variant}
         >
            <Trans>Protect NFT</Trans>
         </Button>
