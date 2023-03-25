@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useIPFSContext } from '../context/IPFSContextProvider'
 import { FileUploader } from "react-drag-drop-files";
+import {
+    Box,
+    Flex,
+} from '@chakra-ui/react'
+import { DownloadIcon } from '@chakra-ui/icons'
 
 interface UploaderInitialData {
     setUrl?: Function | undefined,
@@ -52,5 +57,15 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
         returnFileUrl()
     }, [file])
 
-    return <FileUploader handleChange={setFile} name="file" types={fileTypes} />
+    return <FileUploader 
+        handleChange={setFile} 
+        name="file" 
+        types={fileTypes}
+        children={
+            <Flex bgColor="#F0F9FF" border="1px dashed #009AFF" borderRadius="3px" alignItems="center" justifyContent="center">
+                <DownloadIcon my={["20px"]} fontSize="24px" color="#009AFF" />
+            </Flex>
+        }
+    
+    />
 }
