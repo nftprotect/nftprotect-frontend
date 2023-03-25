@@ -53,8 +53,8 @@ const nftProtectTheme = extendTheme({
             },
             variants: {
                 'light-outline': {
-                    fontSize: {base: "12px", xl: '14px'},
-                    lineHeight: {base: '12px', xl: '18px'},
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     border: "2px solid #FFF",
                     bg: "none",
                     _hover: {
@@ -66,8 +66,8 @@ const nftProtectTheme = extendTheme({
                     }
                 },
                 'dark-outline': {
-                    fontSize: {base: "12px", xl: '14px'},
-                    lineHeight: {base: '12px', xl: '18px'},
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     border: "2px solid #000",
                     bg: "none",
                     _hover: {
@@ -79,8 +79,8 @@ const nftProtectTheme = extendTheme({
                     }
                 },
                 'primary-solid': {
-                    fontSize: {base: "12px", xl: '14px'},
-                    lineHeight: {base: '12px', xl: '18px'},
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     fontWeight: "600",
                     border: "none",
                     bgGradient: "linear(315deg, accent.dark 0%, accent.light 100%)",
@@ -92,8 +92,8 @@ const nftProtectTheme = extendTheme({
                     }
                 },
                 'primary-outline': {
-                    fontSize: {base: "12px", xl: '14px'},
-                    lineHeight: {base: '12px', xl: '18px'},
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     justifyContent: "center",
                     bg: "none",
                     border: "2px solid #BC9CFF",
