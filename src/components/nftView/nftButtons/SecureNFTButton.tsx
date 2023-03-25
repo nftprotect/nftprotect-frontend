@@ -21,10 +21,9 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
-import { t } from '@lingui/macro';
 
 interface ButtonInitialData {
     nft: EvmNft,
