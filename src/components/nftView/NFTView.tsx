@@ -140,7 +140,7 @@ const NFTView = () => {
                                     <Trans>All your NFT</Trans> 
                                 </Text>
                                 <Text textStyle="h3">
-                                    <Trans>It's all yours!</Trans>
+                                    <Trans>{"It's all yours!"}</Trans>
                                 </Text>
                             </Flex>
                         </AccordionButton>
