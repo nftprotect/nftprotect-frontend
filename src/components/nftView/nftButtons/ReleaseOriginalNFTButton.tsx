@@ -31,6 +31,7 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { t } from '@lingui/macro';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -173,11 +174,21 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     function getNftImage() {
         if (metadata) {
             let imgUrl = centralizeIpfsUrl(metadata.image)
-            return (<Image 
-                    src={ imgUrl } 
-                    alt="NFT image" 
-                    w="100%"
-                />)
+            return <Flex
+                        border="2px solid rgba(255, 255, 255, 0.5)"
+                        borderRadius={["16px"]}
+                        overflow="hidden"
+                        my={{base: "1.25rem"}}
+                        justifyContent="center"
+                        h="150px"
+                        w="150px"
+                    > 
+                        <Image 
+                            src={ imgUrl }
+                            alt={t`NFT image`}
+                            borderRadius="1rem"
+                        />
+                    </Flex>
         }
     }
 
@@ -237,20 +248,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
 
                         {/* Start answering for request to release original */}
                         <SwitchableOutside nextStepNumber={nextStep} >
-                            <Flex flexDirection="column">
-                                <Box
-                                    my={[4]}
-                                    border="1px solid rgba(255, 255, 255, 0.5)"
-                                    borderRadius={["20px"]}
-                                    w="50%" 
-                                    overflow="hidden"
-                                    alignSelf="center"
-                                >  
-                                    { getNftImage() }
-                                </Box>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
+                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
+
+                                { getNftImage() }
+
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     <span>
                                         <Trans>Are you sure want to transfer original NFT to</Trans>

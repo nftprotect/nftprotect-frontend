@@ -3,7 +3,6 @@ import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
-// import { MultipleFilesUpload } from '../../MultipleFilesUpload'
 import { useState } from 'react';
 import {
     Button,
@@ -12,46 +11,53 @@ import {
     Image,
     Heading,
     Text,
-    Spinner,
-    Select,
     Modal,
     ModalOverlay,
     ModalBody,
     ModalContent,
     Textarea,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    AccordionIcon,
-    UnorderedList,
-    Tooltip,
     ListItem,
     OrderedList,
     Link,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    Popover,
+    PopoverTrigger,
+    Portal,
+    PopoverContent,
+    PopoverArrow,
+    PopoverHeader,
+    PopoverCloseButton,
+    PopoverBody,
+    PopoverFooter,
+    Highlight,
     useDisclosure
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { AlertCircle, Info } from '@web3uikit/icons'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ExternalLinkIcon, CopyIcon} from '@chakra-ui/icons'
 import { AuthErrorCode } from 'moralis/common-core';
 import { NextComponentType } from 'next';
-import { t } from '@lingui/macro';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { IPFSFileUpload } from '../../IPFSFileUpload';
 
 interface ButtonInitialData {
     nft: EvmNft,
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
+    originalOwner: string, // Owner address of original NFT,
     tokenContract: Contract,
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -85,29 +91,38 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
         let nftImage = <div />
         if (metadata) {
             const imgUrl = centralizeIpfsUrl(metadata?.image || '')
-            nftImage = <Box
-                            my={[4]}
+            nftImage = <Flex
                             border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["20px"]}
+                            borderRadius={["16px"]}
                             overflow="hidden"
-                            alignItems="center"
-                            w="60%"
+                            my={{base: "1.25rem"}}
+                            justifyContent="center"
+                            h="150px"
+                            w="150px"
                         > 
-                            <Image src={ imgUrl } />
-                        </Box>
+                            <Image 
+                                src={ imgUrl }
+                                alt={t`NFT image`}
+                                borderRadius="1rem"
+                            />
+                        </Flex>
             }
         return nftImage
     }
 
-    const handleLostReasonSelection = (selected: any) => {
-        setLostReason(selected.target.value)
+    const handleLostReasonSelection = (event: any) => {
+        let lostReason = event.target.getAttribute('data-reason')
+        setLostReason(lostReason)
         setNextStep(StepMapping.lostReason)
     }
 
     const openCaseInKleros = () => {
         setNextStep(StepMapping.openCaseInKleros)
     }
-    
+
+    const copyOriginalOwnerToClipboard = () => {
+        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+    }
 
     return (<>
         <Button
@@ -139,7 +154,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                 border="2px solid #000"
                 borderRadius="30px"
                 maxH="90%"
-                overflowY={{base: 'scroll', md: 'hidden'}}
+                overflowY={{base: 'auto'}}
             >
                 <ModalBody px="0" py={[8]}>
                     <Wizard>
@@ -157,9 +172,6 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
                                 { getNftImage() }
 
-                                <Text fontSize={["md", "lg", "xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
                                     {"Targeted by an intruder or made a mistake and lost access to your pNFT, don't worry. We can work together to recover your asset and restore it to your wallet."}
                                 </Text>
@@ -167,21 +179,40 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     Select reason for losing pNFT
                                 </Text>
                                 
-                                <Select
-                                    onChange={handleLostReasonSelection}
-                                    placeholder='Reason'
-                                    color="#000"
-                                    bgColor="#2D7BD6"
-                                    w="100%"
-                                    mb={[8]}
-                                    _hover={{
-                                        cursor: "pointer",
-                                    }}
-                                >
-                                    <option value='Phishing attack'>Phishing Attack</option>
-                                    <option value='Protocol breach'>Protocol Breach</option>
-                                    <option value='Sending to an incorrect address'>Sending to an incorrect address</option>
-                                </Select>
+                                <Menu matchWidth>
+                                    <MenuButton
+                                        as={Button} 
+                                        rightIcon={<ChevronDownIcon fontSize="1rem" />}
+                                        borderRadius="0"
+                                        color="#FFF"
+                                        bgColor="#2D7BD6"
+                                        textAlign="left"
+                                        textTransform="none"
+                                        fontWeight="500"
+                                        mb={[8]}
+                                        _hover={{
+                                            bgColor: "#2D7BD6",
+                                            color: "#FFF"
+                                        }}
+                                        _active={{
+                                            bgColor: "#2D7BD6",
+                                            color: "#FFF"
+                                        }}
+                                    >
+                                        <Trans>Reason</Trans>
+                                    </MenuButton>
+                                    <MenuList border="1px solid black" borderRadius="3px">
+                                        <MenuItem data-reason="phishing attack" onClick={ handleLostReasonSelection }>
+                                            <Trans>Phishing attack</Trans>
+                                        </MenuItem>
+                                        <MenuItem data-reason="protocol breach" onClick={ handleLostReasonSelection }>
+                                            <Trans>Protocol breach</Trans>
+                                        </MenuItem>
+                                        <MenuItem data-reason="sending to an incorrect address" onClick={ handleLostReasonSelection }>
+                                            <Trans>Sending to an incorrect address</Trans>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
 
                                 <Flex flexWrap="nowrap" alignItems="center" border="2px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]} mb={[8]}>
                                     <Box color="#2D7BD6" mr={[2, 4]} fontSize={['30px', '50px']}>
@@ -216,8 +247,18 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 </Heading>
 
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    <Trans>{"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}</Trans>
+                                    <Trans>
+                                        {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT "}
+                                    </Trans>
+                                    <span id='originalOwnerAddressHolder'>
+                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } />
+                                        { formatAddress(originalOwner, 4) }
+                                    </span>
+                                    <Trans>
+                                        {" before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
+                                    </Trans>
                                 </Text>
+
                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
                                    <Trans>{"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court."}</Trans>
                                 </Text>
@@ -227,7 +268,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                         onClick={onClose}
                                         variant="dark-outline"
                                         m={[4]}
-                                        w="100%"dark-outline
+                                        w="100%"
                                     ><Trans>Close</Trans>
                                     </Button>
                                     <Button 
@@ -235,7 +276,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                         m={[4]}
                                         w="100%"
                                         onClick={openCaseInKleros}
-                                    ><Trans>Open case in Kleros</Trans>
+                                    ><Trans>Open dispute in Kleros</Trans>
                                     </Button>
                                 </Flex>
 
@@ -263,13 +304,13 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     fontWeight="700"
                                     mb="4"
                                 >
-                                    <Trans>Open case in Kleros</Trans>
+                                    <Trans>Open dispute in Kleros</Trans>
                                 </Heading>
 
                                  <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="400">
                                     { lostReason }
                                 </Text>
-                                <Textarea 
+                                <Textarea
                                     placeholder={t`Describe the situation in details…`}
                                     mb={[8]}
                                     _hover={{
@@ -280,49 +321,104 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     }}
                                 />
                                 
+                                {(lostReason == 'protocol breach') &&
+                                    <Textarea
+                                        placeholder={t`Write the address of the protocol smart contract`}
+                                        mb={[8]}
+                                        _hover={{
+                                            border: "2px solid #2D7BD6"
+                                        }}
+                                        _focus={{
+                                            border: "2px solid #2D7BD6"
+                                        }}
+                                    />
+                                }
+                                
                                 <Text fontSize={["sm", "md"]} mb={[2]}>
                                     <Trans>Upload all available evidence:</Trans>
                                 </Text>
                                 <OrderedList fontSize={["sm", "md"]} mb={[8]}>
                                     <ListItem>
-                                        <Trans>Evidence of attempts to solve the problem on your own</Trans>
-                                        <Tooltip label={t`Details`} bg="none" color="#1A202C">
-                                        <Flex
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            w="2em"
-                                            h="2em"
-                                            p={[1]}
-                                            borderRadius="1em"
-                                            bgColor="gray.200"
-                                            cursor="pointer"
-                                            // _hover={{
-                                            //     bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
-                                            //     color: "#FFF"
-                                            // }}
-                                        >
-                                            <Info color="#2D7BD6" fontSize='30px' />
-                                        </Flex>
-                                    </Tooltip>
-                                        
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <Text>
+                                                    <Trans>
+                                                        <Highlight query='Evidence' styles={{ cursor: "pointer", textDecoration: "underline", px: '1', py: '1', bg: 'orange.100'}}>
+                                                            Evidence of attempts to solve the problem on your own
+                                                        </Highlight>
+                                                    </Trans>
+                                                </Text>
+                                            </PopoverTrigger>
+                                            <PopoverContent bg="#2D7BD6">
+                                                <PopoverArrow bg="#2D7BD6"/>
+                                                <PopoverCloseButton color="#FFF" />
+                                                <PopoverBody color="#FFF" fontSize={{md: "14px"}}>
+
+                                                {(lostReason == 'phishing attack') &&
+                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
+                                                        <Text>
+                                                            Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent.
+                                                        </Text>
+                                                        <Text>
+                                                            Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
+                                                        </Text>
+                                                        <Text>
+                                                            Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
+                                                        </Text>
+                                                        <Text>
+                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                        </Text>
+                                                    </Box>
+                                                }
+
+                                                {(lostReason == 'protocol breach') &&
+                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
+                                                        <Text>
+                                                            Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited.
+                                                        </Text>
+                                                        <Text>
+                                                            Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
+                                                        </Text>
+                                                        <Text>
+                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                        </Text>
+                                                    </Box>
+                                                }
+
+                                                {(lostReason == 'sending to an incorrect address') &&
+                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
+                                                        <Text>
+                                                            Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
+                                                        </Text>
+                                                        <Text>
+                                                            Screenshots: Screenshots of any relevant communication or activity related to the loss of pNFT, such as messages between the original owner and the party who allegedly took it.
+                                                        </Text>
+                                                        <Text>
+                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                        </Text>
+                                                    </Box>
+                                                }
+                                                </PopoverBody>
+                                            </PopoverContent>
+                                        </Popover>
                                     </ListItem>
                                     <ListItem>
                                         <Trans>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</Trans>
                                     </ListItem>
                                 </OrderedList>
 
-                                {/* <MultipleFilesUpload /> */}
+                                <IPFSFileUpload />
 
                                 <Flex flexWrap="nowrap" alignItems="center" mt={[4]} mb={[8]}>
                                     <Box color="#2D7BD6" mr={[2]}>
                                         <Info fontSize='20px' />
                                     </Box>
-                                    <Text fontSize={["sm", "md"]}>
+                                    <Text fontSize={["sm", "md"]} color="#999999">
                                         <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
                                     </Text>
                                 </Flex>
                                 <Flex flexDirection="column" alignItems="center">
-                                    <Button 
+                                    <Button
                                         variant="dark-outline"
                                         m={[4]}
                                         w="50%"

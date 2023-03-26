@@ -25,7 +25,7 @@ const nftProtectTheme = extendTheme({
         h2: {
             fontSize: {base: '44px', xl: '44px'},
             lineHeight: {base: '55px', xl: '55px'},
-            fontWeight: {base: 'regular'}
+            fontWeight: {base: 'bold'}
         },
         h3: {
             fontSize: {base: '18px', xl: '22px'},
@@ -47,12 +47,14 @@ const nftProtectTheme = extendTheme({
     components: {
         Button: {
             baseStyle: {
-                textTransform: "uppercase",
-                fontStyle: 'paragraph',
-                borderRadius: "16px"
+                textTransform: 'uppercase',
+                borderRadius: '16px',
+                w: "100%"
             },
             variants: {
                 'light-outline': {
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     border: "2px solid #FFF",
                     bg: "none",
                     _hover: {
@@ -64,6 +66,8 @@ const nftProtectTheme = extendTheme({
                     }
                 },
                 'dark-outline': {
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     border: "2px solid #000",
                     bg: "none",
                     _hover: {
@@ -75,24 +79,24 @@ const nftProtectTheme = extendTheme({
                     }
                 },
                 'primary-solid': {
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
+                    fontWeight: "600",
                     border: "none",
                     bgGradient: "linear(315deg, accent.dark 0%, accent.light 100%)",
                     color: "#FFF",
                     filter: "drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))",
-                    fontWeight: "600",
-                    py:{base: "1rem", xl: "1.5rem"},
-                    px:{base: "2rem", xl: "3rem"},
-                    w: "100%",
                     _hover: {
                         bgGradient: "linear(315deg, accent.light 0%, accent.dark 100%)",
                         transform: "scale(1.03)"
                     }
                 },
                 'primary-outline': {
+                    fontSize: {base: "12px", md: '14px'},
+                    lineHeight: {base: '12px', md: '18px'},
                     justifyContent: "center",
                     bg: "none",
                     border: "2px solid #BC9CFF",
-                    borderRadius: "16px",
                     _hover: {
                         bgGradient: "linear(315deg, accent.light 0%, accent.dark 100%)",
                         color: "#FFF"
@@ -103,7 +107,6 @@ const nftProtectTheme = extendTheme({
                     p: [3, 6],
                     color: "#FFF",
                     bgColor: 'danger',
-                    w: "100%",
                     _hover: {
                         transform: "scale(1.03)"
                     },

@@ -51,10 +51,18 @@ const NavBar = () => {
                     
                     <Flex flexWrap="wrap">
                         {/* <LocaleMenu/> */}
-                        <MainMenu />
-                        <LoginForm buttonVariant={'light-outline'} />
-                        { active && <NetworkMenu /> }
-                        { active && <ShowConnectionState /> }
+                        <Box mr={[2, 4]}>
+                            <MainMenu />
+                        </Box>
+                        <Box mr={[2, 4]}>
+                            <LoginForm buttonVariant={'light-outline'} />
+                        </Box>
+                        <Box mr={[2, 4]}>
+                            { active && <NetworkMenu /> }
+                        </Box>
+                        <Box>
+                            { active && <ShowConnectionState /> }
+                        </Box>
                     </Flex>
                 </Flex>
             </nav>

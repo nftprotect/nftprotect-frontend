@@ -21,8 +21,7 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { AlertCircle } from '@web3uikit/icons';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
@@ -31,10 +30,11 @@ interface ButtonInitialData {
     metadata: any, // metadata of EvmNft can be empty, so passing it separately
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract
+    tokenContract: Contract,
+    variant: any
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -45,8 +45,8 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
     enum StepMapping {
         start,
         checkPermission,
-        requestConcrete,
-        requestAll,
+        // requestConcrete,
+        // requestAll,
         requestWrap,
         waitingForAllow,
         waitingForFinal,
@@ -122,8 +122,8 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                             handleContractError(wrapErrorMapping)
                         )
                 } else {
-                    setNextStep(StepMapping.requestConcrete)
-                    console.log('Asking to approve token transfer')
+                    // setNextStep(StepMapping.requestConcrete)
+                    // console.log('Asking to approve token transfer')
                     setApproveMethodCall()
                         .then((tx: any) => {
                             setNextStep(StepMapping.waitingForAllow)
@@ -192,15 +192,21 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
         let nftImage = <div />
         if (metadata) {
             const imgUrl = centralizeIpfsUrl(metadata?.image || '')
-            nftImage = <Box
-                            my={[4]}
+            nftImage = <Flex
                             border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["20px"]}
+                            borderRadius={["16px"]}
                             overflow="hidden"
-                            alignItems="center"
+                            my={{base: "1.25rem"}}
+                            justifyContent="center"
+                            h="150px"
+                            w="150px"
                         > 
-                            <Image src={ imgUrl } />
-                        </Box>
+                            <Image 
+                                src={ imgUrl }
+                                alt={t`NFT image`}
+                                borderRadius="1rem"
+                            />
+                        </Flex>
             }
         return nftImage
     }
@@ -208,8 +214,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
     return (<>
         <Button
             onClick={ mainButtonOnClick }
-            variant="primary-solid"
-            w="100%"
+            variant={variant}
         >
            <Trans>Protect NFT</Trans>
         </Button>
@@ -236,24 +241,23 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
             >
                 <ModalBody px="0" py={[8]}>
                     <Wizard>
+                        {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                <Text
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     textAlign="center" 
                                     mb="4"
                                 >
                                     <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
+                                </Text>
 
                                 { getNftImage() }
 
-                                <Text fontSize={["md", "lg", "xl"]} textTransform="uppercase" fontWeight="500" mb={[8]} textAlign="center">
-                                    {metadata?.name || nft.name}
-                                </Text>
                                 <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center">
                                     <Trans>Fee for Protection your NFT:</Trans>
                                 </Text>
@@ -278,28 +282,31 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                     <Trans>Close</Trans>
                                 </Button>
                             </Flex>
-                        </SwitchableOutside> 
+                        </SwitchableOutside>
 
+                        {/* checkPermission*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                 >
                                     <Trans>Protecting <br /> your asset{"…"}</Trans>
                                 </Heading>
                                 <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                    <Trans>{"Checking permission to transfer token…"}</Trans>
+                                    <Trans>{"Wait for transaction to confirm..."}</Trans>
                                 </Text>
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
                             </Flex>
                         </SwitchableOutside>
 
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* requestConcrete*/}
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
                                     lineHeight={["1.5rem", "2rem"]}
@@ -318,9 +325,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 <Trans>Please, allow access and transfer of your NFT</Trans>
                                 </Text>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside>*/}
 
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* requestAll*/}
+                        {/*<SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
                                     lineHeight={["1.5rem", "2rem"]}
@@ -339,14 +347,16 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 <Trans>Please allow access to and transfer of all your NFTs</Trans>
                                 </Text>
                             </Flex>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
+                        {/* requestWrap*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                 >
@@ -360,19 +370,19 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                             </Flex>
                         </SwitchableOutside>
 
+                        {/* waitingForAllow*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                 >
                                     <Trans>Protecting <br /> your asset{"…"}</Trans>
                                 </Heading>
-
-                                
 
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
@@ -382,21 +392,20 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        
+                        {/* waitingForFinal*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                 >
                                     <Trans>Protecting <br /> your asset{"…"}</Trans>
                                 </Heading>
-
-                                
-
                                 <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
                                 </Image>
 
@@ -405,13 +414,15 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 </Text>
                             </Flex>
                         </SwitchableOutside>
-
+                        
+                        {/* finalCompleted*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                 >
@@ -432,20 +443,21 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 <Button 
                                     onClick={onClose}
                                     variant="light-outline"
-                                    border="none"
                                     w="100%"
                                 >
                                     <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
-
-                         <SwitchableOutside nextStepNumber={nextStep} >
+                        
+                        {/* canceled*/}
+                        <SwitchableOutside nextStepNumber={nextStep} >
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                     color="red"
@@ -460,20 +472,21 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                 <Button 
                                     onClick={onClose}
                                     variant="light-outline"
-                                    border="none"
                                     w="100%"
                                 >
                                     <Trans>Close</Trans>
                                 </Button>
                             </Flex>
                         </SwitchableOutside>
-
+                        
+                        {/* error*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                     textAlign="center"
@@ -490,12 +503,14 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                             </Flex>
                         </SwitchableOutside>
 
+                        {/* timeout*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
                                 <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
+                                    as="h3"
+                                    fontSize={{md: "30px"}}
+                                    lineHeight={{md: "130%"}}
                                     textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
                                     fontWeight="700"
                                     mb="4"
                                     textAlign="center"

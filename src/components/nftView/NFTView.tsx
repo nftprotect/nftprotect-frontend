@@ -129,94 +129,108 @@ const NFTView = () => {
     return (
         <>
             <Accordion border="none" defaultIndex={[0, 1, 2]}>
-                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                <AccordionItem 
+                    bgGradient="linear(180deg, dark 70%, #FFF 70%)"
+                    px={['1rem', '3rem']}
+                >
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                        <AccordionButton 
-                            fontSize={['lg', 'xl', '2xl']} 
-                            px="0" py={[2, 4]}
-                            w="15em"
-                        >
-                            <AccordionIcon mr={[2]} />
-                            <Heading fontSize={['lg', 'xl', '2xl']}>
-                                <Trans>Your NFT</Trans> 
-                            </Heading>
+                        <AccordionButton px="0" py={[4, 6]}>
+                            <Flex flexDirection="column" alignItems="flex-start">
+                                <Text textStyle="h2">
+                                    <Trans>All your NFT</Trans> 
+                                </Text>
+                                <Text textStyle="h3">
+                                    <Trans>It's all yours!</Trans>
+                                </Text>
+                            </Flex>
                         </AccordionButton>
                     </Flex>
 
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel px="0" pb={4}>
                         { ownNftElements && (ownNftElements.length > 0) ? 
                         <Grid
                             templateColumns={{
-                                base: "repeat(auto-fill, minmax(6em, 1fr))",
-                                sm: "repeat(auto-fill, 10em)",
-                                md: "repeat(auto-fill, 10em)",
-                                lg: "repeat(auto-fill, 14em)", 
-                                xl: "repeat(auto-fill, 16em)"
+                                base: "repeat(auto-fill, 8rem)",
+                                sm: "repeat(auto-fill, 10rem)",
+                                md: "repeat(auto-fill, 12rem)",
                             }}
                             gap={[6]}
                             my={[4, 8]}
                         >
                             { ownNftElements }
                         </Grid> : 
-                        <Text color={'white'}><Trans>You have no NFTs in your wallet.</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no NFTs in your wallet.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
 
-                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                <AccordionItem 
+                    px={['1rem', '3rem']} 
+                    bgGradient="linear(180deg, dark 70%, #FFF 70%)"
+                >
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
-                        <AccordionIcon mr={[2]} />
-                            <Heading fontSize={['lg', 'xl', '2xl']}>
-                                <Trans>Protected assets without pNFT</Trans>
-                            </Heading>
+                        <AccordionButton px="0" py={[4, 6]}>
+                            <Flex flexDirection="column" alignItems="flex-start">
+                                <Text textStyle="h2">
+                                    <Trans>All your pNFT</Trans> 
+                                </Text>
+                                <Text textStyle="h3">
+                                    <Trans>This section displays your pNFTs that are linked to original NFTs owned by other users</Trans>
+                                </Text>
+                            </Flex>
                         </AccordionButton>
                     </Flex>
                         
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel px="0" pb={4}>
                         { transferedWNftElements && (transferedWNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
-                                base: "repeat(auto-fill, minmax(6em, 1fr))",
-                                sm: "repeat(auto-fill, 10em)",
-                                md: "repeat(auto-fill, 10em)",
-                                lg: "repeat(auto-fill, 14em)", 
-                                xl: "repeat(auto-fill, 16em)"
+                                base: "repeat(auto-fill, 8rem)",
+                                sm: "repeat(auto-fill, 10rem)",
+                                md: "repeat(auto-fill, 12rem)",
                             }}
                             gap={[6]}
                             my={[4, 8]}
                         >
                             { transferedWNftElements }
                         </Grid> :
-                        <Text><Trans>You have no pNFTs transfered to third parties.</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no pNFTs transfered to third parties.</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
                 
-                <AccordionItem bgColor="#1A202C" px={['1rem', '3rem']}>
+                <AccordionItem 
+                    bgImage="url('./images/shieldBackground.png'), linear-gradient(180deg, #0D0E14 70%, #FFF 70%)"
+                    bgRepeat="no-repeat"
+                    bgPosition="right 110px top 76px, top left"
+                    bgSize="auto calc(100% - 76px), cover"
+                    px={['1rem', '3rem']}
+                >
                     <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                        <AccordionButton fontSize={['lg', 'xl', '2xl']} px="0">
-                            <AccordionIcon mr={[2]} />
-                            <Heading fontSize={['lg', 'xl', '2xl']}>
-                            <Trans>Your pNFT</Trans>
-                            </Heading>
+                        <AccordionButton px="0" py={[4, 6]}>
+                            <Flex flexDirection="column" alignItems="flex-start">
+                                <Text textStyle="h2">
+                                    <Trans>All your protected assets</Trans> 
+                                </Text>
+                                <Text textStyle="h3">
+                                    <Trans>This section displays all the NFTs and their associated pNFTs that you own</Trans>
+                                </Text>
+                            </Flex>
                         </AccordionButton>
                     </Flex>
                         
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel px="0" pb={4}>
                         { wNftElements && (wNftElements.length > 0) ?
                         <Grid
                             templateColumns={{
-                                base: "repeat(auto-fill, minmax(6em, 1fr))",
-                                sm: "repeat(auto-fill, 10em)",
-                                md: "repeat(auto-fill, 10em)",
-                                lg: "repeat(auto-fill, 14em)", 
-                                xl: "repeat(auto-fill, 16em)"
+                                base: "repeat(auto-fill, 8rem)",
+                                sm: "repeat(auto-fill, 10rem)",
+                                md: "repeat(auto-fill, 12rem)",
                             }}
                             gap={[6]}
                             my={[4, 8]}
                         >
                             { wNftElements }
                         </Grid> :
-                        <Text color={'white'}><Trans>You have no protected NFTs yet</Trans></Text> }
+                        <Text color={'#FFF'}><Trans>You have no protected NFTs yet</Trans></Text> }
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
