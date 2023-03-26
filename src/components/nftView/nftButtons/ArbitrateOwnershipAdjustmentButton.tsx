@@ -125,6 +125,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
             const dirHash = result.uploadResult.cid.toString()//toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
             const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
+            console.log('MetaEvidence IPFS URL:', fileIPFSUrl)
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(
                     subcourtID.toString(), numberOfVotes.toString()
@@ -144,12 +145,16 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
 
     const uploadMetaEvidence = async (metaEvidence: any) => {
         console.log('METAEVIDENCE', metaEvidence)
-        // const file = new File([JSON.stringify(metaEvidence)], "metaEvidence.json", {
-        //     type: "text/plain",
-        // });
-        const result = await ipfs.add(JSON.stringify(metaEvidence), {wrapWithDirectory: true})
+        const fileName = 'metaEvidence.json'
+        const result = await ipfs.add(
+            {
+                path: fileName,
+                content: JSON.stringify(metaEvidence)
+            }, 
+            {wrapWithDirectory: true}
+        )
         return {
-            fileName: "metaEvidence.json",
+            fileName: fileName,
             uploadResult: result
         }
     }
