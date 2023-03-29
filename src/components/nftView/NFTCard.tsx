@@ -304,6 +304,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
                             tokenContract={ tokenContract }
+                            originalOwner={ originalOwner || '' }
                         />
                     </Box>
                     <Box mb={[2]}>
@@ -322,12 +323,13 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     } else {
         buttons = (
             <Box mb={[2]}>
-                <LostPNFTButton 
+                <SecureNFTButton 
                     nft={ nft } 
                     metadata={ metadata }
                     nftReFetch={ nftReFetch }
                     setRefreshPaused = { setRefreshPaused }
                     tokenContract={ tokenContract }
+                    variant={ "primary-solid" }
                 />
             </Box>
         )

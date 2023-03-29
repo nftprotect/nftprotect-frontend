@@ -21,12 +21,12 @@ export function IPFSContextProvider({ children }:any) {
 
     // Returns ipfs url by hash
     const getIpfsUrl = (hash: string, fileName:string|undefined = undefined) => {
-        return `ipfs://${hash}/` + (fileName || '')
+        return encodeURI(`ipfs://${hash}/` + (fileName || ''))
     }
 
     // Returns url with defined IPFS provider by hash
     const getCentralizedUrl = (hash: string, fileName: string|undefined = undefined) => {
-        return ipfsUrlMask.replace('{HASH}', hash).replace('{FILENAME}', fileName || '') 
+        return encodeURI(ipfsUrlMask.replace('{HASH}', hash).replace('{FILENAME}', fileName || ''))
     }
 
     // Makes centralized url from ipfs:// url

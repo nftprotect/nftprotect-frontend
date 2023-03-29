@@ -14,6 +14,7 @@ import { en, ru } from 'make-plural/plurals'
 import { useRouter } from 'next/router'
 import { useRef, useEffect } from 'react'
 import { I18nProvider } from '@lingui/react'
+import GoogleAnalytics from '../components/GoogleAnalytics'
 import '@fontsource/lexend/400.css'
 import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
@@ -62,6 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <IPFSContextProvider>
                         <NotificationContextProvider>
                             <I18nProvider i18n={i18n}>
+                                { (process.env.NEXT_PUBLIC_NODE_ENV === 'production') && <GoogleAnalytics/> }
                                 <Component {...pageProps} />
                             </I18nProvider>
                         </NotificationContextProvider>
