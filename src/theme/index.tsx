@@ -113,11 +113,30 @@ const nftProtectTheme = extendTheme({
                     },
                     _active: {
                         color: "#FFF",
-                        bgColor: "#FF0000",
+                        bgColor: "#FF0000"
                     }
                 }
             },
         },
+        Textarea: {
+            baseStyle: {
+            },
+            variants: {
+                'primary': {
+                    border: "1px solid #E5E5E5",
+                    borderRadius: "3px",
+                    fontSize: {base: '12px', lg: '14px'},
+                    lineHeight: {base: '16px', lg: '18px'},
+                    fontWeight: "500",
+                    errorBorderColor: "danger",
+                    _focus: {
+                        border: "2px solid",
+                        borderColor: "accent.light",
+                        boxShadow: "0px 0px 6px rgba(80, 36, 205, 0.25)"
+                    }
+                }
+            }
+        }
     },
 })
 
