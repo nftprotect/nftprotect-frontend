@@ -5,7 +5,7 @@ const GoogleAnalytics = () => {
     return apiKey ? (<>
         <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${apiKey}`} />
 
-        <Script strategy="lazyOnload">
+        <Script strategy="lazyOnload" id="googleAnalyticsScript">
             {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
