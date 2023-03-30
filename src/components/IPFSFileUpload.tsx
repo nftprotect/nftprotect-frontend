@@ -61,10 +61,9 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
                 handleChange={setFile} 
                 name="file"
                 types={fileTypes}
-                children={
-                    <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center">
+            >
+                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center">
                         <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />
-                    </Flex>}
-            />
-
+                    </Flex>
+            </FileUploader>
 }
