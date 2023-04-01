@@ -148,8 +148,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
         <Modal
-            scrollBehavior="inside"
-            isCentered
+            variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen}
             onClose={() => {
@@ -158,20 +157,12 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                 setRefreshPaused(false)
             }}
         >
-            <ModalOverlay 
-                bg='blackAlpha.700'
-            />
+            <ModalOverlay />
             <ModalContent
                 w={{base: "450px"}}
-                my="0"
-                bg="#FFF"
-                border="2px solid #000"
-                borderRadius="30px"
-                backdropFilter="blur(7.5px)"
-                overflowY='auto'
             >
-                <ModalCloseButton zIndex="2" />
-                <ModalBody p="0">
+                <ModalCloseButton />
+                <ModalBody>
                     <Wizard>
                         {/* Step 1. start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
