@@ -197,24 +197,28 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
 
     function getNftImage() {
         let nftImage = <div />
+        let imgUrl = ''
+        // If image available in metadata, use this image, else use "no-image" plug
         if (metadata) {
-            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
+            imgUrl = centralizeIpfsUrl(metadata.image)
+        } else {
+            imgUrl = './images/noImage.png'
+        }
             nftImage = <Flex
-                        borderRadius={{base: "16px"}}
-                        filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                        overflow="hidden"
-                        my={{base: "20px"}}
-                        justifyContent="center"
-                        h="150px"
-                        w="150px"
-                    >
-                        <Image 
-                            src={ imgUrl }
-                            alt={t`NFT image`}
-                            borderRadius="1rem"
-                        />
-                    </Flex>
-            }
+                            borderRadius={{base: "16px"}}
+                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+                            overflow="hidden"
+                            my={{base: "20px"}}
+                            justifyContent="center"
+                            h="150px"
+                            w="150px"
+                        >
+                            <Image 
+                                src={ imgUrl }
+                                alt={t`NFT image`}
+                                borderRadius="1rem"
+                            />
+                        </Flex>
         return nftImage
     }
 

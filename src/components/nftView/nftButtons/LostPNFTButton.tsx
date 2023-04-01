@@ -90,8 +90,13 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
     function getNftImage() {
         let nftImage = <div />
+        let imgUrl = ''
+        // If image available in metadata, use this image, else use "no-image" plug
         if (metadata) {
-            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
+            imgUrl = centralizeIpfsUrl(metadata.image)
+        } else {
+            imgUrl = './images/noImage.png'
+        }
             nftImage = <Flex
                             borderRadius={{base: "16px"}}
                             filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
@@ -107,7 +112,6 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 borderRadius="1rem"
                             />
                         </Flex>
-            }
         return nftImage
     }
 
