@@ -9,7 +9,6 @@ import {
     Box,
     Flex,
     Image,
-    Heading,
     Text,
     Modal,
     ModalOverlay,
@@ -57,9 +56,10 @@ interface ButtonInitialData {
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     originalOwner: string, // Owner address of original NFT,
     tokenContract: Contract,
+    variant: any
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -144,7 +144,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     return (<>
         <Button
             onClick={ mainButtonOnClick }
-            variant="primary-solid"
+            variant={ variant }
             w="100%"
         >
             <Trans>Lost pNFT</Trans>

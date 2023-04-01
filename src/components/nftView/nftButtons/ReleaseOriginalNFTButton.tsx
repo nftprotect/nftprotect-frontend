@@ -44,10 +44,11 @@ interface ButtonInitialData {
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
-    pendingRequest: number | undefined
+    pendingRequest: number | undefined,
+    variant: any
 }
 
-const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, pendingRequest}: ButtonInitialData) => {
+const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
@@ -206,7 +207,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     return (<>
         <Button
             onClick={ mainButtonOnClick }
-            variant="primary-solid"
+            variant={ variant }
             w="100%"
         >
             <Trans>Transfer original</Trans>
