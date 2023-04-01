@@ -1,4 +1,8 @@
 import { extendTheme } from '@chakra-ui/react'
+import { cardAnatomy } from '@chakra-ui/anatomy'
+import { createMultiStyleConfigHelpers, defineStyle } from '@chakra-ui/react'
+
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(cardAnatomy.keys)
 
 const nftProtectTheme = extendTheme({
     colors: {
@@ -134,6 +138,62 @@ const nftProtectTheme = extendTheme({
                         borderColor: "accent.light",
                         boxShadow: "0px 0px 6px rgba(80, 36, 205, 0.25)"
                     }
+                }
+            }
+        },
+        Card: {
+            baseStyle: {
+
+            },
+            variants: {
+                'stepContent': definePartsStyle({
+                    container: {
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        py: {base: "33px"},
+                        px: {base: "26px"}
+                    },
+                    header: {
+                        dispaly: "flex",
+                        textTransform: "uppercase",
+                        textAlign: "center",
+                        fontWeight:"700",
+                        p: "0",
+                        m: "0"
+                    },
+                    body: {
+                        display: "flex",
+                        flexDirection:"column",
+                        alignItems: "center",
+                        p: "0",
+                        m: "0"
+                    },
+                    footer: {
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: {base: "wrap", sm: "nowrap"},
+                        alignSelf: "flex-start",
+                        justifyContent: "space-evenly",
+                        w: "100%",
+                        p: "0",
+                        m: "0"
+                    },
+                })
+            }
+        },
+        Spinner: {
+            baseStyle: {
+                borderWidth: '6px',
+                emptyColor: 'gray.200',
+                color: 'accent.light',
+                label: "loading"
+            },
+            variants: {
+                'primary': {
+                    h: {base: "110px"},
+                    w: {base: "110px"}
                 }
             }
         }
