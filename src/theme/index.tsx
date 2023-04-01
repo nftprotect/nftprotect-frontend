@@ -141,6 +141,35 @@ const nftProtectTheme = extendTheme({
                 }
             }
         },
+        Modal: {
+            variants: {
+                'stepModal': definePartsStyle({
+                    overlay: {
+                        bg: 'blackAlpha.700'
+                    },
+                    dialogContainer: {
+                        scrollBehavior: "inside",
+                        alignItems: "center",
+                        closeOnOverlayClick: false
+                    },
+                    dialog: {
+                        my: "0",
+                        bg: "#FFF",
+                        border: "2px solid #000",
+                        borderRadius: "30px",
+                        backdropFilter: "blur(7.5px)",
+                        overflowY: 'auto'
+                    },
+                    closeButton: {
+                        zIndex: "2"
+                    },
+                    body:{
+                        p: "0"
+                    },
+                    footer:{}
+                })
+            },
+        },
         Card: {
             baseStyle: {
 
