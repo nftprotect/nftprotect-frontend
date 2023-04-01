@@ -14,8 +14,12 @@ import {
     ModalOverlay,
     ModalBody,
     ModalContent,
-    ModalHeader,
+    ModalCloseButton,
     Spinner,
+    Card,
+    CardBody,
+    CardHeader,
+    CardFooter,
     useDisclosure
 } from '@chakra-ui/react';
 import { Wizard } from 'react-use-wizard';
@@ -116,28 +120,27 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
     function getNftImage() {
         let nftImage = <div />
         let imgUrl = ''
+        // If image available in metadata, use this image, else use "no-image" plug
         if (metadata) {
             imgUrl = centralizeIpfsUrl(metadata.image)
         } else {
             imgUrl = './images/noImage.png'
         }
             nftImage = <Flex
-                            border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["16px"]}
+                            borderRadius={{base: "16px"}}
+                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
                             overflow="hidden"
-                            my={{base: "1.25rem"}}
+                            my={{base: "20px"}}
                             justifyContent="center"
-                            alignSelf="center"
                             h="150px"
                             w="150px"
-                        > 
+                        >
                             <Image 
                                 src={ imgUrl }
                                 alt={t`NFT image`}
                                 borderRadius="1rem"
                             />
                         </Flex>
-            
         return nftImage
     }
 
@@ -145,57 +148,46 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
         <Button onClick={ mainButtonOnClick } variant={variant} w="100%">
             <Trans>Restore original</Trans>
         </Button>
-        <Modal 
+        <Modal
+            variant="stepModal"
+            closeOnOverlayClick={false}
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
                 setRefreshPaused(false)
             }}
-            closeOnOverlayClick={false}
         >
-            <ModalOverlay 
-                bg='blackAlpha.700'
-                backdropFilter='blur(10px)'
-            />
+            <ModalOverlay />
             <ModalContent
-                w={["15rem", "20rem", "25rem"]}
-                bg="#FFF"
-                border="2px solid #000"
-                borderRadius="30px"
-                py={[4, 8]}
+                w={{base: "450px"}}
             >
+                <ModalCloseButton />
                 <ModalBody>
                     <Wizard>
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column">
-                                <Text
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    textAlign="center" 
-                                    mb="4"
-                                >
-                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
-                                </Text>
+                            <Card variant="stepContent" minH={{base: "500px"}}>
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                    { getNftImage() }
 
-                                { getNftImage() }
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                        <Trans>The pNFT will be burned and the original NFT will be sent to you</Trans>
+                                    </Text>
+                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Trans>Are you sure?</Trans>
+                                    </Text>
 
-                                <Text fontSize={["md", "lg", "xl"]} mb={{lg: "23px"}} textAlign="center">
-                                    <Trans>The pNFT will be burned and the original NFT will be sent to you</Trans>
-                                </Text>
-                                <Text fontSize={["md", "lg", "xl"]} mb={{lg: "32px"}} textAlign="center" textTransform="uppercase">
-                                    <Trans>Are you sure?</Trans>
-                                </Text>
-                                <Flex
-                                    flexWrap="nowrap"
-                                    justifyContent="space-around"
-                                    mb={[4, 8]}
-                                >
-                                    <Box minW="40%">
+                                    </CardBody>
+                                </Flex>
+                                <CardFooter>
+                                    <Box w={{base: "100%", sm: "40%"}}>
                                         <Button 
                                             onClick={ startButtonOnClick }
                                             variant='dark-outline'
@@ -204,8 +196,7 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                             <Trans>Yes</Trans>
                                         </Button>
                                     </Box>
-                                    
-                                    <Box minW="40%">
+                                    <Box w={{base: "100%", sm: "40%"}}>
                                         <Button
                                             onClick={ onClose }
                                             variant="dark-outline"
@@ -214,153 +205,160 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                             <Trans>No</Trans>
                                         </Button>
                                     </Box>
-                                </Flex>
-                            </Flex>
+                                </CardFooter>
+                            </Card>
                         </SwitchableOutside> 
 
                         {/* Confirm transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Text
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    textAlign="center" 
-                                    mb="4"
-                                >
-                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
-                                </Text>
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans>Confirm the transaction in the wallet</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                        <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>Confirm the transaction in the wallet</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* Waiting for transaction confirmation */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Text
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    textAlign="center" 
-                                    mb="4"
-                                >
-                                    <Trans>Restore your <br /> original NFT{"?"}</Trans>
-                                </Text>
-                                <Spinner
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                                <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                <Trans>{"Wait for transaction to confirm…"}</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Restore your <br /> original NFT{"?"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm…"}</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* Restored succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[4, 8, 10]}>
-                                <Text
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    textAlign="center" 
-                                    mb="4"
-                                >
-                                    <Trans>The original NFT restored succesfully!</Trans>
-                                </Text>
-                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
-                                </Image>
+                                <Card variant="stepContent" minH={{base: "360px"}}>
+                                    <Flex flexDirection="column" alignItems="center">
+                                        <CardHeader>
+                                            <Text as="h3" textStyle="h3">
+                                                <Trans>The original NFT restored succesfully!</Trans>
+                                            </Text>
+                                        </CardHeader>
 
-                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={{lg: "32px"}} textTransform="uppercase">
-                                    <Trans values={{name}}>You can protect your NFT <b>{name}</b> again.</Trans>
-                                </Text>
-                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" mb={{lg: "32px"}} textTransform="uppercase">
-                                    <Trans>We recomend always keep your assets secure</Trans>
-                                </Text>
-                                <Flex w="80%" flexDirection="column" alignSelf="center" fontSize="16px">
-                                    <SecureNFTButton 
-                                        metadata={metadata} 
-                                        nft={nft} 
-                                        nftReFetch={nftReFetch}
-                                        setRefreshPaused={setRefreshPaused}
-                                        tokenContract={tokenContract}
-                                        variant={"dark-outline"}
-                                    />
-                                    <Button
-                                        onClick={ onClose }
-                                        my={2}
-                                        h={[8, 10]}
-                                        variant="light-outline"
-                                    >
-                                        <Trans>Close</Trans>
-                                    </Button>
-                                </Flex>
-                            </Flex>
+                                        <CardBody>
+                                            <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                                <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                                </Image>
+                                            </Box>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" textTransform="uppercase">
+                                                <Trans values={{name}}>You can protect your NFT <b>{name}</b> again.</Trans>
+                                            </Text>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" textTransform="uppercase">
+                                                <Trans>We recomend always keep your assets secure</Trans>
+                                            </Text>
+                                        </CardBody>
+                                    </Flex>
+                                    <CardFooter>
+                                        <Box w={{base: "60%"}}>
+                                            <SecureNFTButton 
+                                                metadata={metadata} 
+                                                nft={nft} 
+                                                nftReFetch={nftReFetch}
+                                                setRefreshPaused={setRefreshPaused}
+                                                tokenContract={tokenContract}
+                                                variant={"dark-outline"}
+                                            />
+                                            <Button
+                                                onClick={ onClose }
+                                                variant="light-outline"
+                                            >
+                                                <Trans>Close</Trans>
+                                            </Button>
+                                        </Box>
+                                    </CardFooter>
+                                </Card>
                         </SwitchableOutside>
 
                         {/* Canceled */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl", "2xl"]} fontWeight="500">
-                                    <Trans>Fail!</Trans>
-                                </Heading>
-                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
-                                </Image>
-                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                <Trans>You cancelled a transaction</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <Flex flexDirection="column" alignItems="center">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Fail!</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                            <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                            </Image>
+                                        </Box>
+                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                            <Trans>You cancelled a transaction</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                                <CardFooter>
+                                    <Box w={{base: "100%", xs: "50%"}}>
+                                        <Button 
+                                            onClick={onClose}
+                                            variant="light-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* Error */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Heading my={[4, 8]} textAlign="center" textTransform="uppercase" fontSize={["md", "lg", "xl"]} fontWeight="500">
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
                                     <Trans>Some error occured</Trans>
-                                </Heading>
-                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
-                                </Image>
-                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>Transaction failed.</Trans>
-                                </Text>
-                            </Flex>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        </Image>
+                                    </Box>
+                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Trans>Transaction failed.</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* Timeout */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center">
-                                <Text fontSize={["md", "lg", "xl"]} textAlign="center" my={[4]}>
-                                    <Trans>{"Transaction is still in progress…"}</Trans>
-                                </Text>
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-                            </Flex>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>{"Transaction is still in progress…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                </CardBody>
+                            </Card>
                         </SwitchableOutside>
                     </Wizard>
                 </ModalBody>
