@@ -55,6 +55,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             i18n.activate(locale)
         }
     }, [locale, pageProps.translation])
+
+    useEffect(() => {
+        console.log('ENVIRONMENT:', process.env.NEXT_PUBLIC_NODE_ENV)
+    }, [])
     
     return (
         <Web3ReactProvider getLibrary={getLibrary}>
