@@ -28,6 +28,7 @@ export const supportedChains = [
     //     explorerUrl: "https://arbiscan.io"
     // }
 ]
+export const defaultChain = 5 // Goerli
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 
 export const libraryPollingInterval = 12000

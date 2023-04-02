@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { hexValue } from '@ethersproject/bytes';
-import { BigNumber } from '@ethersproject/bignumber';
 import { supportedChains } from '../../utils/config'
+import { switchNetwork } from '../../utils/helpers'
 import { 
     Menu,
     MenuButton,
@@ -12,36 +11,16 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { useAppContext } from '../../context/AppContextProvider';
-
-interface ProviderError {
-    code: number,
-    message: string
-}
+import { useEffect } from 'react';
 
 const NetworkMenu = () => {
     const { connector } = useWeb3React()
     const { currentChain } = useAppContext()
     const canSwitchNetwork = !(connector instanceof WalletConnectConnector)
 
-    const handleChange = async (e: any) => {
+    const handleChange = (e: any) => {
         const networkId = e.target.value
-        // check if the user is connected through MetaMask
-        if (window.ethereum?.request !== undefined) {
-            try {
-                const accounts = await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: hexValue(BigNumber.from(networkId).toHexString()) }],
-                });
-            } catch (error) {
-                const e = error as ProviderError
-                if (e?.code === 4902) {
-                    console.log(error)
-                    alert('Add network first!')
-                } else {
-                    console.error(error)
-                }
-            }
-        }
+        switchNetwork(networkId)
     }
 
     return (

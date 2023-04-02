@@ -1,14 +1,16 @@
 import { useWeb3React } from "@web3-react/core";
 import { createContext, useContext, useEffect, useState } from "react";
-import { nftpContractAddress, userRegistryContractAddress, supportedChains } from "../utils/config";
+import { nftpContractAddress, userRegistryContractAddress, supportedChains, defaultChain } from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import { Contract } from '@ethersproject/contracts';
+import { defaultChain as defaultChainId } from "../utils/config";
 
 export interface AppContextInterface {
     active: boolean,
     account: string | null | undefined,
     library: any,
+    defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
     referrerAddress: string,
@@ -26,6 +28,7 @@ export function AppContextProvider({ children }:any) {
     const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, library?.getSigner())
     const referrerAddress = '0x0000000000000000000000000000000000000000'
     const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
+    const defaultChain = defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined
     // Marks if user has DID registered
     const [ didRegistered, setDidRegistered ] = useState<boolean>()
     // Current fee for protecting
@@ -33,7 +36,7 @@ export function AppContextProvider({ children }:any) {
     const [ currentBlock, setCurrentBlock] = useState<number>(0)
 
     const setDidState = () => {
-        if (active) {
+        if (active && currentChain) {
             userRegistryContract.isRegistered(account).then((result: boolean) => {
                 console.log('DID Registered:', result)
                 setDidRegistered(result)
@@ -44,7 +47,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (active) {
+        if (active && currentChain) {
             nftProtectContract.feeWei(0).then((result: number) => {
                 console.log('Fee:', result)
                 setFee(result)
@@ -76,6 +79,7 @@ export function AppContextProvider({ children }:any) {
             account,
             library,
             currentChain,
+            defaultChain,
             nftProtectContract,
             referrerAddress,
             didRegistered,

@@ -50,7 +50,7 @@ const LoginForm = ( {buttonVariant}: any) => {
                 <ModalCloseButton />
                 <ModalBody p="0">
                     <Wizard>
-                        <ConnectWallet/>
+                        <ConnectWallet onClose={onClose}/>
                         <ApproveConnection disclosure={disclosure}/>
                         <DIDVerification disclosure={disclosure}/>
                     </Wizard>

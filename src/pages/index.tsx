@@ -20,6 +20,7 @@ import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { NodeNextRequest } from 'next/dist/server/base-http/node'
+import { defaultChain } from '../utils/config'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -49,7 +50,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const Home: NextPage = () => {
 
-    const { active, didRegistered } = useAppContext()
+    const { active, didRegistered, currentChain } = useAppContext()
     const {
         addNotifications, 
         notificationsCount
@@ -157,7 +158,7 @@ const Home: NextPage = () => {
                     </Box>
                 }
                 </Box>
-            {active && 
+            {active &&
                 <main>
                     {innerPart}
                     { active && <NFTView />}

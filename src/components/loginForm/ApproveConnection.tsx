@@ -113,7 +113,7 @@ const ApproveConnection = ({disclosure}: any) => {
                             fontSize={['xs', 'sm', 'md']}
                             mb={[2]}
                         >
-                            <Trans>Make sure to select all accounts that you want to grant access to.</Trans>
+                            <Trans>Please allow network switching in your wallet if asked</Trans>
                         </Text>
                     </Flex>
                 </Flex>

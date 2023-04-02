@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
-const ChooseWalletCard = ({nextStep}: any) => {
+const ChooseWalletCard = ({nextStep, onClose}: any) => {
 
     return(
 
@@ -37,8 +37,8 @@ const ChooseWalletCard = ({nextStep}: any) => {
                 alignItems="center"
                 px={[4, 8]}
             >
-                { (typeof window.ethereum !== 'undefined') && <ConnectMetamask/> }
-                <ConnectWalletConnect/>
+                { (typeof window.ethereum !== 'undefined') && <ConnectMetamask onClose={onClose}/> }
+                <ConnectWalletConnect onClose={onClose}/>
             </Flex>
             <Text
                 fontSize={['xs', 'sm', 'md']}

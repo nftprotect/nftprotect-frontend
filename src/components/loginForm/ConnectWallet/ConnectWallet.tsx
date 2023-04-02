@@ -9,7 +9,7 @@ import {
 
 import { Trans } from '@lingui/macro'
 
-const ConnectWallet = () => {
+const ConnectWallet = ({onClose}: any) => {
 
     return (
         <Flex
@@ -49,7 +49,7 @@ const ConnectWallet = () => {
                 </Text>
             </Flex>
             
-            <ChooseWalletCard/>
+            <ChooseWalletCard onClose={ onClose }/>
 
         </Flex>
 )}
