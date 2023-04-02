@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "lingui compile; next build",
+    "build": "NODE_ENV=production lingui compile; next build",
     "start": "next start",
     "lint": "next lint",
     "extract": "NODE_ENV=development lingui extract",
