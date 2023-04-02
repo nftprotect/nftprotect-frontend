@@ -57,15 +57,13 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
         returnFileUrl()
     }, [file])
 
-    return (
-        <FileUploader 
-            handleChange={setFile} 
-            name="file" 
-            types={fileTypes}
-        >
-            <Flex bgColor="#F0F9FF" border="1px dashed #009AFF" borderRadius="3px" alignItems="center" justifyContent="center">
-                <DownloadIcon my={["20px"]} fontSize="24px" color="#009AFF" />
-            </Flex>
-        </FileUploader>
-    )
+    return <FileUploader 
+                handleChange={setFile} 
+                name="file"
+                types={fileTypes}
+            >
+                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer">
+                        <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />
+                    </Flex>
+            </FileUploader>
 }

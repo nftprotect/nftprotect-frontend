@@ -269,6 +269,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                 setRefreshPaused = { setRefreshPaused }
                                 tokenContract={ tokenContract }
                                 originalOwner={ originalOwner || '' }
+                                variant={"primary-solid"}
                             />
                         </Box>
                 } else {
@@ -305,6 +306,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             setRefreshPaused = { setRefreshPaused }
                             tokenContract={ tokenContract }
                             originalOwner={ originalOwner || '' }
+                            variant={ "primary-solid" }
                         />
                     </Box>
                     <Box mb={[2]}>
@@ -315,6 +317,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                         setRefreshPaused = { setRefreshPaused }
                         tokenContract={ tokenContract }
                         pendingRequest={ pendingRequest?.id }
+                        variant={"primary-solid"}
                     />
                     </Box>
                 </>)

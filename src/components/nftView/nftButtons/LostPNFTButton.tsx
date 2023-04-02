@@ -1,6 +1,6 @@
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
-import { dialogsTimeout } from '../../../utils/config' 
+import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 import { useState } from 'react';
@@ -9,12 +9,12 @@ import {
     Box,
     Flex,
     Image,
-    Heading,
     Text,
     Modal,
     ModalOverlay,
     ModalBody,
     ModalContent,
+    ModalCloseButton,
     Textarea,
     ListItem,
     OrderedList,
@@ -25,14 +25,14 @@ import {
     MenuItem,
     Popover,
     PopoverTrigger,
-    Portal,
     PopoverContent,
     PopoverArrow,
-    PopoverHeader,
-    PopoverCloseButton,
     PopoverBody,
-    PopoverFooter,
-    Highlight,
+    Spinner,
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
     useDisclosure
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
@@ -41,12 +41,13 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { AlertCircle, Info } from '@web3uikit/icons'
-import { ChevronDownIcon, ExternalLinkIcon, CopyIcon} from '@chakra-ui/icons'
+import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { AuthErrorCode } from 'moralis/common-core';
 import { NextComponentType } from 'next';
 import { Trans, t } from '@lingui/macro';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { IPFSFileUpload } from '../../IPFSFileUpload';
+import { formatEther } from "@ethersproject/units";
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -55,11 +56,12 @@ interface ButtonInitialData {
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     originalOwner: string, // Owner address of original NFT,
     tokenContract: Contract,
+    variant: any
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
 
-    const {account, didRegistered, nftProtectContract, referrerAddress} = useAppContext()
+    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -69,16 +71,15 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     enum StepMapping {
         start,
         lostReason,
-        openCaseInKleros,
-        // requestConcrete,
-        // requestAll,
-        // requestWrap,
-        // waitingForAllow,
-        // waitingForFinal,
-        // finalCompleted,
-        // canceled,
-        // error,
-        // timeout
+        evidenceFillForm,
+        evidenceReview,
+        payArbitrationFee,
+        confirmTransaction,
+        waitForTransactionConfirmation,
+        finalCompleted,
+        canceled,
+        error,
+        timeout
     }
 
     const mainButtonOnClick = () => {
@@ -89,24 +90,28 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
     function getNftImage() {
         let nftImage = <div />
+        let imgUrl = ''
+        // If image available in metadata, use this image, else use "no-image" plug
         if (metadata) {
-            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
+            imgUrl = centralizeIpfsUrl(metadata.image)
+        } else {
+            imgUrl = './images/noImage.png'
+        }
             nftImage = <Flex
-                            border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["16px"]}
+                            borderRadius={{base: "16px"}}
+                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
                             overflow="hidden"
-                            my={{base: "1.25rem"}}
+                            my={{base: "20px"}}
                             justifyContent="center"
                             h="150px"
                             w="150px"
-                        > 
+                        >
                             <Image 
                                 src={ imgUrl }
                                 alt={t`NFT image`}
                                 borderRadius="1rem"
                             />
                         </Flex>
-            }
         return nftImage
     }
 
@@ -117,7 +122,19 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     }
 
     const openCaseInKleros = () => {
-        setNextStep(StepMapping.openCaseInKleros)
+        setNextStep(StepMapping.evidenceFillForm)
+    }
+
+    const evidenceReview = () => {
+        setNextStep(StepMapping.evidenceReview)
+    }
+    
+    const payArbitrationFee = () => {
+        setNextStep(StepMapping.payArbitrationFee)
+    }
+
+    const approvePayment = () => {
+        setNextStep(StepMapping.confirmTransaction)
     }
 
     const copyOriginalOwnerToClipboard = () => {
@@ -127,7 +144,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     return (<>
         <Button
             onClick={ mainButtonOnClick }
-            variant="primary-solid"
+            variant={ variant }
             w="100%"
         >
             <Trans>Lost pNFT</Trans>
@@ -135,7 +152,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
         <Modal
-            isCentered
+            variant="stepModal"
+            closeOnOverlayClick={false}
             isOpen={isOpen}
             onClose={() => {
                 setNextStep(StepMapping.start)
@@ -143,301 +161,523 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                 setRefreshPaused(false)
             }}
         >
-            <ModalOverlay 
-                bg='blackAlpha.700'
-            />
+            <ModalOverlay />
             <ModalContent
-                my="0"
-                w={["90%", "32rem", "42rem"]}
-                maxW="100%"
-                bg="#FFF"
-                border="2px solid #000"
-                borderRadius="30px"
-                maxH="90%"
-                overflowY={{base: 'auto'}}
+                w={{base: "450px"}}
             >
-                <ModalBody px="0" py={[8]}>
+                <ModalCloseButton />
+                <ModalBody>
                     <Wizard>
+                        {/* Step 1. start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[4, 8, 12]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
-                                    textTransform="uppercase"
-                                    textAlign="center"
-                                    fontSize={["lg", "xl", "2xl"]}
-                                    fontWeight="700"
-                                    mb="4"
-                                >Have you lost<br /> access to your pNFT?
-                                </Heading>
-
-                                { getNftImage() }
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    {"Targeted by an intruder or made a mistake and lost access to your pNFT, don't worry. We can work together to recover your asset and restore it to your wallet."}
-                                </Text>
-                                <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center" fontWeight="600">
-                                    Select reason for losing pNFT
-                                </Text>
-                                
-                                <Menu matchWidth>
-                                    <MenuButton
-                                        as={Button} 
-                                        rightIcon={<ChevronDownIcon fontSize="1rem" />}
-                                        borderRadius="0"
-                                        color="#FFF"
-                                        bgColor="#2D7BD6"
-                                        textAlign="left"
-                                        textTransform="none"
-                                        fontWeight="500"
-                                        mb={[8]}
-                                        _hover={{
-                                            bgColor: "#2D7BD6",
-                                            color: "#FFF"
-                                        }}
-                                        _active={{
-                                            bgColor: "#2D7BD6",
-                                            color: "#FFF"
-                                        }}
-                                    >
-                                        <Trans>Reason</Trans>
-                                    </MenuButton>
-                                    <MenuList border="1px solid black" borderRadius="3px">
-                                        <MenuItem data-reason="phishing attack" onClick={ handleLostReasonSelection }>
-                                            <Trans>Phishing attack</Trans>
-                                        </MenuItem>
-                                        <MenuItem data-reason="protocol breach" onClick={ handleLostReasonSelection }>
-                                            <Trans>Protocol breach</Trans>
-                                        </MenuItem>
-                                        <MenuItem data-reason="sending to an incorrect address" onClick={ handleLostReasonSelection }>
-                                            <Trans>Sending to an incorrect address</Trans>
-                                        </MenuItem>
-                                    </MenuList>
-                                </Menu>
-
-                                <Flex flexWrap="nowrap" alignItems="center" border="2px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]} mb={[8]}>
-                                    <Box color="#2D7BD6" mr={[2, 4]} fontSize={['30px', '50px']}>
-                                        <Info />
-                                    </Box>
-                                    <Flex flexDirection="column">
-                                        <Text fontSize={["sm", "md", "lg"]}>
-                                            {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
+                            <Card variant="stepContent" minH={{base: "644px"}}>
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            Have you lost<br /> access to your pNFT?
                                         </Text>
-                                    </Flex>
-                                </Flex>
-                                <Button 
-                                    onClick={onClose}
-                                    variant="light-outline"
-                                    border="none"
-                                    w="100%"
-                                >Close
-                                </Button>
-                            </Flex>
-                        </SwitchableOutside> 
+                                    </CardHeader>
+                                    <CardBody>
 
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" px={[4, 8, 12]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
-                                    textTransform="uppercase"
-                                    textAlign="center"
-                                    fontSize={["lg", "xl", "2xl"]}
-                                    fontWeight="700"
-                                    mb="8"
-                                > { lostReason }
-                                </Heading>
+                                        { getNftImage() }
 
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                    <Trans>
-                                        {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT "}
-                                    </Trans>
-                                    <span id='originalOwnerAddressHolder'>
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } />
-                                        { formatAddress(originalOwner, 4) }
-                                    </span>
-                                    <Trans>
-                                        {" before resorting to legal action. You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
-                                    </Trans>
-                                </Text>
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center">
-                                   <Trans>{"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros. It's important to note that your case may not be considered if you don&apos;t have evidence of an attempt to resolve the issue outside of court."}</Trans>
-                                </Text>
-
-                                <Flex flexDirection="row" flexWrap={{base: "wrap", sm: "nowrap"}} justifyContent="space-between" mb={[8]}>
-                                    <Button 
-                                        onClick={onClose}
-                                        variant="dark-outline"
-                                        m={[4]}
-                                        w="100%"
-                                    ><Trans>Close</Trans>
-                                    </Button>
-                                    <Button 
-                                        variant="dark-outline"
-                                        m={[4]}
-                                        w="100%"
-                                        onClick={openCaseInKleros}
-                                    ><Trans>Open dispute in Kleros</Trans>
-                                    </Button>
-                                </Flex>
-
-                                <Flex flexWrap="nowrap" alignItems="center" border="2px solid #2D7BD6" borderRadius={["20px"]} p={[2, 4]} mb={[8]}>
-                                    <Box color="#2D7BD6" mr={[2, 4]} fontSize={['30px', '50px']}>
-                                        <Info />
-                                    </Box>
-                                    <Flex flexDirection="column">
-                                        <Text fontSize={["sm", "md", "lg"]}>
-                                        <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
-                                            to resolve disputes fairly.</Trans> <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6"><Trans>To learn more</Trans><ExternalLinkIcon mx='2px' /></Link>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
                                         </Text>
-                                    </Flex>
-                                </Flex>
-                            </Flex>
-                        </SwitchableOutside>
+                                        <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" fontWeight="700" color="accent.light" textTransform="uppercase">
+                                            Select reason for losing pNFT
+                                        </Text>
 
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" px={[4, 8, 12]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
-                                    textTransform="uppercase"
-                                    textAlign="center"
-                                    fontSize={["lg", "xl", "2xl"]}
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Open dispute in Kleros</Trans>
-                                </Heading>
-
-                                 <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="400">
-                                    { lostReason }
-                                </Text>
-                                <Textarea
-                                    placeholder={t`Describe the situation in details…`}
-                                    mb={[8]}
-                                    _hover={{
-                                        border: "2px solid #2D7BD6"
-                                    }}
-                                    _focus={{
-                                        border: "2px solid #2D7BD6"
-                                    }}
-                                />
-                                
-                                {(lostReason == 'protocol breach') &&
-                                    <Textarea
-                                        placeholder={t`Write the address of the protocol smart contract`}
-                                        mb={[8]}
-                                        _hover={{
-                                            border: "2px solid #2D7BD6"
-                                        }}
-                                        _focus={{
-                                            border: "2px solid #2D7BD6"
-                                        }}
-                                    />
-                                }
-                                
-                                <Text fontSize={["sm", "md"]} mb={[2]}>
-                                    <Trans>Upload all available evidence:</Trans>
-                                </Text>
-                                <OrderedList fontSize={["sm", "md"]} mb={[8]}>
-                                    <ListItem>
-                                        <Popover>
-                                            <PopoverTrigger>
-                                                <Text>
-                                                    <Trans>
-                                                        <Highlight query='Evidence' styles={{ cursor: "pointer", textDecoration: "underline", px: '1', py: '1', bg: 'orange.100'}}>
-                                                            Evidence of attempts to solve the problem on your own
-                                                        </Highlight>
-                                                    </Trans>
+                                        <Flex flexWrap="nowrap" alignItems="center" mb={{base: "10px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                            <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
+                                                <Info fontSize="24px" />
+                                            </Flex>
+                                            <Flex flexDirection="column">
+                                                <Text textStyle="paragraph" color="muted">
+                                                    {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
                                                 </Text>
-                                            </PopoverTrigger>
-                                            <PopoverContent bg="#2D7BD6">
-                                                <PopoverArrow bg="#2D7BD6"/>
-                                                <PopoverCloseButton color="#FFF" />
-                                                <PopoverBody color="#FFF" fontSize={{md: "14px"}}>
+                                            </Flex>
+                                        </Flex>
 
-                                                {(lostReason == 'phishing attack') &&
-                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
-                                                        <Text>
-                                                            Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent.
-                                                        </Text>
-                                                        <Text>
-                                                            Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
-                                                        </Text>
-                                                        <Text>
-                                                            Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
-                                                        </Text>
-                                                        <Text>
-                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
-                                                        </Text>
-                                                    </Box>
-                                                }
-
-                                                {(lostReason == 'protocol breach') &&
-                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
-                                                        <Text>
-                                                            Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited.
-                                                        </Text>
-                                                        <Text>
-                                                            Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
-                                                        </Text>
-                                                        <Text>
-                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
-                                                        </Text>
-                                                    </Box>
-                                                }
-
-                                                {(lostReason == 'sending to an incorrect address') &&
-                                                    <Box py={{md: "10px"}} px={{md: "20px"}}>
-                                                        <Text>
-                                                            Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
-                                                        </Text>
-                                                        <Text>
-                                                            Screenshots: Screenshots of any relevant communication or activity related to the loss of pNFT, such as messages between the original owner and the party who allegedly took it.
-                                                        </Text>
-                                                        <Text>
-                                                            Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
-                                                        </Text>
-                                                    </Box>
-                                                }
-                                                </PopoverBody>
-                                            </PopoverContent>
-                                        </Popover>
-                                    </ListItem>
-                                    <ListItem>
-                                        <Trans>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</Trans>
-                                    </ListItem>
-                                </OrderedList>
-
-                                <IPFSFileUpload />
-
-                                <Flex flexWrap="nowrap" alignItems="center" mt={[4]} mb={[8]}>
-                                    <Box color="#2D7BD6" mr={[2]}>
-                                        <Info fontSize='20px' />
+                                        <Menu matchWidth>
+                                            <MenuButton
+                                                as={Button} 
+                                                rightIcon={<ChevronDownIcon fontSize="14px" />}
+                                                borderRadius="0"
+                                                color="#FFF"
+                                                bgColor="accent.light"
+                                                textAlign="left"
+                                                fontSize={{base: '12px', lg: '14px'}}
+                                                lineHeight={{base: '16px', lg: '18px'}}
+                                                fontWeight="500"
+                                                textTransform="none"
+                                                mb={{base: "20px"}}
+                                                _hover={{
+                                                    bgColor: "accent.light",
+                                                    color: "#FFF"
+                                                }}
+                                                _active={{
+                                                    bgColor: "accent.light",
+                                                    color: "#FFF"
+                                                }}
+                                            >
+                                                <Trans>Reason</Trans>
+                                            </MenuButton>
+                                            <MenuList border="1px solid black" borderRadius="3px" textStyle="paragraph">
+                                                <MenuItem data-reason="phishing attack" onClick={ handleLostReasonSelection }>
+                                                    <Trans>Phishing attack</Trans>
+                                                </MenuItem>
+                                                <MenuItem data-reason="protocol breach" onClick={ handleLostReasonSelection }>
+                                                    <Trans>Protocol breach</Trans>
+                                                </MenuItem>
+                                                <MenuItem data-reason="sending to an incorrect address" onClick={ handleLostReasonSelection }>
+                                                    <Trans>Sending to an incorrect address</Trans>
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </CardBody>
+                                </Flex>
+                                <CardFooter>
+                                    <Box w={{base: "100%", sm: "40%"}}>
+                                        <Button 
+                                            onClick={onClose}
+                                            variant="light-outline"
+                                            border="none"
+                                            w="100%"
+                                        >Close
+                                        </Button>
                                     </Box>
-                                    <Text fontSize={["sm", "md"]} color="#999999">
-                                        <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
-                                    </Text>
-                                </Flex>
-                                <Flex flexDirection="column" alignItems="center">
-                                    <Button
-                                        variant="dark-outline"
-                                        m={[4]}
-                                        w="50%"
-                                        textTransform="uppercase"
-                                    >
-                                        <Trans>Open dispute</Trans>
-                                    </Button>
-                                    <Button 
-                                        onClick={onClose}
-                                        variant="light-outline"
-                                        m={[4]}
-                                        textTransform="uppercase"
-                                        w="50%"
-                                    >Close
-                                    </Button>
-                                </Flex>
-                            </Flex>
+                                </CardFooter>
+                            </Card>
                         </SwitchableOutside>
 
+                        {/* Step 2. lostReason */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "644px"}}>
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            { lostReason }
+                                        </Text>
+                                    </CardHeader>
+                                    
+                                    <CardBody>
+                                        { getNftImage() }
+
+                                        <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}}>
+                                            <Text mb={{base: "8px"}}>
+                                                <Trans>
+                                                    {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
+                                                </Trans>
+                                                <span id='originalOwnerAddressHolder'>
+                                                    { " "}
+                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer"/>
+                                                    { " (" + formatAddress(originalOwner, 4) + ") " }
+                                                </span>
+                                                <Trans>
+                                                    {"before resorting to legal action."}
+                                                </Trans>
+                                            </Text>
+                                            <Text mb={{base: "8px"}}>
+                                                <Trans>
+                                                {"You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
+                                                </Trans>
+                                            </Text>
+
+                                            <Text>
+                                                <Trans>{"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros."}</Trans>
+                                            </Text>
+                                        </Flex>
+
+                                        <Flex flexWrap="nowrap" alignItems="center" my={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                            <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
+                                            <Flex flexDirection="column">
+                                                <Text textStyle="paragraph" color="muted">
+                                                    <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
+                                                    to resolve disputes fairly.</Trans>
+                                                </Text>
+                                                <Text>
+                                                    <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                                        <Trans> To learn more</Trans>
+                                                        <ArrowForwardIcon ml={{base: '2px'}} />
+                                                    </Link>
+                                                </Text>
+                                            </Flex>
+                                        </Flex>
+                                    </CardBody>
+                                </Flex>
+
+                                <CardFooter>
+                                    <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
+                                        <Button 
+                                            onClick={onClose}
+                                            variant="dark-outline"
+                                        ><Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+
+                                    <Box w={{base: "100%", sm: "40%"}}>
+                                        <Button 
+                                            variant="dark-outline"
+                                            onClick={openCaseInKleros}
+                                        ><Trans>Open dispute</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+                        
+                        {/* Step 3. evidenceFillForm */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "644px"}} >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Open dispute <br /> in Kleros</Trans>
+                                        </Text>
+                                    </CardHeader>
+
+                                    <CardBody>
+                                        <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center" textTransform="uppercase" fontWeight="700" color="accent.light">
+                                            { lostReason }
+                                        </Text>
+                                        <Textarea placeholder={t`Describe the situation in details…`} variant='primary' resize="vertical" mb={{base: "20px"}} isRequired />
+                                        
+                                        {(lostReason == 'protocol breach') &&
+                                            <Textarea placeholder={t`Write the address of the protocol smart contract`} variant='primary' resize="vertical" mb={{base: "20px"}} isRequired minH={{base: "38px" }} />
+                                        }
+                                        
+                                        <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
+                                            <Text mb={{base: "8px"}}>
+                                                <Trans>Upload all available evidence:</Trans>
+                                            </Text>
+                                            <OrderedList>
+                                                <ListItem>
+                                                    <Popover>
+                                                        <Text>
+                                                            <Trans>Evidence of attempts to solve the problem on your own.</Trans>
+                                                        </Text>
+                                                        <PopoverTrigger>
+                                                            <Text color="#9D9D9D" textDecoration="underline" cursor="pointer">
+                                                                <Trans>Detailed</Trans>
+                                                            </Text>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent bg="#F5F1FF" w="400px" border="2px solid #000" borderRadius="30px">
+                                                            <PopoverArrow bg="#F5F1FF" />
+                                                            <PopoverBody color="#000">
+
+                                                            {(lostReason == 'phishing attack') &&
+                                                                <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
+                                                                    <Text letterSpacing="0.04em" mb={{base: "8px"}}>
+                                                                        Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent.
+                                                                    </Text>
+                                                                    <Text letterSpacing="0.04em" mb={{base: "8px"}}>
+                                                                        Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
+                                                                    </Text>
+                                                                    <Text letterSpacing="0.04em" mb={{base: "8px"}}>
+                                                                        Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
+                                                                    </Text>
+                                                                    <Text letterSpacing="0.04em" mb={{base: "8px"}}>
+                                                                        Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                                    </Text>
+                                                                </Box>
+                                                            }
+
+                                                            {(lostReason == 'protocol breach') &&
+                                                                <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited.
+                                                                    </Text>
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence.
+                                                                    </Text>
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                                    </Text>
+                                                                </Box>
+                                                            }
+
+                                                            {(lostReason == 'sending to an incorrect address') &&
+                                                                <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.
+                                                                    </Text>
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Screenshots: Screenshots of any relevant communication or activity related to the loss of pNFT, such as messages between the original owner and the party who allegedly took it.
+                                                                    </Text>
+                                                                    <Text mb={{base: "8px"}} letterSpacing="0.04em">
+                                                                        Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.
+                                                                    </Text>
+                                                                </Box>
+                                                            }
+                                                            </PopoverBody>
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                </ListItem>
+                                                <ListItem>
+                                                    <Trans>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</Trans>
+                                                </ListItem>
+                                            </OrderedList>
+                                        </Flex>
+                                        
+                                        <Box w="100%">
+                                            <IPFSFileUpload />
+                                        </Box>
+                                        
+                                        <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
+                                            <Box color="#2D7BD6" mr={[2]}>
+                                                <Info fontSize='20px' />
+                                            </Box>
+                                            <Text textStyle="paragraph" color="#999999">
+                                                <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
+                                            </Text>
+                                        </Flex>
+                                    </CardBody>
+                                </Flex>
+
+                                <CardFooter>
+                                    <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
+                                        <Button
+                                            onClick={onClose}
+                                            variant="dark-outline"
+                                            textTransform="uppercase"
+                                        ><Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+
+                                    <Box w={{base: "100%", sm: "40%"}}>
+                                        <Button
+                                            onClick={ evidenceReview }
+                                            variant="dark-outline"
+                                            textTransform="uppercase"
+                                        >
+                                            <Trans>Open dispute</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+                        
+                        {/* Step 4. evidenceReview */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                        Open dispute<br /> in Kleros
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
+                                            <Trans>
+                                                We{'\u0027'}ve worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the 
+                                                <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
+                                                    <Trans>link</Trans>
+                                                </Link>
+                                                , and file it in court.
+                                            </Trans>
+                                        </Text>
+
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                            <Trans>Please note that the review process can take several weeks to several months.</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+
+                                <CardFooter>
+                                    <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
+                                        <Button
+                                            onClick={ onClose }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+
+                                    <Box w={{base: "100%", sm: "40%"}}>
+                                        <Button
+                                            onClick={ payArbitrationFee }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Open dispute</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Step 5. payArbitrationFee */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <Flex flexDirection="column" alignItems="center">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            Open dispute<br /> in Kleros
+                                        </Text>
+                                    </CardHeader>
+                                    
+                                    <CardBody>
+                                        <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
+                                            <Trans>The final step to open a dispute is to pay for the arbitration fees.</Trans>
+                                        </Text>
+                                        
+                                        <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center">
+                                            <Trans>The fee for dispute resolution is</Trans>
+                                        </Text>
+
+                                        <Text fontSize={{base: "36px"}} mb={{base: "20px"}} textAlign="center" textTransform="uppercase">
+                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+
+                                <CardFooter>
+                                    <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
+                                        <Button
+                                            onClick={ onClose }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                    <Box w={{base: "100%", sm: "50%"}}>
+                                        <Button
+                                            onClick={ approvePayment }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Pay the dispute</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Step 6. confirmTransaction */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        Open dispute<br /> in Kleros
+                                    </Text>
+                                </CardHeader>
+
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Trans>Confirm the transaction in the wallet</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Waiting for transaction confirmation */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
+                                        Open dispute<br /> in Kleros
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm…"}</Trans>
+                                        </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Dispute sent succesfully */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                                <Card variant="stepContent" minH={{base: "360px"}}>
+                                    <Flex flexDirection="column" alignItems="center">
+                                        <CardHeader>
+                                            <Text as="h3" textStyle="h3">
+                                                <Trans>Your dispute <br/> sent to Kleros</Trans>
+                                            </Text>
+                                        </CardHeader>
+
+                                        <CardBody>
+                                            <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                                <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                                </Image>
+                                            </Box>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                                <Trans>
+                                                    You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase.
+                                                </Trans>
+                                            </Text>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                                <Trans>Follow the status of the dispute through our app or on the website Kleros.</Trans>
+                                            </Text>
+                                        </CardBody>
+                                    </Flex>
+                                    <CardFooter>
+                                        <Box w={{base: "60%"}}>
+                                            <Button
+                                                onClick={ onClose }
+                                                variant="dark-outline"
+                                            >
+                                                <Trans>Close</Trans>
+                                            </Button>
+                                        </Box>
+                                    </CardFooter>
+                                </Card>
+                        </SwitchableOutside>
+
+                        {/* Canceled */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Fail!</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        </Image>
+                                    </Box>
+                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Trans>You cancelled a transaction</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Error */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                    <Trans>Some error occured</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        </Image>
+                                    </Box>
+                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Trans>Transaction failed.</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Timeout */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>{"Transaction is still in progress…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
                     </Wizard>
                 </ModalBody>
             </ModalContent>

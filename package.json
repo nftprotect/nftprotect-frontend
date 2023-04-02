@@ -53,6 +53,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-runtime": "^6.26.0",
+    "crypto-convert": "^2.1.5",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
     "formik": "^2.2.9",

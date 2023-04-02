@@ -15,8 +15,15 @@ import {
     ModalOverlay,
     ModalBody,
     ModalContent,
+    ModalCloseButton,
+    Card,
+    CardBody,
+    CardHeader,
+    CardFooter,
+    Link,
     useDisclosure
 } from '@chakra-ui/react';
+import { ArrowForwardIcon} from '@chakra-ui/icons'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
@@ -44,9 +51,9 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
 
     enum StepMapping {
         start,
+        requestConcrete,
+        requestAll,
         checkPermission,
-        // requestConcrete,
-        // requestAll,
         requestWrap,
         waitingForAllow,
         waitingForFinal,
@@ -122,8 +129,8 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                             handleContractError(wrapErrorMapping)
                         )
                 } else {
-                    // setNextStep(StepMapping.requestConcrete)
-                    // console.log('Asking to approve token transfer')
+                    setNextStep(StepMapping.requestConcrete)
+                    console.log('Asking to approve token transfer')
                     setApproveMethodCall()
                         .then((tx: any) => {
                             setNextStep(StepMapping.waitingForAllow)
@@ -190,24 +197,28 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
 
     function getNftImage() {
         let nftImage = <div />
+        let imgUrl = ''
+        // If image available in metadata, use this image, else use "no-image" plug
         if (metadata) {
-            const imgUrl = centralizeIpfsUrl(metadata?.image || '')
+            imgUrl = centralizeIpfsUrl(metadata.image)
+        } else {
+            imgUrl = './images/noImage.png'
+        }
             nftImage = <Flex
-                            border="2px solid rgba(255, 255, 255, 0.5)"
-                            borderRadius={["16px"]}
+                            borderRadius={{base: "16px"}}
+                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
                             overflow="hidden"
-                            my={{base: "1.25rem"}}
+                            my={{base: "20px"}}
                             justifyContent="center"
                             h="150px"
                             w="150px"
-                        > 
+                        >
                             <Image 
                                 src={ imgUrl }
                                 alt={t`NFT image`}
                                 borderRadius="1rem"
                             />
                         </Flex>
-            }
         return nftImage
     }
 
@@ -221,313 +232,312 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
 
         <DidRequiredDialog disclosure={didDialogDisclosure}/>
         <Modal
-            isCentered
+            variant="stepModal"
+            closeOnOverlayClick={false}
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
                 setRefreshPaused(false)
             }}
-            closeOnOverlayClick={false}
         >
-            <ModalOverlay 
-                bg='blackAlpha.700'
-            />
+            <ModalOverlay />
             <ModalContent
-                w={["15rem", "20rem", "25rem"]}
-                bg="#FFF"
-                border="2px solid #000"
-                borderRadius="30px"
+                w={{base: "450px"}}
             >
-                <ModalBody px="0" py={[8]}>
+                <ModalCloseButton />
+                <ModalBody>
                     <Wizard>
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Text
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    textAlign="center" 
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Text>
+                            <Card variant="stepContent" minH={{base: "600px"}}>
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
 
-                                { getNftImage() }
+                                        { getNftImage() }
 
-                                <Text fontSize={["sm", "md", "lg"]} mb={[4]} textAlign="center">
-                                    <Trans>Fee for Protection your NFT:</Trans>
-                                </Text>
-                                <Text fontSize={["xl", "2xl", "3xl"]} mb={[8]} textAlign="center" textTransform="uppercase" fontWeight="500">
-                                    {"Ξ"}{ formatEther(fee || 0) } 
-                                </Text>
-                                <Button 
-                                    onClick={ startButtonOnClick }
-                                    variant="dark-outline"
-                                    my={2}
-                                    w="100%"
-                                    textTransform="uppercase"
-                                >
-                                    <Trans>Protect NFT</Trans>
-                                </Button>
-                                <Button 
-                                    onClick={onClose}
-                                    variant="light-outline"
-                                    border="none"
-                                    w="100%"
-                                >
-                                    <Trans>Close</Trans>
-                                </Button>
-                            </Flex>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
+                                        </Text>
+
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            <Trans>Fee for Protection your NFT:</Trans>
+                                        </Text>
+                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                                <CardFooter>
+                                    <Box w={{base: "100%", xs: "50%"}}>
+                                        <Button 
+                                            onClick={ startButtonOnClick }
+                                            variant="dark-outline"
+                                            mb={{base: "10px"}}
+                                        >
+                                            <Trans>Protect NFT</Trans>
+                                        </Button>
+                                        <Button 
+                                            onClick={onClose}
+                                            variant="light-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* requestConcrete*/}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent">
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
+                                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                                <Trans>To learn more</Trans>
+                                                <ArrowForwardIcon ml={{base: '2px'}} />
+                                            </Link>
+                                            
+                                        </Text>
+
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>Please, allow access and <br />transfer of your NFT</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* requestAll*/}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                        <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        
+
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
+                                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                                <Trans>To learn more</Trans>
+                                                <ArrowForwardIcon ml={{base: '2px'}} />
+                                            </Link>
+                                            
+                                        </Text>
+
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>Please, allow access and <br />transfer of your NFTs</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* checkPermission*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
-                                <Text fontSize={["md", "lg", "xl", "2xl"]} mb={[2]} textAlign="center">
-                                    <Trans>{"Wait for transaction to confirm..."}</Trans>
-                                </Text>
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm..."}</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
-
-                        {/* requestConcrete*/}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
-                                    textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
-
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Please, allow access and transfer of your NFT</Trans>
-                                </Text>
-                            </Flex>
-                        </SwitchableOutside>*/}
-
-                        {/* requestAll*/}
-                        {/*<SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    lineHeight={["1.5rem", "2rem"]}
-                                    textTransform="uppercase"
-                                    fontSize={["lg", "xl", "2xl"]}
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset…</Trans>
-                                </Heading>
-
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Please allow access to and transfer of all your NFTs</Trans>
-                                </Text>
-                            </Flex>
-                        </SwitchableOutside> */}
 
                         {/* requestWrap*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Confirm the transaction in the wallet</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>Confirm the transaction in the wallet</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* waitingForAllow*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
-
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-                                
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>{"Wait for transaction to confirm…"}</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm..."}</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
                         
                         {/* waitingForFinal*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                </Heading>
-                                <Image className="loading-icon-shield" src="../images/shieldIcon.svg" alt="Shield" w={["2rem", "4rem"]} my={[4]}>
-                                </Image>
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>{"Wait for transaction to confirm…"}</Trans>
-                                </Text>
-                            </Flex>
+                            <Card variant="stepContent" >
+                                <Flex flexDirection="column">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Flex my={{base: "20px"}}>
+                                            <Spinner variant="primary" speed='0.65s'></Spinner>
+                                        </Flex>
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm…"}</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
                         
                         {/* finalCompleted*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                >
-                                    <Trans>Success!</Trans>
-                                </Heading>
+                            <Card variant="stepContent" minH={{base: "360px"}}>
+                                    <Flex flexDirection="column" alignItems="center">
+                                        <CardHeader>
+                                            <Text as="h3" textStyle="h3">
+                                                <Trans>Success</Trans>
+                                            </Text>
+                                        </CardHeader>
 
-                                <Image src="/images/statusIcons/confirm.png" alt="Success" my={[4]}>
-                                </Image>
-
-                                <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Your asset is now protected!</Trans>
-                                </Text>
-
-                                <Text fontSize={["sm", "md", "lg"]} mb={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Enjoy your new life in protected world!</Trans>
-                                </Text>
-
-                                <Button 
-                                    onClick={onClose}
-                                    variant="light-outline"
-                                    w="100%"
-                                >
-                                    <Trans>Close</Trans>
-                                </Button>
-                            </Flex>
+                                        <CardBody>
+                                            <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                                <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                                </Image>
+                                            </Box>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                                <Trans>Your asset is now protected!</Trans>
+                                            </Text>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                                <Trans>Enjoy your new life in protected world!</Trans>
+                                            </Text>
+                                        </CardBody>
+                                    </Flex>
+                                    <CardFooter>
+                                        <Box w={{base: "60%"}}>
+                                            <Button
+                                                onClick={ onClose }
+                                                variant="dark-outline"
+                                            >
+                                                <Trans>Close</Trans>
+                                            </Button>
+                                        </Box>
+                                    </CardFooter>
+                            </Card>
                         </SwitchableOutside>
-                        
+
                         {/* canceled*/}
                         <SwitchableOutside nextStepNumber={nextStep} >
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                    color="red"
-                                >
-                                    <Trans>Fail!</Trans>
-                                </Heading>
-                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
-                                </Image>
-                                <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>You cancelled a transaction</Trans>
-                                </Text>
-                                <Button 
-                                    onClick={onClose}
-                                    variant="light-outline"
-                                    w="100%"
-                                >
-                                    <Trans>Close</Trans>
-                                </Button>
-                            </Flex>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <Flex flexDirection="column" alignItems="center">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Fail!</Trans>
+                                        </Text>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                            <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                            </Image>
+                                        </Box>
+                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                            <Trans>You cancelled a transaction</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                                <CardFooter>
+                                    <Box w={{base: "100%", xs: "50%"}}>
+                                        <Button 
+                                            onClick={onClose}
+                                            variant="light-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
                         </SwitchableOutside>
                         
                         {/* error*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                    textAlign="center"
-                                >
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
                                     <Trans>Some error occured</Trans>
-                                </Heading>
-
-                                <Image src="/images/statusIcons/fail.png" alt="Fail" my={[4]} >
-                                </Image>
-
-                                <Text fontSize={["sm", "md", "lg"]} my={[8]} textAlign="center" textTransform="uppercase">
-                                <Trans>Transaction failed.</Trans>
-                                </Text>
-                            </Flex>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        </Image>
+                                    </Box>
+                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Trans>Transaction failed.</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* timeout*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Flex flexDirection="column" alignItems="center" px={[8, 20]}>
-                                <Heading
-                                    as="h3"
-                                    fontSize={{md: "30px"}}
-                                    lineHeight={{md: "130%"}}
-                                    textTransform="uppercase"
-                                    fontWeight="700"
-                                    mb="4"
-                                    textAlign="center"
-                                >
-                                    <Trans>{"Transaction is still in progress…"}</Trans>
-                                </Heading>
-
-                                <Spinner 
-                                    my={[4]} 
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    color='#BC9CFF'
-                                    size={['lg', 'xl']}>
-                                </Spinner>
-
-                            </Flex>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>{"Transaction is still in progress…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                </CardBody>
+                            </Card>
                         </SwitchableOutside>
                     </Wizard>
                 </ModalBody>
