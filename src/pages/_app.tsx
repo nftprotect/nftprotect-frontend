@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }, [locale, pageProps.translation])
 
     useEffect(() => {
-        console.log('ENVIRONMENT:', process.env.NEXT_PUBLIC_NODE_ENV)
+        console.log('ENVIRONMENT:', process.env.NODE_ENV)
     }, [])
     
     return (
@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <IPFSContextProvider>
                         <NotificationContextProvider>
                             <I18nProvider i18n={i18n}>
-                                { (process.env.NEXT_PUBLIC_NODE_ENV === 'production') && <GoogleAnalytics/> }
+                                { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
                                 <Component {...pageProps} />
                             </I18nProvider>
                         </NotificationContextProvider>

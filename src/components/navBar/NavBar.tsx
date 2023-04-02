@@ -50,7 +50,7 @@ const NavBar = () => {
                     </Flex>
                     
                     <Flex flexWrap="wrap">
-                        { (process.env.NEXT_PUBLIC_NODE_ENV !== 'production') && 
+                        { (process.env.NODE_ENV !== 'production') && 
                             <Box mr={[2, 4]}>
                                 <LocaleMenu/> 
                             </Box>
