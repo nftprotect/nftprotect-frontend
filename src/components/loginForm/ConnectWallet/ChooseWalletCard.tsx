@@ -37,7 +37,7 @@ const ChooseWalletCard = ({nextStep}: any) => {
                 alignItems="center"
                 px={[4, 8]}
             >
-                <ConnectMetamask/>
+                { (typeof window.ethereum !== 'undefined') && <ConnectMetamask/> }
                 <ConnectWalletConnect/>
             </Flex>
             <Text
