@@ -173,75 +173,60 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
             <ModalContent
                 w={{base: "400px"}}
             >
-                <ModalCloseButton />
+                <ModalCloseButton onClick={onClose} />
                 <ModalBody>
                     <Wizard>
                         {/* start */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "620px"}}>
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Request the original NFT{"?"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" mt={{base: "20px"}} mb={{base: "8px"}} textAlign="center" textTransform="uppercase">
-                                            <span>
-                                                <Trans>To obtain the original NFT, send a request to the owner</Trans>
-                                            </span>
-                                        </Text>
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
-                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard  } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
-                                            <span id='originalOwnerAddressHolder'>
-                                                { formatAddress(originalOwner, 4) }
-                                            </span>
-                                        </Text>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Request the original NFT{"?"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody mb={{base: "20px"}} >
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" mt={{base: "20px"}} mb={{base: "8px"}} textAlign="center" textTransform="uppercase">
+                                        <span>
+                                            <Trans>To obtain the original NFT, send a request to the owner</Trans>
+                                        </span>
+                                    </Text>
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
+                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard  } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                        <span id='originalOwnerAddressHolder'>
+                                            { formatAddress(originalOwner, 4) }
+                                        </span>
+                                    </Text>
 
-                                        { getNftImage() }
+                                    { getNftImage() }
 
-                                        <Flex flexWrap="nowrap" alignItems="center" mb={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
-                                            <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
-                                                <AlertCircle fontSize="36px" />
-                                            </Flex>
-                                            <Flex flexDirection="column">
-                                                <Text textStyle="paragraph">
-                                                    <Trans>Please note that when you receive the original NFT, pNFT will be burned.</Trans>
-                                                </Text>
-                                            </Flex>
+                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                        <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
+                                            <AlertCircle fontSize="36px" />
                                         </Flex>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter flexDirection="column">
-                                    <Flex 
-                                        flexWrap={{base: "wrap", sm: "nowrap"}}
-                                        alignSelf="flex-start"
-                                        justifyContent="space-evenly"
-                                        w="100%"
-                                    >
-                                        <Box w={{base: "60%"}}>
-                                            <Button 
-                                                onClick={ startButtonOnClick }
-                                                variant="dark-outline"
-                                                mb={{base: "10px"}}
-                                            >
-                                                <Trans>Request original</Trans>
-                                            </Button>
-
-                                            <Button 
-                                                onClick={onClose}
-                                                variant="light-outline"
-                                            ><Trans>Close</Trans>
-                                            </Button>
-                                        </Box>
+                                        <Flex flexDirection="column">
+                                            <Text textStyle="paragraph">
+                                                <Trans>Please note that when you receive the original NFT, pNFT will be burned.</Trans>
+                                            </Text>
+                                        </Flex>
                                     </Flex>
+                                </CardBody>
+
+                                <CardFooter>
+                                    <Box w={{base: "60%"}}>
+                                        <Button 
+                                            onClick={ startButtonOnClick }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Request original</Trans>
+                                        </Button>
+                                    </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside> 
+                        </SwitchableOutside>  */}
 
                         {/* confirmTransaction */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "270px"}}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
                                         <Trans>Request the original NFT{"?"}</Trans>
@@ -255,11 +240,11 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* waitingForFinal */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "270px"}}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
                                         <Trans>Request the original NFT{"?"}</Trans>
@@ -272,63 +257,51 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                         </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
                         
                         {/* finalCompleted */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "644px"}}>
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Request sent!</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    
-                                    <CardBody>
-                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
-                                            </Image>
-                                        </Box>
-
-                                        <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}}>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                                <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
-                                            </Text>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                                {"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court."}
-                                            </Text>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                                {"The button to open a dispute will appear on the DApp's main page"}
-                                            </Text>
-                                        </Flex>
-
-                                        <Flex flexWrap="nowrap" alignItems="center" my={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
-                                            <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
-                                            <Flex flexDirection="column">
-                                                <Text textStyle="paragraph" color="muted">
-                                                    <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
-                                                    to resolve disputes fairly.</Trans>
-                                                </Text>
-                                                <Text>
-                                                    <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
-                                                        <Trans> To learn more</Trans>
-                                                        <ArrowForwardIcon ml={{base: '2px'}} />
-                                                    </Link>
-                                                </Text>
-                                            </Flex>
-                                        </Flex>
-                                    </CardBody>
-                                </Flex>
-
-                                <CardFooter>
-                                    <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
-                                        <Button 
-                                            onClick={onClose}
-                                            variant="dark-outline"
-                                        ><Trans>Close</Trans>
-                                        </Button>
+                            <Card variant="stepContent" >
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Request sent!</Trans>
+                                    </Text>
+                                </CardHeader>
+                                
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                        </Image>
                                     </Box>
-                                </CardFooter>
+
+                                    <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}}>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                            <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
+                                        </Text>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                            {"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court."}
+                                        </Text>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                            {"The button to open a dispute will appear on the DApp's main page"}
+                                        </Text>
+                                    </Flex>
+
+                                    <Flex flexWrap="nowrap" alignItems="center" mt={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                        <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
+                                        <Flex flexDirection="column">
+                                            <Text textStyle="paragraph" color="muted">
+                                                <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
+                                                to resolve disputes fairly.</Trans>
+                                            </Text>
+                                            <Text>
+                                                <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                                    <Trans> To learn more</Trans>
+                                                    <ArrowForwardIcon ml={{base: '2px'}} />
+                                                </Link>
+                                            </Text>
+                                        </Flex>
+                                    </Flex>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
