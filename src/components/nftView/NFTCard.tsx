@@ -289,9 +289,18 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             </Box>
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
-                        buttons = <Text><Trans>{"Pending request…"}</Trans></Text>
+                        buttons =   <Flex mb={[2]} alignItems="center" justifyContent="center" fontWeight="600" height="2.25rem">
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            <Trans>{"Pending request…"}</Trans>
+                                        </Text>
+                                    </Flex>
+                        
                     } else if (pendingRequest.status === RequestStatus.Disputed) {
-                        buttons = <Text>{`Under dispute ${pendingRequest.disputeId}…`}</Text>
+                        buttons =   <Flex mb={[2]} alignItems="center" justifyContent="center" fontWeight="600" height="2.25rem">
+                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                            {`Under dispute ${pendingRequest.disputeId}…`}
+                                        </Text>
+                                    </Flex>
                     }
                 }
             }
@@ -330,9 +339,9 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     nft={ nft } 
                     metadata={ metadata }
                     nftReFetch={ nftReFetch }
-                    setRefreshPaused = { setRefreshPaused }
+                    setRefreshPaused={ setRefreshPaused }
                     tokenContract={ tokenContract }
-                    variant={ "primary-solid" }
+                    variant={"primary-solid"}
                 />
             </Box>
         )
