@@ -383,7 +383,16 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                 />
     } else if (!fetchEnded) {
         // Metadata is still loading, showing loading
-        result = <Spinner size='xl' mt={4} />
+        result =    <Flex
+                        position="absolute"
+                        borderRadius="1rem"
+                        h="100%"
+                        w="100%"
+                        alignItems="center"
+                        justifyContent="center"
+                    >
+                        <Spinner speed='0.65s'  />
+                    </Flex>
     } else {
         // No metadata, showing the plug
         result = <Image src={'./images/noImage.png'} 
