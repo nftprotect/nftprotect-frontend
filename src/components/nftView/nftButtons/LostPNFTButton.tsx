@@ -5,6 +5,7 @@ import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 import { useState } from 'react';
 import {
+    chakra,
     Button,
     Box,
     Flex,
@@ -26,6 +27,7 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
+    PopoverCloseButton,
     PopoverArrow,
     PopoverBody,
     Spinner,
@@ -164,6 +166,19 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
             <ModalOverlay />
             <ModalContent
                 w={{base: "450px"}}
+                sx={{
+                    "::-webkit-scrollbar": {
+                        w: "5px",
+                    },
+                    "::-webkit-scrollbar-track": {
+                        my: '16px',
+                        overflowY: "hidden"
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                        bgColor: 'accent.light',
+                    }
+
+                }}
             >
                 <ModalCloseButton onClick={onClose} />
                 <ModalBody>
@@ -189,16 +204,9 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                         Select reason for losing pNFT
                                     </Text>
 
-                                    <Flex flexWrap="nowrap" alignItems="center" mb={{base: "10px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
-                                        <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
-                                            <Info fontSize="24px" />
-                                        </Flex>
-                                        <Flex flexDirection="column">
-                                            <Text textStyle="paragraph" color="muted">
-                                                {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
-                                            </Text>
-                                        </Flex>
-                                    </Flex>
+                                    <Text textStyle="paragraph" color="muted" textAlign="center" mb={{base: "20px"}}>
+                                        {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
+                                    </Text>
 
                                     <Menu matchWidth>
                                         <MenuButton
@@ -252,7 +260,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 <CardBody mb={{base: "20px"}}>
                                     { getNftImage() }
 
-                                    <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}}>
+                                    <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                         <Text mb={{base: "8px"}}>
                                             <Trans>
                                                 {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
@@ -333,15 +341,31 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                             <ListItem>
                                                 <Popover>
                                                     <Text>
-                                                        <Trans>Evidence of attempts to solve the problem on your own.</Trans>
+                                                        {"Evidence of attempts to solve the problem on your own.\u0020"}
+                                                        <PopoverTrigger>
+                                                            <chakra.span color="#9D9D9D" textDecoration="underline" cursor="pointer">
+                                                                <Trans>Detailed</Trans>
+                                                            </chakra.span>
+                                                        </PopoverTrigger>
                                                     </Text>
-                                                    <PopoverTrigger>
-                                                        <Text color="#9D9D9D" textDecoration="underline" cursor="pointer">
-                                                            <Trans>Detailed</Trans>
-                                                        </Text>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent bg="#F5F1FF" w="400px" border="2px solid #000" borderRadius="30px">
+                                                    
+                                                    <PopoverContent bg="#F5F1FF" w="400px" border="2px solid #000" borderRadius="30px" maxH="280px" overflowY="auto" ml={{base: "20px"}}
+                                                        sx={{
+                                                            "::-webkit-scrollbar": {
+                                                                w: "5px",
+                                                            },
+                                                            "::-webkit-scrollbar-track": {
+                                                                my: '16px',
+                                                                overflowY: "hidden"
+                                                            },
+                                                            "::-webkit-scrollbar-thumb": {
+                                                                bgColor: 'accent.light',
+                                                            }
+
+                                                        }}
+                                                    >
                                                         <PopoverArrow bg="#F5F1FF" />
+                                                        <PopoverCloseButton />
                                                         <PopoverBody color="#000">
 
                                                         {(lostReason == 'phishing attack') &&
