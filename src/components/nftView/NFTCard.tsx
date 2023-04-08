@@ -289,14 +289,39 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             </Box>
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
-                        buttons =   <Flex mb={[2]} alignItems="center" justifyContent="center" fontWeight="600" height="2.25rem">
+                        buttons =   <Flex 
+                                        mb={[2]} 
+                                        alignItems="center" 
+                                        justifyContent="center" 
+                                        fontWeight="600" 
+                                        minH="2.25rem"
+                                        px="16px"
+                                        py="8px"
+                                        borderRadius="16px"
+                                        bgGradient="linear(315deg, accent.dark 0%, accent.light 100%)"
+                                        color="#FFF"
+                                        filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
+                                    >
+                                        <Spinner borderWidth='2px' h={{base: "20px"}} w={{base: "20px"}} speed='0.65s' mr={{base: "10px"}} color="#FFF"></Spinner>
                                         <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>{"Pending request…"}</Trans>
+                                            <Trans>{"Pending..."}</Trans>
                                         </Text>
                                     </Flex>
                         
                     } else if (pendingRequest.status === RequestStatus.Disputed) {
-                        buttons =   <Flex mb={[2]} alignItems="center" justifyContent="center" fontWeight="600" height="2.25rem">
+                        buttons =   <Flex 
+                                        mb={[2]} 
+                                        alignItems="center" 
+                                        justifyContent="center" 
+                                        fontWeight="600" 
+                                        minH="2.25rem"
+                                        px="16px"
+                                        py="8px"
+                                        borderRadius="16px"
+                                        bgGradient="linear(315deg, accent.dark 0%, accent.light 100%)"
+                                        color="#FFF"
+                                        filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
+                                    >
                                         <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
                                             {`Under dispute ${pendingRequest.disputeId}…`}
                                         </Text>
