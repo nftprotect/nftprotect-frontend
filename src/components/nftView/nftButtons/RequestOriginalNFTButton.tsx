@@ -177,11 +177,11 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                 <ModalBody>
                     <Wizard>
                         {/* start */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Request the original NFT{"?"}</Trans>
+                                        <Trans>Request <br/> the original NFT{"?"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}} >
@@ -204,7 +204,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                             <AlertCircle fontSize="36px" />
                                         </Flex>
                                         <Flex flexDirection="column">
-                                            <Text textStyle="paragraph">
+                                            <Text textStyle="paragraph" color="muted">
                                                 <Trans>Please note that when you receive the original NFT, pNFT will be burned.</Trans>
                                             </Text>
                                         </Flex>
@@ -222,14 +222,14 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside>  */}
+                        </SwitchableOutside> 
 
                         {/* confirmTransaction */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Request the original NFT{"?"}</Trans>
+                                        <Trans>Request <br/> the original NFT{"?"}</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -240,14 +240,14 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* waitingForFinal */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
-                                        <Trans>Request the original NFT{"?"}</Trans>
+                                        <Trans>Request <br/> the original NFT{"?"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -257,7 +257,7 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                         </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
                         
                         {/* finalCompleted */}
                         <SwitchableOutside nextStepNumber={nextStep}>
@@ -274,19 +274,16 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                         </Image>
                                     </Box>
 
-                                    <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}}>
+                                    <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}}>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
                                             <Trans>Request sent to the original NFT owner. Please wait for the transfer of rights.</Trans>
                                         </Text>
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                            {"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court."}
-                                        </Text>
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                            {"The button to open a dispute will appear on the DApp's main page"}
+                                        <Text textStyle="paragraph" textAlign="center">
+                                            {"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page"}
                                         </Text>
                                     </Flex>
 
-                                    <Flex flexWrap="nowrap" alignItems="center" mt={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                    <Flex flexWrap="nowrap" alignItems="center" mb={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
                                             <Text textStyle="paragraph" color="muted">
@@ -302,6 +299,16 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                         </Flex>
                                     </Flex>
                                 </CardBody>
+                                <CardFooter>
+                                    <Box w={{base: "50%"}}>
+                                        <Button 
+                                            onClick={ onClose}
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
                             </Card>
                         </SwitchableOutside>
 
