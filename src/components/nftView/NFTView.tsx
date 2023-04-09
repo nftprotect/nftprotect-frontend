@@ -38,13 +38,16 @@ const NFTView = () => {
 
     const reFetch = (force = false) => {
         if (force) {
+            setRefreshNeeded(false)
+            console.log('Fetching NFTs forced...')
             fetch()
         } else {
             if (refreshPaused) {
+                console.log('Fetching NFTs paused, waiting...')
                 setRefreshNeeded(true)
             } else if (!refreshNeeded) {
+                console.log('Fetching NFTs...')
                 fetch()
-                console.log('FETCH STR!!!')
             }
         }
     }
@@ -119,7 +122,7 @@ const NFTView = () => {
             if (refreshNeeded) {
                 fetch()
                 setRefreshNeeded(false)
-                console.log('FETCH EFF!!!')
+                console.log('Fetching NFTs after pause...')
             }
         }
     }, [refreshPaused, refreshNeeded])
