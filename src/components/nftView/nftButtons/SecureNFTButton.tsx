@@ -245,48 +245,35 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
             <ModalContent
                 w={{base: "450px"}}
             >
-                <ModalCloseButton />
+                <ModalCloseButton onClick={onClose} />
                 <ModalBody>
                     <Wizard>
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "600px"}}>
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
 
-                                        { getNftImage() }
+                                <CardBody mb={{base: "20px"}} >
+                                    { getNftImage() }
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                        <Trans>Fee for Protection your NFT:</Trans>
+                                    </Text>
+                                    <Text textStyle="h3" textAlign="center">
+                                        {"Ξ"}{ formatEther(fee || 0) } 
+                                    </Text>
+                                </CardBody>
 
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
-                                        </Text>
-
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            <Trans>Fee for Protection your NFT:</Trans>
-                                        </Text>
-                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
-                                            {"Ξ"}{ formatEther(fee || 0) } 
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", xs: "50%"}}>
+                                <CardFooter w="100%" justifySelf="flex-start">
+                                    <Box w={{base: "60%", sm: "50%"}}>
                                         <Button 
                                             onClick={ startButtonOnClick }
                                             variant="dark-outline"
-                                            mb={{base: "10px"}}
                                         >
                                             <Trans>Protect NFT</Trans>
-                                        </Button>
-                                        <Button 
-                                            onClick={onClose}
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
                                         </Button>
                                     </Box>
                                 </CardFooter>
@@ -296,187 +283,163 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                         {/* requestConcrete*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
 
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
-                                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
-                                                <Trans>To learn more</Trans>
-                                                <ArrowForwardIcon ml={{base: '2px'}} />
-                                            </Link>
-                                            
-                                        </Text>
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                        {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
+                                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                            <Trans>To learn more</Trans>
+                                            <ArrowForwardIcon ml={{base: '2px'}} />
+                                        </Link>
+                                        
+                                    </Text>
 
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>Please, allow access and <br />transfer of your NFT</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>Please, allow access and <br />transfer of your NFT</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
                         {/* requestAll*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                         <Card variant="stepContent" >
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Flex my={{base: "20px"}}>
-                                            <Spinner variant="primary" speed='0.65s'></Spinner>
-                                        </Flex>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Flex my={{base: "20px"}}>
+                                        <Spinner variant="primary" speed='0.65s'></Spinner>
+                                    </Flex>
+                                    
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                        {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
+                                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                            <Trans>To learn more</Trans>
+                                            <ArrowForwardIcon ml={{base: '2px'}} />
+                                        </Link>
                                         
+                                    </Text>
 
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            {"When you grant permission for access and transfer of NFTs, they are securely stored in a smart contract. The NFT Protect team will not have access to your assets, nor will they have the right to manage them.\u0020"}
-                                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
-                                                <Trans>To learn more</Trans>
-                                                <ArrowForwardIcon ml={{base: '2px'}} />
-                                            </Link>
-                                            
-                                        </Text>
-
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>Please, allow access and <br />transfer of your NFTs</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>Please, allow access and <br />transfer of your NFTs</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
                         {/* checkPermission*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" >
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Flex my={{base: "20px"}}>
-                                            <Spinner variant="primary" speed='0.65s'></Spinner>
-                                        </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>{"Wait for transaction to confirm..."}</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Flex my={{base: "20px"}}>
+                                        <Spinner variant="primary" speed='0.65s'></Spinner>
+                                    </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>{"Wait for transaction to confirm..."}</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
                         {/* requestWrap*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" >
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Flex my={{base: "20px"}}>
-                                            <Spinner variant="primary" speed='0.65s'></Spinner>
-                                        </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>Confirm the transaction in the wallet</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Flex my={{base: "20px"}}>
+                                        <Spinner variant="primary" speed='0.65s'></Spinner>
+                                    </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>Confirm the transaction in the wallet</Trans>
+                                    </Text>
+                                </CardBody>
+
                             </Card>
                         </SwitchableOutside>
 
                         {/* waitingForAllow*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" >
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Flex my={{base: "20px"}}>
-                                            <Spinner variant="primary" speed='0.65s'></Spinner>
-                                        </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>{"Wait for transaction to confirm..."}</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Flex my={{base: "20px"}}>
+                                        <Spinner variant="primary" speed='0.65s'></Spinner>
+                                    </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>{"Wait for transaction to confirm..."}</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
                         
                         {/* waitingForFinal*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" >
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Protecting <br /> your asset{"…"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Flex my={{base: "20px"}}>
-                                            <Spinner variant="primary" speed='0.65s'></Spinner>
-                                        </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            <Trans>{"Wait for transaction to confirm…"}</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Flex my={{base: "20px"}}>
+                                        <Spinner variant="primary" speed='0.65s'></Spinner>
+                                    </Flex>
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Trans>{"Wait for transaction to confirm…"}</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
                         
                         {/* finalCompleted*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "360px"}}>
-                                    <Flex flexDirection="column" alignItems="center">
-                                        <CardHeader>
-                                            <Text as="h3" textStyle="h3">
-                                                <Trans>Success</Trans>
-                                            </Text>
-                                        </CardHeader>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Success</Trans>
+                                    </Text>
+                                </CardHeader>
 
-                                        <CardBody>
-                                            <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                                <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
-                                                </Image>
-                                            </Box>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
-                                                <Trans>Your asset is now protected!</Trans>
-                                            </Text>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
-                                                <Trans>Enjoy your new life in protected world!</Trans>
-                                            </Text>
-                                        </CardBody>
-                                    </Flex>
-                                    <CardFooter>
-                                        <Box w={{base: "60%"}}>
-                                            <Button
-                                                onClick={ onClose }
-                                                variant="dark-outline"
-                                            >
-                                                <Trans>Close</Trans>
-                                            </Button>
-                                        </Box>
-                                    </CardFooter>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                        </Image>
+                                    </Box>
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                        <Trans>Your asset is now protected!</Trans>
+                                    </Text>
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                        <Trans>Enjoy your new life in protected world!</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
                         {/* canceled*/}
                         <SwitchableOutside nextStepNumber={nextStep} >
-                            <Card variant="stepContent" minH={{base: "270px"}}>
+                            <Card variant="stepContent">
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
@@ -488,27 +451,17 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                             <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
                                             </Image>
                                         </Box>
-                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                        <Text textStyle="h3" textAlign="center">
                                             <Trans>You cancelled a transaction</Trans>
                                         </Text>
                                     </CardBody>
                                 </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", xs: "50%"}}>
-                                        <Button 
-                                            onClick={onClose}
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
-                                </CardFooter>
                             </Card>
                         </SwitchableOutside>
                         
                         {/* error*/}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "270px"}}>
+                            <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
                                     <Trans>Some error occured</Trans>
@@ -519,7 +472,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                                         <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
+                                    <Text textStyle="h3" textAlign="center">
                                         <Trans>Transaction failed.</Trans>
                                     </Text>
                                 </CardBody>

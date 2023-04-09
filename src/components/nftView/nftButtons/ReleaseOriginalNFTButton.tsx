@@ -57,12 +57,10 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
 
     // Naming of wizard step numbers
     enum StepMapping {
-        startReleaseOriginal,
         startAnswerReleaseOriginal,
         confirmTransaction,
         pendingTransaction,
         transferredSuccessfully,
-        remainsInWallet,
         canceled,
         error,
         timeout
@@ -104,31 +102,9 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     }
 
     const mainButtonOnClick = () => {
-        pendingRequest ?
-            setNextStep(StepMapping.startAnswerReleaseOriginal) :
-            setNextStep(StepMapping.startReleaseOriginal)
+            setNextStep(StepMapping.startAnswerReleaseOriginal)
         onOpen()
         setRefreshPaused(true)
-    }
-
-    const startButtonOnClick = () => {
-        try {
-            console.log('ADJUST')
-            nftProtectContract.adjustOwnership(nft.tokenId, 0, '', defaultArbitrator)
-                .then( finalTransactionSent(
-                    tokenContract,
-                    StepMapping.pendingTransaction,
-                    StepMapping.transferredSuccessfully
-                ))
-                .catch(
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    })
-                )
-        } catch (err: any) {
-            handleUnknownError(err)
-        }
     }
 
     const sendButtonOnClick = () => {
@@ -155,12 +131,12 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     const rejectButtonOnClick = () => {
         try {
             console.log('ANSWER ADJUSTMENT REJECT')
-            setNextStep(StepMapping.confirmTransaction)
+            // setNextStep(StepMapping.confirmTransaction)
             nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0, '')
             .then( finalTransactionSent(
                 tokenContract,
                 StepMapping.pendingTransaction,
-                StepMapping.remainsInWallet
+                StepMapping.canceled
             ))
             .catch(
                 handleContractError({
@@ -218,9 +194,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(
-                    pendingRequest ? 
-                        StepMapping.startReleaseOriginal :
-                        StepMapping.startAnswerReleaseOriginal
+                    StepMapping.startAnswerReleaseOriginal
                 )
                 onClose()
                 setRefreshPaused(false)
@@ -230,86 +204,55 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
             <ModalContent
                 w={{base: "450px"}}
             >
-                <ModalCloseButton />
+                <ModalCloseButton onClick={onClose} />
                 <ModalBody>
                     <Wizard>
-                        {/* TODO Этот шаг остается? В макете его нет */}
-                        {/* Start release original */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent">
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer the original NFT to a new owner{"?"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Text textStyle="paragraph" textAlign="center" my={{base: "20px"}}>
-                                            <Trans>Press button to send original NFT to pNFT owner.</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", sm: "40%"}}>
-                                        <Button 
-                                            onClick={ startButtonOnClick }
-                                            variant='dark-outline'
-                                        >
-                                            <Trans>Start</Trans>
-                                        </Button>
-                                    </Box>
-                                </CardFooter>
-                            </Card>
-                        </SwitchableOutside> */}
-
                         {/* Start answering for request to release original */}
                         <SwitchableOutside nextStepNumber={nextStep} >
-                            <Card variant="stepContent" minH={{base: "644px"}}>
-                                <Flex flexDirection="column">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer the original NFT to a new owner{"?"}</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        { getNftImage() }
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "8px"}} textAlign="center">
-                                            <span>
-                                                <Trans>Are you sure want to transfer original NFT to</Trans>
-                                            </span>
-                                        </Text>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody mb={{base: "20px"}}>
+                                    { getNftImage() }
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "8px"}} textAlign="center">
+                                        <span>
+                                            <Trans>Are you sure want to transfer original NFT to</Trans>
+                                        </span>
+                                    </Text>
 
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "20px"}} textAlign="center">
-                                            <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
-                                            <span id='newOwnerAddressHolder'>
-                                                { formatAddress(nft.ownerOf?.format() || '', 4) }
-                                            </span>
-                                            {'\u003F'}
-                                        </Text>
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "20px"}} textAlign="center">
+                                        <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                        <span id='newOwnerAddressHolder'>
+                                            { formatAddress(nft.ownerOf?.format() || '', 4) }
+                                        </span>
+                                        {'\u003F'}
+                                    </Text>
 
-                                        <Flex flexWrap="nowrap" alignItems="center" mb={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px">
-                                            <Flex color="danger" mr={{base: "20px"}} bg="#FFF" >
-                                                <AlertCircle fontSize="36px" />
-                                            </Flex>
-                                            <Flex flexDirection="column">
-                                                <Text textStyle="paragraph" textTransform="uppercase" fontWeight="700" color="danger">
-                                                    <Trans>Warning!</Trans>
-                                                </Text>
-                                                <Text textStyle="paragraph">
-                                                    {"Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"}
-                                                </Text>
-                                            </Flex>
+                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px">
+                                        <Flex color="danger" mr={{base: "20px"}} bg="#FFF" >
+                                            <AlertCircle fontSize="36px" />
                                         </Flex>
-                                    </CardBody>
-                                </Flex>
+                                        <Flex flexDirection="column">
+                                            <Text textStyle="paragraph" textTransform="uppercase" fontWeight="700" color="danger">
+                                                <Trans>Warning!</Trans>
+                                            </Text>
+                                            <Text textStyle="paragraph">
+                                                {"Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"}
+                                            </Text>
+                                        </Flex>
+                                    </Flex>
+                                </CardBody>
                                 <CardFooter flexDirection="column">
                                     <Flex 
                                         flexWrap={{base: "wrap", sm: "nowrap"}}
                                         alignSelf="flex-start"
-                                        justifyContent="space-evenly"
+                                        justifyContent="space-around"
                                         w="100%"
                                     >
-                                        <Box mb={{base: "20px", sm: "0"}} w={{base: "100%", sm: "40%"}}>
+                                        <Box mb={{base: "20px", sm: "0"}} w={{base: "40%"}}>
                                             <Button 
                                                 onClick={ sendButtonOnClick }
                                                 variant='dark-outline'
@@ -318,7 +261,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                             </Button>
                                         </Box>
 
-                                        <Box w={{base: "100%", sm: "40%"}}>
+                                        <Box w={{base: "40%"}}>
                                             <Button
                                                 onClick={ rejectButtonOnClick }
                                                 variant="dark-outline"
@@ -337,7 +280,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <Flex flexDirection="column">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer the original NFT to a new owner{"?"}</Trans>
+                                            <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
                                         </Text>
                                     </CardHeader>
                                     <CardBody>
@@ -358,7 +301,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <Flex flexDirection="column">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer the original NFT to a new owner{"?"}</Trans>
+                                            <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
                                         </Text>
                                     </CardHeader>
                                     <CardBody>
@@ -375,91 +318,39 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
 
                         {/* NFT transfered successfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "360px"}}>
-                                <Flex flexDirection="column" alignItems="center">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>The original NFT was transferred to new owner</Trans>
-                                        </Text>
-                                    </CardHeader>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>The original NFT <br/> was transferred <br/> to new owner</Trans>
+                                    </Text>
+                                </CardHeader>
 
-                                    <CardBody>
-                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
-                                            </Image>
-                                        </Box>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "60%"}}>
-                                        <Button
-                                            onClick={ onClose }
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
+                                <CardBody>
+                                    <Box mt={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                        </Image>
                                     </Box>
-                                </CardFooter>
-                            </Card>
-                        </SwitchableOutside>
-
-                        {/* NFT remains in your wallet */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "270px"}}>
-                                <Flex flexDirection="column" alignItems="center">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>The original NFT remains in your wallet</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%"></Image>
-                                        </Box>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", xs: "50%"}}>
-                                        <Button 
-                                            onClick={ onClose}
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
-                                </CardFooter>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
                         {/* Canceled */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "270px"}}>
-                                <Flex flexDirection="column" alignItems="center">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>Fail!</Trans>
-                                        </Text>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
-                                            </Image>
-                                        </Box>
-                                        <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
-                                            <Trans>You cancelled a transaction</Trans>
-                                        </Text>
-                                    </CardBody>
-                                </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", xs: "50%"}}>
-                                        <Button 
-                                            onClick={ onClose}
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
+                            <Card variant="stepContent">
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3">
+                                        <Trans>Fail!</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        </Image>
                                     </Box>
-                                </CardFooter>
+                                    <Text textStyle="h3" textAlign="center">
+                                        <Trans>You cancelled a transaction</Trans>
+                                    </Text>
+                                </CardBody>
                             </Card>
                         </SwitchableOutside>
 
