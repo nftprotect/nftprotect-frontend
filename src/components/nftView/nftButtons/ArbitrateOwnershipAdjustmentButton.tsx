@@ -219,7 +219,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Flex flexDirection="column" alignItems="center">
                                 <Text fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                    {t`Original NFT owner ` + (pendingRequest.status == RequestStatus.Rejected ? t`refused` : t`unresponsive`)}
+                                    {t`Original NFT owner` + ' ' + (pendingRequest.status == RequestStatus.Rejected ? t`refused` : t`unresponsive`)}
                                 </Text>
                                 <Text id='originalOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
                                     { formatAddress(originalOwner, 4) }
