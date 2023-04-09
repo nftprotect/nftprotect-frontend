@@ -32,7 +32,7 @@ import { CopyIcon } from '@chakra-ui/icons';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import { t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import ErrorStepContent from './steps/ErrorStepContent'
@@ -51,7 +51,6 @@ interface ButtonInitialData {
 const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
-    const { centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
 

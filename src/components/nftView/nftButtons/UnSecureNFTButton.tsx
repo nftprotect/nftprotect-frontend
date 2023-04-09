@@ -29,7 +29,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import { defaultArbitrator } from '../../../utils/config';
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import { t } from '@lingui/macro';
 
 interface ButtonInitialData {
@@ -44,7 +44,6 @@ interface ButtonInitialData {
 const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
-    const { centralizeIpfsUrl } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const name = metadata?.name || nft.name

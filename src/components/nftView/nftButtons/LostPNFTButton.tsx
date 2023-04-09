@@ -47,9 +47,9 @@ import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@c
 import { AuthErrorCode } from 'moralis/common-core';
 import { NextComponentType } from 'next';
 import { Trans, t } from '@lingui/macro';
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { IPFSFileUpload } from '../../IPFSFileUpload';
 import { formatEther } from "@ethersproject/units";
+import { centralizeIpfsUrl } from '../../../utils/ipfs';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -64,7 +64,6 @@ interface ButtonInitialData {
 const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)

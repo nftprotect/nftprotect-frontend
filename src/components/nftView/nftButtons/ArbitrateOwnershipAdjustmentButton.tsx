@@ -40,6 +40,7 @@ import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther } from '@ethersproject/units';
+import { getCentralizedUrl, getRelativeIpfsUrl, centralizeIpfsUrl } from '../../../utils/ipfs';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -54,7 +55,7 @@ interface ButtonInitialData {
 const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library } = useAppContext()
-    const { ipfs, getCentralizedUrl, getIpfsUrl, centralizeIpfsUrl } = useIPFSContext()
+    const { ipfs } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [url, setUrl] = useState<string>()
@@ -124,7 +125,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
             setNextStep(StepMapping.confirmTransaction)
             const dirHash = result.uploadResult.cid.toString()//toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
-            const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
+            const fileIPFSUrl = getRelativeIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
             console.log('MetaEvidence IPFS URL:', fileIPFSUrl)
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest.id, generateArbitratorExtraData(

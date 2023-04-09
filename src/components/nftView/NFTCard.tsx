@@ -22,10 +22,10 @@ import LostPNFTButton from './nftButtons/LostPNFTButton';
 import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
-import { useIPFSContext } from '../../context/IPFSContextProvider';
 import { useNotificationContext } from '../../context/NotificationContextProvider';
 import { Trans } from '@lingui/macro';
 import { formatAddress } from '../../utils/helpers';
+import { centralizeIpfsUrl } from '../../utils/ipfs';
 
 interface NFTInitialData {
     nft: EvmNft,
@@ -62,7 +62,6 @@ export enum RequestStatus {
 
 const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
-    const { centralizeIpfsUrl } = useIPFSContext()
     const {
         addNotifications, 
         notificationsCount

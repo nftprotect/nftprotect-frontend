@@ -30,7 +30,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { centralizeIpfsUrl } from '../../../utils/ipfs';
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -44,7 +44,6 @@ interface ButtonInitialData {
 const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { centralizeIpfsUrl } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)

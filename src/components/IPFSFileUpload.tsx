@@ -6,6 +6,7 @@ import {
     Flex,
 } from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
+import { getCentralizedUrl, getRelativeIpfsUrl } from '../utils/ipfs';
 
 interface UploaderInitialData {
     setUrl?: Function | undefined,
@@ -13,7 +14,7 @@ interface UploaderInitialData {
 }
 
 export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
-    const { ipfs, getCentralizedUrl, getIpfsUrl } = useIPFSContext()
+    const { ipfs } = useIPFSContext()
     const [file, setFile] = useState<any>()
     const [fileUrl, setFileUrl] = useState('')
     const [loading, setLoading] = useState(false)
@@ -43,7 +44,7 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
         if (result) {
             const dirHash = result.uploadResult.cid.toString()//.toV1().toString()
             const dirUrl = getCentralizedUrl(dirHash)
-            const fileIPFSUrl = getIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
+            const fileIPFSUrl = getRelativeIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
 
             setUrl && setUrl(dirUrl)
             setIpfsUrl && setIpfsUrl(fileIPFSUrl)
