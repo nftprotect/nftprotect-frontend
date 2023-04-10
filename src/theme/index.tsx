@@ -214,10 +214,12 @@ const nftProtectTheme = extendTheme({
         },
         Spinner: {
             baseStyle: {
-                borderWidth: '6px',
+                borderWidth: '4px',
                 emptyColor: 'gray.200',
                 color: 'accent.light',
-                label: "loading"
+                label: "loading",
+                h: {base: "80px"},
+                w: {base: "80px"}
             },
             variants: {
                 'primary': {
