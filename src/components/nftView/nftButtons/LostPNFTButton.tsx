@@ -183,7 +183,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                 <ModalBody>
                     <Wizard>
                         {/* Step 1. start */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" 
                             >
                                 <CardHeader>
@@ -244,7 +244,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Menu>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* Step 2. lostReason */}
                         <SwitchableOutside nextStepNumber={nextStep}>
@@ -312,7 +312,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                         </SwitchableOutside>
                         
                         {/* Step 3. evidenceFillForm */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -445,10 +445,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
                         
                         {/* Step 4. evidenceReview */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -482,10 +482,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* Step 5. payArbitrationFee */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
@@ -520,10 +520,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* Step 6. confirmTransaction */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -538,10 +538,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* Waiting for transaction confirmation */}
-                        {/* <SwitchableOutside nextStepNumber={nextStep}>
+                        <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
@@ -555,7 +555,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                         </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside> */}
+                        </SwitchableOutside>
 
                         {/* Dispute sent succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
