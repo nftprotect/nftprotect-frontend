@@ -183,9 +183,8 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                 <ModalBody>
                     <Wizard>
                         {/* Step 1. start */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" 
-                            minH={{base: "664px"}}
                             >
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -245,7 +244,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Menu>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* Step 2. lostReason */}
                         <SwitchableOutside nextStepNumber={nextStep}>
@@ -283,7 +282,16 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                             <Trans>{"Keep screenshots of all conversations as evidence if you need to submit a case to Kleros."}</Trans>
                                         </Text>
                                     </Flex>
+                                </CardBody>
 
+                                <CardFooter flexDirection="column" alignItems="center">
+                                    <Box w={{base: "60%", sm: "40%"}} mb={{base: "20px"}}>
+                                        <Button
+                                            variant="dark-outline"
+                                            onClick={openCaseInKleros}
+                                        ><Trans>Open dispute</Trans>
+                                        </Button>
+                                    </Box>
                                     <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
@@ -299,22 +307,12 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                             </Text>
                                         </Flex>
                                     </Flex>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Box w={{base: "60%", xs: "40%"}}>
-                                        <Button 
-                                            variant="dark-outline"
-                                            onClick={openCaseInKleros}
-                                        ><Trans>Open dispute</Trans>
-                                        </Button>
-                                    </Box>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside>
                         
                         {/* Step 3. evidenceFillForm */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -447,10 +445,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
                         
                         {/* Step 4. evidenceReview */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -484,10 +482,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* Step 5. payArbitrationFee */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
@@ -522,10 +520,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Box>
                                 </CardFooter>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* Step 6. confirmTransaction */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
@@ -540,10 +538,10 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* Waiting for transaction confirmation */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
+                        {/* <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
@@ -557,7 +555,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                         </Text>
                                 </CardBody>
                             </Card>
-                        </SwitchableOutside>
+                        </SwitchableOutside> */}
 
                         {/* Dispute sent succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
