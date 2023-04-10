@@ -198,6 +198,18 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
 
                                     { getNftImage() }
 
+                                    
+                                </CardBody>
+
+                                <CardFooter flexDirection="column" alignItems="center">
+                                    <Box w={{base: "60%"}} mb={{base: "20px"}}>
+                                        <Button 
+                                            onClick={ startButtonOnClick }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Request original</Trans>
+                                        </Button>
+                                    </Box>
                                     <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
                                             <AlertCircle fontSize="36px" />
@@ -208,17 +220,6 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                             </Text>
                                         </Flex>
                                     </Flex>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Box w={{base: "60%"}}>
-                                        <Button 
-                                            onClick={ startButtonOnClick }
-                                            variant="dark-outline"
-                                        >
-                                            <Trans>Request original</Trans>
-                                        </Button>
-                                    </Box>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside> 
