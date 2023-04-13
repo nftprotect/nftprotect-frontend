@@ -129,17 +129,9 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     const evidenceReview = () => {
         setNextStep(StepMapping.evidenceReview)
     }
-    
-    const payArbitrationFee = () => {
-        setNextStep(StepMapping.payArbitrationFee)
-    }
-
-    const approvePayment = () => {
-        setNextStep(StepMapping.confirmTransaction)
-    }
 
     const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
     return (<>
@@ -259,19 +251,32 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                     { getNftImage() }
 
                                     <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
-                                        <Text mb={{base: "8px"}}>
+                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
                                             <Trans>
                                                 {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
                                             </Trans>
+                                            {" "}
+                                            <Popover placement='top'>
+                                                <PopoverTrigger>
+                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                </PopoverTrigger>
+                                                <PopoverContent w="150px">
+                                                    <PopoverArrow />
+                                                    <PopoverCloseButton />
+                                                    <PopoverBody >
+                                                        <Trans>Copied{"!"}</Trans>
+                                                    </PopoverBody>
+                                                </PopoverContent>
+                                            </Popover>
+                                            
                                             <span id='originalOwnerAddressHolder'>
-                                                { " "}
-                                                <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer"/>
                                                 { " (" + formatAddress(originalOwner, 4) + ") " }
                                             </span>
                                             <Trans>
                                                 {"before resorting to legal action."}
                                             </Trans>
                                         </Text>
+
                                         <Text mb={{base: "8px"}}>
                                             <Trans>
                                             {"You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."}
@@ -474,7 +479,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 <CardFooter>
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
-                                            onClick={ payArbitrationFee }
+                                            onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
                                             variant="dark-outline"
                                         >
                                             <Trans>Open dispute</Trans>
@@ -512,7 +517,7 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
                                 <CardFooter>
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
-                                            onClick={ approvePayment }
+                                            onClick={ () => setNextStep(StepMapping.confirmTransaction) }
                                             variant="dark-outline"
                                         >
                                             <Trans>Pay the dispute</Trans>
@@ -559,30 +564,30 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
 
                         {/* Dispute sent succesfully */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                                <Card variant="stepContent" minH={{base: "360px"}}>
-                                    <Flex flexDirection="column" alignItems="center">
-                                        <CardHeader>
-                                            <Text as="h3" textStyle="h3">
-                                                <Trans>Your dispute <br/> sent to Kleros</Trans>
-                                            </Text>
-                                        </CardHeader>
+                            <Card variant="stepContent" minH={{base: "360px"}}>
+                                <Flex flexDirection="column" alignItems="center">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Your dispute <br/> sent to Kleros</Trans>
+                                        </Text>
+                                    </CardHeader>
 
-                                        <CardBody>
-                                            <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                                <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
-                                                </Image>
-                                            </Box>
-                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                                <Trans>
-                                                    You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase.
-                                                </Trans>
-                                            </Text>
-                                            <Text textStyle="paragraph" textAlign="center">
-                                                <Trans>Follow the status of the dispute through our app or on the website Kleros.</Trans>
-                                            </Text>
-                                        </CardBody>
-                                    </Flex>
-                                </Card>
+                                    <CardBody>
+                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                            </Image>
+                                        </Box>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
+                                            <Trans>
+                                                You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase.
+                                            </Trans>
+                                        </Text>
+                                        <Text textStyle="paragraph" textAlign="center">
+                                            <Trans>Follow the status of the dispute through our app or on the website Kleros.</Trans>
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+                            </Card>
                         </SwitchableOutside>
 
                         {/* Canceled */}
