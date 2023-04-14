@@ -19,7 +19,7 @@ export interface AppContextInterface {
     fee: number | undefined
 }
 
-const AppContext = createContext<AppContextInterface|null>(null);
+export const AppContext = createContext<AppContextInterface|null>(null);
 
 export function AppContextProvider({ children }:any) {
 

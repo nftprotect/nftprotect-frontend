@@ -20,9 +20,11 @@ import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
+import { useAlchemy } from '../../hooks/useAlchemy';
+import { NftFilters } from 'alchemy-sdk';
 
 const NFTView = () => {
-
+    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts } = useAlchemy()
     const { currentChain, account, active, library, nftProtectContract } = useAppContext()
     const { isOpen, onToggle } = useDisclosure()
     // Holds component data refresh while refreshPaused
@@ -115,6 +117,16 @@ const NFTView = () => {
     })
     // Ends here
     const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
+
+    useEffect(() => {
+        if (currentChain && account) {
+            getNftsForOwner([
+                account
+            ]).then((result) => {
+                console.log('ALCHEMY ALL MY NFTS:', result)
+            })
+        }
+    }, [currentChain, account])
 
     useEffect(() => {
         // Update data when refresh unpaused if needed

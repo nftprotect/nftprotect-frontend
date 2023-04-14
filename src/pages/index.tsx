@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
 import LoginForm from '../components/loginForm/LoginForm'
 import NavBar from '../components/navBar/NavBar'
-import DIDVerificationRequiredCard from '../components/nftView/DidVerificationRequiredCard'
-import CheckUrlPopup from '../components/popups/CheckUrlPopup'
 import {
     Container,
     Heading,
@@ -15,14 +13,8 @@ import { useAppContext } from '../context/AppContextProvider'
 import NFTView from '../components/nftView/NFTView'
 import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotificationContext } from '../context/NotificationContextProvider'
-import { useEffect } from 'react'
-import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
-import { NodeNextRequest } from 'next/dist/server/base-http/node'
-import { defaultChain } from '../utils/config'
-import { useAlchemyContext } from '../context/AlchemyContextProvider'
-import { alchemyFetch } from '../utils/alchemy'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -52,23 +44,12 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const Home: NextPage = () => {
 
-    const { active, didRegistered, currentChain } = useAppContext()
+    const { active } = useAppContext()
     const {
         addNotifications, 
         notificationsCount
     } = useNotificationContext()
-    const { alchemy } = useAlchemyContext()
 
-    useEffect(() => {
-        alchemy && alchemy.core.getBlockNumber().then((latestBlock) => {
-            console.log("ALCHEMY TEST: The latest block number is", latestBlock, alchemy);
-        })
-        alchemy && alchemyFetch(currentChain.alchemyId, 'core.getBlockNumber', {}).then(
-            (latestBlock) => {
-                console.log("ALCHEMY BE TEST: The latest block number is", latestBlock, alchemy);
-            }
-        )
-    }, [alchemy])
     // useEffect(() => {
     //     addNotifications([
     //         {
