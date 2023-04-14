@@ -6,9 +6,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ru-RU\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:252
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:308
 msgid "(Paid separately)"
+msgstr ""
+
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:166
+msgid ", confirm the transmission of the original NFT"
 msgstr ""
 
 #: src/components/nftView/NFTView.tsx:143
@@ -49,6 +59,10 @@ msgstr ""
 msgid "Available wallets"
 msgstr ""
 
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:103
+msgid "Bona fide transfer"
+msgstr ""
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:376
 msgid "Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent."
 msgstr ""
@@ -57,20 +71,25 @@ msgstr ""
 msgid "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:267
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:340
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:309
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:356
 #: src/components/nftView/nftButtons/steps/CancelledStepContent.tsx:45
 msgid "Close"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:372
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:445
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:152
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:542
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:305
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:256
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:370
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:220
 msgid "Confirm the transaction in the wallet"
+msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:246
+msgid "Congrats"
 msgstr ""
 
 #: src/components/loginForm/LoginForm.tsx:31
@@ -97,7 +116,10 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:276
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:267
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:156
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:199
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:240
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:207
 msgid "Copied!"
@@ -108,7 +130,7 @@ msgid "Decentralized self-custody protocol for safeguarding digital assets from 
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:332
-#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:111
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:114
 msgid "Describe the situation in details…"
 msgstr ""
 
@@ -120,11 +142,15 @@ msgstr ""
 msgid "Detailed"
 msgstr ""
 
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:107
+msgid "Do not transfer original"
+msgstr ""
+
 #: src/components/nftView/NFTCard.tsx:180
 msgid "Do you want to transfer the original to them?"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:248
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:294
 msgid "Don't agree? Initiate a dispute in the Kleros decentralized court."
 msgstr ""
 
@@ -136,7 +162,7 @@ msgstr ""
 msgid "Enjoy your new life in protected world!"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:433
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:506
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:598
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:356
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:337
@@ -154,7 +180,7 @@ msgstr ""
 msgid "Fetching balance…"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:420
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:493
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:586
 msgid "Follow the status of the dispute through our app or on the website Kleros."
 msgstr ""
@@ -168,11 +194,19 @@ msgstr ""
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr ""
 
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:189
+msgid "If you did not transfer the pNFT to"
+msgstr ""
+
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:146
+msgid "If you transferred the pNFT to user"
+msgstr ""
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:255
 msgid "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:411
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:484
 msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
 msgstr ""
 
@@ -198,8 +232,10 @@ msgstr ""
 msgid "Lost pNFT"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:183
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:192
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:90
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:112
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:91
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:182
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:153
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:217
@@ -216,13 +252,13 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:196
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:260
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:315
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:205
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:320
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:388
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:297
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:448
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:485
-#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:150
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:153
 msgid "Open dispute"
 msgstr ""
 
@@ -231,10 +267,10 @@ msgstr ""
 msgid "Open dispute <0/> in Kleros"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:290
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:328
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:365
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:383
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:363
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:401
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:438
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:456
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:460
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:498
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:535
@@ -242,16 +278,20 @@ msgstr ""
 msgid "Open dispute<0/> in Kleros"
 msgstr ""
 
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:104
+msgid "Original requested"
+msgstr ""
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:422
 msgid "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:353
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:426
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:523
 msgid "Pay the dispute"
 msgstr ""
 
-#: src/components/nftView/NFTCard.tsx:307
+#: src/components/nftView/NFTCard.tsx:309
 msgid "Pending..."
 msgstr ""
 
@@ -275,7 +315,11 @@ msgstr ""
 msgid "Please connect your wallet to see your digital <0/>assets and protect them"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:305
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:259
+msgid "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court. We recommend using Kleros to resolve disputes fairly and protect your property rights"
+msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:378
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:475
 msgid "Please note that the review process can take several weeks to several months."
 msgstr ""
@@ -399,7 +443,7 @@ msgstr ""
 msgid "Show all"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:453
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:526
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:618
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:466
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:306
@@ -415,14 +459,18 @@ msgstr ""
 msgid "Terms of service"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:338
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:411
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:508
 msgid "The fee for dispute resolution is"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:334
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:407
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:504
 msgid "The final step to open a dispute is to pay for the arbitration fees."
+msgstr ""
+
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:181
+msgid "The original NFT <0/> remains in your <1/> wallet"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:338
@@ -430,15 +478,31 @@ msgid "The original NFT <0/> was transferred <1/> to new owner"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:235
-msgid "The original NFT owner"
+#~ msgid "The original NFT owner"
+#~ msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:253
+msgid "The original NFT owner refused"
+msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:260
+msgid "The original NFT owner unresponsive"
 msgstr ""
 
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:250
 msgid "The original NFT restored succesfully!"
 msgstr ""
 
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:188
+msgid "The pNFT is at user 1234...1234"
+msgstr ""
+
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:178
 msgid "The pNFT will be burned and the original NFT will be sent to you"
+msgstr ""
+
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:198
+msgid "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT"
 msgstr ""
 
 #: src/components/nftView/NFTView.tsx:217
@@ -453,7 +517,7 @@ msgstr ""
 msgid "To access all the features of the application, please complete DID verification."
 msgstr ""
 
-#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:124
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:127
 msgid "To ensure a fair review by expert arbitrators, be sure to provide evidence. The more detail you provide, including text, images, or other documentation, the better the review."
 msgstr ""
 
@@ -468,7 +532,7 @@ msgstr ""
 msgid "To obtain the original NFT, send a request to the owner"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:462
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:535
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:627
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:475
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:315
@@ -476,7 +540,7 @@ msgstr ""
 msgid "Transaction failed."
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:473
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:546
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:638
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:486
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:326
@@ -494,6 +558,15 @@ msgstr ""
 msgid "Transfer original"
 msgstr ""
 
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:145
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:163
+msgid "Transfer the <0/>original NFT to <1/> the new owner"
+msgstr ""
+
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:138
+msgid "Transfer the original NFT<0/> to the new owner?"
+msgstr ""
+
 #: src/components/nftView/DidVerificationRequiredCard.tsx:26
 msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"
 msgstr ""
@@ -503,7 +576,7 @@ msgid "Until you complete DID verification, the only available function is to re
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:340
-#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:121
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:124
 msgid "Upload all available evidence:"
 msgstr ""
 
@@ -516,7 +589,8 @@ msgstr ""
 msgid "Wait for transaction to confirm..."
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:389
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:462
+#: src/components/nftView/nftButtons/DoNotTransferOriginal.tsx:169
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:559
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:326
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:273
@@ -525,7 +599,7 @@ msgstr ""
 msgid "Wait for transaction to confirm…"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:249
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:301
 msgid "Want to initiate a dispute in the Kleros decentralized court?"
 msgstr ""
 
@@ -537,7 +611,11 @@ msgstr ""
 msgid "We recomend always keep your assets secure"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:295
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:212
+msgid "We recommend opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker's wallet. This will prevent them from using or selling your asset, and help to protect your property rights."
+msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:368
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:465
 msgid "We've worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the <0>link</0>, and file it in court."
 msgstr ""
@@ -556,7 +634,7 @@ msgid "Yes"
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:436
-#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:137
+#: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:140
 msgid "You can add an external file in PDF or add multiple files in a single .zip file."
 msgstr ""
 
@@ -568,11 +646,15 @@ msgstr ""
 msgid "You can protect your NFT <0>{name}</0> again."
 msgstr ""
 
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:235
+msgid "You can refuse to give the owner of the pNFT the original NFT"
+msgstr ""
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:281
 msgid "You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:442
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:515
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:607
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:365
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:346
@@ -598,7 +680,7 @@ msgstr ""
 msgid "Your asset is now protected!"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:401
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:474
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:571
 msgid "Your dispute <0/> sent to Kleros"
 msgstr ""
@@ -607,14 +689,22 @@ msgstr ""
 msgid "before resorting to legal action."
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:416
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:489
 msgid "case {disputeId}"
 msgstr ""
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:235
-msgid "refused"
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:284
+msgid "has transferred the original NFT to you"
 msgstr ""
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:235
-msgid "unresponsive"
+#~ msgid "refused"
+#~ msgstr ""
+
+#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:235
+#~ msgid "unresponsive"
+#~ msgstr ""
+
+#: src/components/nftView/nftButtons/OriginalRequested.tsx:209
+msgid "your asset may have been stolen!"
 msgstr ""
