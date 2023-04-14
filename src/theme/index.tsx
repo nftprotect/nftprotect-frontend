@@ -5,6 +5,18 @@ import { createMultiStyleConfigHelpers, defineStyle } from '@chakra-ui/react'
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(cardAnatomy.keys)
 
 const nftProtectTheme = extendTheme({
+    styles: {
+        global: {
+          body: {
+            "::-webkit-scrollbar": {
+                w: "5px",
+            },
+            "::-webkit-scrollbar-thumb": {
+                bgColor: 'accent.light',
+            }
+          },
+        }
+    },
     colors: {
         dark: '#0D0E14',
         lightGray: '#F2F2F2',
@@ -158,7 +170,8 @@ const nftProtectTheme = extendTheme({
                         border: "2px solid #000",
                         borderRadius: "30px",
                         backdropFilter: "blur(7.5px)",
-                        overflowY: 'auto'
+                        overflowY: 'auto',
+                        maxH: "90%"
                     },
                     closeButton: {
                         zIndex: "2"
@@ -214,10 +227,12 @@ const nftProtectTheme = extendTheme({
         },
         Spinner: {
             baseStyle: {
-                borderWidth: '6px',
+                borderWidth: '4px',
                 emptyColor: 'gray.200',
                 color: 'accent.light',
-                label: "loading"
+                label: "loading",
+                h: {base: "80px"},
+                w: {base: "80px"}
             },
             variants: {
                 'primary': {

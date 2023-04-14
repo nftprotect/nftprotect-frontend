@@ -5,6 +5,7 @@ import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
 import {
+    chakra,
     Button,
     Box,
     Image,
@@ -17,6 +18,12 @@ import {
     ModalContent,
     ModalCloseButton,
     Spinner,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow ,
+    PopoverCloseButton,
+    PopoverBody,
     Card,
     CardBody,
     CardHeader,
@@ -149,7 +156,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     }
 
     const copyNewOwnerToClipboard = () => {
-        copyTextToClipboard(nft.ownerOf?.format() || '', '#newOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(nft.ownerOf?.format() || '', '#newOwnerAddressHolder')
     }
 
     function getNftImage() {
@@ -217,39 +224,34 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                 <CardBody mb={{base: "20px"}}>
                                     { getNftImage() }
                                     <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "8px"}} textAlign="center">
-                                        <span>
+                                        <chakra.span>
                                             <Trans>Are you sure want to transfer original NFT to</Trans>
-                                        </span>
+                                        </chakra.span>
+                                        
+                                        <Text id='newOwnerAddressHolder' whiteSpace="nowrap">
+                                            <Popover placement='top'>
+                                                <PopoverTrigger>
+                                                    <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                </PopoverTrigger>
+                                                <PopoverContent w="150px">
+                                                    <PopoverArrow />
+                                                    <PopoverCloseButton />
+                                                    <PopoverBody >
+                                                        <Trans>Copied{"!"}</Trans>
+                                                    </PopoverBody>
+                                                </PopoverContent>
+                                            </Popover>
+                                            { formatAddress(nft.ownerOf?.format() || '', 4) }{'\u003F'}
+                                        </Text>
                                     </Text>
-
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "20px"}} textAlign="center">
-                                        <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
-                                        <span id='newOwnerAddressHolder'>
-                                            { formatAddress(nft.ownerOf?.format() || '', 4) }
-                                        </span>
-                                        {'\u003F'}
-                                    </Text>
-
-                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px">
-                                        <Flex color="danger" mr={{base: "20px"}} bg="#FFF" >
-                                            <AlertCircle fontSize="36px" />
-                                        </Flex>
-                                        <Flex flexDirection="column">
-                                            <Text textStyle="paragraph" textTransform="uppercase" fontWeight="700" color="danger">
-                                                <Trans>Warning!</Trans>
-                                            </Text>
-                                            <Text textStyle="paragraph">
-                                                {"Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"}
-                                            </Text>
-                                        </Flex>
-                                    </Flex>
                                 </CardBody>
-                                <CardFooter flexDirection="column">
+                                <CardFooter flexDirection="column" alignItems="center">
                                     <Flex 
                                         flexWrap={{base: "wrap", sm: "nowrap"}}
                                         alignSelf="flex-start"
                                         justifyContent="space-around"
                                         w="100%"
+                                        mb={{base: "20px"}}
                                     >
                                         <Box mb={{base: "20px", sm: "0"}} w={{base: "40%"}}>
                                             <Button 
@@ -268,6 +270,19 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                                 <Trans>No</Trans>
                                             </Button>
                                         </Box>
+                                    </Flex>
+                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px">
+                                        <Flex color="danger" mr={{base: "20px"}} bg="#FFF" >
+                                            <AlertCircle fontSize="36px" />
+                                        </Flex>
+                                        <Flex flexDirection="column">
+                                            <Text textStyle="paragraph" textTransform="uppercase" fontWeight="700" color="danger">
+                                                <Trans>Warning!</Trans>
+                                            </Text>
+                                            <Text textStyle="paragraph">
+                                                {"Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"}
+                                            </Text>
+                                        </Flex>
                                     </Flex>
                                 </CardFooter>
                             </Card>
