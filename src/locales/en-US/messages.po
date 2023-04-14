@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-04-09 18:37+0700\n"
+"POT-Creation-Date: 2023-04-14 15:47+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en-US\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:252
 msgid "(Paid separately)"
@@ -126,7 +120,7 @@ msgstr "Description is required"
 msgid "Detailed"
 msgstr "Detailed"
 
-#: src/components/nftView/NFTCard.tsx:179
+#: src/components/nftView/NFTCard.tsx:180
 msgid "Do you want to transfer the original to them?"
 msgstr "Do you want to transfer the original to them?"
 
@@ -160,10 +154,6 @@ msgstr "Fee for Protection your NFT:"
 msgid "Fetching balance…"
 msgstr "Fetching balance…"
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:356
-#~ msgid "Follow the status of the case through our app or at the Kleros website."
-#~ msgstr "Follow the status of the case through our app or at the Kleros website."
-
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:420
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:586
 msgid "Follow the status of the dispute through our app or on the website Kleros."
@@ -178,10 +168,6 @@ msgstr "Get Started"
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr "Have you lost<0/> access to your pNFT?"
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:350
-#~ msgid "If you want to attach any additional evidence, you can do it int the next 48 hours by this link:"
-#~ msgstr "If you want to attach any additional evidence, you can do it int the next 48 hours by this link:"
-
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:255
 msgid "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
 msgstr "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
@@ -189,11 +175,6 @@ msgstr "If you've lost access to your pNFT, you should try attempting to resolve
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:411
 msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
 msgstr "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
-
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:246
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:285
-#~ msgid "Initiate a dispute"
-#~ msgstr "Initiate a dispute"
 
 #: src/components/nftView/NFTView.tsx:146
 msgid "It's all yours!"
@@ -235,10 +216,6 @@ msgstr "No"
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:216
-#~ msgid "Open case in Kleros"
-#~ msgstr "Open case in Kleros"
-
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:196
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:260
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:315
@@ -265,10 +242,6 @@ msgstr "Open dispute <0/> in Kleros"
 msgid "Open dispute<0/> in Kleros"
 msgstr "Open dispute<0/> in Kleros"
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:223
-#~ msgid "Original NFT owner"
-#~ msgstr "Original NFT owner"
-
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:422
 msgid "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
@@ -278,8 +251,7 @@ msgstr "Other Evidence including chat logs or emails, screen recordings, law enf
 msgid "Pay the dispute"
 msgstr "Pay the dispute"
 
-#: src/components/nftView/NFTCard.tsx:306
-#: src/components/nftView/NFTCard.tsx:429
+#: src/components/nftView/NFTCard.tsx:307
 msgid "Pending..."
 msgstr "Pending..."
 
@@ -535,7 +507,7 @@ msgstr "Until you complete DID verification, the only available function is to r
 msgid "Upload all available evidence:"
 msgstr "Upload all available evidence:"
 
-#: src/components/nftView/NFTCard.tsx:174
+#: src/components/nftView/NFTCard.tsx:175
 msgid "User {newOwnerAddressFormatted} is requesting the original NFT."
 msgstr "User {newOwnerAddressFormatted} is requesting the original NFT."
 
@@ -570,10 +542,6 @@ msgstr "We recomend always keep your assets secure"
 msgid "We've worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the <0>link</0>, and file it in court."
 msgstr "We've worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the <0>link</0>, and file it in court."
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:263
-#~ msgid "Welcome to Kleros,<0/>where you can resolve disputes fairly and transparently. <1/>To ensure a fair review by our expert arbitrators, be sure to provide evidence on the next screen. <2/>The more detail you provide, including text, images, or other documentation, the better the review. <3/>Test network is free, <4/>main network costs money."
-#~ msgstr "Welcome to Kleros,<0/>where you can resolve disputes fairly and transparently. <1/>To ensure a fair review by our expert arbitrators, be sure to provide evidence on the next screen. <2/>The more detail you provide, including text, images, or other documentation, the better the review. <3/>Test network is free, <4/>main network costs money."
-
 #: src/components/navBar/MainMenu.tsx:51
 msgid "Whitepaper"
 msgstr "Whitepaper"
@@ -604,10 +572,6 @@ msgstr "You can protect your NFT <0>{name}</0> again."
 msgid "You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."
 msgstr "You can try to find the owner through social media or use services like Blockscan Chat or Hashmail to communicate with them."
 
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:378
-#~ msgid "You canceled the transaction in your wallet."
-#~ msgstr "You canceled the transaction in your wallet."
-
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:442
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:607
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:365
@@ -633,10 +597,6 @@ msgstr "You have no protected NFTs yet"
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:430
 msgid "Your asset is now protected!"
 msgstr "Your asset is now protected!"
-
-#: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:346
-#~ msgid "Your case sent to Kleros"
-#~ msgstr "Your case sent to Kleros"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:401
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:571
