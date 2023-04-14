@@ -1,4 +1,4 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
+♦import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import React, { useState } from 'react';
 import {
@@ -6,7 +6,6 @@ import {
     Box,
     Image,
     Flex,
-    Heading,
     Text,
     Modal,
     ModalOverlay,
@@ -19,6 +18,12 @@ import {
     CardHeader,
     CardBody,
     CardFooter,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverCloseButton,
+    PopoverArrow,
+    PopoverBody,
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
@@ -35,6 +40,8 @@ import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther, formatEther } from '@ethersproject/units';
 import { getCentralizedUrl, getRelativeIpfsUrl, centralizeIpfsUrl } from '../../../utils/ipfs';
+import SecureNFTButton from './SecureNFTButton';
+import { Contract } from "@ethersproject/contracts";
 
 interface ButtonInitialData {
     nft: EvmNft,
@@ -44,10 +51,12 @@ interface ButtonInitialData {
     pendingRequest: any,
     originalOwner: string, // Owner address of original NFT,
     loadPendingRequest: Function, // Function to reload a pending request
+    requestTimedOut: boolean,
+    tokenContract: Contract,
     variant: any // apearance of the button (see variants in theme/index.tsx)
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest, variant}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest, variant, requestTimedOut, tokenContract}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library, fee } = useAppContext()
     const { ipfs } = useIPFSContext()
@@ -230,35 +239,99 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
                         {/* Start */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
-                                <CardHeader>
-                                    <Text as="h3" textStyle="h3">
-                                        {t`The original NFT owner` + ' ' + (pendingRequest?.status == RequestStatus.Rejected ? t`refused` : t`unresponsive`)}
-                                    </Text>
-                                    {/* <Text id='originalOwnerAddressHolder' fontSize={["md", "lg", "xl"]} mb={[2]} textAlign="center">
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } />
-                                        { formatAddress(originalOwner, 4) }
-                                    </Text> */}
+                                <CardHeader mb={{base: "20px"}}>
+                                    {/* NFT owner confirmed transfer */}
+                                    { pendingRequest?.status == RequestStatus.Accepted &&
+                                        <Text as="h3" textStyle="h3">
+                                            {t`Congrats`}{"!"}
+                                        </Text>
+                                    } 
+                                    
+                                    {/* NFT owner refused transfer */}
+                                    { pendingRequest?.status == RequestStatus.Rejected &&
+                                        <Text as="h3" textStyle="h3" >
+                                            {t`The original NFT owner refused`}
+                                        </Text>
+                                    }
+                                    
+                                    {/* NFT owner unresponsive */}
+                                    { requestTimedOut &&
+                                        <Text as="h3" textStyle="h3">
+                                            {t`The original NFT owner unresponsive`}
+                                        </Text>
+                                    }
                                 </CardHeader>
-                                <CardBody>
+                                <CardBody mb={{base: "20px"}}>
+                                    {/* NFT owner confirmed transfer */}
+                                    { pendingRequest?.status == RequestStatus.Accepted &&
+                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
+                                            <Popover placement='top'>
+                                                <PopoverTrigger>
+                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                </PopoverTrigger>
+                                                <PopoverContent w="150px">
+                                                    <PopoverArrow />
+                                                    <PopoverCloseButton />
+                                                    <PopoverBody >
+                                                        <Trans>Copied{"!"}</Trans>
+                                                    </PopoverBody>
+                                                </PopoverContent>
+                                            </Popover>
+                                            
+                                            <span id='originalOwnerAddressHolder'>
+                                                { " (" + formatAddress(originalOwner, 4) + ") " }
+                                            </span>
+                                            <Trans>
+                                                {"has transferred the original NFT to you"}
+                                            </Trans>
+                                        </Text>
+                                    }
 
                                     { getNftImage() }
+                                    {/* NFT owner rejected transfer */}
+                                    { pendingRequest?.status == RequestStatus.Rejected &&
+                                        <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">
+                                            { t`Don't agree? Initiate a dispute in the Kleros decentralized court.`}
+                                        </Text>
+                                    }
 
-                                    <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">
-                                        { pendingRequest?.status == RequestStatus.Rejected ?
-                                        t`Don't agree? Initiate a dispute in the Kleros decentralized court.` :
-                                        t`Want to initiate a dispute in the Kleros decentralized court?` }
-                                    </Text>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                        {t`(Paid separately)`}
-                                    </Text>
+                                    {/* NFT owner unresponsive */}
+                                    { requestTimedOut &&
+                                        <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">
+                                            {t`Want to initiate a dispute in the Kleros decentralized court?`}
+                                        </Text>
+                                    }
+
+                                    {/* NFT owner rejected transfer or unresponsive*/}
+                                    { (pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                        <Text textStyle="paragraph"  textAlign="center" letterSpacing="0.04em">
+                                                {t`(Paid separately)`}
+                                        </Text>
+                                    }
                                 </CardBody>
                                 <CardFooter flexDirection="column" alignItems="center">
+                                    
                                     <Box w={{base: "60%", sm: "50%"}} mb={{base: "20px"}}>
-                                        <Button
-                                            variant="dark-outline"
-                                            onClick={ () => setNextStep(StepMapping.klerosForm) }
-                                        ><Trans>Open dispute</Trans>
-                                        </Button>
+                                        {/* NFT owner rejected transfer or unresponsive*/}
+                                        { (pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                            <Button
+                                                variant="dark-outline"
+                                                onClick={ () => setNextStep(StepMapping.klerosForm) }
+                                            ><Trans>Open dispute</Trans>
+                                            </Button>
+                                        }
+
+                                        {/* NFT owner accepted transfer */}
+                                        { pendingRequest?.status == RequestStatus.Accepted &&
+                                            <SecureNFTButton 
+                                                metadata={metadata} 
+                                                nft={nft} 
+                                                nftReFetch={nftReFetch}
+                                                setRefreshPaused={setRefreshPaused}
+                                                tokenContract={tokenContract}
+                                                variant={"dark-outline"}
+                                            />
+                                        }
                                     </Box>
                                     <Box w={{base: "60%", sm: "50%"}}>
                                         <Button

@@ -96,8 +96,11 @@ const KlerosCaseForm = ({
                 <Form onSubmit={props.handleSubmit}>
                     <Card variant="stepContent">
                         <CardHeader>
-                            <Text as="h3" textStyle="h3">
+                            <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                 <Trans>Open dispute <br /> in Kleros</Trans>
+                            </Text>
+                            <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                <Trans>Bona fide transfer</Trans>
                             </Text>
                         </CardHeader>
 

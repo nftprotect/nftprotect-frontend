@@ -26,7 +26,6 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import { formatAddress } from '../../utils/helpers';
 import { centralizeIpfsUrl } from '../../utils/ipfs';
-
 interface NFTInitialData {
     nft: EvmNft,
     nftReFetch: Function,
@@ -57,6 +56,7 @@ export enum RequestStatus {
     Initial,
     Accepted,
     Rejected,
+    Unresposive,
     Disputed
 }
 
@@ -282,9 +282,11 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                     nftReFetch={ nftReFetch }
                                     setRefreshPaused = { setRefreshPaused }
                                     pendingRequest={ pendingRequest }
+                                    requestTimedOut={ requestTimedOut }
                                     originalOwner={ originalOwner || '' }
                                     loadPendingRequest={ loadPendingRequest }
-                                    variant={"primary-solid"}
+                                    tokenContract={tokenContract}
+                                    variant="primary-solid"
                                 />
                             </Box>
                     // Otherwise we can only wait
