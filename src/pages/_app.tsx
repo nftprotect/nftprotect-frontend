@@ -18,6 +18,7 @@ import GoogleAnalytics from '../components/GoogleAnalytics'
 import '@fontsource/lexend/400.css'
 import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
+import { AlchemyContextProvider } from '../context/AlchemyContextProvider'
 
 function initTranslation(i18n: I18n): void {
     i18n.loadLocaleData({
@@ -64,14 +65,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Web3ReactProvider getLibrary={getLibrary}>
             <AppContextProvider>
                 <ChakraProvider theme={nftProtectTheme}>
-                    <IPFSContextProvider>
-                        <NotificationContextProvider>
-                            <I18nProvider i18n={i18n}>
-                                { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
-                                <Component {...pageProps} />
-                            </I18nProvider>
-                        </NotificationContextProvider>
-                    </IPFSContextProvider>
+                    <AlchemyContextProvider>
+                        <IPFSContextProvider>
+                            <NotificationContextProvider>
+                                <I18nProvider i18n={i18n}>
+                                    { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
+                                    <Component {...pageProps} />
+                                </I18nProvider>
+                            </NotificationContextProvider>
+                        </IPFSContextProvider>
+                    </AlchemyContextProvider>
                 </ChakraProvider>
             </AppContextProvider>
         </Web3ReactProvider>

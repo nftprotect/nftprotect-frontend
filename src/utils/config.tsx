@@ -1,7 +1,10 @@
+import { Network } from "alchemy-sdk"
+
 export const supportedChains = [
     // For MVP will be used only Goerli network, others are commented for now
     // {
     //     id: 1,
+    //     alchemyId: Network.ETH_MAINNET,
     //     name: "Ethereum Mainnet",
     //     symbol: "ETH",
     //     nodeUrl: "https://1rpc.io/eth",
@@ -9,6 +12,7 @@ export const supportedChains = [
     // },
     {
         id: 5,
+        alchemyId: Network.ETH_GOERLI,
         name: "Goerli",
         symbol: "ETH",
         nodeUrl: "https://rpc.ankr.com/eth_goerli",
@@ -16,12 +20,14 @@ export const supportedChains = [
     }, 
     // {
     //     id: 137,
+    //     alchemyId: Network.MATIC_MAINNET,
     //     name: "Polygon Mainnet",
     //     symbol: "MATIC",
     //     nodeUrl: "https://1rpc.io/matic",
     //     explorerUrl: "https://polygonscan.com"
     // }, {
     //     id: 42161,
+    //     alchemyId: Network.ARB_MAINNET,
     //     name: "Arbitrum One",
     //     symbol: "ETH",
     //     nodeUrl: "https://1rpc.io/arb",

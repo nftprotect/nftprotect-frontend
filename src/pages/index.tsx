@@ -21,6 +21,8 @@ import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { NodeNextRequest } from 'next/dist/server/base-http/node'
 import { defaultChain } from '../utils/config'
+import { useAlchemyContext } from '../context/AlchemyContextProvider'
+import { alchemyFetch } from '../utils/alchemy'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -55,7 +57,18 @@ const Home: NextPage = () => {
         addNotifications, 
         notificationsCount
     } = useNotificationContext()
+    const { alchemy } = useAlchemyContext()
 
+    useEffect(() => {
+        alchemy && alchemy.core.getBlockNumber().then((latestBlock) => {
+            console.log("ALCHEMY TEST: The latest block number is", latestBlock, alchemy);
+        })
+        alchemy && alchemyFetch(currentChain.alchemyId, 'core.getBlockNumber', {}).then(
+            (latestBlock) => {
+                console.log("ALCHEMY BE TEST: The latest block number is", latestBlock, alchemy);
+            }
+        )
+    }, [alchemy])
     // useEffect(() => {
     //     addNotifications([
     //         {
