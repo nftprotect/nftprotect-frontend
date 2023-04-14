@@ -1,4 +1,4 @@
-♦import { EvmNft } from '@moralisweb3/common-evm-utils';
+import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import React, { useState } from 'react';
 import {
