@@ -209,7 +209,7 @@ const OriginalRequested = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                 <Trans>your asset may have been stolen!</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "20px"}}>
-                                <Trans>We recommend opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker's wallet. This will prevent them from using or selling your asset, and help to protect your property rights.</Trans>
+                                <Trans>We recommend opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker{'\u0027'}s wallet. This will prevent them from using or selling your asset, and help to protect your property rights.</Trans>
                             </Text>
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center">
