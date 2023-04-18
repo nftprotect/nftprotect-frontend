@@ -19,6 +19,12 @@ import {
     CardHeader,
     CardFooter,
     Link,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow ,
+    PopoverCloseButton,
+    PopoverBody,
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
@@ -120,7 +126,7 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
     }
 
     const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
     function getNftImage() {
@@ -180,7 +186,19 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                         </span>
                                     </Text>
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard  } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                        <Popover placement='top'>
+                                                <PopoverTrigger>
+                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                </PopoverTrigger>
+                                                <PopoverContent w="150px">
+                                                    <PopoverArrow />
+                                                    <PopoverCloseButton />
+                                                    <PopoverBody >
+                                                        <Trans>Copied{"!"}</Trans>
+                                                    </PopoverBody>
+                                                </PopoverContent>
+                                            </Popover>
+                                        
                                         <span id='originalOwnerAddressHolder'>
                                             { formatAddress(originalOwner, 4) }
                                         </span>
@@ -188,6 +206,17 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
 
                                     { getNftImage() }
 
+                                </CardBody>
+
+                                <CardFooter flexDirection="column" alignItems="center">
+                                    <Box w={{base: "60%"}} mb={{base: "20px"}}>
+                                        <Button 
+                                            onClick={ startButtonOnClick }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Request original</Trans>
+                                        </Button>
+                                    </Box>
                                     <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Flex color="accent.light" mr={{base: "20px"}} bg="#FFF" >
                                             <AlertCircle fontSize="36px" />
@@ -198,17 +227,6 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                             </Text>
                                         </Flex>
                                     </Flex>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Box w={{base: "60%"}}>
-                                        <Button 
-                                            onClick={ startButtonOnClick }
-                                            variant="dark-outline"
-                                        >
-                                            <Trans>Request original</Trans>
-                                        </Button>
-                                    </Box>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside> 
@@ -271,8 +289,17 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                             {"If the original NFT is not handed over, you can open a dispute in the Kleros decentralized court. The button to open a dispute will appear on the DApp's main page"}
                                         </Text>
                                     </Flex>
-
-                                    <Flex flexWrap="nowrap" alignItems="center" mb={{base: "20px"}} py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                </CardBody>
+                                <CardFooter flexDirection="column" alignItems="center">
+                                    <Box w={{base: "50%"}} mb={{base: "20px"}}>
+                                        <Button 
+                                            onClick={ onClose}
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Close</Trans>
+                                        </Button>
+                                    </Box>
+                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
                                             <Text textStyle="paragraph" color="muted">
@@ -287,16 +314,6 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                             </Text>
                                         </Flex>
                                     </Flex>
-                                </CardBody>
-                                <CardFooter>
-                                    <Box w={{base: "50%"}}>
-                                        <Button 
-                                            onClick={ onClose}
-                                            variant="dark-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside>
