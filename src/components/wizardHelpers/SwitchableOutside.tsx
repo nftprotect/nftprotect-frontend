@@ -1,7 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
-import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Sandbox2 } from '@web3uikit/icons'
 import React, { useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { useWizard } from 'react-use-wizard';

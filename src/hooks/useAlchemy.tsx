@@ -84,5 +84,9 @@ export function useAlchemy() {
             checkChain();
             return await alchemyFetch(currentChain.alchemyId, 'nft.getMintedNfts', params)
         },
+        getOwnersForNft: async (params: any) => {
+            checkChain();
+            return await alchemyFetch(currentChain.alchemyId, 'nft.getOwnersForNft', params)
+        },
     };
 }

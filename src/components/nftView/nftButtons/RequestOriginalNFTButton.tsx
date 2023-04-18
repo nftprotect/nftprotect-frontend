@@ -1,4 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
@@ -36,10 +35,10 @@ import { t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import ErrorStepContent from './steps/ErrorStepContent'
 import TimeoutStepContent from './steps/TimeoutStepContent'
+import NFT from '../../../classes/NFT';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
@@ -47,7 +46,7 @@ interface ButtonInitialData {
     variant: any // Button apearance variant from theme
 }
 
-const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
+const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -125,30 +124,21 @@ const RequestOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     }
 
     function getNftImage() {
-        let nftImage = <div />
-        let imgUrl = ''
-        // If image available in metadata, use this image, else use "no-image" plug
-        if (metadata) {
-            imgUrl = centralizeIpfsUrl(metadata.image)
-        } else {
-            imgUrl = './images/noImage.png'
-        }
-            nftImage = <Flex
-                            borderRadius={{base: "16px"}}
-                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                            overflow="hidden"
-                            my={{base: "20px"}}
-                            justifyContent="center"
-                            h="150px"
-                            w="150px"
-                        >
-                            <Image 
-                                src={ imgUrl }
-                                alt={t`NFT image`}
-                                borderRadius="1rem"
-                            />
-                        </Flex>
-        return nftImage
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     return (<>

@@ -1,5 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
@@ -42,18 +40,16 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { AlertCircle, Info } from '@web3uikit/icons'
+import { Info } from '@web3uikit/icons'
 import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
-import { AuthErrorCode } from 'moralis/common-core';
-import { NextComponentType } from 'next';
 import { Trans, t } from '@lingui/macro';
 import { IPFSFileUpload } from '../../IPFSFileUpload';
 import { formatEther } from "@ethersproject/units";
 import { centralizeIpfsUrl } from '../../../utils/ipfs';
+import NFT from '../../../classes/NFT';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     originalOwner: string, // Owner address of original NFT,
@@ -61,7 +57,7 @@ interface ButtonInitialData {
     variant: any
 }
 
-const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const didDialogDisclosure = useDisclosure()
@@ -90,30 +86,21 @@ const LostPNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContr
     }
 
     function getNftImage() {
-        let nftImage = <div />
-        let imgUrl = ''
-        // If image available in metadata, use this image, else use "no-image" plug
-        if (metadata) {
-            imgUrl = centralizeIpfsUrl(metadata.image)
-        } else {
-            imgUrl = './images/noImage.png'
-        }
-            nftImage = <Flex
-                            borderRadius={{base: "16px"}}
-                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                            overflow="hidden"
-                            my={{base: "20px"}}
-                            justifyContent="center"
-                            h="150px"
-                            w="150px"
-                        >
-                            <Image 
-                                src={ imgUrl }
-                                alt={t`NFT image`}
-                                borderRadius="1rem"
-                            />
-                        </Flex>
-        return nftImage
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     const handleLostReasonSelection = (event: any) => {

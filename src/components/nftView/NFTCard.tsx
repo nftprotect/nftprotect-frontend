@@ -9,7 +9,6 @@ import {
     Image,
     Flex,
 } from '@chakra-ui/react'
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { useState, useEffect } from 'react';
 import SecureNFTButton from './nftButtons/SecureNFTButton';
 import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
@@ -19,16 +18,17 @@ import { Contract } from '@ethersproject/contracts';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
 import LostPNFTButton from './nftButtons/LostPNFTButton';
-import { BigNumber } from 'moralis/common-core';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
 import { useNotificationContext } from '../../context/NotificationContextProvider';
 import { Trans } from '@lingui/macro';
 import { formatAddress } from '../../utils/helpers';
 import { centralizeIpfsUrl } from '../../utils/ipfs';
+import NFT from '../../classes/NFT';
+import { NftTokenType } from 'alchemy-sdk';
 
 interface NFTInitialData {
-    nft: EvmNft,
+    nft: NFT,
     nftReFetch: Function,
     setRefreshPaused: Function
 }
@@ -67,11 +67,11 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
         notificationsCount
     } = useNotificationContext()
     // Stores the metadata of NFT
-    const [ metadata, setMetadata ] = useState<any>(nft.metadata)
+    //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
-    const [ hasMetadata, setHasMetadata ] = useState(true)
+    //const [ hasMetadata, setHasMetadata ] = useState(true)
     // In case of external metadata fetching it marks if fetch is ended
-    const [ fetchEnded, setFetchEnded ] = useState(false)
+    //const [ fetchEnded, setFetchEnded ] = useState(false)
     // If our NFT is pNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
     // Stores pending request data if available
@@ -81,26 +81,26 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     // Stores original NFT's owner address
     const [ originalOwner, setOriginalOwner ] = useState<string>()
     // Contract of the NFT
-    const tokenContract = nft.contractType === 'ERC721' ?
-        new Contract(nft.tokenAddress.format(), ERC721ABI, library?.getSigner()) :
-        new Contract(nft.tokenAddress.format(), ERC1155ABI, library?.getSigner())
+    const tokenContract = nft.tokenType === NftTokenType.ERC721 ?
+        new Contract(nft.contract.address, ERC721ABI, library?.getSigner()) :
+        new Contract(nft.contract.address, ERC1155ABI, library?.getSigner())
     // Marks if our NFT is pNFT
-    const isWNFT = tokenContract.address.toLowerCase() === nftProtectContract.address.toLowerCase()
+    const isPNFT = nft.isMintedBy(nftProtectContract.address)
     // Marks if this is our pNFT on other address
-    const isOnAnotherAddress = isWNFT ? 
-        nft.ownerOf?.format().toLowerCase() !== account?.toLowerCase() :
+    const isOnAnotherAddress = account && isPNFT ? 
+        nft.isOwnedBy(account) :
         false
 
     // Fetching metadata if it's unawailable by default
-    const fetchMetadataUri = async (uri: string) => {  
-        const response = await fetch(uri, {
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        const data = await response.json()
-        return {response, data}
-    }
+    // const fetchMetadataUri = async (uri: string) => {  
+    //     const response = await fetch(uri, {
+    //         headers: {
+    //             'Accept': 'application/json'
+    //         }
+    //     })
+    //     const data = await response.json()
+    //     return {response, data}
+    // }
 
     // If our NFT is pNFT we have to know about the original NFT
     const loadOriginalNFTData = () => {
@@ -122,24 +122,25 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                 securityLevel: securityLevel
             }
             if (isNotNullAddress(contractAddress721)) {
-                setOriginalNFTData({
+                nft.originalData = {
                     standard: 'ERC721',
                     contractAddress: contractAddress721,
                     ...otherParams
-                })
+                }
             } else if (isNotNullAddress(contractAddress1155)) {
-                setOriginalNFTData({
+                nft.originalData = {
                     standard: 'ERC1155',
                     contractAddress: contractAddress1155,
                     ...otherParams
-                })
+                }
             } else if (isNotNullAddress(contractAddress20)) {
-                setOriginalNFTData({
+                nft.originalData = {
                     standard: 'ERC20',
                     contractAddress: contractAddress20,
                     ...otherParams
-                })
+                }
             }
+            setOriginalNFTData(nft.originalData)
         })
     }
 
@@ -150,20 +151,15 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                 nftProtectContract.requests(requestId).then((request: any) => {
                     setPendingRequest({id: requestId, ...request})
                     const newOwnerAddressFormatted = formatAddress(request.newowner, 4)
-                    // Temporarily workaround
-                    if (isWNFT && isOnAnotherAddress && originalNFTData && 
-                        (originalNFTData.owner.toLowerCase() !== account?.toLowerCase()) &&
-                        nft.ownerOf && (nft.ownerOf.format().toLowerCase() !== account?.toLowerCase())) {
-                            return
-                        }
+
                     return // temporary disable notification creating
                     if (isOnAnotherAddress) {
                         addNotifications([
                             {
                                 id:'request-'+requestId,
-                                image: metadata && {
-                                    url: centralizeIpfsUrl(metadata.image),
-                                    text: metadata.name || nft.name
+                                image: nft.media && nft.media[0] && {
+                                    url: nft.thumbnail,
+                                    text: nft.title
                                 },
                                 callback: () => {alert('Pressed!')},
                                 children:
@@ -199,22 +195,22 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
 
     useEffect(() => {
         // If no metadata preloaded trying to load it by tokenUri
-        if (!metadata && hasMetadata) {
-            if (nft.tokenUri) {
-                fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
-                    if (response.ok) {
-                        setMetadata(data)
-                    } else {
-                        setHasMetadata(false)
-                    }
-                    setFetchEnded(true)
-                }).catch(() => setFetchEnded(true))
-            } else {
-                setHasMetadata(false)
-                setFetchEnded(true)
-            }
-        }
-        if (isWNFT) {
+        // if (!metadata && hasMetadata) {
+        //     if (nft.tokenUri) {
+        //         fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
+        //             if (response.ok) {
+        //                 setMetadata(data)
+        //             } else {
+        //                 setHasMetadata(false)
+        //             }
+        //             setFetchEnded(true)
+        //         }).catch(() => setFetchEnded(true))
+        //     } else {
+        //         setHasMetadata(false)
+        //         setFetchEnded(true)
+        //     }
+        // }
+        if (isPNFT) {
             // Load info about original NFT
             loadOriginalNFTData()
             // Load original owner address
@@ -237,7 +233,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
 
     let result = <div />
     let buttons = <div />
-    if (isWNFT) {
+    if (isPNFT) {
         // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
@@ -248,7 +244,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     <Box mb={[2]}>
                         <UnSecureNFTButton 
                             nft={ nft } 
-                            metadata={ metadata } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
                             tokenContract={ tokenContract }
@@ -263,7 +258,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                         <Box mb={[2]}>
                             <RequestOriginalNFTButton
                                 nft={ nft } 
-                                metadata={ metadata } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
                                 tokenContract={ tokenContract }
@@ -278,7 +272,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             <Box mb={[2]}>
                                 <ArbitrateOwnershipAdjustmentButton
                                     nft={ nft } 
-                                    metadata={ metadata } 
                                     nftReFetch={ nftReFetch }
                                     setRefreshPaused = { setRefreshPaused }
                                     pendingRequest={ pendingRequest }
@@ -334,7 +327,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     <Box mb={[2]}>
                         <LostPNFTButton 
                             nft={ nft } 
-                            metadata={ metadata }
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
                             tokenContract={ tokenContract }
@@ -344,14 +336,13 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     </Box>
                     <Box mb={[2]}>
                         <ReleaseOriginalNFTButton
-                        nft={ nft } 
-                        metadata={ metadata } 
-                        nftReFetch={ nftReFetch }
-                        setRefreshPaused = { setRefreshPaused }
-                        tokenContract={ tokenContract }
-                        pendingRequest={ pendingRequest?.id }
-                        variant={"primary-solid"}
-                    />
+                            nft={ nft } 
+                            nftReFetch={ nftReFetch }
+                            setRefreshPaused = { setRefreshPaused }
+                            tokenContract={ tokenContract }
+                            pendingRequest={ pendingRequest?.id }
+                            variant={"primary-solid"}
+                        />
                     </Box>
                 </>)
             } 
@@ -361,7 +352,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
             <Box mb={[2]}>
                 <SecureNFTButton 
                     nft={ nft } 
-                    metadata={ metadata }
                     nftReFetch={ nftReFetch }
                     setRefreshPaused={ setRefreshPaused }
                     tokenContract={ tokenContract }
@@ -370,44 +360,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
             </Box>
         )
     }
-    if (metadata) {
-        // Metadata already loaded, showing it
-        const img = centralizeIpfsUrl(metadata?.image)
-        result = <Image
-                    src={ img }
-                    position="absolute"
-                    borderRadius="1rem"
-                    h="100%"
-                    w="100%"
-                />
-    } else if (!fetchEnded) {
-        // Metadata is still loading, showing loading
-        result =    <Flex
-                        position="absolute"
-                        borderRadius="1rem"
-                        h="100%"
-                        w="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <Spinner speed='0.65s'  />
-                    </Flex>
-    } else {
-        // No metadata, showing the plug
-        result = <Image src={'./images/noImage.png'} 
-                    position="absolute"
-                    borderRadius="1rem"
-                    h="100%"
-                    w="100%"
-                />
-    }
-
-    // Temporarily workaround
-    if (isWNFT && isOnAnotherAddress && originalNFTData && 
-        (originalNFTData.owner.toLowerCase() !== account?.toLowerCase()) &&
-        nft.ownerOf && (nft.ownerOf.format().toLowerCase() !== account?.toLowerCase())) {
-            return <></>
-        }
 
     return (
         <Card 
@@ -436,7 +388,13 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             mb={{base: "1.25rem"}}
                             justifyContent="center"
                         >
-                            { result }
+                            <Image
+                                src={ nft.thumbnail }
+                                position="absolute"
+                                borderRadius="1rem"
+                                h="100%"
+                                w="100%"
+                            />
                         </Flex>
 
                         <Text 
@@ -446,7 +404,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             textTransform="uppercase"
                             mb={{base: "0.625rem"}}
                         >
-                            { metadata?.name || nft.name }
+                            { nft.title }
                         </Text>
 
                         <Text
@@ -455,7 +413,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             lineHeight={{base: "0.75rem"}}
                             mb={{base: "1.25rem"}}
                         >
-                            { nft.name }
+                            { nft.contract.name }
                         </Text>
                     </Flex>
 

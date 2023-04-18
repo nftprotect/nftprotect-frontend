@@ -1,6 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { Twitter } from '@web3uikit/icons';
-import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
@@ -37,10 +34,10 @@ import { t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import ErrorStepContent from './steps/ErrorStepContent'
 import TimeoutStepContent from './steps/TimeoutStepContent'
+import NFT from '../../../classes/NFT';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
@@ -48,7 +45,7 @@ interface ButtonInitialData {
     variant: any
 }
 
-const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, pendingRequest, variant}: ButtonInitialData) => {
+const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -149,34 +146,25 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
     }
 
     const copyNewOwnerToClipboard = () => {
-        copyTextToClipboard(nft.ownerOf?.format() || '', '#newOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(nft.ownerAddress || '', '#newOwnerAddressHolder').then(() => alert('Copied!'))
     }
 
     function getNftImage() {
-        let nftImage = <div />
-        let imgUrl = ''
-        // If image available in metadata, use this image, else use "no-image" plug
-        if (metadata) {
-            imgUrl = centralizeIpfsUrl(metadata.image)
-        } else {
-            imgUrl = './images/noImage.png'
-        }
-            nftImage = <Flex
-                            borderRadius={{base: "16px"}}
-                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                            overflow="hidden"
-                            my={{base: "20px"}}
-                            justifyContent="center"
-                            h="150px"
-                            w="150px"
-                        >
-                            <Image 
-                                src={ imgUrl }
-                                alt={t`NFT image`}
-                                borderRadius="1rem"
-                            />
-                        </Flex>
-        return nftImage
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     return (<>
@@ -225,7 +213,7 @@ const ReleaseOriginalNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, 
                                     <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "20px"}} textAlign="center">
                                         <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
                                         <span id='newOwnerAddressHolder'>
-                                            { formatAddress(nft.ownerOf?.format() || '', 4) }
+                                            { formatAddress(nft.ownerAddress || '', 4) }
                                         </span>
                                         {'\u003F'}
                                     </Text>

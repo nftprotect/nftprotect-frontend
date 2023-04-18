@@ -1,4 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
@@ -31,17 +30,18 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
 import { centralizeIpfsUrl } from '../../../utils/ipfs';
+import NFT from '../../../classes/NFT';
+import { NftTokenType } from 'alchemy-sdk';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
     variant: any
 }
 
-const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const didDialogDisclosure = useDisclosure()
@@ -167,10 +167,10 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
     }
 
     const startButtonOnClick = () => {
-        const tokenContractAddress = nft.tokenAddress.format()
+        const tokenContractAddress = nft.contract.address
         const tokenId = nft.tokenId
         try {
-            if (nft.contractType === 'ERC721') {
+            if (nft.tokenType === NftTokenType.ERC721) {
                 secureNFT(
                     tokenContract,
                     () => tokenContract.getApproved(nft.tokenId),
@@ -178,7 +178,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
                     () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrerAddress, {value: fee})
                 )
-            } else if (nft.contractType === 'ERC1155') {
+            } else if (nft.tokenType === NftTokenType.ERC1155) {
                 secureNFT(
                     tokenContract,
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
@@ -187,7 +187,7 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
                     () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
                 )
             } else {
-                console.log(`Unknown NFT contract type: ${nft.contractType}`)
+                console.log(`Unknown NFT contract type: ${nft.tokenType}`)
             }
         } catch (err: any) {
             handleUnknownError(err)
@@ -195,30 +195,21 @@ const SecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCont
     }
 
     function getNftImage() {
-        let nftImage = <div />
-        let imgUrl = ''
-        // If image available in metadata, use this image, else use "no-image" plug
-        if (metadata) {
-            imgUrl = centralizeIpfsUrl(metadata.image)
-        } else {
-            imgUrl = './images/noImage.png'
-        }
-            nftImage = <Flex
-                            borderRadius={{base: "16px"}}
-                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                            overflow="hidden"
-                            my={{base: "20px"}}
-                            justifyContent="center"
-                            h="150px"
-                            w="150px"
-                        >
-                            <Image 
-                                src={ imgUrl }
-                                alt={t`NFT image`}
-                                borderRadius="1rem"
-                            />
-                        </Flex>
-        return nftImage
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     return (<>

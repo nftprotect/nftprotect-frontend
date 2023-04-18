@@ -13,61 +13,49 @@ import {
     Flex,
     useDisclosure
 } from '@chakra-ui/react'
-import { useEvmWalletNFTs, useEvmNFTMetadata } from '@moralisweb3/next';
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import NFTCard from './NFTCard'
 import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
 import { useAlchemy } from '../../hooks/useAlchemy';
-import { NftFilters } from 'alchemy-sdk';
+import { Nft as NFTInterface, NftFilters } from 'alchemy-sdk';
+import NFT from '../../classes/NFT';
 
 const NFTView = () => {
-    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts } = useAlchemy()
-    const { currentChain, account, active, library, nftProtectContract } = useAppContext()
+    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
+    const appContext = useAppContext()
+    const { currentChain, account, active, library, nftProtectContract } = appContext
     const { isOpen, onToggle } = useDisclosure()
     // Holds component data refresh while refreshPaused
     const [ refreshPaused, setRefreshPaused ] = useState(false)
     const [ refreshNeeded, setRefreshNeeded ] = useState(false)
 
-    const { data, fetch, cursor, page, pageSize, total} = useEvmWalletNFTs({
-        chain: currentChain.id,
-        address: account || '0x0'
-    })
-
-    const nftIsWNFT = (nft: EvmNft) => nft.tokenAddress.format().toLowerCase() === nftpContractAddress.toLowerCase()
-
     const reFetch = (force = false) => {
         if (force) {
             setRefreshNeeded(false)
             console.log('Fetching NFTs forced...')
-            fetch()
+            fetchAllNfts()
         } else {
             if (refreshPaused) {
                 console.log('Fetching NFTs paused, waiting...')
                 setRefreshNeeded(true)
             } else if (!refreshNeeded) {
                 console.log('Fetching NFTs...')
-                fetch()
+                fetchAllNfts()
             }
         }
     }
 
-    const renderNFT = (nft: EvmNft) => {
-        console.log('NFT: ', nft.name, nft)
+    const renderNFT = (nft: NFT) => {
+        console.log('NFT: ', nft.title, nft)
         return <NFTCard
-            key={nft.tokenHash}
+            key={`${nft.contract.address}:${nft.tokenId}`}
             nft={nft}
             nftReFetch={reFetch}
             setRefreshPaused={setRefreshPaused}
         />
     }
-    const {data: dummyOriginalNFT} = useEvmNFTMetadata({ 
-        chain: currentChain.id,
-        address: nftpContractAddress,
-        tokenId: '1'
-    })
 
     const subscribeNftTransfers = () => {
         const nftEventReceived = () => {
@@ -87,57 +75,107 @@ const NFTView = () => {
         }
     }
 
-    const ownNfts = data?.filter(nft => !nftIsWNFT(nft) )
-    const wNfts = data?.filter(nft => nftIsWNFT(nft) )
-    const ownNftElements = ownNfts?.map(renderNFT)
-    const wNftElements = wNfts?.map(renderNFT)
-    //const transferedWNfts: EvmNft[] = []
+    // Stores all NFTs owned by account (with pNFTS)
+    const [ownedNfts, setOwnedNfts] = useState<NFT[]>()
+    // Stores all pNFTs minted by account (owned and given)
+    const [mintedNfts, setMintedNfts] = useState<NFT[]>()
+    // Stores original NFTs (not protected) owned by account
+    const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
+    // Stores all pNFTs owned by account
+    const [ownedPNfts, setOwnedPNfts] = useState<NFT[]>()
+    // Stores pNFTs given to another accounts
+    const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
 
-    // Following block is for testing purposes only
-    // Remove after The Graph integration
-    const restOfParams = {
-        chain: currentChain.id,
-        address: nftpContractAddress
-    }
-    const transferedWNfts: any[] = [
-        useEvmNFTMetadata({tokenId: '32', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '33', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '35', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '36', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '37', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '38', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '39', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '40', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '41', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '42', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '43', ...restOfParams}).data,
-        useEvmNFTMetadata({tokenId: '44', ...restOfParams}).data,
-    ].filter((item: EvmNft|undefined) => {
-        return item && item.ownerOf?.format().toLowerCase() !== account?.toLowerCase()
-    })
-    // Ends here
-    const transferedWNftElements:any[] = transferedWNfts?.map(renderNFT)
-
-    useEffect(() => {
+    // Loads all the NFTs and pNFTs owned by user
+    const fetchOwnedNfts = () => {
         if (currentChain && account) {
+            // Own NFTs
             getNftsForOwner([
                 account
-            ]).then((result) => {
-                console.log('ALCHEMY ALL MY NFTS:', result)
+            ]).then(({blockHash, ownedNfts, totalCount}) => {
+                const nftObjects = ownedNfts
+                    .map((item: NFTInterface) => {
+                        return new NFT(item, appContext, {ownerAddress: account})
+                    })
+                Promise.all(nftObjects.map((nft: NFT) => {
+                    return nft.loadInitialData()
+                })).then(() => {
+                    console.log('ALCHEMY ALL MY NFTS:', nftObjects)
+                    setOwnedNfts(nftObjects);
+                })
             })
         }
-    }, [currentChain, account])
+    }
+
+    // Loads all the pNFTs minted by user
+    const fetchMintedNfts = () => {
+        if (currentChain && account) {
+            // pNFTs
+            getMintedNfts([
+                account,
+                {
+                    contractAddresses: [nftpContractAddress]
+                }
+            ]).then(({blockHash, nfts, totalCount}) => {
+                const nftObjects = nfts
+                    .map((item: NFTInterface) => {
+                        return new NFT(item, appContext)
+                    })
+                
+                Promise.all(nftObjects.map((nft: NFT) => {
+                    return nft.loadInitialData()
+                })).then(() => {
+                    console.log('ALCHEMY ALL pNFTS:', nftObjects)
+                    setMintedNfts(nftObjects);
+                })
+            })
+        }
+    }
+
+    const fetchAllNfts = () => {
+        fetchOwnedNfts()
+        fetchMintedNfts()
+    }
+
+    // Reload NFTs when chain or account changed
+    useEffect(fetchAllNfts, [currentChain, account])
 
     useEffect(() => {
         // Update data when refresh unpaused if needed
         if (!refreshPaused) {
             if (refreshNeeded) {
-                fetch()
+                fetchAllNfts()
                 setRefreshNeeded(false)
                 console.log('Fetching NFTs after pause...')
             }
         }
     }, [refreshPaused, refreshNeeded])
+
+    useEffect(() => {
+        // non-protected NFTs owned by account
+        setMyOwnNfts(
+            ownedNfts?.filter((item: NFT) => {
+                return !item.isMintedBy(nftpContractAddress)
+            })
+        )
+
+        // all pNFTs owned by account (minted by him or another account)
+        setOwnedPNfts(
+            ownedNfts?.filter((item: NFT) => {
+                return item.isMintedBy(nftpContractAddress)
+            })
+        )
+    }, [ownedNfts])
+
+    useEffect(() => {
+        if (account) {
+            setGivenPNfts(
+                mintedNfts?.filter((item: NFT) => {
+                    return !item.isOwnedBy(account)
+                })
+            )
+        }
+    }, [mintedNfts])
 
     useEffect(subscribeNftTransfers, [account, active])
 
@@ -162,7 +200,7 @@ const NFTView = () => {
                     </Flex>
 
                     <AccordionPanel px="0" pb={4}>
-                        { ownNftElements && (ownNftElements.length > 0) ? 
+                        { myOwnNfts && (myOwnNfts.length > 0) ? 
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, 8rem)",
@@ -172,7 +210,7 @@ const NFTView = () => {
                             gap={[6]}
                             my={[4, 8]}
                         >
-                            { ownNftElements }
+                            { myOwnNfts.map(nft => renderNFT(nft)) }
                         </Grid> : 
                         <Text color={'#FFF'}><Trans>You have no NFTs in your wallet.</Trans></Text> }
                     </AccordionPanel>
@@ -196,7 +234,7 @@ const NFTView = () => {
                     </Flex>
                         
                     <AccordionPanel px="0" pb={4}>
-                        { transferedWNftElements && (transferedWNftElements.length > 0) ?
+                        { givenPNfts && (givenPNfts.length > 0) ?
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, 8rem)",
@@ -206,7 +244,7 @@ const NFTView = () => {
                             gap={[6]}
                             my={[4, 8]}
                         >
-                            { transferedWNftElements }
+                            { givenPNfts.map(nft => renderNFT(nft)) }
                         </Grid> :
                         <Text color={'#FFF'}><Trans>You have no pNFTs transfered to third parties.</Trans></Text> }
                     </AccordionPanel>
@@ -233,7 +271,7 @@ const NFTView = () => {
                     </Flex>
                         
                     <AccordionPanel px="0" pb={4}>
-                        { wNftElements && (wNftElements.length > 0) ?
+                        { ownedPNfts && (ownedPNfts.length > 0) ?
                         <Grid
                             templateColumns={{
                                 base: "repeat(auto-fill, 8rem)",
@@ -243,7 +281,7 @@ const NFTView = () => {
                             gap={[6]}
                             my={[4, 8]}
                         >
-                            { wNftElements }
+                            { ownedPNfts.map(nft => renderNFT(nft)) }
                         </Grid> :
                         <Text color={'#FFF'}><Trans>You have no protected NFTs yet</Trans></Text> }
                     </AccordionPanel>

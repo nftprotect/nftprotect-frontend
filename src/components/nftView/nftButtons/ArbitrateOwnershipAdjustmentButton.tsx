@@ -1,4 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config' 
 import React, { useState } from 'react';
 import {
@@ -35,16 +34,15 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../NFTCard';
 import { Trans } from '@lingui/macro'
 import { generateArbitratorExtraData, KlerosCourts, klerosCases } from '../../../utils/kleros';
-import { Form, Field, Formik } from 'formik'
 import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther } from '@ethersproject/units';
 import { getCentralizedUrl, getRelativeIpfsUrl, centralizeIpfsUrl } from '../../../utils/ipfs';
+import NFT from '../../../classes/NFT';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function // Function to pause/unpause nft list updating
     pendingRequest: ActionRequest,
@@ -52,7 +50,7 @@ interface ButtonInitialData {
     loadPendingRequest: Function, // Function to reload a pending request
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library } = useAppContext()
     const { ipfs } = useIPFSContext()
@@ -165,24 +163,21 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, metadata, nftReFetch, setRefre
     }
 
     function getNftImage() {
-        if (metadata) {
-            let imgUrl = centralizeIpfsUrl(metadata.image)
-            return <Flex
-                        border="2px solid rgba(255, 255, 255, 0.5)"
-                        borderRadius={["16px"]}
-                        overflow="hidden"
-                        my={{base: "1.25rem"}}
-                        justifyContent="center"
-                        h="150px"
-                        w="150px"
-                    > 
-                        <Image 
-                            src={ imgUrl }
-                            alt={t`NFT image`}
-                            borderRadius="1rem"
-                        />
-                    </Flex>
-        }
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     return (<>

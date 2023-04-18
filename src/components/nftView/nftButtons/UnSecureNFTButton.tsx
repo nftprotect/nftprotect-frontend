@@ -1,5 +1,3 @@
-import { EvmNft } from '@moralisweb3/common-evm-utils';
-import { EvmNftMetadataish } from '@moralisweb3/common-evm-utils';
 import { dialogsTimeout } from '../../../utils/config';
 import { Contract } from "@ethersproject/contracts";
 import React, { useState } from 'react';
@@ -31,22 +29,22 @@ import { Trans } from '@lingui/macro';
 import { defaultArbitrator } from '../../../utils/config';
 import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import { t } from '@lingui/macro';
+import NFT from '../../../classes/NFT';
 
 interface ButtonInitialData {
-    nft: EvmNft,
-    metadata: any, // metadata of EvmNft can be empty, so passing it separately
+    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     tokenContract: Contract,
     variant: any
 }
 
-const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
+const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
 
     const { nftProtectContract, account } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const name = metadata?.name || nft.name
+    const name = nft.title
 
     enum StepMapping {
         start,
@@ -117,30 +115,21 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
     }
 
     function getNftImage() {
-        let nftImage = <div />
-        let imgUrl = ''
-        // If image available in metadata, use this image, else use "no-image" plug
-        if (metadata) {
-            imgUrl = centralizeIpfsUrl(metadata.image)
-        } else {
-            imgUrl = './images/noImage.png'
-        }
-            nftImage = <Flex
-                            borderRadius={{base: "16px"}}
-                            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-                            overflow="hidden"
-                            my={{base: "20px"}}
-                            justifyContent="center"
-                            h="150px"
-                            w="150px"
-                        >
-                            <Image 
-                                src={ imgUrl }
-                                alt={t`NFT image`}
-                                borderRadius="1rem"
-                            />
-                        </Flex>
-        return nftImage
+        return <Flex
+            borderRadius={{base: "16px"}}
+            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
+            overflow="hidden"
+            my={{base: "20px"}}
+            justifyContent="center"
+            h="150px"
+            w="150px"
+        >
+            <Image 
+                src={ nft.thumbnail }
+                alt={ nft.title || t`NFT image`}
+                borderRadius="1rem"
+            />
+        </Flex>
     }
 
     return (<>
@@ -266,7 +255,6 @@ const UnSecureNFTButton = ({nft, metadata, nftReFetch, setRefreshPaused, tokenCo
                                 <CardFooter>
                                     <Box w={{base: "60%"}}>
                                         <SecureNFTButton 
-                                            metadata={metadata} 
                                             nft={nft} 
                                             nftReFetch={nftReFetch}
                                             setRefreshPaused={setRefreshPaused}
