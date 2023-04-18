@@ -79,6 +79,7 @@ const NFTView = () => {
     const [ownedNfts, setOwnedNfts] = useState<NFT[]>()
     // Stores all pNFTs minted by account (owned and given)
     const [mintedNfts, setMintedNfts] = useState<NFT[]>()
+
     // Stores original NFTs (not protected) owned by account
     const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
     // Stores all pNFTs owned by account
@@ -193,7 +194,7 @@ const NFTView = () => {
                                     <Trans>All your NFT</Trans> 
                                 </Text>
                                 <Text textStyle="h3">
-                                    <Trans>{"It's all yours!"}</Trans>
+                                    <Trans>{"It's all not protected yet"}</Trans>
                                 </Text>
                             </Flex>
                         </AccordionButton>
@@ -224,10 +225,10 @@ const NFTView = () => {
                         <AccordionButton px="0" py={[4, 6]}>
                             <Flex flexDirection="column" alignItems="flex-start">
                                 <Text textStyle="h2">
-                                    <Trans>All your pNFT</Trans> 
+                                    <Trans>Transfered pNFT</Trans> 
                                 </Text>
                                 <Text textStyle="h3">
-                                    <Trans>This section displays your pNFTs that are linked to original NFTs owned by other users</Trans>
+                                    <Trans>This section displays your pNFTs that were moved to another adresses</Trans>
                                 </Text>
                             </Flex>
                         </AccordionButton>
@@ -264,7 +265,7 @@ const NFTView = () => {
                                     <Trans>All your protected assets</Trans> 
                                 </Text>
                                 <Text textStyle="h3">
-                                    <Trans>This section displays all the NFTs and their associated pNFTs that you own</Trans>
+                                    <Trans>This section displays all the pNFTs that you own</Trans>
                                 </Text>
                             </Flex>
                         </AccordionButton>

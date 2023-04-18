@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-04-18 23:34+0700\n"
+"POT-Creation-Date: 2023-04-19 00:35+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,15 +11,11 @@ msgstr ""
 msgid "(Paid separately)"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:193
+#: src/components/nftView/NFTView.tsx:194
 msgid "All your NFT"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:227
-msgid "All your pNFT"
-msgstr ""
-
-#: src/components/nftView/NFTView.tsx:264
+#: src/components/nftView/NFTView.tsx:265
 msgid "All your protected assets"
 msgstr ""
 
@@ -81,7 +77,7 @@ msgstr ""
 msgid "Connect your wallet"
 msgstr ""
 
-#: src/pages/index.tsx:125
+#: src/pages/index.tsx:132
 msgid "Connect your wallet<0/>& get protected"
 msgstr ""
 
@@ -103,7 +99,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/pages/index.tsx:117
+#: src/pages/index.tsx:124
 msgid "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 msgstr ""
 
@@ -176,8 +172,8 @@ msgstr ""
 msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:196
-msgid "It's all yours!"
+#: src/components/nftView/NFTView.tsx:197
+msgid "It's all not protected yet"
 msgstr ""
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:274
@@ -271,7 +267,7 @@ msgstr ""
 msgid "Please complete DID verification"
 msgstr ""
 
-#: src/pages/index.tsx:133
+#: src/pages/index.tsx:140
 msgid "Please connect your wallet to see your digital <0/>assets and protect them"
 msgstr ""
 
@@ -311,7 +307,7 @@ msgstr ""
 msgid "Protect NFT"
 msgstr ""
 
-#: src/pages/index.tsx:110
+#: src/pages/index.tsx:117
 msgid "Protect your digital <0/>assets from bad<1/> actors"
 msgstr ""
 
@@ -441,12 +437,12 @@ msgstr ""
 msgid "The pNFT will be burned and the original NFT will be sent to you"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:267
-msgid "This section displays all the NFTs and their associated pNFTs that you own"
+#: src/components/nftView/NFTView.tsx:268
+msgid "This section displays all the pNFTs that you own"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:230
-msgid "This section displays your pNFTs that are linked to original NFTs owned by other users"
+#: src/components/nftView/NFTView.tsx:231
+msgid "This section displays your pNFTs that were moved to another adresses"
 msgstr ""
 
 #: src/components/loginForm/DIDVerification.tsx:36
@@ -492,6 +488,10 @@ msgstr ""
 
 #: src/components/nftView/nftButtons/ReleaseOriginalNFTButton.tsx:183
 msgid "Transfer original"
+msgstr ""
+
+#: src/components/nftView/NFTView.tsx:228
+msgid "Transfered pNFT"
 msgstr ""
 
 #: src/components/nftView/DidVerificationRequiredCard.tsx:26
@@ -582,15 +582,15 @@ msgstr ""
 msgid "You cancelled a transaction"
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:215
+#: src/components/nftView/NFTView.tsx:216
 msgid "You have no NFTs in your wallet."
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:249
+#: src/components/nftView/NFTView.tsx:250
 msgid "You have no pNFTs transfered to third parties."
 msgstr ""
 
-#: src/components/nftView/NFTView.tsx:286
+#: src/components/nftView/NFTView.tsx:287
 msgid "You have no protected NFTs yet"
 msgstr ""
 
