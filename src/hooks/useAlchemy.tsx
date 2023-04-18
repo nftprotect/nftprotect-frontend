@@ -7,7 +7,7 @@ export interface AlchemyContextInterface {
 }
 
 const alchemyFetch = async (alchemyChainId: string, method: string, params: any) => {
-    const response = await fetch('http://localhost:3000/api/alchemy/alchemy', {
+    const response = await fetch('/api/alchemy/alchemy', {
         method: "POST",
         headers: {
             'Accept': 'application/json'

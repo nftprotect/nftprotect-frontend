@@ -15,6 +15,8 @@ import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotificationContext } from '../context/NotificationContextProvider'
 import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
+import { useIPFSContext } from '../context/IPFSContextProvider'
+import { useEffect } from 'react'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -49,6 +51,11 @@ const Home: NextPage = () => {
         addNotifications, 
         notificationsCount
     } = useNotificationContext()
+    const { setBaseUrl } = useIPFSContext()
+
+    useEffect(() => {
+        setBaseUrl(window.location.origin)
+    }, [])
 
     // useEffect(() => {
     //     addNotifications([
