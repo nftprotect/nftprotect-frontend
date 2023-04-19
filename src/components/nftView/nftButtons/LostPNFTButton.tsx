@@ -129,7 +129,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
             <Trans>Lost pNFT</Trans>
         </Button>
 
-        <DidRequiredDialog disclosure={didDialogDisclosure}/>
+        {/* <DidRequiredDialog disclosure={didDialogDisclosure}/> */}
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}

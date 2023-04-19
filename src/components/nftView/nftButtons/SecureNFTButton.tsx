@@ -218,7 +218,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
            <Trans>Protect NFT</Trans>
         </Button>
 
-        <DidRequiredDialog disclosure={didDialogDisclosure}/>
+        {/* <DidRequiredDialog disclosure={didDialogDisclosure}/> */}
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}

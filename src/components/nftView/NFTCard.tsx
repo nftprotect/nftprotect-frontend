@@ -152,6 +152,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                     pendingRequest={ pendingRequest }
                                     originalOwner={ originalNFTData.ownerAddress }
                                     variant={"primary-solid"}
+                                    requestTimedOut={ requestTimedOut }
                                 />
                             </Box>
                     // Otherwise we can only wait
