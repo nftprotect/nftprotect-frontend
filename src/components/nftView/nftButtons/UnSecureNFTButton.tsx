@@ -258,7 +258,6 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
                                             nft={nft} 
                                             nftReFetch={nftReFetch}
                                             setRefreshPaused={setRefreshPaused}
-                                            tokenContract={tokenContract}
                                             variant={"dark-outline"}
                                         />
                                     </Box>
