@@ -45,8 +45,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
     // Marks if request is timed out (if exists)
     const [ requestTimedOut, setRequestTimedOut] = useState(false)
-    // Stores original NFT's owner address
-    const [ originalOwner, setOriginalOwner ] = useState<string>()
 
     // Fetching metadata if it's unawailable by default
     // const fetchMetadataUri = async (uri: string) => {  
@@ -138,7 +136,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
                                 tokenContract={ nft.loadedContract }
-                                originalOwner={ originalOwner || '' }
+                                originalOwner={ originalNFTData.ownerAddress }
                                 variant={"primary-solid"}
                             />
                         </Box>
@@ -152,7 +150,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                     nftReFetch={ nftReFetch }
                                     setRefreshPaused = { setRefreshPaused }
                                     pendingRequest={ pendingRequest }
-                                    originalOwner={ originalOwner || '' }
+                                    originalOwner={ originalNFTData.ownerAddress }
                                     variant={"primary-solid"}
                                 />
                             </Box>
@@ -206,7 +204,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             nft={ nft } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
-                            originalOwner={ originalOwner || '' }
+                            originalOwner={ originalNFTData.ownerAddress }
                             variant={ "primary-solid" }
                         />
                     </Box>
