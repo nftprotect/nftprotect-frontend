@@ -1,4 +1,3 @@
-import { Web3Provider } from '@ethersproject/providers'
 import {
     Heading,
     Card, 
@@ -12,9 +11,6 @@ import {
 import { useState, useEffect } from 'react';
 import SecureNFTButton from './nftButtons/SecureNFTButton';
 import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
-import ERC721ABI from '../../abi/ERC721ABI';
-import ERC1155ABI from '../../abi/ERC1155ABI';
-import { Contract } from '@ethersproject/contracts';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
 import LostPNFTButton from './nftButtons/LostPNFTButton';
@@ -22,42 +18,13 @@ import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
 import { useNotificationContext } from '../../context/NotificationContextProvider';
 import { Trans } from '@lingui/macro';
-import { formatAddress } from '../../utils/helpers';
-import { centralizeIpfsUrl } from '../../utils/ipfs';
 import NFT from '../../classes/NFT';
-import { NftTokenType } from 'alchemy-sdk';
+import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
 
 interface NFTInitialData {
     nft: NFT,
     nftReFetch: Function,
     setRefreshPaused: Function
-}
-
-interface OriginalNFTData {
-    standard: string,
-    contractAddress: string,
-    tokenId: number,
-    amount: number,
-    owner: string,
-    securityLevel: number
-}
-
-export interface ActionRequest {
-    id: number,
-    reqtype: number,
-    tokenId: number,
-    newowner: string,
-    timeout: number,
-    status: RequestStatus,
-    arbitrator: string,
-    disputeId: number
-}
-
-export enum RequestStatus {
-    Initial,
-    Accepted,
-    Rejected,
-    Disputed
 }
 
 const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
@@ -80,16 +47,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     const [ requestTimedOut, setRequestTimedOut] = useState(false)
     // Stores original NFT's owner address
     const [ originalOwner, setOriginalOwner ] = useState<string>()
-    // Contract of the NFT
-    const tokenContract = nft.tokenType === NftTokenType.ERC721 ?
-        new Contract(nft.contract.address, ERC721ABI, library?.getSigner()) :
-        new Contract(nft.contract.address, ERC1155ABI, library?.getSigner())
-    // Marks if our NFT is pNFT
-    const isPNFT = nft.isMintedBy(nftProtectContract.address)
-    // Marks if this is our pNFT on other address
-    const isOnAnotherAddress = account && isPNFT ? 
-        nft.isOwnedBy(account) :
-        false
 
     // Fetching metadata if it's unawailable by default
     // const fetchMetadataUri = async (uri: string) => {  
@@ -101,97 +58,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     //     const data = await response.json()
     //     return {response, data}
     // }
-
-    // If our NFT is pNFT we have to know about the original NFT
-    const loadOriginalNFTData = () => {
-        const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
-        nftProtectContract.tokens(nft.tokenId).then(([ 
-            standardId, 
-            contractAddress721, 
-            contractAddress1155,
-            contractAddress20,
-            tokenId,
-            amount,
-            owner,
-            securityLevel
-        ]:any[]) => {
-            const otherParams = {
-                tokenId: tokenId,
-                amount: amount,
-                owner: owner,
-                securityLevel: securityLevel
-            }
-            if (isNotNullAddress(contractAddress721)) {
-                nft.originalData = {
-                    standard: 'ERC721',
-                    contractAddress: contractAddress721,
-                    ...otherParams
-                }
-            } else if (isNotNullAddress(contractAddress1155)) {
-                nft.originalData = {
-                    standard: 'ERC1155',
-                    contractAddress: contractAddress1155,
-                    ...otherParams
-                }
-            } else if (isNotNullAddress(contractAddress20)) {
-                nft.originalData = {
-                    standard: 'ERC20',
-                    contractAddress: contractAddress20,
-                    ...otherParams
-                }
-            }
-            setOriginalNFTData(nft.originalData)
-        })
-    }
-
-    // Checks if pNFT has request to transfer
-    const loadPendingRequest = () => {
-        nftProtectContract.tokenToRequest(nft.tokenId).then((requestId: number) => {
-            if (requestId.toString() !== '0') {
-                nftProtectContract.requests(requestId).then((request: any) => {
-                    setPendingRequest({id: requestId, ...request})
-                    const newOwnerAddressFormatted = formatAddress(request.newowner, 4)
-
-                    return // temporary disable notification creating
-                    if (isOnAnotherAddress) {
-                        addNotifications([
-                            {
-                                id:'request-'+requestId,
-                                image: nft.media && nft.media[0] && {
-                                    url: nft.thumbnail,
-                                    text: nft.title
-                                },
-                                callback: () => {alert('Pressed!')},
-                                children:
-                                    <div>
-                                        <Heading 
-                                            fontSize={{base: "0.875rem"}}
-                                            mb={{base: "0.625rem"}}
-                                        >
-                                            <Trans values={{newOwnerAddressFormatted}}>User {newOwnerAddressFormatted} is requesting the original NFT.</Trans>
-                                        </Heading>
-                                        <Text
-                                            fontSize={{base: "0.625rem"}}
-                                        > 
-                                            <Trans>Do you want to transfer the original to them?</Trans>
-                                        </Text>
-                                    </div>, 
-                                severity: 0,
-                                dateCreated: new Date()
-                            }
-                        ])
-                    }
-                })
-            }
-        })
-    }
-
-    // Checks if pNFT has request to transfer
-    const loadOriginalOwner = () => {
-        nftProtectContract.originalOwnerOf(nft.tokenId).then((address: string) => {
-            setOriginalOwner(address)
-        })
-    }
 
     useEffect(() => {
         // If no metadata preloaded trying to load it by tokenUri
@@ -210,13 +76,24 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
         //         setFetchEnded(true)
         //     }
         // }
-        if (isPNFT) {
-            // Load info about original NFT
-            loadOriginalNFTData()
-            // Load original owner address
-            loadOriginalOwner()
-            // We have to check if there's a request to transfer
-            loadPendingRequest()
+
+        // Load all secondary NFT data
+        nft.loadAnotherData()
+        const originalNFTDataLoadedListener = () => {
+            setOriginalNFTData(nft.originalData)
+        }
+        const pendingRequestLoadedListener = () => {
+            setPendingRequest(nft.pendingRequest)
+        }
+        if (nft.isPNFT()) {
+            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
+            nft.addEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
+        }
+        return () => {
+            if (nft.isPNFT()) {
+                nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
+                nft.removeEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
+            }
         }
     }, [])
 
@@ -233,12 +110,12 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
 
     let result = <div />
     let buttons = <div />
-    if (isPNFT) {
+    if (nft.isPNFT()) {
         // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData) {
             console.log('ORIGINAL NFT DATA:', originalNFTData)
             console.log('PENDING REQUEST:', nft.tokenId, pendingRequest)
-            if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() === account?.toLowerCase())) {
+            if (!nft.isOnAnotherAddress() && (originalNFTData.ownerAddress.toLowerCase() === account?.toLowerCase())) {
                 // Original NFT and pNFT are both belong to user
                 buttons = 
                     <Box mb={[2]}>
@@ -246,11 +123,11 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             nft={ nft } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
-                            tokenContract={ tokenContract }
+                            tokenContract={ nft.loadedContract }
                             variant={"dark-outline"}
                         />
                     </Box>
-            } else if (!isOnAnotherAddress && (originalNFTData.owner.toLowerCase() !== account?.toLowerCase())) {
+            } else if (!nft.isOnAnotherAddress() && !nft.isOriginalOwnedByAccount()) {
                 // This pNFT belongs to user but original is not
                 if (!pendingRequest) {
                     // If no request pending then we can sent it, so showing the button
@@ -260,7 +137,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
-                                tokenContract={ tokenContract }
+                                tokenContract={ nft.loadedContract }
                                 originalOwner={ originalOwner || '' }
                                 variant={"primary-solid"}
                             />
@@ -276,7 +153,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                                     setRefreshPaused = { setRefreshPaused }
                                     pendingRequest={ pendingRequest }
                                     originalOwner={ originalOwner || '' }
-                                    loadPendingRequest={ loadPendingRequest }
                                     variant={"primary-solid"}
                                 />
                             </Box>
@@ -322,7 +198,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     }
                 }
             }
-            else if (isOnAnotherAddress) {
+            else if (nft.isOnAnotherAddress()) {
                 // Original NFT belongs to user, but this pNFT is not
                 buttons = (<>
                     <Box mb={[2]}>
@@ -330,7 +206,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             nft={ nft } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
-                            tokenContract={ tokenContract }
                             originalOwner={ originalOwner || '' }
                             variant={ "primary-solid" }
                         />
@@ -340,7 +215,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                             nft={ nft } 
                             nftReFetch={ nftReFetch }
                             setRefreshPaused = { setRefreshPaused }
-                            tokenContract={ tokenContract }
                             pendingRequest={ pendingRequest?.id }
                             variant={"primary-solid"}
                         />
@@ -355,7 +229,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
                     nft={ nft } 
                     nftReFetch={ nftReFetch }
                     setRefreshPaused={ setRefreshPaused }
-                    tokenContract={ tokenContract }
                     variant={"primary-solid"}
                 />
             </Box>

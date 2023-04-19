@@ -53,11 +53,10 @@ interface ButtonInitialData {
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     originalOwner: string, // Owner address of original NFT,
-    tokenContract: Contract,
     variant: any
 }
 
-const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
+const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const didDialogDisclosure = useDisclosure()

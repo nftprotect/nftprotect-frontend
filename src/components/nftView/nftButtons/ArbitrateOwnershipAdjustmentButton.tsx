@@ -26,7 +26,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { RequestStatus, ActionRequest } from '../NFTCard';
+import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import { generateArbitratorExtraData, KlerosCourts, klerosCases } from '../../../utils/kleros';
 import KlerosCaseForm from './steps/KlerosCaseForm';
@@ -42,11 +42,10 @@ interface ButtonInitialData {
     setRefreshPaused: Function // Function to pause/unpause nft list updating
     pendingRequest: any,
     originalOwner: string, // Owner address of original NFT,
-    loadPendingRequest: Function, // Function to reload a pending request
     variant: any // apearance of the button (see variants in theme/index.tsx)
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, loadPendingRequest, variant}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library, fee } = useAppContext()
     const { ipfs } = useIPFSContext()
@@ -96,7 +95,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    loadPendingRequest()
+                    nft.loadPendingRequest()
                     // after mined fire wrap
                     setNextStep(StepMapping.caseSent)
                     console.log("Transaction successful", tx.hash);

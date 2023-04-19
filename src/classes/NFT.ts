@@ -13,6 +13,38 @@ import ERC1155ABI from "../abi/ERC1155ABI";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
 
+export interface OriginalNFTData {
+    ownerAddress: string,
+    tokenId: string,
+    contractAddress: string,
+    tokenType: NftTokenType
+    amount: number,
+    securityLevel: number
+}
+
+export interface ActionRequest {
+    id: number,
+    reqtype: number,
+    tokenId: number,
+    newowner: string,
+    timeout: number,
+    status: RequestStatus,
+    arbitrator: string,
+    disputeId: number
+}
+
+export enum RequestStatus {
+    Initial,
+    Accepted,
+    Rejected,
+    Disputed
+}
+
+export enum NFTEvents {
+    OriginalNFTDataLoaded = 'originalNFTDataLoaded',
+    PendingRequestLoaded = 'pendingRequestLoaded'
+}
+
 export default class NFT implements NFTInterface {
     tokenId: string;
     /** The type of ERC token, if known. */
@@ -41,7 +73,7 @@ export default class NFT implements NFTInterface {
     /** Holds loaded owner address */
     ownerAddress: string | undefined
     /** Holds original data */
-    originalData: any
+    originalData: OriginalNFTData | undefined
     /** Holds thumbnail */
     thumbnail: string
     /** Holds token amount */
@@ -50,10 +82,47 @@ export default class NFT implements NFTInterface {
     context: AppContextInterface
     /** Holds loaded ethers contract object */
     loadedContract: Contract
+    //** Holds pending request data */
+    pendingRequest: ActionRequest | undefined
+
+    private events: EventTarget
+
+    //** Returns true if NFT is pNFT issued by NFTProtect */
+    isPNFT(): boolean {
+        return (this.contract.address.toLowerCase() === this.context.nftProtectContract.address.toLowerCase())
+    }
+
+    //** Returns true if NFT is pNFT transfered to another address */
+    isOnAnotherAddress():boolean {
+        if (this.context.account) {
+            return this.isPNFT() ? 
+                this.isOwnedBy(this.context.account) :
+                false
+        } else {
+            throw Error('Context is not initialized')
+        }
+    }
+
+    //** Returns true if original is owned by current account */
+    isOriginalOwnedByAccount():boolean {
+        if (this.context.account) {
+            if (this.isPNFT()) {
+                if (this.originalData) {
+                    return this.originalData.ownerAddress.toLowerCase() === this.context.account.toLowerCase()
+                } else {
+                    throw new Error('Original data is not loaded')
+                }
+            } else {
+                return true
+            }
+        } else {
+            throw Error('Context is not initialized')
+        }
+    }
 
     //** Returns true if NFT is burned */
     isBurned(): boolean {
-        return (this.ownerAddress === '0x0000000000000000000000000000000000000000') || (this.ownerAddress === undefined) 
+        return this.isMintedBy(this.context.nftProtectContract.address)
     }
 
     //** Returns true if nft is owned by address */
@@ -102,9 +171,79 @@ export default class NFT implements NFTInterface {
         ])
     }
 
+    //** If our NFT is pNFT we have to know about the original NFT */
+    loadOriginalNFTData():void {
+        const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
+        this.context.nftProtectContract.tokens(this.tokenId).then(([ 
+            standardId, 
+            contractAddress721, 
+            contractAddress1155,
+            contractAddress20,
+            tokenId,
+            amount,
+            owner,
+            securityLevel
+        ]:any[]) => {
+            const otherParams = {
+                tokenId: tokenId.toString(),
+                amount: amount,
+                ownerAddress: owner,
+                securityLevel: securityLevel
+            }
+            if (isNotNullAddress(contractAddress721)) {
+                this.originalData = {
+                    tokenType: NftTokenType.ERC721,
+                    contractAddress: contractAddress721,
+                    ...otherParams
+                }
+            } else if (isNotNullAddress(contractAddress1155)) {
+                this.originalData = {
+                    tokenType: NftTokenType.ERC1155,
+                    contractAddress: contractAddress1155,
+                    ...otherParams
+                }
+            } else if (isNotNullAddress(contractAddress20)) {
+                this.originalData = {
+                    tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD,
+                    contractAddress: contractAddress20,
+                    ...otherParams
+                }
+            }
+            this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
+        })
+    }
+
+    // Checks if pNFT has request to transfer
+    loadPendingRequest():void {
+        const nftProtectContract = this.context.nftProtectContract
+        nftProtectContract.tokenToRequest(this.tokenId).then((requestId: BigNumber) => {
+            if (requestId.toString() !== '0') {
+                nftProtectContract.requests(requestId).then((request: any) => {
+                    this.pendingRequest = {id: requestId, ...request}
+                    this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
+                })
+            }
+        })
+    }
+
     //** Runs assigned functions to fetch another additional data */
     loadAnotherData() {
-        
+        this.isPNFT() && this.loadOriginalNFTData()
+    }
+
+    //** Add event listener */
+    addEventListener(eventType: string, listener: EventListener) {
+        this.events.addEventListener(eventType, listener);
+    }
+
+    //** Remove event listener */
+    removeEventListener(eventType: string, listener: EventListener) {
+        this.events.removeEventListener(eventType, listener);
+    }
+
+    //** Dispatch evenet */
+    dispatchEvent(event: Event) {
+        this.events.dispatchEvent(event);
     }
 
     constructor(alchemyNFT: NFTInterface, context: AppContextInterface, otherProps?: any) {
@@ -121,6 +260,7 @@ export default class NFT implements NFTInterface {
         this.spamInfo = alchemyNFT.spamInfo;
         this.thumbnail = this.media && this.media[0] && this.media[0].thumbnail || './images/noImage.png'
         this.context = context
+        this.events = new EventTarget();
 
         if (otherProps) {
             Object.assign(this, otherProps);

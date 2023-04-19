@@ -37,11 +37,10 @@ interface ButtonInitialData {
     nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract,
     variant: any
 }
 
-const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
+const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const didDialogDisclosure = useDisclosure()
@@ -167,8 +166,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, vari
     }
 
     const startButtonOnClick = () => {
-        const tokenContractAddress = nft.contract.address
-        const tokenId = nft.tokenId
+        const tokenContract = nft.loadedContract
         try {
             if (nft.tokenType === NftTokenType.ERC721) {
                 secureNFT(
@@ -176,7 +174,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, vari
                     () => tokenContract.getApproved(nft.tokenId),
                     (result: any) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.wrap721(tokenContractAddress, nft.tokenId, 0, referrerAddress, {value: fee})
+                    () => nftProtectContract.wrap721(tokenContract.address, nft.tokenId, 0, referrerAddress, {value: fee})
                 )
             } else if (nft.tokenType === NftTokenType.ERC1155) {
                 secureNFT(
@@ -184,7 +182,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, vari
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
                     (result: any) => result,
                     () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.wrap1155(tokenContractAddress, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
+                    () => nftProtectContract.wrap1155(tokenContract.address, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft.tokenType}`)

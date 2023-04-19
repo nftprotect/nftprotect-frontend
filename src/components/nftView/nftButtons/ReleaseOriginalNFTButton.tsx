@@ -47,12 +47,11 @@ interface ButtonInitialData {
     nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract,
     pendingRequest: number | undefined,
     variant: any
 }
 
-const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, pendingRequest, variant}: ButtonInitialData) => {
+const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -116,7 +115,7 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
             setNextStep(StepMapping.confirmTransaction)
             nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0, '')
             .then( finalTransactionSent(
-                tokenContract,
+                nft.loadedContract,
                 StepMapping.pendingTransaction,
                 StepMapping.transferredSuccessfully
             ))
@@ -137,7 +136,7 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
             // setNextStep(StepMapping.confirmTransaction)
             nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0, '')
             .then( finalTransactionSent(
-                tokenContract,
+                nft.loadedContract,
                 StepMapping.pendingTransaction,
                 StepMapping.canceled
             ))
