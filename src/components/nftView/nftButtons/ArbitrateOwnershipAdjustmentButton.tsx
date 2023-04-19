@@ -142,16 +142,20 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const uploadMetaEvidence = async (metaEvidence: any) => {
         console.log('METAEVIDENCE', metaEvidence)
         const fileName = 'metaEvidence.json'
-        const result = await ipfs.add(
-            {
-                path: fileName,
-                content: JSON.stringify(metaEvidence)
-            }, 
-            {wrapWithDirectory: true}
-        )
-        return {
-            fileName: fileName,
-            uploadResult: result
+        if (ipfs) {
+            const result = await ipfs.add(
+                {
+                    path: fileName,
+                    content: JSON.stringify(metaEvidence)
+                }, 
+                {wrapWithDirectory: true}
+            )
+            return {
+                fileName: fileName,
+                uploadResult: result
+            }
+        } else {
+            throw Error('IPFS client not configured!')
         }
     }
 

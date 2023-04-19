@@ -27,14 +27,18 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
             return
         }
 
-        const result = await ipfs.add({
-            path: file.name,
-            content: file
-        }, {wrapWithDirectory: true})
+        if (ipfs) {
+            const result = await ipfs.add({
+                path: file.name,
+                content: file
+            }, {wrapWithDirectory: true})
 
-        return {
-            fileName: file.name,
-            uploadResult: result
+            return {
+                fileName: file.name,
+                uploadResult: result
+            }
+        } else {
+            throw Error('IPFS client not configured!')
         }
     }
 

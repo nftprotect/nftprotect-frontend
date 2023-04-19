@@ -3,7 +3,7 @@ import { createContext, Dispatch, useContext, useEffect } from "react";
 import { useState, SetStateAction } from 'react';
 
 export interface IPFSContextInterface {
-    ipfs: IPFSHTTPClient,
+    ipfs: IPFSHTTPClient | undefined,
     setBaseUrl: Dispatch<SetStateAction<string | undefined>>
 }
 
