@@ -178,6 +178,12 @@ const NFTView = () => {
         }
     }, [mintedNfts])
 
+    useEffect(() => {
+        console.log('MY OWN NFTS', myOwnNfts)
+        console.log('OWNED pNFTS', ownedPNfts)
+        console.log('GIVEN pNFTS', givenPNfts)
+    },[myOwnNfts, ownedPNfts, givenPNfts])
+
     useEffect(subscribeNftTransfers, [account, active])
 
     return (
