@@ -78,9 +78,11 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
         // Load all secondary NFT data
         nft.loadAnotherData()
         const originalNFTDataLoadedListener = () => {
+            console.log('ORIGINAL NFT DATA:', nft.originalData)
             setOriginalNFTData(nft.originalData)
         }
         const pendingRequestLoadedListener = () => {
+            console.log('PENDING REQUEST:', nft.tokenId, nft.pendingRequest)
             setPendingRequest(nft.pendingRequest)
         }
         if (nft.isPNFT()) {
@@ -111,8 +113,6 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     if (nft.isPNFT()) {
         // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData) {
-            console.log('ORIGINAL NFT DATA:', originalNFTData)
-            console.log('PENDING REQUEST:', nft.tokenId, pendingRequest)
             if (!nft.isOnAnotherAddress() && (originalNFTData.ownerAddress.toLowerCase() === account?.toLowerCase())) {
                 // Original NFT and pNFT are both belong to user
                 buttons = 
