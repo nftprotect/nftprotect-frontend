@@ -173,62 +173,67 @@ export default class NFT implements NFTInterface {
 
     //** If our NFT is pNFT we have to know about the original NFT */
     loadOriginalNFTData():void {
-        const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
-        this.context.nftProtectContract.tokens(this.tokenId).then(([ 
-            standardId, 
-            contractAddress721, 
-            contractAddress1155,
-            contractAddress20,
-            tokenId,
-            amount,
-            owner,
-            securityLevel
-        ]:any[]) => {
-            const otherParams = {
-                tokenId: tokenId.toString(),
-                amount: amount,
-                ownerAddress: owner,
-                securityLevel: securityLevel
-            }
-            if (isNotNullAddress(contractAddress721)) {
-                this.originalData = {
-                    tokenType: NftTokenType.ERC721,
-                    contractAddress: contractAddress721,
-                    ...otherParams
+        if (this.isPNFT()) {
+            const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
+            this.context.nftProtectContract.tokens(this.tokenId).then(([ 
+                standardId, 
+                contractAddress721, 
+                contractAddress1155,
+                contractAddress20,
+                tokenId,
+                amount,
+                owner,
+                securityLevel
+            ]:any[]) => {
+                const otherParams = {
+                    tokenId: tokenId.toString(),
+                    amount: amount,
+                    ownerAddress: owner,
+                    securityLevel: securityLevel
                 }
-            } else if (isNotNullAddress(contractAddress1155)) {
-                this.originalData = {
-                    tokenType: NftTokenType.ERC1155,
-                    contractAddress: contractAddress1155,
-                    ...otherParams
+                if (isNotNullAddress(contractAddress721)) {
+                    this.originalData = {
+                        tokenType: NftTokenType.ERC721,
+                        contractAddress: contractAddress721,
+                        ...otherParams
+                    }
+                } else if (isNotNullAddress(contractAddress1155)) {
+                    this.originalData = {
+                        tokenType: NftTokenType.ERC1155,
+                        contractAddress: contractAddress1155,
+                        ...otherParams
+                    }
+                } else if (isNotNullAddress(contractAddress20)) {
+                    this.originalData = {
+                        tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD,
+                        contractAddress: contractAddress20,
+                        ...otherParams
+                    }
                 }
-            } else if (isNotNullAddress(contractAddress20)) {
-                this.originalData = {
-                    tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD,
-                    contractAddress: contractAddress20,
-                    ...otherParams
-                }
-            }
-            this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
-        })
+                this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
+            })
+        }
     }
 
-    // Checks if pNFT has request to transfer
+    //** Loads a pending request if exists */
     loadPendingRequest():void {
-        const nftProtectContract = this.context.nftProtectContract
-        nftProtectContract.tokenToRequest(this.tokenId).then((requestId: BigNumber) => {
-            if (requestId.toString() !== '0') {
-                nftProtectContract.requests(requestId).then((request: any) => {
-                    this.pendingRequest = {id: requestId, ...request}
-                    this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
-                })
-            }
-        })
+        if (this.isPNFT()) {
+            const nftProtectContract = this.context.nftProtectContract
+            nftProtectContract.tokenToRequest(this.tokenId).then((requestId: BigNumber) => {
+                if (requestId.toString() !== '0') {
+                    nftProtectContract.requests(requestId).then((request: any) => {
+                        this.pendingRequest = {id: requestId, ...request}
+                        this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
+                    })
+                }
+            })
+        }
     }
 
     //** Runs assigned functions to fetch another additional data */
     loadAnotherData() {
-        this.isPNFT() && this.loadOriginalNFTData()
+        this.loadOriginalNFTData()
+        this.loadPendingRequest()
     }
 
     //** Add event listener */
