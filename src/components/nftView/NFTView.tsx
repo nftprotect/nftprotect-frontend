@@ -172,7 +172,7 @@ const NFTView = () => {
         if (account) {
             setGivenPNfts(
                 mintedNfts?.filter((item: NFT) => {
-                    return !item.isOwnedBy(account)
+                    return !item.isBurned() && !item.isOwnedBy(account)
                 })
             )
         }

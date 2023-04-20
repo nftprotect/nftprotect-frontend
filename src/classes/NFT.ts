@@ -86,6 +86,7 @@ export default class NFT implements NFTInterface {
     pendingRequest: ActionRequest | undefined
 
     private events: EventTarget
+    private nullAddress = '0x0000000000000000000000000000000000000000'
 
     //** Returns true if NFT is pNFT issued by NFTProtect */
     isPNFT(): boolean {
@@ -96,7 +97,7 @@ export default class NFT implements NFTInterface {
     isOnAnotherAddress():boolean {
         if (this.context.account) {
             return this.isPNFT() ? 
-                this.isOwnedBy(this.context.account) :
+                !this.isOwnedBy(this.context.account) :
                 false
         } else {
             throw Error('Context is not initialized')
@@ -122,7 +123,7 @@ export default class NFT implements NFTInterface {
 
     //** Returns true if NFT is burned */
     isBurned(): boolean {
-        return this.isMintedBy(this.context.nftProtectContract.address)
+        return (this.ownerAddress === undefined) || (this.ownerAddress === this.nullAddress)
     }
 
     //** Returns true if nft is owned by address */
@@ -174,7 +175,7 @@ export default class NFT implements NFTInterface {
     //** If our NFT is pNFT we have to know about the original NFT */
     loadOriginalNFTData():void {
         if (this.isPNFT()) {
-            const isNotNullAddress = (address: string) => address !== '0x0000000000000000000000000000000000000000'
+            const isNotNullAddress = (address: string) => address !== this.nullAddress
             this.context.nftProtectContract.tokens(this.tokenId).then(([ 
                 standardId, 
                 contractAddress721, 
@@ -210,6 +211,7 @@ export default class NFT implements NFTInterface {
                         ...otherParams
                     }
                 }
+                this.originalData && console.log('ORIGDATA',this.originalData, this.tokenId, tokenId)
                 this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
             })
         }

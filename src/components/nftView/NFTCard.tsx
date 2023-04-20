@@ -27,7 +27,7 @@ interface NFTInitialData {
     setRefreshPaused: Function
 }
 
-const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
+const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
     const {
         addNotifications, 
@@ -39,6 +39,7 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     //const [ hasMetadata, setHasMetadata ] = useState(true)
     // In case of external metadata fetching it marks if fetch is ended
     //const [ fetchEnded, setFetchEnded ] = useState(false)
+    const [ nft, setNft ] = useState<NFT>(_nft)
     // If our NFT is pNFT it stores the info about original NFT
     const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
     // Stores pending request data if available
@@ -79,10 +80,12 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
         nft.loadAnotherData()
         const originalNFTDataLoadedListener = () => {
             console.log('ORIGINAL NFT DATA:', nft.originalData)
+            setNft(nft)
             setOriginalNFTData(nft.originalData)
         }
         const pendingRequestLoadedListener = () => {
             console.log('PENDING REQUEST:', nft.tokenId, nft.pendingRequest)
+            setNft(nft)
             setPendingRequest(nft.pendingRequest)
         }
         if (nft.isPNFT()) {
@@ -112,8 +115,8 @@ const NFTCard = ({ nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
     let buttons = <div />
     if (nft.isPNFT()) {
         // We can't show buttons for pNFT before we have info about original NFT
-        if (originalNFTData) {
-            if (!nft.isOnAnotherAddress() && (originalNFTData.ownerAddress.toLowerCase() === account?.toLowerCase())) {
+        if (originalNFTData !== undefined) {
+            if (!nft.isOnAnotherAddress() && nft.isOriginalOwnedByAccount()) {
                 // Original NFT and pNFT are both belong to user
                 buttons = 
                     <Box mb={[2]}>
