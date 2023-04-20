@@ -80,12 +80,10 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
         nft.loadAnotherData()
         const originalNFTDataLoadedListener = () => {
             console.log('ORIGINAL NFT DATA:', nft.originalData)
-            setNft(nft)
             setOriginalNFTData(nft.originalData)
         }
         const pendingRequestLoadedListener = () => {
             console.log('PENDING REQUEST:', nft.tokenId, nft.pendingRequest)
-            setNft(nft)
             setPendingRequest(nft.pendingRequest)
         }
         if (nft.isPNFT()) {
