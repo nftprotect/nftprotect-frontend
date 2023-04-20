@@ -95,7 +95,7 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
         try {
             setNextStep(StepMapping.confirmTransaction);
             onOpen()
-            nftProtectContract.burn(nft.tokenId, 0, '', account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
+            nftProtectContract.burn(nft.tokenId, account, defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(tokenContract) )
                 .catch(
                     handleContractError({
