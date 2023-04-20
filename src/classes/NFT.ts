@@ -257,7 +257,7 @@ export default class NFT implements NFTInterface {
         this.tokenId = alchemyNFT.tokenId;
         this.tokenType = alchemyNFT.tokenType;
         this.contract = alchemyNFT.contract;
-        this.title = alchemyNFT.title;
+        this.title = alchemyNFT.title || alchemyNFT.contract.name || '';
         this.description = alchemyNFT.description;
         this.timeLastUpdated = alchemyNFT.timeLastUpdated;
         this.metadataError = alchemyNFT.metadataError;
