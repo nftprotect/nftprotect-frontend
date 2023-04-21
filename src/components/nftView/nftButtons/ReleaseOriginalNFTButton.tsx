@@ -113,8 +113,14 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
         try {
             console.log('ANSWER ADJUSTMENT OK')
             setNextStep(StepMapping.confirmTransaction)
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, 0, '')
-            .then( finalTransactionSent(
+            const performAnswer = () => {
+                if (pendingRequest) {
+                    return nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, '')
+                } else {
+                    return nftProtectContract.adjustOwnership(nft.tokenId, defaultArbitrator, '')
+                }
+            }
+            performAnswer().then( finalTransactionSent(
                 nft.loadedContract,
                 StepMapping.pendingTransaction,
                 StepMapping.transferredSuccessfully
@@ -134,7 +140,7 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
         try {
             console.log('ANSWER ADJUSTMENT REJECT')
             // setNextStep(StepMapping.confirmTransaction)
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, 0, '')
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
             .then( finalTransactionSent(
                 nft.loadedContract,
                 StepMapping.pendingTransaction,

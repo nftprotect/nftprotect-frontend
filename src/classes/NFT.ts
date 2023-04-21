@@ -45,6 +45,13 @@ export enum NFTEvents {
     PendingRequestLoaded = 'pendingRequestLoaded'
 }
 
+enum NftProtectStandard
+{
+    ERC721,
+    ERC1155,
+    ERC20
+}
+
 export default class NFT implements NFTInterface {
     tokenId: string;
     /** The type of ERC token, if known. */
@@ -178,9 +185,7 @@ export default class NFT implements NFTInterface {
             const isNotNullAddress = (address: string) => address !== this.nullAddress
             this.context.nftProtectContract.tokens(this.tokenId).then(([ 
                 standardId, 
-                contractAddress721, 
-                contractAddress1155,
-                contractAddress20,
+                contractAddress,
                 tokenId,
                 amount,
                 owner,
@@ -189,28 +194,27 @@ export default class NFT implements NFTInterface {
                 const otherParams = {
                     tokenId: tokenId.toString(),
                     amount: amount,
+                    contractAddress: contractAddress,
                     ownerAddress: owner,
                     securityLevel: securityLevel
                 }
-                if (isNotNullAddress(contractAddress721)) {
-                    this.originalData = {
-                        tokenType: NftTokenType.ERC721,
-                        contractAddress: contractAddress721,
-                        ...otherParams
-                    }
-                } else if (isNotNullAddress(contractAddress1155)) {
-                    this.originalData = {
-                        tokenType: NftTokenType.ERC1155,
-                        contractAddress: contractAddress1155,
-                        ...otherParams
-                    }
-                } else if (isNotNullAddress(contractAddress20)) {
-                    this.originalData = {
-                        tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD,
-                        contractAddress: contractAddress20,
-                        ...otherParams
-                    }
+                console.log('standardId', standardId)
+                const tokenType = (standardId === NftProtectStandard.ERC721) ?
+                    NftTokenType.ERC721 :
+                    (standardId === NftProtectStandard.ERC1155) ?
+                    NftTokenType.ERC1155 :
+                    (standardId === NftProtectStandard.ERC20) ?
+                    NftTokenType.NO_SUPPORTED_NFT_STANDARD :
+                    NftTokenType.NO_SUPPORTED_NFT_STANDARD
+                this.originalData = {
+                    tokenId: tokenId.toString(),
+                    amount: amount,
+                    contractAddress: contractAddress,
+                    ownerAddress: owner,
+                    securityLevel: securityLevel,
+                    tokenType: tokenType
                 }
+
                 this.originalData && console.log('ORIGDATA',this.originalData, this.tokenId, tokenId)
                 this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
             })
