@@ -197,29 +197,75 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                     </Flex>
                     }
                 }
-            }
-            else if (nft.isOnAnotherAddress()) {
+            } else if (nft.isOnAnotherAddress()) {
                 // Original NFT belongs to user, but this pNFT is not
-                buttons = (<>
-                    <Box mb={[2]}>
-                        <LostPNFTButton 
-                            nft={ nft } 
-                            nftReFetch={ nftReFetch }
-                            setRefreshPaused = { setRefreshPaused }
-                            originalOwner={ originalNFTData.ownerAddress }
-                            variant={ "primary-solid" }
-                        />
-                    </Box>
-                    <Box mb={[2]}>
-                        <ReleaseOriginalNFTButton
-                            nft={ nft } 
-                            nftReFetch={ nftReFetch }
-                            setRefreshPaused = { setRefreshPaused }
-                            pendingRequest={ pendingRequest?.id }
-                            variant={"primary-solid"}
-                        />
-                    </Box>
-                </>)
+                if (!pendingRequest) {
+                    // If there's no pending request then we can Release NFT or Dispute NFT
+                    buttons = (<>
+                        <Box mb={[2]}>
+                            <LostPNFTButton 
+                                nft={ nft } 
+                                nftReFetch={ nftReFetch }
+                                setRefreshPaused = { setRefreshPaused }
+                                originalOwner={ originalNFTData.ownerAddress }
+                                variant={ "primary-solid" }
+                            />
+                        </Box>
+                        <Box mb={[2]}>
+                            <ReleaseOriginalNFTButton
+                                nft={ nft } 
+                                nftReFetch={ nftReFetch }
+                                setRefreshPaused = { setRefreshPaused }
+                                pendingRequest={ undefined }
+                                variant={"primary-solid"}
+                            /> 
+                        </Box>
+                    </>)
+                } else if (pendingRequest.status === RequestStatus.Initial) {
+                    // If there's an initial request then we can only answer this request
+                    buttons = (<>
+                        <Box mb={[2]}>
+                            <ReleaseOriginalNFTButton
+                                nft={ nft } 
+                                nftReFetch={ nftReFetch }
+                                setRefreshPaused = { setRefreshPaused }
+                                pendingRequest={ pendingRequest?.id }
+                                variant={"primary-solid"}
+                            /> 
+                        </Box>
+                    </>)
+                } else if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
+                    // If there's an rejected request then we can only dispute this request
+                    buttons = (<>
+                        <Box mb={[2]}>
+                            <LostPNFTButton 
+                                nft={ nft } 
+                                nftReFetch={ nftReFetch }
+                                setRefreshPaused = { setRefreshPaused }
+                                originalOwner={ originalNFTData.ownerAddress }
+                                variant={ "primary-solid" }
+                            />
+                        </Box>
+                    </>)
+                } else if (pendingRequest.status === RequestStatus.Disputed) {
+                    buttons =   <Flex 
+                                    mb={[2]} 
+                                    alignItems="center" 
+                                    justifyContent="center" 
+                                    fontWeight="600" 
+                                    minH="2.25rem"
+                                    px="16px"
+                                    py="8px"
+                                    borderRadius="16px"
+                                    bgGradient="linear(315deg, accent.dark 0%, accent.light 100%)"
+                                    color="#FFF"
+                                    filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
+                                >
+                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        {`Under dispute ${pendingRequest.disputeId}…`}
+                                    </Text>
+                                </Flex>
+                }
             } 
         }
     } else {
