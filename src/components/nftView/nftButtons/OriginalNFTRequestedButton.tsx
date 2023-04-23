@@ -29,9 +29,9 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import ReleaseOriginalNFTButton from './ReleaseOriginalNFTButton';
+import TransferOriginalNFTButton from './TransferOriginalNFTButton';
 import LostPNFTButton from './LostPNFTButton'
-import DoNotTransferOriginal from './DoNotTransferOriginal';
+import DoNotTransferOriginalNFTButton from './DoNotTransferOriginalNFTButton';
 import NFT from "../../../classes/NFT";
 
 interface ButtonInitialData {
@@ -43,7 +43,7 @@ interface ButtonInitialData {
     variant: any
 }
 
-const OriginalRequested = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
+const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -155,7 +155,7 @@ const OriginalRequested = ({nft, nftReFetch, setRefreshPaused, originalOwner, va
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center" mb={{base: "20px"}}>
                             <Box w={{base: "60%", sm: "50%"}}>
-                                <ReleaseOriginalNFTButton 
+                                <TransferOriginalNFTButton 
                                     nft={ nft } 
                                     nftReFetch={ nftReFetch }
                                     setRefreshPaused = { setRefreshPaused }
@@ -219,7 +219,7 @@ const OriginalRequested = ({nft, nftReFetch, setRefreshPaused, originalOwner, va
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center">
                             <Box w={{base: "60%"}} mb={{base: "20px"}}>
-                                <DoNotTransferOriginal 
+                                <DoNotTransferOriginalNFTButton 
                                     nft={nft}
                                     nftReFetch={nftReFetch}
                                     setRefreshPaused={setRefreshPaused}
@@ -247,4 +247,4 @@ const OriginalRequested = ({nft, nftReFetch, setRefreshPaused, originalOwner, va
     </>)
 }
 
-export default OriginalRequested
+export default OriginalNFTRequestedButton

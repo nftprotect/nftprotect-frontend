@@ -52,7 +52,7 @@ interface ButtonInitialData {
     variant: any
 }
 
-const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant}: ButtonInitialData) => {
+const TransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant}: ButtonInitialData) => {
 
     const { nftProtectContract } = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -271,4 +271,4 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
     </>)
 }
 
-export default ReleaseOriginalNFTButton
+export default TransferOriginalNFTButton

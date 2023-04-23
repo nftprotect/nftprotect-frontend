@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import SecureNFTButton from './nftButtons/SecureNFTButton';
 import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
-import ReleaseOriginalNFTButton from './nftButtons/ReleaseOriginalNFTButton';
+import TransferOriginalNFTButton from './nftButtons/TransferOriginalNFTButton';
 import LostPNFTButton from './nftButtons/LostPNFTButton';
 import { useAppContext } from '../../context/AppContextProvider';
 import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
@@ -20,7 +20,7 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
-import OriginalRequested from './nftButtons/OriginalRequested';
+import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
 
 interface NFTInitialData {
     nft: NFT,
@@ -213,7 +213,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                             />
                         </Box>
                         <Box mb={[2]}>
-                            <ReleaseOriginalNFTButton
+                            <TransferOriginalNFTButton
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
@@ -226,7 +226,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If there's an initial request then we can only answer this request
                     buttons = (<>
                         <Box mb={[2]}>
-                            <OriginalRequested
+                            <OriginalNFTRequestedButton
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }

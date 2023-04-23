@@ -25,7 +25,7 @@ import { Trans, t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import TimeoutStepContent from './steps/TimeoutStepContent'
 import ErrorStepContent from './steps/ErrorStepContent'
-import ReleaseOriginalNFTButton from './ReleaseOriginalNFTButton'
+import TransferOriginalNFTButton from './TransferOriginalNFTButton'
 import LostPNFTButton from './LostPNFTButton';
 import NFT from "../../../classes/NFT";
 import { dialogsTimeout } from '../../../utils/config';
@@ -41,7 +41,7 @@ interface ButtonInitialData {
     variant: any
 }
 
-const DoNotTransferOriginal = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
+const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -242,7 +242,7 @@ const DoNotTransferOriginal = ({nft, nftReFetch, setRefreshPaused, originalOwner
                                             mb={{base: "20px"}}
                                         >
                                             <Box w={{base: "100%", sm: "45%"}}>
-                                                <ReleaseOriginalNFTButton 
+                                                <TransferOriginalNFTButton 
                                                     nft={ nft } 
                                                     nftReFetch={ nftReFetch }
                                                     setRefreshPaused = { setRefreshPaused }
@@ -286,4 +286,4 @@ const DoNotTransferOriginal = ({nft, nftReFetch, setRefreshPaused, originalOwner
     </>)
 }
 
-export default DoNotTransferOriginal
+export default DoNotTransferOriginalNFTButton
