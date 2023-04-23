@@ -112,8 +112,8 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
         checkApprovedMethodCall()
             .then((result: any) => {
                 const wrapErrorMapping = {
-                    'NFTProtect: user must be registered': didDialogDisclosure.onOpen,
-                    'NFTProtect: invalid referrer': handleUnknownError,
+                    'user must be registered': didDialogDisclosure.onOpen,
+                    'invalid referrer': handleUnknownError,
                     'ACTION_REJECTED': handleRejected,
                     default: handleUnknownError
                 }
