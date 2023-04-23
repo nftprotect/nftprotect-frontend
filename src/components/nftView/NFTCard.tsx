@@ -20,6 +20,7 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
+import OriginalRequested from './nftButtons/OriginalRequested';
 
 interface NFTInitialData {
     nft: NFT,
@@ -225,13 +226,14 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If there's an initial request then we can only answer this request
                     buttons = (<>
                         <Box mb={[2]}>
-                            <ReleaseOriginalNFTButton
+                            <OriginalRequested
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
+                                originalOwner = { originalNFTData.ownerAddress }
                                 pendingRequest={ pendingRequest?.id }
                                 variant={"primary-solid"}
-                            /> 
+                            />
                         </Box>
                     </>)
                 } else if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {

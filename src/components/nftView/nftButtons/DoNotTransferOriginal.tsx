@@ -20,9 +20,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
-import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import TimeoutStepContent from './steps/TimeoutStepContent'
@@ -30,6 +28,9 @@ import ErrorStepContent from './steps/ErrorStepContent'
 import ReleaseOriginalNFTButton from './ReleaseOriginalNFTButton'
 import LostPNFTButton from './LostPNFTButton';
 import NFT from "../../../classes/NFT";
+import { dialogsTimeout } from '../../../utils/config';
+import { Contract } from '@ethersproject/contracts';
+import { handleContractError } from '../../../utils/errorHandling';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -56,12 +57,6 @@ const DoNotTransferOriginal = ({nft, nftReFetch, setRefreshPaused, originalOwner
         timeout
     }
 
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.confirmTransaction)
-        onOpen()
-        setRefreshPaused(true)
-    }
-
     function getNftImage() {
         return <Flex
             borderRadius={{base: "16px"}}
@@ -80,8 +75,59 @@ const DoNotTransferOriginal = ({nft, nftReFetch, setRefreshPaused, originalOwner
         </Flex>
     }
 
-    const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(StepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(StepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleTransactionFailed = (tx: any) => {
+        setNextStep(StepMapping.error)
+        console.log("Transaction failed", tx.hash);
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const finalTransactionSent = (tokenContract: Contract) => {
+        return (tx: any) => {
+            setNextStep(StepMapping.waitForTransactionConfirmation);
+            tokenContract.provider.once(tx.hash, (receipt) => {
+                if (receipt.status === 1) {
+                    // after mined fire wrap
+                    setNextStep(StepMapping.finalCompleted)
+                    console.log("Transaction successful", tx.hash);
+                    nftReFetch();
+                } else {
+                    handleTransactionFailed(tx);
+                }
+            })
+        }
+    }
+
+    const mainButtonOnClick = () => {
+        try {
+            setNextStep(StepMapping.confirmTransaction)
+            console.log('ANSWER ADJUSTMENT REJECT')
+            onOpen()
+            setRefreshPaused(true)
+            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
+                .then( finalTransactionSent(
+                    nft.loadedContract,
+                ))
+                .catch(
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    })
+                )
+        } catch (err: any) {
+            handleUnknownError(err)
+        }
     }
 
     return (<>

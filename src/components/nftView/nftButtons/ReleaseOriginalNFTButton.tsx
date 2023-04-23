@@ -60,11 +60,9 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
 
     // Naming of wizard step numbers
     enum StepMapping {
-        startAnswerReleaseOriginal,
         confirmTransaction,
         pendingTransaction,
         transferredSuccessfully,
-        declined,
         canceled,
         error,
         timeout
@@ -93,11 +91,9 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
             setNextStep(waitingStep);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // after mined fire wrap
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(onClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -106,15 +102,11 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
     }
 
     const mainButtonOnClick = () => {
-            setNextStep(StepMapping.startAnswerReleaseOriginal)
-        onOpen()
-        setRefreshPaused(true)
-    }
-
-    const sendButtonOnClick = () => {
         try {
             console.log('ANSWER ADJUSTMENT OK')
             setNextStep(StepMapping.confirmTransaction)
+            onOpen()
+            setRefreshPaused(true)
             const performAnswer = () => {
                 if (pendingRequest) {
                     return nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, '')
@@ -136,35 +128,6 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
         } catch (err: any) {
             handleUnknownError(err)
         }
-    }
-
-    const rejectButtonOnClick = () => {
-        try {
-            console.log('ANSWER ADJUSTMENT REJECT')
-            // setNextStep(StepMapping.confirmTransaction)
-            if (pendingRequest) {
-                nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
-                .then( finalTransactionSent(
-                    nft.loadedContract,
-                    StepMapping.pendingTransaction,
-                    StepMapping.declined
-                ))
-                .catch(
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    })
-                )
-            } else {
-                onClose()
-            }
-        } catch (err: any) {
-            handleUnknownError(err)
-        }
-    }
-
-    const copyNewOwnerToClipboard = () => {
-        copyTextToClipboard(nft.ownerAddress || '', '#newOwnerAddressHolder')
     }
 
     function getNftImage() {
@@ -199,7 +162,7 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
             isOpen={isOpen} 
             onClose={() => {
                 setNextStep(
-                    StepMapping.startAnswerReleaseOriginal
+                    StepMapping.confirmTransaction
                 )
                 onClose()
                 setRefreshPaused(false)
@@ -212,81 +175,6 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
                 <ModalCloseButton onClick={onClose} />
                 <ModalBody>
                     <Wizard>
-                        {/* Start answering for request to release original */}
-                        <SwitchableOutside nextStepNumber={nextStep} >
-                            <Card variant="stepContent">
-                                <CardHeader>
-                                    <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
-                                    </Text>
-                                </CardHeader>
-                                <CardBody mb={{base: "20px"}}>
-                                    { getNftImage() }
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" mb={{base: "8px"}} textAlign="center">
-                                        <chakra.span>
-                                            <Trans>Are you sure want to transfer original NFT to</Trans>
-                                        </chakra.span>
-                                        
-                                        <Text id='newOwnerAddressHolder' whiteSpace="nowrap">
-                                            <Popover placement='top'>
-                                                <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
-                                                </PopoverTrigger>
-                                                <PopoverContent w="150px">
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody >
-                                                        <Trans>Copied{"!"}</Trans>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Popover>
-                                            { formatAddress(nft.ownerAddress || '', 4) }{'\u003F'}
-                                        </Text>
-                                    </Text>
-                                </CardBody>
-                                <CardFooter flexDirection="column" alignItems="center">
-                                    <Flex 
-                                        flexWrap={{base: "wrap", sm: "nowrap"}}
-                                        alignSelf="flex-start"
-                                        justifyContent="space-around"
-                                        w="100%"
-                                        mb={{base: "20px"}}
-                                    >
-                                        <Box mb={{base: "20px", sm: "0"}} w={{base: "40%"}}>
-                                            <Button 
-                                                onClick={ sendButtonOnClick }
-                                                variant='dark-outline'
-                                            >
-                                                <Trans>Yes</Trans>
-                                            </Button>
-                                        </Box>
-
-                                        <Box w={{base: "40%"}}>
-                                            <Button
-                                                onClick={ rejectButtonOnClick }
-                                                variant="dark-outline"
-                                            >
-                                                <Trans>No</Trans>
-                                            </Button>
-                                        </Box>
-                                    </Flex>
-                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px">
-                                        <Flex color="danger" mr={{base: "20px"}} bg="#FFF" >
-                                            <AlertCircle fontSize="36px" />
-                                        </Flex>
-                                        <Flex flexDirection="column">
-                                            <Text textStyle="paragraph" textTransform="uppercase" fontWeight="700" color="danger">
-                                                <Trans>Warning!</Trans>
-                                            </Text>
-                                            <Text textStyle="paragraph">
-                                                {"Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"}
-                                            </Text>
-                                        </Flex>
-                                    </Flex>
-                                </CardFooter>
-                            </Card>
-                        </SwitchableOutside>
-
                         {/* Confirm the transaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
@@ -344,67 +232,6 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
                                         </Image>
                                     </Box>
                                 </CardBody>
-                            </Card>
-                        </SwitchableOutside>
-
-                        {/* Declined */}
-                        <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent" minH={{base: "360px"}}>
-                                <Flex flexDirection="column" alignItems="center">
-                                    <CardHeader>
-                                        <Text as="h3" textStyle="h3">
-                                            <Trans>The original NFT <br/> remains in your <br/> wallet</Trans>
-                                        </Text>
-                                    </CardHeader>
-
-                                    <CardBody mb={{base: "20px"}}>
-                                        { getNftImage() }
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
-                                            <Trans>
-                                                The pNFT is at user 1234...1234
-                                            </Trans>
-                                        </Text>
-                                        <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px" bgColor="rgba(255, 96, 96, 0.2)">
-                                            <Box color="danger" mr={[2]} >
-                                                <Info fontSize='32px' />
-                                            </Box>
-                                            <Flex flexDirection="column">
-                                                <Text textStyle="paragraph">
-                                                    <Trans>This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT</Trans>
-                                                </Text>
-                                            </Flex>
-                                        </Flex>
-                                    </CardBody>
-
-                                    <CardFooter>
-                                        <Flex 
-                                            flexWrap={{base: "wrap", sm: "nowrap"}}
-                                            alignSelf="flex-start"
-                                            justifyContent="space-around"
-                                            w="100%"
-                                            mb={{base: "20px"}}
-                                        >
-                                            <Box w={{base: "100%", sm: "45%"}}>
-                                                <ReleaseOriginalNFTButton 
-                                                    nft={ nft } 
-                                                    nftReFetch={ nftReFetch }
-                                                    setRefreshPaused = { setRefreshPaused }
-                                                    pendingRequest={ pendingRequest }
-                                                    variant={"dark-outline"}
-                                                />
-                                            </Box>
-                                            <Box w={{base: "100%", sm: "45%"}}>
-                                                <LostPNFTButton 
-                                                    nft={ nft } 
-                                                    nftReFetch={ nftReFetch }
-                                                    setRefreshPaused = { setRefreshPaused }
-                                                    originalOwner={nft.originalData?.ownerAddress || ''}
-                                                    variant={"dark-outline"}
-                                                />
-                                            </Box>
-                                        </Flex>
-                                </CardFooter>
-                                </Flex>
                             </Card>
                         </SwitchableOutside>
 
