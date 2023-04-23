@@ -45,7 +45,7 @@ const ShowConnectionState = () => {
 
     return (
         <>
-        <VisuallyHiddenInput id='addressHolder' value={account || ''}></VisuallyHiddenInput>
+        <VisuallyHiddenInput id='addressHolder' value={account || ''} readOnly></VisuallyHiddenInput>
         <Menu>
             <MenuButton 
                 as={Button} 
