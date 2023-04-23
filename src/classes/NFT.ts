@@ -180,45 +180,45 @@ export default class NFT implements NFTInterface {
     }
 
     //** If our NFT is pNFT we have to know about the original NFT */
-    loadOriginalNFTData():void {
-        if (this.isPNFT()) {
-            const isNotNullAddress = (address: string) => address !== this.nullAddress
-            this.context.nftProtectContract.tokens(this.tokenId).then(([ 
-                standardId, 
-                contractAddress,
-                tokenId,
-                amount,
-                owner,
-                securityLevel
-            ]:any[]) => {
-                const otherParams = {
-                    tokenId: tokenId.toString(),
-                    amount: amount,
-                    contractAddress: contractAddress,
-                    ownerAddress: owner,
-                    securityLevel: securityLevel
-                }
-                console.log('standardId', standardId)
-                const tokenType = (standardId === NftProtectStandard.ERC721) ?
-                    NftTokenType.ERC721 :
-                    (standardId === NftProtectStandard.ERC1155) ?
-                    NftTokenType.ERC1155 :
-                    (standardId === NftProtectStandard.ERC20) ?
-                    NftTokenType.NO_SUPPORTED_NFT_STANDARD :
-                    NftTokenType.NO_SUPPORTED_NFT_STANDARD
-                this.originalData = {
-                    tokenId: tokenId.toString(),
-                    amount: amount,
-                    contractAddress: contractAddress,
-                    ownerAddress: owner,
-                    securityLevel: securityLevel,
-                    tokenType: tokenType
-                }
-
-                this.originalData && console.log('ORIGDATA',this.originalData, this.tokenId, tokenId)
-                this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded))
-            })
+    loadOriginalNFTData(): void {
+        if (!this.isPNFT()) {
+          return;
         }
+      
+        // Function to check if an address is not null
+        const isNotNullAddress = (address: string): boolean => address !== this.nullAddress;
+      
+        // Get NFT data from the contract
+        this.context.nftProtectContract.tokens(this.tokenId)
+        .then(([standardId, contractAddress, tokenId, amount, owner, securityLevel]: any[]) => {
+            // Create an object with the retrieved data
+            const nftData:any = {
+                tokenId: tokenId.toString(),
+                amount,
+                contractAddress,
+                ownerAddress: owner,
+                securityLevel,
+            };
+            
+            // Determine the NFT token type based on the standard ID
+            switch (standardId) {
+                case NftProtectStandard.ERC721:
+                    nftData.tokenType = NftTokenType.ERC721;
+                break;
+                case NftProtectStandard.ERC1155:
+                    nftData.tokenType = NftTokenType.ERC1155;
+                break;
+                case NftProtectStandard.ERC20:
+                default:    
+                    nftData.tokenType = NftTokenType.NO_SUPPORTED_NFT_STANDARD;
+                break;
+            }
+        
+            // Store the original NFT data and dispatch an event to notify listeners
+            this.originalData = { ...nftData };
+            console.log('ORIGDATA', this.originalData, this.tokenId);
+            this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
+        });
     }
 
     //** Loads a pending request if exists */
