@@ -241,7 +241,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -273,7 +273,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -300,7 +300,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                         <Card variant="stepContent" >
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -329,7 +329,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent" >
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -348,7 +348,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -368,7 +368,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent" >
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -387,7 +387,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                             <Card variant="stepContent" >
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Protecting <br /> your asset{"…"}</Trans>
+                                        <Trans>Protecting your asset{"…"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
