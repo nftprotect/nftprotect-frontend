@@ -6,17 +6,17 @@ import {
     Flex,
 } from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
-import { getCentralizedUrl, getRelativeIpfsUrl } from '../utils/ipfs';
+import IPFSUpload from '../classes/IPFSUpload';
 
 interface UploaderInitialData {
-    setUrl?: Function | undefined,
-    setIpfsUrl?: Function | undefined
+    returnLoadedFile?: Function,
+    returnUploadedFile?: Function
 }
 
-export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
+export const IPFSFileUpload = ({ returnLoadedFile, returnUploadedFile }:UploaderInitialData) => {
     const { ipfs } = useIPFSContext()
-    const [file, setFile] = useState<any>()
-    const [fileUrl, setFileUrl] = useState('')
+    const [loadedFile, setLoadedFile] = useState<any>()
+    const [uploadedFile, setUploadedFile] = useState<IPFSUpload>()
     const [loading, setLoading] = useState(false)
     const [uploaded, setUploaded] = useState(false)
     const fileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF"];
@@ -35,6 +35,7 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
 
             return {
                 fileName: file.name,
+                wrappedWithDirectory: true,
                 uploadResult: result
             }
         } else {
@@ -44,26 +45,26 @@ export const IPFSFileUpload = ({ setUrl, setIpfsUrl }:UploaderInitialData) => {
 
     const returnFileUrl = async () => {
         setLoading(true)
-        const result = await uploadFile(file)
+        const result = await uploadFile(loadedFile)
         if (result) {
-            const dirHash = result.uploadResult.cid.toString()//.toV1().toString()
-            const dirUrl = getCentralizedUrl(dirHash)
-            const fileIPFSUrl = getRelativeIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
-
-            setUrl && setUrl(dirUrl)
-            setIpfsUrl && setIpfsUrl(fileIPFSUrl)
-            setFileUrl(dirUrl)
+            const ipfsUpload = new IPFSUpload(result)
+            setUploadedFile(ipfsUpload)
             setLoading(false)
             setUploaded(true)
+            // return upload data
+            returnUploadedFile && returnUploadedFile(ipfsUpload)
         }
     }
 
     useEffect(() => {
+        // return file object loaded to uploader
+        returnLoadedFile && returnLoadedFile(loadedFile)
+        // and start uploading
         returnFileUrl()
-    }, [file])
+    }, [loadedFile])
 
     return <FileUploader 
-                handleChange={setFile} 
+                handleChange={setLoadedFile} 
                 name="file"
                 types={fileTypes}
             >

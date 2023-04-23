@@ -45,8 +45,8 @@ import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@c
 import { Trans, t } from '@lingui/macro';
 import { IPFSFileUpload } from '../../IPFSFileUpload';
 import { formatEther } from "@ethersproject/units";
-import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import NFT from '../../../classes/NFT';
+import IPFSUpload from '../../../classes/IPFSUpload';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -63,6 +63,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
+    const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
 
     enum StepMapping {
         start,
@@ -411,7 +412,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                     </Flex>
                                     
                                     <Box w="100%">
-                                        <IPFSFileUpload />
+                                        <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
                                     </Box>
                                     
                                     <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>

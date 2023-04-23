@@ -33,6 +33,7 @@ import { Info } from '@web3uikit/icons';
 import { Trans, t } from '@lingui/macro';
 import { IPFSFileUpload } from '../../../IPFSFileUpload';
 import { generateMetaEvidence, KlerosCourts } from '../../../../utils/kleros';
+import IPFSUpload from '../../../../classes/IPFSUpload';
 
 interface FormInitialData {
     onSubmit?: Function | undefined,
@@ -55,7 +56,7 @@ const KlerosCaseForm = ({
     question,
     ruling
 }: FormInitialData) => {
-    const [evidenceIpfsUrl, setEvidenceIpfsUrl] = useState('')
+    const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
 
     const onSubmit = (data:any) => {
         const metaEvidence = generateMetaEvidence({
@@ -66,7 +67,7 @@ const KlerosCaseForm = ({
             defendant: defendant,
             question: question,
             ruling: ruling,
-            fileURI: evidenceIpfsUrl
+            fileURI: ''//evidenceIpfsUrl
         })
         outerOnSubmit && outerOnSubmit(metaEvidence)
     }
@@ -129,7 +130,8 @@ const KlerosCaseForm = ({
                             </Flex>
                             
                             <Box w="100%">
-                                <IPFSFileUpload setIpfsUrl={setEvidenceIpfsUrl}/>
+                                { evidenceUpload && evidenceUpload.fileName }
+                                <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
                             </Box>
                             
                             <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
@@ -148,7 +150,7 @@ const KlerosCaseForm = ({
                                     type="submit"
                                     variant="dark-outline"
                                     textTransform="uppercase"
-                                    isDisabled={ !props.isValid }
+                                    isDisabled={ !props.isValid || !evidenceUpload }
                                 >
                                     <Trans>Open dispute</Trans>
                                 </Button>

@@ -38,10 +38,10 @@ import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther, formatEther } from '@ethersproject/units';
-import { getCentralizedUrl, getRelativeIpfsUrl, centralizeIpfsUrl } from '../../../utils/ipfs';
 import NFT from '../../../classes/NFT';
 import SecureNFTButton from './SecureNFTButton';
 import { Contract } from "@ethersproject/contracts";
+import IPFSUpload from '../../../classes/IPFSUpload';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -125,9 +125,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const klerosFormSubmit = (metaEvidence: any) => {
         uploadMetaEvidence(metaEvidence).then((result:any) => {
             setNextStep(StepMapping.evidenceReview)
-            const dirHash = result.uploadResult.cid.toString()//toV1().toString()
-            const dirUrl = getCentralizedUrl(dirHash)
-            const fileIPFSUrl = getRelativeIpfsUrl(result.uploadResult.cid.toString(), result.fileName)
+            const ipfsUpload = new IPFSUpload({
+                uploadResult: result,
+                wrappedWithDirectory: true,
+                fileName: 'metaEvidence.json'
+            })
+            const fileIPFSUrl = ipfsUpload.getRelativeIPFSUrl()
             console.log('MetaEvidence IPFS URL:', fileIPFSUrl)
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, generateArbitratorExtraData(
