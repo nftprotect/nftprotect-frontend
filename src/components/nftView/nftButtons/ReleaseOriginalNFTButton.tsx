@@ -140,18 +140,22 @@ const ReleaseOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingReq
         try {
             console.log('ANSWER ADJUSTMENT REJECT')
             // setNextStep(StepMapping.confirmTransaction)
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
-            .then( finalTransactionSent(
-                nft.loadedContract,
-                StepMapping.pendingTransaction,
-                StepMapping.canceled
-            ))
-            .catch(
-                handleContractError({
-                    'ACTION_REJECTED': handleRejected,
-                    default: handleUnknownError
-                })
-            )
+            if (pendingRequest) {
+                nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
+                .then( finalTransactionSent(
+                    nft.loadedContract,
+                    StepMapping.pendingTransaction,
+                    StepMapping.canceled
+                ))
+                .catch(
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    })
+                )
+            } else {
+                onClose()
+            }
         } catch (err: any) {
             handleUnknownError(err)
         }
