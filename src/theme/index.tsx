@@ -1,5 +1,6 @@
 import { extendTheme } from '@chakra-ui/react'
 import { cardAnatomy } from '@chakra-ui/anatomy'
+import { StepsTheme as Steps } from 'chakra-ui-steps';
 import { createMultiStyleConfigHelpers, defineStyle } from '@chakra-ui/react'
 
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(cardAnatomy.keys)
@@ -240,7 +241,8 @@ const nftProtectTheme = extendTheme({
                     w: {base: "110px"}
                 }
             }
-        }
+        },
+        Steps,
     },
 })
 
