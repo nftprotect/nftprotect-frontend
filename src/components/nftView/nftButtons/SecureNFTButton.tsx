@@ -29,7 +29,6 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
-import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
 

@@ -36,7 +36,6 @@ import { CopyIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
-import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import { t } from '@lingui/macro';
 import CancelledStepContent from './steps/CancelledStepContent'
 import ErrorStepContent from './steps/ErrorStepContent'

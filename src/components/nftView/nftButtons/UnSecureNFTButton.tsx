@@ -27,7 +27,6 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import { defaultArbitrator } from '../../../utils/config';
-import { centralizeIpfsUrl } from '../../../utils/ipfs';
 import { t } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 
