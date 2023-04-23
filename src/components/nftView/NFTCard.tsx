@@ -7,6 +7,7 @@ import {
     Spinner,
     Image,
     Flex,
+    propNames,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import SecureNFTButton from './nftButtons/SecureNFTButton';
@@ -20,6 +21,7 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
+import KlerosCase from '../klerosCase/KlerosCase'
 import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
 
 interface NFTInitialData {
@@ -47,6 +49,8 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
     // Marks if request is timed out (if exists)
     const [ requestTimedOut, setRequestTimedOut] = useState(false)
+
+    const [components, setComponents] = useState(["Sample Component"]); 
 
     // Fetching metadata if it's unawailable by default
     // const fetchMetadataUri = async (uri: string) => {  
@@ -272,6 +276,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
         }
     } else {
         buttons = (
+            <>
             <Box mb={[2]}>
                 <SecureNFTButton 
                     nft={ nft } 
@@ -280,6 +285,15 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     variant={"primary-solid"}
                 />
             </Box>
+            <Box mb={[2]}>
+                <KlerosCase
+                    nft={ nft } 
+                    nftReFetch={ nftReFetch }
+                    setRefreshPaused = { setRefreshPaused }
+                    variant={ "primary-solid" }
+                />
+            </Box>
+            </>
         )
     }
 

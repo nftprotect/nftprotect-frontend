@@ -1,0 +1,176 @@
+import { dialogsTimeout } from '../../utils/config'
+import { Contract } from "@ethersproject/contracts";
+import DidRequiredDialog from '../dialogs/DidRequiredDialog';
+import { useState } from 'react';
+import {
+    chakra,
+    Button,
+    Box,
+    Flex,
+    Image,
+    Text,
+    Modal,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    ModalCloseButton,
+    Textarea,
+    ListItem,
+    OrderedList,
+    Link,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverCloseButton,
+    PopoverArrow,
+    PopoverBody,
+    Spinner,
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    useDisclosure
+} from '@chakra-ui/react'
+import { Wizard } from 'react-use-wizard';
+import SwitchableOutside from '../wizardHelpers/SwitchableOutside';
+import { useAppContext } from '../../context/AppContextProvider';
+import { handleContractError } from '../../utils/errorHandling';
+import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
+import { Info } from '@web3uikit/icons'
+import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
+import { Trans, t } from '@lingui/macro';
+import { formatEther } from "@ethersproject/units";
+import NFT from '../../classes/NFT';
+// import { StepsTheme as Steps } from 'chakra-ui-steps';
+import { Step, Steps, useSteps } from "chakra-ui-steps";
+import StepLabel from './step/StepLabel';
+import StepContent from './step/StepContent';
+
+interface ButtonInitialData {
+    nft: NFT,
+    nftReFetch: Function, // function to update nft list
+    setRefreshPaused: Function, // Function to pause/unpause nft list updating
+    // originalOwner: string, // Owner address of original NFT,
+    variant: any
+}
+
+const KlerosCase = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialData) => {
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
+        initialStep: 0,
+      });
+    
+    const mainButtonOnClick = () => {
+        onOpen()
+        setRefreshPaused(true)
+    }
+
+    // Step content mapping
+    // Label refers to name of the step and displayed on steps bar
+    // description is displayed under label. 
+    // TODO replace descriptions with counters!!!
+    const steps = [
+        { key: "Evidence period", label: <StepLabel labelKey={"Evidence period"} />, description:"1d 06h 09m", content: <StepContent stepKey={"Evidence period"} nft={nft} /> },
+        { key: "Voting period", label: <StepLabel labelKey={"Voting period"} />, description:"3d 18h 00m", content: <StepContent stepKey="Voting period" nft={nft} /> },
+        { key: "Apealing period", label: <StepLabel labelKey={"Apealing period"} />, description:"3d 12h 00m", content: <StepContent stepKey={"Apealing period"} nft={nft} /> },
+        { key: "Decision period", label: <StepLabel labelKey={"Decision period"} />, content: <StepContent stepKey={"Decision period"} nft={nft} /> }
+    ];
+
+    return (
+        <>
+            <Button
+                onClick={ mainButtonOnClick }
+                variant={ variant }
+                w="100%"
+            >
+                <Trans>Open Kleros Case</Trans>
+            </Button>
+
+            <Modal
+                variant="stepModal"
+                closeOnOverlayClick={false}
+                isOpen={isOpen}
+                onClose={() => {
+                    onClose()
+                    setRefreshPaused(false)
+                }}
+                size="full"
+            >
+                <ModalOverlay />
+                <ModalContent
+                    borderRadius="0"
+                    sx={{
+                        "::-webkit-scrollbar": {
+                            w: "5px",
+                        },
+                        "::-webkit-scrollbar-track": {
+                            my: '16px',
+                            overflowY: "hidden"
+                        },
+                        "::-webkit-scrollbar-thumb": {
+                            bgColor: 'accent.light',
+                        }
+
+                    }}
+                >
+                    <ModalCloseButton onClick={onClose} />
+                    <ModalBody mx={{base: "220px"}}>
+                        <Flex flexDir="column" width="100%">
+                            <Steps
+                                borderBottom="2px solid #ADADAD"
+                                variant={"circles"} 
+                                colorScheme="#1316DD"
+                                activeStep={activeStep}
+                                onClickStep={(i) => {
+                                    setStep(i);
+                                }}
+                                py="30px"
+                                sx={{
+                                    "& .cui-steps__step-icon-container": {
+                                        w: "26px",
+                                        h: "26px",
+                                        // bg: "#1316DD", 
+                                        // {activeStep === 0}
+                                    },
+                                    ".cui-steps__step-icon-container span": {
+                                        fontFamily: "Open Sans",
+                                        fontWeight: "600",
+                                        fontSize: "14px",
+                                        lineHeight: "19px",
+                                        color: "#FFF"
+                                    },
+                                    "& .cui-steps__horizontal-step": {
+                                        color: "#FFF",
+                                        "::after": {
+                                            height: "1px",
+                                            bg: "#ADADAD"
+                                        }
+                                    },
+
+                                }}
+                            >
+                                
+                                {steps.map(({ key, label, description, content }) => (
+                                    <Step 
+                                        key={key}
+                                        label={label} 
+                                        description={description}
+                                    >
+                                        {content}
+                                    </Step>
+                                ))}
+                            </Steps>
+                        </Flex>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </>
+    )
+}
+
+export default KlerosCase
