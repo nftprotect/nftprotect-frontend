@@ -81,11 +81,9 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <Trans>Dispute</Trans>
                     </FormLabel>
                     <InputGroup >
-                        <InputLeftElement
-                            py={{base: "14px"}}
-                            pointerEvents='none'
-                            children={"#"}
-                        />
+                        <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
+                            {"#"}
+                        </InputLeftElement>
                         <Input value="1369" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
@@ -95,11 +93,9 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <Trans>Date of creation</Trans>
                     </FormLabel>
                     <InputGroup >
-                        <InputLeftElement
-                            py={{base: "14px"}}
-                            pointerEvents='none'
-                            children={<Calendar fontSize="18px" />}
-                        />
+                        <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
+                            <Calendar fontSize="18px" />
+                        </InputLeftElement>
                         <Input value="24/05/2022" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
@@ -109,11 +105,9 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <Trans>Jurors</Trans>
                     </FormLabel>
                     <InputGroup>
-                        <InputLeftElement
-                            py={{base: "14px"}}
-                            pointerEvents='none'
-                            children={<User fontSize="18px" />}
-                        />
+                        <InputLeftElement  py={{base: "14px"}} pointerEvents='none'>
+                            <User fontSize="18px" />
+                        </InputLeftElement>
                         <Input value="3" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
@@ -123,11 +117,9 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <Trans>Court</Trans>
                     </FormLabel>
                     <InputGroup >
-                        <InputLeftElement
-                            py={{base: "14px"}}
-                            pointerEvents='none'
-                            children={<Image src="./images/lawBalance.svg" alt="Law balance icon" w="16px" h="16px" />}
-                        />
+                        <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
+                            <Image src="./images/lawBalance.svg" alt="Law balance icon" w="16px" h="16px" />
+                        </InputLeftElement>
                         <Input value="Non technical" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
