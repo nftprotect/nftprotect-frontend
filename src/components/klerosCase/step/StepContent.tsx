@@ -21,9 +21,11 @@ import {
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
+    Button,
+    IconButton,
 } from '@chakra-ui/react'
 import { HelpCircle, ExternalLink, Calendar, User, } from '@web3uikit/icons'
-import { ExternalLinkIcon} from '@chakra-ui/icons'
+import { ExternalLinkIcon, ArrowDownIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 
@@ -312,11 +314,43 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <AccordionIcon />
                     </AccordionButton>
 
-                    <AccordionPanel px={{base: "32px"}} py={{base: "32px"}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                    commodo consequat.
+                    <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
+                        <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
+                            <Flex alignItems="center" flexDirection="row" color="#ADADAD" fontSize={{base: "14px"}} lineHeight={{base: "18px"}}>
+                                <Text>
+                                    <Trans>Sort by{": "} date</Trans>
+                                </Text>
+
+                                <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
+                            </Flex>
+                            <Button variant="primary-solid" w={{base: "200px"}}>Submit new evidence</Button>
+                        </Flex>
+
+                        <Flex flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
+                            <Text fontWeight="600" fontSize={{base: "14px"}} lineHeight={{base: "18px"}} px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
+                                {"#"}1 Evidence of a phishing atack
+                            </Text>
+                            <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
+                                <Text fontSize={{base: "14px"}} lineHeight={{base: "18px"}}>
+                                    <Trans>
+                                        Submitted by the 0x12...3456
+                                    </Trans>
+                                </Text>
+                                <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
+                                    <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
+                                        Jan 09, 2020 05:00 GMT
+                                    </Text>
+                                    
+                                    <Text fontSize={{base: "14px"}} lineHeight={{base: "18px"}} color="#2D7BD6">
+                                        <Trans>File link</Trans>
+                                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6">
+                                            <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                        </Link>
+                                    </Text>
+                                </Flex>
+                            </Flex>
+                        </Flex>
+
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
