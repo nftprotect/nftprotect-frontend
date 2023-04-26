@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-04-26 12:37+0700\n"
+"POT-Creation-Date: 2023-04-26 12:44+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,6 +33,10 @@ msgstr "Always make sure the URL is nftprotect.app"
 msgid "Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr "Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 
+#: src/components/klerosCase/step/StepLabel.tsx:36
+msgid "Apealing period"
+msgstr "Apealing period"
+
 #: src/components/loginForm/ApproveConnection.tsx:62
 msgid "Approve connection"
 msgstr "Approve connection"
@@ -56,6 +60,10 @@ msgstr "Chat logs or emails: If the loss of pNFT resulted from a phishing attack
 #: src/components/loginForm/ConnectWallet/ChooseWalletCard.tsx:49
 msgid "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
+
+#: src/components/klerosCase/step/StepContent.tsx:235
+msgid "Claimant was the Original Owner of the NFT and insured it through the Protocol:"
+msgstr "Claimant was the Original Owner of the NFT and insured it through the Protocol:"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:333
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:298
@@ -110,9 +118,34 @@ msgstr "Connecting..."
 msgid "Copied!"
 msgstr "Copied!"
 
+#: src/components/klerosCase/step/StepContent.tsx:117
+msgid "Court"
+msgstr "Court"
+
+#: src/components/klerosCase/step/StepContent.tsx:167
+msgid "Creator:"
+msgstr "Creator:"
+
+#: src/components/klerosCase/step/StepContent.tsx:217
+#: src/components/klerosCase/step/StepContent.tsx:278
+msgid "DID:"
+msgstr "DID:"
+
+#: src/components/klerosCase/step/StepContent.tsx:93
+msgid "Date of creation"
+msgstr "Date of creation"
+
 #: src/pages/index.tsx:124
 msgid "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 msgstr "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
+
+#: src/components/klerosCase/step/StepLabel.tsx:38
+msgid "Decision period"
+msgstr "Decision period"
+
+#: src/components/klerosCase/step/StepContent.tsx:296
+msgid "Defendant acquired the pNFT through this transaction:"
+msgstr "Defendant acquired the pNFT through this transaction:"
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:319
 #: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:115
@@ -126,6 +159,14 @@ msgstr "Description is required"
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:336
 msgid "Detailed"
 msgstr "Detailed"
+
+#: src/components/klerosCase/step/StepContent.tsx:81
+msgid "Dispute"
+msgstr "Dispute"
+
+#: src/components/klerosCase/step/StepContent.tsx:63
+msgid "Dispute policy"
+msgstr "Dispute policy"
 
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:139
 msgid "Do not transfer original"
@@ -142,6 +183,10 @@ msgstr "English"
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:421
 msgid "Enjoy your new life in protected world!"
 msgstr "Enjoy your new life in protected world!"
+
+#: src/components/klerosCase/step/StepContent.tsx:326
+msgid "Evidence"
+msgstr "Evidence"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:499
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:585
@@ -161,6 +206,10 @@ msgstr "Fee for Protection your NFT:"
 msgid "Fetching balance…"
 msgstr "Fetching balance…"
 
+#: src/components/klerosCase/step/StepContent.tsx:361
+msgid "File link"
+msgstr "File link"
+
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:486
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:573
 msgid "Follow the status of the dispute through our app or on the website Kleros."
@@ -170,6 +219,10 @@ msgstr "Follow the status of the dispute through our app or on the website Klero
 #: src/components/loginForm/ConnectWallet/ConnectWallet.tsx:37
 msgid "Get Started"
 msgstr "Get Started"
+
+#: src/components/klerosCase/step/StepContent.tsx:219
+msgid "Gitcoin passport: 70%"
+msgstr "Gitcoin passport: 70%"
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:170
 msgid "Have you lost<0/> access to your pNFT?"
@@ -195,6 +248,10 @@ msgstr "If you've missed including any evidences, you have up to 48 hours to add
 msgid "It's all not protected yet"
 msgstr "It's all not protected yet"
 
+#: src/components/klerosCase/step/StepContent.tsx:105
+msgid "Jurors"
+msgstr "Jurors"
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:274
 msgid "Keep screenshots of all conversations as evidence if you need to submit a case to Kleros."
 msgstr "Keep screenshots of all conversations as evidence if you need to submit a case to Kleros."
@@ -213,6 +270,7 @@ msgstr "Law enforcement reports: If the loss of pNFT has been reported to law en
 msgid "Lost pNFT"
 msgstr "Lost pNFT"
 
+#: src/components/klerosCase/step/StepContent.tsx:48
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:188
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:72
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:100
@@ -224,13 +282,29 @@ msgstr "Lost pNFT"
 msgid "NFT image"
 msgstr "NFT image"
 
+#: src/components/klerosCase/step/StepContent.tsx:162
+msgid "Name:"
+msgstr "Name:"
+
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:188
 msgid "No"
 msgstr "No"
 
+#: src/components/klerosCase/step/StepContent.tsx:280
+msgid "None"
+msgstr "None"
+
 #: src/components/notifications/ShowNotifications.tsx:94
 msgid "Notifications"
 msgstr "Notifications"
+
+#: src/components/klerosCase/KlerosCase.tsx:91
+msgid "Open Kleros Case"
+msgstr "Open Kleros Case"
+
+#: src/components/klerosCase/step/StepContent.tsx:71
+msgid "Open court's page in Kleros"
+msgstr "Open court's page in Kleros"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:200
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:315
@@ -258,20 +332,36 @@ msgstr "Open dispute <0/> in Kleros"
 msgid "Open dispute<0/> in Kleros"
 msgstr "Open dispute<0/> in Kleros"
 
+#: src/components/klerosCase/step/StepContent.tsx:172
+msgid "Original NFT creation date:"
+msgstr "Original NFT creation date:"
+
+#: src/components/klerosCase/step/StepContent.tsx:177
+msgid "Original NFT protection date:"
+msgstr "Original NFT protection date:"
+
 #: src/components/nftView/nftButtons/OriginalNFTRequestedButton.tsx:90
 msgid "Original requested"
 msgstr "Original requested"
 
+#: src/components/klerosCase/step/StepContent.tsx:224
+msgid "Original:"
+msgstr "Original:"
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:409
 msgid "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr "Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
+
+#: src/components/klerosCase/step/StepContent.tsx:56
+msgid "Ownership restoration in case of loss of pNFT in phishing attack"
+msgstr "Ownership restoration in case of loss of pNFT in phishing attack"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:419
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:510
 msgid "Pay the dispute"
 msgstr "Pay the dispute"
 
-#: src/components/nftView/NFTCard.tsx:177
+#: src/components/nftView/NFTCard.tsx:181
 msgid "Pending..."
 msgstr "Pending..."
 
@@ -348,6 +438,10 @@ msgstr "Protect your digital <0/>assets from bad<1/> actors"
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:389
 msgid "Protecting your asset…"
 msgstr "Protecting your asset…"
+
+#: src/components/klerosCase/step/StepContent.tsx:154
+msgid "Protection NFT (pNFT)"
+msgstr "Protection NFT (pNFT)"
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:217
 msgid "Protocol breach"
@@ -431,6 +525,14 @@ msgstr "Show all"
 msgid "Some error occured"
 msgstr "Some error occured"
 
+#: src/components/klerosCase/step/StepContent.tsx:335
+msgid "Sort by:  date"
+msgstr "Sort by:  date"
+
+#: src/components/klerosCase/step/StepContent.tsx:351
+msgid "Submitted by the 0x12...3456"
+msgstr "Submitted by the 0x12...3456"
+
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:408
 msgid "Success"
 msgstr "Success"
@@ -438,6 +540,30 @@ msgstr "Success"
 #: src/components/navBar/MainMenu.tsx:77
 msgid "Terms of service"
 msgstr "Terms of service"
+
+#: src/components/klerosCase/step/StepContent.tsx:310
+msgid "The Claimant claims that he lost his pNFT due to a phishing attack"
+msgstr "The Claimant claims that he lost his pNFT due to a phishing attack"
+
+#: src/components/klerosCase/step/StepContent.tsx:199
+msgid "The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)"
+msgstr "The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)"
+
+#: src/components/klerosCase/step/StepContent.tsx:260
+msgid "The Defendant is the party that has aquired th pNFT and is challenged."
+msgstr "The Defendant is the party that has aquired th pNFT and is challenged."
+
+#: src/components/klerosCase/step/StepContent.tsx:152
+msgid "The Subject of the Dispute:"
+msgstr "The Subject of the Dispute:"
+
+#: src/components/klerosCase/step/StepContent.tsx:188
+msgid "The claimant"
+msgstr "The claimant"
+
+#: src/components/klerosCase/step/StepContent.tsx:249
+msgid "The defendant"
+msgstr "The defendant"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:404
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:495
@@ -480,6 +606,10 @@ msgstr "The pNFT will be burned and the original NFT will be sent to you"
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:230
 msgid "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT"
 msgstr "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT"
+
+#: src/components/klerosCase/step/StepContent.tsx:314
+msgid "This is how he described the situation:"
+msgstr "This is how he described the situation:"
 
 #: src/components/nftView/NFTView.tsx:278
 msgid "This section displays all the pNFTs that you own"
@@ -559,6 +689,10 @@ msgstr "Until you complete DID verification, the only available function is to r
 msgid "Upload all available evidence:"
 msgstr "Upload all available evidence:"
 
+#: src/components/klerosCase/step/StepLabel.tsx:34
+msgid "Voting period"
+msgstr "Voting period"
+
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:339
 #: src/components/nftView/nftButtons/SecureNFTButton.tsx:378
 msgid "Wait for transaction to confirm..."
@@ -573,6 +707,11 @@ msgstr "Wait for transaction to confirm..."
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:227
 msgid "Wait for transaction to confirm…"
 msgstr "Wait for transaction to confirm…"
+
+#: src/components/klerosCase/step/StepContent.tsx:206
+#: src/components/klerosCase/step/StepContent.tsx:267
+msgid "Wallet:"
+msgstr "Wallet:"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:296
 msgid "Want to initiate a dispute in the Kleros decentralized court?"
@@ -594,6 +733,10 @@ msgstr "We've worked very hard to prepare a strong dispute with compelling evide
 #: src/components/navBar/MainMenu.tsx:51
 msgid "Whitepaper"
 msgstr "Whitepaper"
+
+#: src/components/klerosCase/step/StepContent.tsx:136
+msgid "Winner:"
+msgstr "Winner:"
 
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:322
 msgid "Write the address of the protocol smart contract"
@@ -659,6 +802,18 @@ msgstr "case {disputeId}"
 msgid "has transferred the original NFT to you"
 msgstr "has transferred the original NFT to you"
 
+#: src/components/klerosCase/step/StepContent.tsx:285
+msgid "pNFT:"
+msgstr "pNFT:"
+
 #: src/components/nftView/nftButtons/OriginalNFTRequestedButton.tsx:193
 msgid "your asset may have been stolen!"
 msgstr "your asset may have been stolen!"
+
+#: src/components/klerosCase/step/StepLabel.tsx:32
+msgid "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
+msgstr "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
+
+#: src/components/klerosCase/step/StepContent.tsx:157
+msgid "Сollection:"
+msgstr "Сollection:"
