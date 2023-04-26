@@ -59,6 +59,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const { ipfs } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const [url, setUrl] = useState<string>()
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
@@ -122,20 +123,45 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
         setRefreshPaused(true)
     }
 
-    const klerosFormSubmit = (metaEvidence: any) => {
-        uploadMetaEvidence(metaEvidence).then((result:any) => {
+    const klerosFormSubmit = (evidenceData: any) => {
+        const evidenceJSON = {
+            evidenceSide: 0,
+            name: "Evidence of Bona Fide transfer",
+            ...evidenceData
+        }
+        uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
+            console.log('EVIDENCE', evidenceJSON, result)
+            setEvidence(result)
             setNextStep(StepMapping.evidenceReview)
-            const ipfsUpload = new IPFSUpload({
+        })
+    }
+
+    const uploadEvidence = async (evidence: any) => {
+        const fileName = 'evidence.json'
+        if (ipfs) {
+            const result = await ipfs.add(
+                {
+                    path: fileName,
+                    content: JSON.stringify(evidence)
+                }, 
+                {wrapWithDirectory: true}
+            )
+            return new IPFSUpload({
                 uploadResult: result,
-                wrappedWithDirectory: true,
-                fileName: 'metaEvidence.json'
+                fileName: fileName,
+                wrappedWithDirectory: true
             })
-            const fileIPFSUrl = ipfsUpload.getRelativeIPFSUrl()
-            console.log('MetaEvidence IPFS URL:', fileIPFSUrl)
+        } else {
+            throw Error('IPFS client not configured!')
+        }
+    }
+
+    const openDispute = () => {
+        setNextStep(StepMapping.confirmTransaction)
+        if (evidence) {
+            const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, generateArbitratorExtraData(
-                    subcourtID.toString(), numberOfVotes.toString()
-                ), fileIPFSUrl, {value: parseEther(DISPUTE_PRICE)})
+                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, evidenceJSONUrl, {value: parseEther(DISPUTE_PRICE)})
                     .then( finalTransactionSent() )
                     .catch( 
                         handleContractError({
@@ -146,26 +172,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
             } catch (err: any) {
                 handleUnknownError(err)
             }
-        })
-    }
-
-    const uploadMetaEvidence = async (metaEvidence: any) => {
-        console.log('METAEVIDENCE', metaEvidence)
-        const fileName = 'metaEvidence.json'
-        if (ipfs) {
-            const result = await ipfs.add(
-                {
-                    path: fileName,
-                    content: JSON.stringify(metaEvidence)
-                }, 
-                {wrapWithDirectory: true}
-            )
-            return {
-                fileName: fileName,
-                uploadResult: result
-            }
         } else {
-            throw Error('IPFS client not configured!')
+            console.error('Missing evidence.json file')
         }
     }
 
@@ -413,7 +421,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                 <CardFooter>
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
-                                            onClick={ () => setNextStep(StepMapping.confirmTransaction) }
+                                            onClick={ openDispute }
                                             variant="dark-outline"
                                         >
                                             <Trans>Pay the dispute</Trans>

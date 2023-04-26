@@ -59,17 +59,11 @@ const KlerosCaseForm = ({
     const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
 
     const onSubmit = (data:any) => {
-        const metaEvidence = generateMetaEvidence({
-            title: title,
-            category: category,
+        const evidence = {
             description: data.description,
-            claimant: claimant,
-            defendant: defendant,
-            question: question,
-            ruling: ruling,
-            fileURI: ''//evidenceIpfsUrl
-        })
-        outerOnSubmit && outerOnSubmit(metaEvidence)
+            fileURI: evidenceUpload?.getRelativeIPFSUrl()
+        }
+        outerOnSubmit && outerOnSubmit(evidence)
     }
 
     // Textarea input validation
@@ -79,7 +73,7 @@ const KlerosCaseForm = ({
           error = <Trans>Description is required</Trans>
         }
         return error
-      }
+    }
 
     return (<>
         <Formik
