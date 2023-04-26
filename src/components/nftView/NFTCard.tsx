@@ -285,14 +285,16 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     variant={"primary-solid"}
                 />
             </Box>
-            <Box mb={[2]}>
-                <KlerosCase
-                    nft={ nft } 
-                    nftReFetch={ nftReFetch }
-                    setRefreshPaused = { setRefreshPaused }
-                    variant={ "primary-solid" }
-                />
-            </Box>
+            {
+                (process.env.NODE_ENV !== 'production') && <Box mb={[2]}>
+                    <KlerosCase
+                        nft={ nft } 
+                        nftReFetch={ nftReFetch }
+                        setRefreshPaused = { setRefreshPaused }
+                        variant={ "primary-solid" }
+                    />
+                </Box>
+            }
             </>
         )
     }
