@@ -33,7 +33,7 @@ import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
-import { generateArbitratorExtraData, KlerosCourts, klerosCases } from '../../../utils/kleros';
+import { generateArbitratorExtraData, KlerosCourts } from '../../../utils/kleros';
 import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
@@ -126,7 +126,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const klerosFormSubmit = (evidenceData: any) => {
         const evidenceJSON = {
             evidenceSide: 0,
-            name: "Evidence of Bona Fide transfer",
+            name: t`Evidence of Bona Fide transfer`,
             ...evidenceData
         }
         uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
@@ -352,8 +352,18 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
                                 defendant={originalOwner}
-                                {...klerosCases.arbitrateOwnershipAdjustment}
-                            />
+                                title={t`Bona fide transfer`}
+                                requireProtocolAddress={false}
+                            >
+                                <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
+                                    <Text mb={{base: "8px"}}>
+                                        <Trans>Upload all available evidence:</Trans>
+                                    </Text>
+                                    <Text>
+                                        <Trans>To ensure a fair review by expert arbitrators, be sure to provide evidence. The more detail you provide, including text, images, or other documentation, the better the review.</Trans>
+                                    </Text>
+                                </Flex>
+                            </KlerosCaseForm>
                         </SwitchableOutside>
 
                         {/* evidenceReview */}

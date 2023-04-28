@@ -40,10 +40,9 @@ interface FormInitialData {
     onClose: Function,
     claimant: string,
     defendant: string,
-    title: string,
-    category: string,
-    question: string,
-    ruling: any
+    title?: string,
+    requireProtocolAddress?: boolean,
+    children?: React.ReactNode
 }
 
 const KlerosCaseForm = ({
@@ -52,9 +51,8 @@ const KlerosCaseForm = ({
     claimant,
     defendant,
     title,
-    category,
-    question,
-    ruling
+    requireProtocolAddress = false,
+    children
 }: FormInitialData) => {
     const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
 
@@ -71,6 +69,14 @@ const KlerosCaseForm = ({
         let error
         if (!value) {
           error = <Trans>Description is required</Trans>
+        }
+        return error
+    }
+
+    function validateProtocolAddress(value: string) {
+        let error
+        if (!value) {
+          error = <Trans>Protocol address is required</Trans>
         }
         return error
     }
@@ -94,9 +100,11 @@ const KlerosCaseForm = ({
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                 <Trans>Open dispute <br /> in Kleros</Trans>
                             </Text>
-                            <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
-                                <Trans>Bona fide transfer</Trans>
-                            </Text>
+                            {
+                                title && <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                    { title }
+                                </Text>
+                            }
                         </CardHeader>
 
                         <CardBody my={{base: "20px"}}>
@@ -114,14 +122,24 @@ const KlerosCaseForm = ({
                                 )}
                             </Field>
 
-                            <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
-                                <Text mb={{base: "8px"}}>
-                                    <Trans>Upload all available evidence:</Trans>
-                                </Text>
-                                <Text>
-                                    <Trans>To ensure a fair review by expert arbitrators, be sure to provide evidence. The more detail you provide, including text, images, or other documentation, the better the review.</Trans>
-                                </Text>
-                            </Flex>
+                            { requireProtocolAddress && <Field name='protocolAddress' validate={validateProtocolAddress} >
+                                {({ field, form }: any) => (
+                                    <FormControl isInvalid={form.errors.protocolAddress && form.touched.protocolAddress} mb={{base: "20px"}}>
+                                        <Textarea 
+                                            type='text' 
+                                            {...field} 
+                                            placeholder={t`Write the address of the protocol smart contract`}
+                                            variant='primary' resize="vertical" 
+                                            mb={{base: "20px"}} 
+                                            isRequired 
+                                            minH={{base: "38px" }}
+                                        />
+                                        <FormErrorMessage>{form.errors.protocolAddress}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>}
+
+                            { children }
                             
                             <Box w="100%">
                                 { evidenceUpload && evidenceUpload.fileName }

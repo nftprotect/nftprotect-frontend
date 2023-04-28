@@ -47,6 +47,8 @@ import { IPFSFileUpload } from '../../IPFSFileUpload';
 import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
+import KlerosCaseForm from './steps/KlerosCaseForm';
+import { useIPFSContext } from '../../../context/IPFSContextProvider';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -59,11 +61,12 @@ interface ButtonInitialData {
 const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant}: ButtonInitialData) => {
 
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
+    const { ipfs } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
-    const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
+    const [ evidence, setEvidence ] = useState<IPFSUpload>()
 
     enum StepMapping {
         start,
@@ -113,14 +116,50 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         setNextStep(StepMapping.evidenceFillForm)
     }
 
-    const evidenceReview = () => {
-        setNextStep(StepMapping.evidenceReview)
-    }
-
     const copyOriginalOwnerToClipboard = () => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
+    const klerosFormSubmit = (evidenceData: any) => {
+        const evidenceJSON = {
+            evidenceSide: 0,
+            name: t`Evidence of` + ` ${klerosCaseFormTitle}`,
+            ...evidenceData
+        }
+        uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
+            console.log('EVIDENCE', evidenceJSON, result)
+            setEvidence(result)
+            setNextStep(StepMapping.evidenceReview)
+        })
+    }
+
+    const uploadEvidence = async (evidence: any) => {
+        const fileName = 'evidence.json'
+        if (ipfs) {
+            const result = await ipfs.add(
+                {
+                    path: fileName,
+                    content: JSON.stringify(evidence)
+                }, 
+                {wrapWithDirectory: true}
+            )
+            return new IPFSUpload({
+                uploadResult: result,
+                fileName: fileName,
+                wrappedWithDirectory: true
+            })
+        } else {
+            throw Error('IPFS client not configured!')
+        }
+    }
+
+    const klerosCaseFormTitle = (lostReason === 'protocol breach') ?
+                                    t`Protocol breach` :
+                                (lostReason === 'phishing attack') ?
+                                    t`Phishing attack` :
+                                (lostReason === 'sending to an incorrect address') ?
+                                    t`Sending to an incorrect address` :
+                                undefined
     return (<>
         <Button
             onClick={ mainButtonOnClick }
@@ -305,23 +344,14 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                         
                         {/* Step 3. evidenceFillForm */}
                         <SwitchableOutside nextStepNumber={nextStep}>
-                            <Card variant="stepContent">
-                                <CardHeader>
-                                    <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute <br /> in Kleros</Trans>
-                                    </Text>
-                                </CardHeader>
-
-                                <CardBody mb={{base: "20px"}}>
-                                    <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center" textTransform="uppercase" fontWeight="700" color="accent.light">
-                                        { lostReason }
-                                    </Text>
-                                    <Textarea placeholder={t`Describe the situation in details…`} variant='primary' resize="vertical" mb={{base: "20px"}} isRequired />
-                                    
-                                    {(lostReason == 'protocol breach') &&
-                                        <Textarea placeholder={t`Write the address of the protocol smart contract`} variant='primary' resize="vertical" mb={{base: "20px"}} isRequired minH={{base: "38px" }} />
-                                    }
-                                    
+                            <KlerosCaseForm
+                                onClose={onClose}
+                                onSubmit={klerosFormSubmit}
+                                claimant={account || ''}
+                                defendant={originalOwner}
+                                title={ klerosCaseFormTitle }
+                                requireProtocolAddress={(lostReason === 'protocol breach')}
+                            >
                                     <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
                                         <Text mb={{base: "8px"}}>
                                             <Trans>Upload all available evidence:</Trans>
@@ -410,33 +440,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                             </ListItem>
                                         </OrderedList>
                                     </Flex>
-                                    
-                                    <Box w="100%">
-                                        <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
-                                    </Box>
-                                    
-                                    <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
-                                        <Box color="#2D7BD6" mr={[2]}>
-                                            <Info fontSize='20px' />
-                                        </Box>
-                                        <Text textStyle="paragraph" color="#999999">
-                                            <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
-                                        </Text>
-                                    </Flex>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Box w={{base: "60%", xs: "40%"}}>
-                                        <Button
-                                            onClick={ evidenceReview }
-                                            variant="dark-outline"
-                                            textTransform="uppercase"
-                                        >
-                                            <Trans>Open dispute</Trans>
-                                        </Button>
-                                    </Box>
-                                </CardFooter>
-                            </Card>
+                            </KlerosCaseForm>
                         </SwitchableOutside>
                         
                         {/* Step 4. evidenceReview */}
