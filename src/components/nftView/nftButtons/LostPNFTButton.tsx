@@ -1,4 +1,4 @@
-import { dialogsTimeout } from '../../../utils/config'
+import { defaultArbitrator, dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
 import { useState } from 'react';
@@ -49,6 +49,7 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import { parseEther } from '@ethersproject/units';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -67,6 +68,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
+    const DISPUTE_PRICE = '0.03'
 
     enum StepMapping {
         start,
@@ -80,6 +82,48 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         canceled,
         error,
         timeout
+    }
+
+    const evidenceTypes: any = {
+        'protocol breach': 5,
+        'phishing attack': 6,
+        'sending to an incorrect address': 7
+    }
+
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(StepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(StepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleTransactionFailed = (tx: any) => {
+        setNextStep(StepMapping.error)
+        console.log("Transaction failed", tx.hash);
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const finalTransactionSent = () => {
+        return (tx: any) => {
+            setNextStep(StepMapping.waitForTransactionConfirmation);
+            nftProtectContract.provider.once(tx.hash, (receipt) => {
+                if (receipt.status === 1) {
+                    nft.loadPendingRequest()
+                    // after mined fire wrap
+                    setNextStep(StepMapping.finalCompleted)
+                    console.log("Transaction successful", tx.hash);
+                    nftReFetch();
+                    setTimeout(onClose, dialogsTimeout)
+                } else {
+                    handleTransactionFailed(tx);
+                }
+            })
+        }
     }
 
     const mainButtonOnClick = () => {
@@ -150,6 +194,34 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
             })
         } else {
             throw Error('IPFS client not configured!')
+        }
+    }
+
+    const openDispute = () => {
+        setNextStep(StepMapping.confirmTransaction)
+        if (evidence) {
+            const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
+            try {
+                nftProtectContract.askOwnershipRestoreArbitrate(
+                    nft.tokenId,
+                    account, // TODO: Must be replaced by new address
+                    defaultArbitrator,
+                    //lostReason && evidenceTypes[lostReason],
+                    evidenceJSONUrl,
+                    {value: parseEther(DISPUTE_PRICE)}
+                )
+                    .then( finalTransactionSent() )
+                    .catch( 
+                        handleContractError({
+                            'ACTION_REJECTED': handleRejected,
+                            default: handleUnknownError
+                        }) 
+                    )
+            } catch (err: any) {
+                handleUnknownError(err)
+            }
+        } else {
+            console.error('Missing evidence.json file')
         }
     }
 
@@ -508,7 +580,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                 <CardFooter>
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
-                                            onClick={ () => setNextStep(StepMapping.confirmTransaction) }
+                                            onClick={ openDispute }
                                             variant="dark-outline"
                                         >
                                             <Trans>Pay the dispute</Trans>
