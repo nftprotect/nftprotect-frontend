@@ -40,6 +40,7 @@ export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 export const libraryPollingInterval = 12000
 export const nftpContractAddress = '0x0f89a90ca6b0e193bd1beb6cef24da76d4434d77'
 export const userRegistryContractAddress = '0x6062b6588955e25a2d09292ccfe1a28b49f3b4e1'
+export const arbitratorRegistryContractAddress = '0x6062b6588955e25a2d09292ccfe1a28b49f3b4e1'
 export const couponsContractAddress = '0x479213ab22d41999DF143aDBce000831b9B7C736'
 
 export const dialogsTimeout = 5000
