@@ -49,15 +49,9 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Home: NextPage = () => {
 
     const { account, active, arbitratorRegistryContract } = useAppContext()
-    const [ isRegistered, setIsRegistered ] = useState<Boolean>()
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
-
-    const loadIsRegistered = async () => {
-        const result = await arbitratorRegistryContract.arbitrator(account)
-        setIsRegistered(result.extraData !== '')
-    }
 
     useEffect(() => {
         setBaseUrl(window.location.origin)
@@ -67,11 +61,6 @@ const Home: NextPage = () => {
         // on login check arbitrator state
     //    active && loadIsRegistered()
     }, [active])
-
-    useEffect(() => {
-        // Load other arbitrator data
-
-    }, [isRegistered])
 
     return (
         <>
@@ -146,13 +135,12 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
-                    { isRegistered && <div>{"You're registered"}</div>}
-                    { !isRegistered && <Button onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}>Register as arbitrator</Button>}
-                    { !isRegistered && <Button onClick={ () => { getDialog('SomeAnotherDialog').onOpen() }}>Register as SomeAnother</Button>}
+                    <Button onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}>
+                        <Trans>Register new arbitrator</Trans>
+                    </Button>
 
                     { /** Dialogs used on this page */ }
                     <RegisterArbitratorDialog setDisputeId={setDisputeId}/>
-                    <SomeAnotherDialog/>
                 </main>
             }
         </Container>

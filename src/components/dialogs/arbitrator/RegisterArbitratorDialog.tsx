@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import {
+    CheckboxGroup,
+    Checkbox,
     Button,
     Box,
     Image,
@@ -42,6 +44,7 @@ import SwitchableOutside from "../../wizardHelpers/SwitchableOutside";
 import { dialogsTimeout } from "../../../utils/config";
 import { useAppContext } from "../../../context/AppContextProvider";
 import { formatEther, parseEther } from "@ethersproject/units";
+import { isAddress } from "@ethersproject/address";
 import CancelledStepContent from "../../nftView/nftButtons/steps/CancelledStepContent";
 import ErrorStepContent from "../../nftView/nftButtons/steps/ErrorStepContent";
 import TimeoutStepContent from "../../nftView/nftButtons/steps/TimeoutStepContent";
@@ -57,6 +60,34 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
     const { account, arbitratorRegistryContract, fee } = useAppContext()
+
+    const metaEvidenceTypes = [
+        {
+            label: 'burn',
+            value: '0'
+        }, {
+            label: 'adjustOwnership',
+            value: '1'
+        }, {
+            label: 'askOwnershipAdjustment',
+            value: '2'
+        }, {
+            label: 'answerOwnershipAdjustment',
+            value: '3'
+        }, {
+            label: 'askOwnershipAdjustmentArbitrate',
+            value: '4'
+        }, {
+            label: 'askOwnershipRestoreArbitrateMistake',
+            value: '5'
+        }, {
+            label: 'askOwnershipRestoreArbitratePhishing',
+            value: '6'
+        }, {
+            label: 'askOwnershipRestoreArbitrateProtocolBreach',
+            value: '7'
+        }
+    ]
 
     const DISPUTE_PRICE = '0.03'
 
@@ -116,8 +147,9 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                 fileURI: evidenceUpload?.getRelativeIPFSUrl()
             },
             name: data.name,
-            operations: splitByLines(data.operations),
+            operations: data.operations,
             extraDatas: splitByLines(data.extraDatas),
+            arbitratorContractAddress: data.arbitratorContractAddress,
             contractAddresses: splitByLines(data.contractAddresses)
         }
         setSubmissionData(result)
@@ -133,7 +165,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
         return error
     }
 
-    const validateOperations = (value: string) => {
+    const validateOperations = (value: number[]) => {
         let error
         // Do some check
         return error
@@ -146,7 +178,8 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                 error = t`At least one extraData must be specified`
             } else {
                 const extraDatasLength = splitByLines(values.extraDatas)?.length
-                const operationsLength = splitByLines(values.operations)?.length
+                const operationsLength = values.operations?.length
+                console.log(values.operations)
                 if (extraDatasLength !== operationsLength) {
                     error = t`Extra Datas must contain the same number of lines as Operations`
                 }
@@ -161,8 +194,21 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
         return error
     }
 
+    const validateArbitratorContractAddress = async (value: string) => {
+        if (!value) {
+            return t`Contract address is required`
+        }
+        if (!isAddress(value)) {
+            return t`Incorrect address`
+        }
+        const checkAddress = await arbitratorRegistryContract.checkArbitrator(value)
+        if (checkAddress) {
+            return t`Address already registered`
+        }
+    }
+
     const splitByLines = (str: string | undefined) => {
-        return str?.trim()?.split('\n')
+        return str?.trim()?.split('\n') || []
     }
 
     const openDispute = () => {
@@ -170,8 +216,9 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
         if (evidenceUpload) {
             const evidenceJSONUrl = evidenceUpload.getRelativeIPFSUrl()
             try {
-                arbitratorRegistryContract.register(
-                    account,
+                arbitratorRegistryContract.addArbitrator(
+                    submissionData.name,
+                    submissionData.arbitratorContractAddress,
                     submissionData.operations,
                     submissionData.extraDatas,
                     submissionData.contractAdresses,
@@ -248,7 +295,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                 }}
                             >
 
-                                {(props) => (
+                                {(props: FormikProps<any>) => (
                                     <Form onSubmit={props.handleSubmit}>
                                         <Card variant="stepContent">
                                             <CardHeader>
@@ -261,6 +308,21 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                             </CardHeader>
 
                                             <CardBody my={{base: "20px"}}>
+                                                <Field name='arbitratorContractAddress' validate={validateArbitratorContractAddress} >
+                                                    {({ field, form }: any) => (
+                                                        <FormControl isInvalid={form.errors.arbitratorContractAddress && form.touched.arbitratorContractAddress} mb={{base: "20px"}}>
+                                                            <Input 
+                                                                variant='outline' 
+                                                                resize="vertical" 
+                                                                placeholder={ t`An address of your arbitrator contract`}
+                                                                isRequired
+                                                                {...field} 
+                                                            />
+                                                            <FormErrorMessage>{form.errors.arbitratorContractAddress}</FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+
                                                 <Field name='name' validate={validateName} >
                                                     {({ field, form }: any) => (
                                                         <FormControl isInvalid={form.errors.name && form.touched.name} mb={{base: "20px"}}>
@@ -279,14 +341,25 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                                 <Field name='operations' validate={validateOperations} >
                                                     {({ field, form }: any) => (
                                                         <FormControl isInvalid={form.errors.operations && form.touched.operations} mb={{base: "20px"}}>
-                                                            <Textarea 
-                                                                type='text' 
-                                                                {...field} 
-                                                                placeholder={t`Write a list of operations you can handle (each in a new line)`}
-                                                                variant='primary' resize="vertical" 
-                                                                mb={{base: "20px"}} 
-                                                                minH={{base: "128px" }}
-                                                            />
+                                                            <CheckboxGroup 
+                                                                defaultValue={[]}
+                                                                onChange={(value: string[]) => {
+                                                                    const operations = value.map(
+                                                                        (value: string) => Number(value)
+                                                                    ).sort()
+                                                                    props.setValues({ ...props.values, operations })
+                                                                }}
+                                                            >
+                                                                {metaEvidenceTypes.map((option) => (
+                                                                    <Checkbox
+                                                                        key={option.label}
+                                                                        value={option.value}
+                                                                        //onChange={}
+                                                                    >
+                                                                        {option.label}
+                                                                    </Checkbox>
+                                                                ))}
+                                                            </CheckboxGroup>
                                                             <FormErrorMessage>{form.errors.operations}</FormErrorMessage>
                                                         </FormControl>
                                                     )}
@@ -386,7 +459,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                         </Text>
 
                                         <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
-                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                            {"Ξ"}{ DISPUTE_PRICE } 
                                         </Text>
                                     </CardBody>
                                 </Flex>
