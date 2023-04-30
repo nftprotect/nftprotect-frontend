@@ -22,6 +22,7 @@ import {
     List,
     ListItem,
     ListIcon,
+    Link,
     Input,
     Textarea,
     Card,
@@ -36,15 +37,77 @@ import { Trans, t } from '@lingui/macro';
 import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
 import IPFSUpload from "../../../classes/IPFSUpload";
 import { IPFSFileUpload } from "../../IPFSFileUpload";
+import { Wizard } from "react-use-wizard";
+import SwitchableOutside from "../../wizardHelpers/SwitchableOutside";
+import { dialogsTimeout } from "../../../utils/config";
+import { useAppContext } from "../../../context/AppContextProvider";
+import { formatEther, parseEther } from "@ethersproject/units";
+import CancelledStepContent from "../../nftView/nftButtons/steps/CancelledStepContent";
+import ErrorStepContent from "../../nftView/nftButtons/steps/ErrorStepContent";
+import TimeoutStepContent from "../../nftView/nftButtons/steps/TimeoutStepContent";
+import { BigNumber } from '@ethersproject/bignumber';
+import { handleContractError } from '../../../utils/errorHandling';
 
-const RegisterArbitratorDialog = () => {
+const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisputeId?: Function}) => {
     const disclosure = useDisclosure()
+    const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
-    const [evidenceUpload, setEvidenceUpload] = useState<IPFSUpload>()
+    const [ evidenceUpload, setEvidenceUpload ] = useState<IPFSUpload>()
+    const [ disputeId, setDisputeId ] = useState<BigNumber>()
+    const [ nextStep, setNextStep ] = useState<number>(0)
+    const [ submissionData, setSubmissionData ] = useState<any>()
+    const { account, arbitratorRegistryContract, fee } = useAppContext()
 
-    useEffect(() => {
-        setDialog('RegisterArbitratorDialog', disclosure)
-    }, [])
+    const DISPUTE_PRICE = '0.03'
+
+    // Naming of wizard step numbers
+    enum StepMapping {
+        start,
+        payArbitrationFee,
+        confirmTransaction,
+        waitingForTransaction,
+        success,
+        canceled,
+        error,
+        timeout
+    }
+
+    const handleUnknownError = (error: any) => {
+        console.error(error)
+        setNextStep(StepMapping.error)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleRejected = () => {
+        // Transaction declined
+        setNextStep(StepMapping.canceled)
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const handleTransactionFailed = (tx: any) => {
+        setNextStep(StepMapping.error)
+        console.log("Transaction failed", tx.hash);
+        setTimeout(onClose, dialogsTimeout)
+    }
+
+    const finalTransactionSent = () => {
+        return (tx: any) => {
+            console.log('ARBITRATOR REGISTRATION TX', tx)
+            // setDisputeId
+            setNextStep(StepMapping.waitingForTransaction);
+            arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
+                if (receipt.status === 1) {
+                    // after mined fire wrap
+                    setDisputeIdExternal && setDisputeIdExternal(disputeId)
+                    setNextStep(StepMapping.success)
+                    console.log("Transaction successful", tx.hash);
+                    setTimeout(onClose, dialogsTimeout)
+                } else {
+                    handleTransactionFailed(tx);
+                }
+            })
+        }
+    }
 
     const onSubmit = (data:any) => {
         const result = {
@@ -57,7 +120,8 @@ const RegisterArbitratorDialog = () => {
             extraDatas: splitByLines(data.extraDatas),
             contractAddresses: splitByLines(data.contractAddresses)
         }
-        //outerOnSubmit && outerOnSubmit(evidence)
+        setSubmissionData(result)
+        setNextStep(StepMapping.payArbitrationFee)
     }
 
     // Textarea input validation
@@ -101,13 +165,52 @@ const RegisterArbitratorDialog = () => {
         return str?.trim()?.split('\n')
     }
 
+    const openDispute = () => {
+        setNextStep(StepMapping.confirmTransaction)
+        if (evidenceUpload) {
+            const evidenceJSONUrl = evidenceUpload.getRelativeIPFSUrl()
+            try {
+                arbitratorRegistryContract.register(
+                    account,
+                    submissionData.operations,
+                    submissionData.extraDatas,
+                    submissionData.contractAdresses,
+                    evidenceJSONUrl, 
+                    {value: parseEther(DISPUTE_PRICE)}
+                )
+                    .then( finalTransactionSent() )
+                    .catch( 
+                        handleContractError({
+                            'ACTION_REJECTED': handleRejected,
+                            default: handleUnknownError
+                        }) 
+                    )
+            } catch (err: any) {
+                handleUnknownError(err)
+            }
+        } else {
+            console.error('Missing evidence')
+        }
+    }
+
+    useEffect(() => {
+        setDialog('RegisterArbitratorDialog', disclosure)
+    }, [])
+
+    useEffect(() => {
+        setNextStep(StepMapping.start)
+        setEvidenceUpload(undefined)
+        setSubmissionData(undefined)
+        setDisputeId(undefined)
+    }, [isOpen])
+
     return (<>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
-            isOpen={disclosure.isOpen} 
+            isOpen={disclosure.isOpen}
             onClose={() => {
-                disclosure.onClose()
+                onClose()
             }}
         >
             <ModalOverlay 
@@ -129,137 +232,261 @@ const RegisterArbitratorDialog = () => {
                     }
                 }}
             >
-                <ModalCloseButton onClick={disclosure.onClose} />
+                <ModalCloseButton onClick={onClose} />
                 <ModalBody>
-                    <Formik
-                        initialValues={{}}
-                        validateOnMount={true}
-                        onSubmit={(values, actions) => {
-                            onSubmit(values)
-                            setTimeout(() => {
-                                actions.setSubmitting(false)
-                            }, 1000)
-                        }}
-                    >
+                    <Wizard>
+                        {/* Start */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Formik
+                                initialValues={{}}
+                                validateOnMount={true}
+                                onSubmit={(values, actions) => {
+                                    onSubmit(values)
+                                    setTimeout(() => {
+                                        actions.setSubmitting(false)
+                                    }, 1000)
+                                }}
+                            >
 
-                        {(props) => (
-                            <Form onSubmit={props.handleSubmit}>
-                                <Card variant="stepContent">
+                                {(props) => (
+                                    <Form onSubmit={props.handleSubmit}>
+                                        <Card variant="stepContent">
+                                            <CardHeader>
+                                                <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
+                                                    <Trans>Register as arbitrator</Trans>
+                                                </Text>
+                                                <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                                    <Trans>Please fill the form to register</Trans>
+                                                </Text>
+                                            </CardHeader>
+
+                                            <CardBody my={{base: "20px"}}>
+                                                <Field name='name' validate={validateName} >
+                                                    {({ field, form }: any) => (
+                                                        <FormControl isInvalid={form.errors.name && form.touched.name} mb={{base: "20px"}}>
+                                                            <Input 
+                                                                variant='outline' 
+                                                                resize="vertical" 
+                                                                placeholder={ t`A name of your arbitartor`}
+                                                                isRequired
+                                                                {...field} 
+                                                            />
+                                                            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+
+                                                <Field name='operations' validate={validateOperations} >
+                                                    {({ field, form }: any) => (
+                                                        <FormControl isInvalid={form.errors.operations && form.touched.operations} mb={{base: "20px"}}>
+                                                            <Textarea 
+                                                                type='text' 
+                                                                {...field} 
+                                                                placeholder={t`Write a list of operations you can handle (each in a new line)`}
+                                                                variant='primary' resize="vertical" 
+                                                                mb={{base: "20px"}} 
+                                                                minH={{base: "128px" }}
+                                                            />
+                                                            <FormErrorMessage>{form.errors.operations}</FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+
+                                                <Field name='extraDatas' validate={validateExtraDatas(props)} >
+                                                    {({ field, form }: any) => (
+                                                        <FormControl isInvalid={form.errors.extraDatas && form.touched.extraDatas} mb={{base: "20px"}}>
+                                                            <Textarea 
+                                                                type='text' 
+                                                                {...field} 
+                                                                placeholder={t`Write your extraData for every supported operation (each in a new line)`}
+                                                                variant='primary' resize="vertical" 
+                                                                mb={{base: "20px"}}
+                                                                required
+                                                                minH={{base: "128px" }}
+                                                            />
+                                                            <FormErrorMessage>{form.errors.extraDatas}</FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+
+                                                <Field name='contractAdresses' validate={validateContractAdresses} >
+                                                    {({ field, form }: any) => (
+                                                        <FormControl isInvalid={form.errors.contractAdresses && form.touched.contractAdresses} mb={{base: "20px"}}>
+                                                            <Textarea 
+                                                                type='text' 
+                                                                {...field} 
+                                                                placeholder={t`Write your supported contractAdresses (each in a new line)`}
+                                                                variant='primary' resize="vertical" 
+                                                                mb={{base: "20px"}} 
+                                                                minH={{base: "128px" }}
+                                                            />
+                                                            <FormErrorMessage>{form.errors.contractAdresses}</FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+
+                                                <Box w="100%">
+                                                    { evidenceUpload && evidenceUpload.fileName }
+                                                    <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
+                                                </Box>
+
+                                                <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
+                                                    <Box color="#2D7BD6" mr={[2]}>
+                                                        <Info fontSize='20px' />
+                                                    </Box>
+                                                    <Text textStyle="paragraph" color="muted">
+                                                        <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
+                                                    </Text>
+                                                </Flex>
+                                            </CardBody>
+
+                                            <CardFooter flexDirection="column" alignItems="center">
+                                                <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
+                                                    <Button
+                                                        type="submit"
+                                                        variant="dark-outline"
+                                                        textTransform="uppercase"
+                                                        isDisabled={ !props.isValid || !evidenceUpload }
+                                                    >
+                                                        <Trans>Register</Trans>
+                                                    </Button>
+                                                </Box>
+                                                <Box w={{base: "60%", sm: "50%"}}>
+                                                    <Button 
+                                                        onClick={ onClose }
+                                                        variant="dark-outline"
+                                                    >
+                                                        Close
+                                                    </Button>
+                                                </Box>
+                                            </CardFooter>
+                                        </Card>
+                                    </Form>
+                                )}
+                            </Formik>
+                        </SwitchableOutside>
+                        
+                        {/* payArbitrationFee */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                             <Trans>Register as arbitrator</Trans>
                                         </Text>
-                                        {
-                                            <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
-                                                <Trans>Please fill the form to register</Trans>
-                                            </Text>
-                                        }
+                                    </CardHeader>
+                                    
+                                    <CardBody mb={{base: "20px"}}>
+                                        <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
+                                            <Trans>The final step to register is to pay for the arbitration fees.</Trans>
+                                        </Text>
+                                        
+                                        <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center">
+                                            <Trans>The fee for dispute resolution is</Trans>
+                                        </Text>
+
+                                        <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
+                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                        </Text>
+                                    </CardBody>
+                                </Flex>
+
+                                <CardFooter>
+                                    <Box w={{base: "60%", xs: "50%"}}>
+                                        <Button
+                                            onClick={ openDispute }
+                                            variant="dark-outline"
+                                        >
+                                            <Trans>Pay the dispute</Trans>
+                                        </Button>
+                                    </Box>
+                                </CardFooter>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Confirm transaction */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
+                                        <Trans>Register as arbitrator</Trans>
+                                    </Text>
+                                </CardHeader>
+
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Trans>Confirm the transaction in the wallet</Trans>
+                                    </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Waiting for transaction */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "270px"}}>
+                                <CardHeader>
+                                    <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
+                                        <Trans>Register as arbitrator</Trans>
+                                    </Text>
+                                </CardHeader>
+                                <CardBody>
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
+                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                            <Trans>{"Wait for transaction to confirm…"}</Trans>
+                                        </Text>
+                                </CardBody>
+                            </Card>
+                        </SwitchableOutside>
+
+                        {/* Sucess */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <Card variant="stepContent" minH={{base: "360px"}}>
+                                <Flex flexDirection="column" alignItems="center">
+                                    <CardHeader>
+                                        <Text as="h3" textStyle="h3">
+                                            <Trans>Your submission sent</Trans>
+                                        </Text>
                                     </CardHeader>
 
-                                    <CardBody my={{base: "20px"}}>
-                                        <Field name='name' validate={validateName} >
-                                            {({ field, form }: any) => (
-                                                <FormControl isInvalid={form.errors.name && form.touched.name} mb={{base: "20px"}}>
-                                                    <Input 
-                                                        variant='outline' 
-                                                        resize="vertical" 
-                                                        placeholder={ t`A name of your arbitartor`}
-                                                        isRequired
-                                                        {...field} 
-                                                    />
-                                                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                                                </FormControl>
-                                            )}
-                                        </Field>
-
-                                        <Field name='operations' validate={validateOperations} >
-                                            {({ field, form }: any) => (
-                                                <FormControl isInvalid={form.errors.operations && form.touched.operations} mb={{base: "20px"}}>
-                                                    <Textarea 
-                                                        type='text' 
-                                                        {...field} 
-                                                        placeholder={t`Write a list of operations you can handle (each in a new line)`}
-                                                        variant='primary' resize="vertical" 
-                                                        mb={{base: "20px"}} 
-                                                        minH={{base: "128px" }}
-                                                    />
-                                                    <FormErrorMessage>{form.errors.operations}</FormErrorMessage>
-                                                </FormControl>
-                                            )}
-                                        </Field>
-
-                                        <Field name='extraDatas' validate={validateExtraDatas(props)} >
-                                            {({ field, form }: any) => (
-                                                <FormControl isInvalid={form.errors.extraDatas && form.touched.extraDatas} mb={{base: "20px"}}>
-                                                    <Textarea 
-                                                        type='text' 
-                                                        {...field} 
-                                                        placeholder={t`Write your extraData for every supported operation (each in a new line)`}
-                                                        variant='primary' resize="vertical" 
-                                                        mb={{base: "20px"}}
-                                                        required
-                                                        minH={{base: "128px" }}
-                                                    />
-                                                    <FormErrorMessage>{form.errors.extraDatas}</FormErrorMessage>
-                                                </FormControl>
-                                            )}
-                                        </Field>
-
-                                        <Field name='contractAdresses' validate={validateContractAdresses} >
-                                            {({ field, form }: any) => (
-                                                <FormControl isInvalid={form.errors.contractAdresses && form.touched.contractAdresses} mb={{base: "20px"}}>
-                                                    <Textarea 
-                                                        type='text' 
-                                                        {...field} 
-                                                        placeholder={t`Write your supported contractAdresses (each in a new line)`}
-                                                        variant='primary' resize="vertical" 
-                                                        mb={{base: "20px"}} 
-                                                        minH={{base: "128px" }}
-                                                    />
-                                                    <FormErrorMessage>{form.errors.contractAdresses}</FormErrorMessage>
-                                                </FormControl>
-                                            )}
-                                        </Field>
-
-                                        <Box w="100%">
-                                            { evidenceUpload && evidenceUpload.fileName }
-                                            <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
+                                    <CardBody>
+                                        <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
+                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                            </Image>
                                         </Box>
-
-                                        <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
-                                            <Box color="#2D7BD6" mr={[2]}>
-                                                <Info fontSize='20px' />
-                                            </Box>
-                                            <Text textStyle="paragraph" color="muted">
-                                                <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            <Trans>If you{'\u0027'}ve missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link</Trans>
+                                        </Text>
+                                        
+                                        <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                                <Trans>case</Trans>{` ${disputeId}`}
                                             </Text>
-                                        </Flex>
+                                        </Link>
+                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                            <Trans>Follow the status of the dispute through our app or on the website Kleros.</Trans>
+                                        </Text>
+                                        
                                     </CardBody>
+                                </Flex>
+                            </Card>
+                        </SwitchableOutside>
 
-                                    <CardFooter flexDirection="column" alignItems="center">
-                                        <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
-                                            <Button
-                                                type="submit"
-                                                variant="dark-outline"
-                                                textTransform="uppercase"
-                                                isDisabled={ !props.isValid || !evidenceUpload }
-                                            >
-                                                <Trans>Register</Trans>
-                                            </Button>
-                                        </Box>
-                                        <Box w={{base: "60%", sm: "50%"}}>
-                                            <Button 
-                                                onClick={ disclosure.onClose }
-                                                variant="dark-outline"
-                                            >
-                                                Close
-                                            </Button>
-                                        </Box>
-                                    </CardFooter>
-                                </Card>
-                            </Form>
-                        )}
-                    </Formik>
+                        {/* Transaction canceled */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <CancelledStepContent/>
+                        </SwitchableOutside>
+
+                        {/* Error occured */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <ErrorStepContent/>
+                        </SwitchableOutside>
+
+                        {/* Transaction timeout */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            <TimeoutStepContent/>
+                        </SwitchableOutside>
+                    </Wizard>
                 </ModalBody>
             </ModalContent>
         </Modal>

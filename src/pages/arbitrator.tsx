@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react'
 import { useCallableDialogContext } from '../context/CallableDialogContextProvider'
 import RegisterArbitratorDialog from '../components/dialogs/arbitrator/RegisterArbitratorDialog'
 import SomeAnotherDialog from '../components/dialogs/arbitrator/SomeAnotherDialog'
+import { BigNumber } from '@ethersproject/bignumber'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -49,6 +50,7 @@ const Home: NextPage = () => {
 
     const { account, active, arbitratorRegistryContract } = useAppContext()
     const [ isRegistered, setIsRegistered ] = useState<Boolean>()
+    const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
 
@@ -144,12 +146,12 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
-                    { isRegistered && <div>You're registered</div>}
+                    { isRegistered && <div>{"You're registered"}</div>}
                     { !isRegistered && <Button onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}>Register as arbitrator</Button>}
                     { !isRegistered && <Button onClick={ () => { getDialog('SomeAnotherDialog').onOpen() }}>Register as SomeAnother</Button>}
 
                     { /** Dialogs used on this page */ }
-                    <RegisterArbitratorDialog/>
+                    <RegisterArbitratorDialog setDisputeId={setDisputeId}/>
                     <SomeAnotherDialog/>
                 </main>
             }

@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en-US\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:311
 msgid "(Paid separately)"
@@ -14,6 +20,10 @@ msgstr "(Paid separately)"
 #: src/components/nftView/nftButtons/OriginalNFTRequestedButton.tsx:152
 msgid ", confirm the transmission of the original NFT"
 msgstr ", confirm the transmission of the original NFT"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:270
+msgid "A name of your arbitartor"
+msgstr "A name of your arbitartor"
 
 #: src/components/nftView/NFTView.tsx:201
 msgid "All your NFT"
@@ -41,9 +51,17 @@ msgstr "Apealing period"
 msgid "Approve connection"
 msgstr "Approve connection"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:131
+msgid "Arbitrator name is required"
+msgstr "Arbitrator name is required"
+
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:169
 msgid "Are you sure?"
 msgstr "Are you sure?"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:146
+msgid "At least one extraData must be specified"
+msgstr "At least one extraData must be specified"
 
 #: src/components/loginForm/ConnectWallet/ChooseWalletCard.tsx:30
 msgid "Available wallets"
@@ -72,6 +90,7 @@ msgstr "Claimant was the Original Owner of the NFT and insured it through the Pr
 msgid "Close"
 msgstr "Close"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:419
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:456
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:184
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:605
@@ -94,6 +113,7 @@ msgstr "Connect Wallet"
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
 
+#: src/pages/arbitrator.tsx:117
 #: src/pages/index.tsx:132
 msgid "Connect your wallet<0/>& get protected"
 msgstr "Connect your wallet<0/>& get protected"
@@ -135,6 +155,7 @@ msgstr "DID:"
 msgid "Date of creation"
 msgstr "Date of creation"
 
+#: src/pages/arbitrator.tsx:109
 #: src/pages/index.tsx:124
 msgid "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 msgstr "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
@@ -195,6 +216,10 @@ msgstr "Evidence of"
 msgid "Evidence of Bona Fide transfer"
 msgstr "Evidence of Bona Fide transfer"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:151
+msgid "Extra Datas must contain the same number of lines as Operations"
+msgstr "Extra Datas must contain the same number of lines as Operations"
+
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:517
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:661
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:326
@@ -217,6 +242,7 @@ msgstr "Fetching balance…"
 msgid "File link"
 msgstr "File link"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:467
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:504
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:649
 msgid "Follow the status of the dispute through our app or on the website Kleros."
@@ -247,6 +273,7 @@ msgstr "If you transferred the pNFT to user"
 msgid "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
 msgstr "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:458
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:495
 msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
 msgstr "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
@@ -361,6 +388,7 @@ msgstr "Other Evidence including chat logs or emails, screen recordings, law enf
 msgid "Ownership restoration in case of loss of pNFT in phishing attack"
 msgstr "Ownership restoration in case of loss of pNFT in phishing attack"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:400
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:437
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:586
 msgid "Pay the dispute"
@@ -387,9 +415,14 @@ msgstr "Please approve the connection in your wallet and authorize access to con
 msgid "Please complete DID verification"
 msgstr "Please complete DID verification"
 
+#: src/pages/arbitrator.tsx:125
 #: src/pages/index.tsx:140
 msgid "Please connect your wallet to see your digital <0/>assets and protect them"
 msgstr "Please connect your wallet to see your digital <0/>assets and protect them"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:259
+msgid "Please fill the form to register"
+msgstr "Please fill the form to register"
 
 #: src/components/nftView/nftButtons/OriginalNFTRequestedButton.tsx:239
 msgid "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court. We recommend using Kleros to resolve disputes fairly and protect your property rights"
@@ -431,6 +464,7 @@ msgstr "Proceed to DID"
 msgid "Protect NFT"
 msgstr "Protect NFT"
 
+#: src/pages/arbitrator.tsx:102
 #: src/pages/index.tsx:117
 msgid "Protect your digital <0/>assets from bad<1/> actors"
 msgstr "Protect your digital <0/>assets from bad<1/> actors"
@@ -469,6 +503,17 @@ msgstr "Read more"
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:321
 msgid "Reason"
 msgstr "Reason"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:351
+msgid "Register"
+msgstr "Register"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:256
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:375
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:412
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:430
+msgid "Register as arbitrator"
+msgstr "Register as arbitrator"
 
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:178
 #: src/components/nftView/nftButtons/RequestOriginalNFTButton.tsx:238
@@ -577,6 +622,7 @@ msgstr "The claimant"
 msgid "The defendant"
 msgstr "The defendant"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:385
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:422
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:571
 msgid "The fee for dispute resolution is"
@@ -586,6 +632,10 @@ msgstr "The fee for dispute resolution is"
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:567
 msgid "The final step to open a dispute is to pay for the arbitration fees."
 msgstr "The final step to open a dispute is to pay for the arbitration fees."
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:381
+msgid "The final step to register is to pay for the arbitration fees."
+msgstr "The final step to register is to pay for the arbitration fees."
 
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:213
 msgid "The original NFT <0/> remains in your <1/> wallet"
@@ -710,6 +760,7 @@ msgstr "Voting period"
 msgid "Wait for transaction to confirm..."
 msgstr "Wait for transaction to confirm..."
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:436
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:473
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:201
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:622
@@ -750,14 +801,27 @@ msgstr "Whitepaper"
 msgid "Winner:"
 msgstr "Winner:"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:285
+msgid "Write a list of operations you can handle (each in a new line)"
+msgstr "Write a list of operations you can handle (each in a new line)"
+
 #: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:131
 msgid "Write the address of the protocol smart contract"
 msgstr "Write the address of the protocol smart contract"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:301
+msgid "Write your extraData for every supported operation (each in a new line)"
+msgstr "Write your extraData for every supported operation (each in a new line)"
+
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:318
+msgid "Write your supported contractAdresses (each in a new line)"
+msgstr "Write your supported contractAdresses (each in a new line)"
 
 #: src/components/nftView/nftButtons/UnSecureNFTButton.tsx:179
 msgid "Yes"
 msgstr "Yes"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:338
 #: src/components/nftView/nftButtons/steps/KlerosCaseForm.tsx:154
 msgid "You can add an external file in PDF or add multiple files in a single .zip file."
 msgstr "You can add an external file in PDF or add multiple files in a single .zip file."
@@ -801,10 +865,15 @@ msgstr "Your asset is now protected!"
 msgid "Your dispute <0/> sent to Kleros"
 msgstr "Your dispute <0/> sent to Kleros"
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:448
+msgid "Your submission sent"
+msgstr "Your submission sent"
+
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:373
 msgid "before resorting to legal action."
 msgstr "before resorting to legal action."
 
+#: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:463
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:500
 msgid "case {disputeId}"
 msgstr "case {disputeId}"
