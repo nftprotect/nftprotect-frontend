@@ -227,7 +227,7 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
                                             </Box>
                                             <Flex flexDirection="column">
                                                 <Text textStyle="paragraph">
-                                                    <Trans>This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT</Trans>
+                                                    <Trans>This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT {"("}by opening the dispute{")"}</Trans>
                                                 </Text>
                                             </Flex>
                                         </Flex>
@@ -251,13 +251,14 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
                                                 />
                                             </Box>
                                             <Box w={{base: "100%", sm: "45%"}}>
-                                                <LostPNFTButton 
+                                                <LostPNFTButton
+                                                    buttonTitle={"Open dispute"}
                                                     nft={ nft } 
                                                     nftReFetch={ nftReFetch }
                                                     setRefreshPaused = { setRefreshPaused }
                                                     originalOwner={originalOwner}
                                                     variant={"dark-outline"}
-                                                    />
+                                                />
                                             </Box>
                                         </Flex>
                                 </CardFooter>
