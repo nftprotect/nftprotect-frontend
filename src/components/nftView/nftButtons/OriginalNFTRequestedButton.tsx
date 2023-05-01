@@ -30,7 +30,6 @@ import { Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import TransferOriginalNFTButton from './TransferOriginalNFTButton';
-import LostPNFTButton from './LostPNFTButton'
 import DoNotTransferOriginalNFTButton from './DoNotTransferOriginalNFTButton';
 import NFT from "../../../classes/NFT";
 
