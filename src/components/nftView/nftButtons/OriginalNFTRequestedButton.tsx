@@ -133,7 +133,7 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 {" "}
                                 <Popover placement='top'>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                     </PopoverTrigger>
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
@@ -145,11 +145,11 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 </Popover>
                                 
                                 <chakra.span id='originalOwnerAddressHolder'>
-                                    { " (" + formatAddress(originalOwner, 4) + ") " }
+                                    { " (" + formatAddress(originalOwner, 4) + "), " }
                                 </chakra.span>
                                 {" "}
                                 <chakra.span>
-                                    <Trans>, confirm the transmission of the original NFT</Trans>
+                                    <Trans>confirm the transmission of the original NFT</Trans>
                                 </chakra.span>
                             </Text>
                         </CardBody>
@@ -168,13 +168,13 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                     <Divider orientation='horizontal' borderBottom="1px solid #000"/>
 
                     <Card variant="stepContent" borderRadius="0" bgColor="rgba(255, 96, 96, 0.2)" py={{base: "10px"}}>
-                        <CardBody>
+                        <CardBody mt={{base: "10px"}}>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "10px"}}>
                                 <Trans>If you did not transfer the pNFT to</Trans>
                                 {" "}
                                 <Popover placement='top'>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                     </PopoverTrigger>
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
@@ -193,33 +193,12 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 <Trans>your asset may have been stolen!</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "20px"}}>
-                                <Trans>We recommend opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker{'\u0027'}s wallet. This will prevent them from using or selling your asset, and help to protect your property rights.</Trans>
+                                <Trans>We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker{'\u0027'}s wallet.</Trans>
                             </Text>
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center">
-                            <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
-                                <LostPNFTButton 
-                                    nft={ nft } 
-                                    nftReFetch={ nftReFetch }
-                                    setRefreshPaused = { setRefreshPaused }
-                                    originalOwner={originalOwner}
-                                    variant={"dark-outline"}
-                                />
-                            </Box>
-                        </CardFooter>
-                    </Card>
-
-                    <Divider orientation='horizontal' borderTop="1px solid #000" />
-
-                    <Card variant="stepContent" borderRadius="0">
-                        <CardBody>
-                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                <Trans>You can refuse to give the owner of the pNFT the original NFT</Trans>
-                            </Text>
-                        </CardBody>
-                        <CardFooter flexDirection="column" alignItems="center">
-                            <Box w={{base: "60%"}} mb={{base: "20px"}}>
-                                <DoNotTransferOriginalNFTButton 
+                            <Box w={{base: "60%"}} mb={{base: "20px"}} >
+                                <DoNotTransferOriginalNFTButton
                                     nft={nft}
                                     nftReFetch={nftReFetch}
                                     setRefreshPaused={setRefreshPaused}
@@ -229,14 +208,18 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 />
                             </Box>
                         </CardFooter>
+                    </Card>
 
+                    <Divider orientation='horizontal' borderTop="1px solid #000" />
+
+                    <Card variant="stepContent" borderRadius="0">
                         <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                             <Box color="#2D7BD6" mr={[2]} >
                                 <Info fontSize='32px' />
                             </Box>
                             <Flex flexDirection="column">
                                 <Text textStyle="paragraph" color="muted">
-                                    <Trans>Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court. We recommend using Kleros to resolve disputes fairly and protect your property rights</Trans>
+                                    <Trans>Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court.</Trans>
                                 </Text>
                             </Flex>
                         </Flex>
