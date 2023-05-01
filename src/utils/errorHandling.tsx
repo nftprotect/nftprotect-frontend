@@ -14,7 +14,7 @@ export const handleContractError = (errorMapping: any = {}) => {
                 const callback = errorMapping[errorMessage]
                 callback && callback()
             } else if (errorMapping.default) {
-                errorMapping.default()
+                errorMapping.default(error)
             } else {
                 console.error(error, error.error)
             }

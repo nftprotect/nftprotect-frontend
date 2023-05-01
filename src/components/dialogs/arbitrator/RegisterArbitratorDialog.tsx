@@ -50,6 +50,9 @@ import ErrorStepContent from "../../nftView/nftButtons/steps/ErrorStepContent";
 import TimeoutStepContent from "../../nftView/nftButtons/steps/TimeoutStepContent";
 import { BigNumber } from '@ethersproject/bignumber';
 import { handleContractError } from '../../../utils/errorHandling';
+import { arrayify } from "@ethersproject/bytes";
+import { getAddress } from "@ethersproject/address";
+import { defaultAbiCoder } from "@ethersproject/abi";
 
 const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisputeId?: Function}) => {
     const disclosure = useDisclosure()
@@ -104,7 +107,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
     }
 
     const handleUnknownError = (error: any) => {
-        console.error(error)
+        console.log({err: error})
         setNextStep(StepMapping.error)
         setTimeout(onClose, dialogsTimeout)
     }
@@ -147,11 +150,12 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                 fileURI: evidenceUpload?.getRelativeIPFSUrl()
             },
             name: data.name,
-            operations: data.operations,
-            extraDatas: splitByLines(data.extraDatas),
+            operations: data.operations?.map((item: BigNumber) => defaultAbiCoder.encode(["uint8"],[item])) || [],
+            extraDatas: splitByLines(data.extraDatas).map((item: string) => arrayify(item)),
             arbitratorContractAddress: data.arbitratorContractAddress,
-            contractAddresses: splitByLines(data.contractAddresses)
+            contractAddresses: splitByLines(data.contractAddresses).map((item: string) => getAddress(item))
         }
+        console.log('RESULT', result)
         setSubmissionData(result)
         setNextStep(StepMapping.payArbitrationFee)
     }
@@ -165,7 +169,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
         return error
     }
 
-    const validateOperations = (value: number[]) => {
+    const validateOperations = (value: BigNumber[]) => {
         let error
         // Do some check
         return error
@@ -180,7 +184,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                 const extraDatasLength = splitByLines(values.extraDatas)?.length
                 const operationsLength = values.operations?.length
                 console.log(values.operations)
-                if (extraDatasLength !== operationsLength) {
+                if (operationsLength > 0 && extraDatasLength !== operationsLength) {
                     error = t`Extra Datas must contain the same number of lines as Operations`
                 }
             }
@@ -189,8 +193,13 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
     }
 
     const validateContractAdresses = (value: string) => {
+        const valueList = splitByLines(value)
         let error
-        // Do some check
+        valueList.forEach((address: string) => {
+            if (!isAddress(address)) {
+                error = t`Incorrect address`
+            }
+        })
         return error
     }
 
@@ -213,30 +222,28 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
 
     const openDispute = () => {
         setNextStep(StepMapping.confirmTransaction)
-        if (evidenceUpload) {
-            const evidenceJSONUrl = evidenceUpload.getRelativeIPFSUrl()
-            try {
-                arbitratorRegistryContract.addArbitrator(
-                    submissionData.name,
-                    submissionData.arbitratorContractAddress,
-                    submissionData.operations,
-                    submissionData.extraDatas,
-                    submissionData.contractAdresses,
-                    evidenceJSONUrl, 
-                    {value: parseEther(DISPUTE_PRICE)}
+        try {
+            arbitratorRegistryContract.addArbitrator(
+                submissionData.name,
+                submissionData.arbitratorContractAddress,
+                submissionData.operations,
+                submissionData.extraDatas,
+                submissionData.contractAddresses,
+                submissionData.evidence.fileURI, 
+                {
+                    value: parseEther(DISPUTE_PRICE),
+                    gasLimit: 1000000
+                }
+            )
+                .then( finalTransactionSent() )
+                .catch( 
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    }) 
                 )
-                    .then( finalTransactionSent() )
-                    .catch( 
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        }) 
-                    )
-            } catch (err: any) {
-                handleUnknownError(err)
-            }
-        } else {
-            console.error('Missing evidence')
+        } catch (err: any) {
+            handleUnknownError(err)
         }
     }
 
@@ -345,7 +352,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                                                 defaultValue={[]}
                                                                 onChange={(value: string[]) => {
                                                                     const operations = value.map(
-                                                                        (value: string) => Number(value)
+                                                                        (value: string) => BigNumber.from(value)
                                                                     ).sort()
                                                                     props.setValues({ ...props.values, operations })
                                                                 }}
@@ -382,18 +389,18 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                                     )}
                                                 </Field>
 
-                                                <Field name='contractAdresses' validate={validateContractAdresses} >
+                                                <Field name='contractAddresses' validate={validateContractAdresses} >
                                                     {({ field, form }: any) => (
-                                                        <FormControl isInvalid={form.errors.contractAdresses && form.touched.contractAdresses} mb={{base: "20px"}}>
+                                                        <FormControl isInvalid={form.errors.contractAddresses && form.touched.contractAddresses} mb={{base: "20px"}}>
                                                             <Textarea 
                                                                 type='text' 
                                                                 {...field} 
-                                                                placeholder={t`Write your supported contractAdresses (each in a new line)`}
+                                                                placeholder={t`Write your supported contractAddresses (each in a new line)`}
                                                                 variant='primary' resize="vertical" 
                                                                 mb={{base: "20px"}} 
                                                                 minH={{base: "128px" }}
                                                             />
-                                                            <FormErrorMessage>{form.errors.contractAdresses}</FormErrorMessage>
+                                                            <FormErrorMessage>{form.errors.contractAddresses}</FormErrorMessage>
                                                         </FormControl>
                                                     )}
                                                 </Field>
