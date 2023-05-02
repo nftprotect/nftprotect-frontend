@@ -17,8 +17,9 @@ import { useIPFSContext } from '../context/IPFSContextProvider'
 import { useEffect, useState } from 'react'
 import { useCallableDialogContext } from '../context/CallableDialogContextProvider'
 import RegisterArbitratorDialog from '../components/dialogs/arbitrator/RegisterArbitratorDialog'
-import SomeAnotherDialog from '../components/dialogs/arbitrator/SomeAnotherDialog'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useTheGraph } from '../hooks/useTheGraph'
+import ArbitratorRequestList, { ArbitratorData, ArbitratorRequest } from '../components/arbitrator/ArbitratorRequestList'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -52,15 +53,26 @@ const Home: NextPage = () => {
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
+    const { loadDyArbitrators } = useTheGraph()
+    const [ arbitratorsData, setArbitratorsData ] = useState<{
+        arbitrators: ArbitratorData[]
+        requests: ArbitratorRequest[]
+    }>()
+
+    const reloadDyArbitrators = () => {
+        if (active) {
+            loadDyArbitrators().then(({data}) => {
+                console.log('GRAPH ARBITRATORS DATA', data)
+                setArbitratorsData(data)
+            })
+        }
+    }
 
     useEffect(() => {
         setBaseUrl(window.location.origin)
     }, [])
 
-    useEffect(() => {
-        // on login check arbitrator state
-    //    active && loadIsRegistered()
-    }, [active])
+    useEffect(reloadDyArbitrators, [active, account])
 
     return (
         <>
@@ -135,9 +147,15 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
+                    { arbitratorsData?.requests ?
+                        <ArbitratorRequestList requests={ arbitratorsData.requests }/> :
+                        <Box><Trans>You have no requests yet</Trans></Box>
+                    }
+                    <br/>
                     <Button onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}>
                         <Trans>Register new arbitrator</Trans>
                     </Button>
+
 
                     { /** Dialogs used on this page */ }
                     <RegisterArbitratorDialog setDisputeId={setDisputeId}/>
