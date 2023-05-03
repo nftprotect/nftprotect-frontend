@@ -37,23 +37,24 @@ export function useTheGraph() {
             query GetAllArbitrators($managerAddress: Bytes!) {
                 requests(where: {status: InDispute, manager: $managerAddress}) {
                     id
+                    name
+                    disputeID
                     operation
-                    arbitrator {
-                        id
-                        name
-                        operations
-                        contracts
-                        requests
-                    }
                     manager
                 }
 
                 arbitrators(where: {manager: $managerAddress}) {
                     id
                     name
-                    operations
-                    contracts
-                    requests
+                    operations {
+                        id
+                        operation
+                        extraData
+                    }
+                    contracts {
+                        id
+                        contract
+                    }
                 }
             }          
         `;

@@ -11,6 +11,7 @@ import {
     Th,
 } from "@chakra-ui/react"
 import { Trans } from "@lingui/macro"
+import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 
 export enum ArbitratorRequestStatus {
     InDispute,
@@ -24,33 +25,19 @@ export enum MasterOperation {
     AddContract = 'AddContract'
 }
 
-export interface Operation {
-    id: string,
-    operation: string,
-    extraData: string
-}
-
-export interface ArbitratorData {
-    id: string,
-    name: string,
-    manager: string,
-    operations: Operation[],
-    contracts: string[],
-    requests: ArbitratorRequest[]
-}
-
 export interface ArbitratorRequest {
     id: string,
     disputeID: string,
     status: ArbitratorRequestStatus,
     operation: MasterOperation,
-    arbitrator: ArbitratorData,
-    candidate: string,
+    name: string,
 }
 
 const ArbitratorRequestList = ({requests}: {
     requests: ArbitratorRequest[]
 }) => {
+
+    const { getDialog } = useCallableDialogContext()
 
     return (
         <>        
@@ -68,11 +55,15 @@ const ArbitratorRequestList = ({requests}: {
                     </Thead>
                     <Tbody>
                         {
-                            requests.map(({candidate, operation, disputeID}) => {
-                                return  <Tr>
-                                    <Td>{candidate}</Td>
-                                    <Td>{operation}</Td>
-                                    <Td>{disputeID}</Td>
+                            requests.map((request) => {
+                                return <Tr key={`arb${request.id}`} onClick={() => {
+                                    const dialog = getDialog('ShowRequestDialog')
+                                    dialog.setRequest(request)
+                                    dialog.onOpen()
+                                }}>
+                                    <Td>{request.name}</Td>
+                                    <Td>{request.operation}</Td>
+                                    <Td>{request.disputeID}</Td>
                                 </Tr>
                             })
                         }

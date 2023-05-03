@@ -92,7 +92,7 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
         }
     ]
 
-    const DISPUTE_PRICE = '0.03'
+    const DISPUTE_PRICE = '0.1'
 
     // Naming of wizard step numbers
     enum StepMapping {

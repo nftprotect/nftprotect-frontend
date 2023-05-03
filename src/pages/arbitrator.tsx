@@ -19,7 +19,10 @@ import { useCallableDialogContext } from '../context/CallableDialogContextProvid
 import RegisterArbitratorDialog from '../components/dialogs/arbitrator/RegisterArbitratorDialog'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTheGraph } from '../hooks/useTheGraph'
-import ArbitratorRequestList, { ArbitratorData, ArbitratorRequest } from '../components/arbitrator/ArbitratorRequestList'
+import ArbitratorRequestList,  { ArbitratorRequest } from '../components/arbitrator/ArbitratorRequestList'
+import ArbitratorsList, { ArbitratorData } from '../components/arbitrator/ArbitratorsList'
+import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitratorDialog'
+import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 
 async function loadTranslation(locale: string, isProduction = true) {
     let data
@@ -147,7 +150,11 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
-                    { arbitratorsData?.requests ?
+                    { arbitratorsData?.requests?.length ?
+                        <ArbitratorsList arbitrators={ arbitratorsData.arbitrators }/> :
+                        <Box><Trans>You did not register any arbitrator yet</Trans></Box>
+                    }
+                    { arbitratorsData?.requests?.length ?
                         <ArbitratorRequestList requests={ arbitratorsData.requests }/> :
                         <Box><Trans>You have no requests yet</Trans></Box>
                     }
@@ -159,6 +166,8 @@ const Home: NextPage = () => {
 
                     { /** Dialogs used on this page */ }
                     <RegisterArbitratorDialog setDisputeId={setDisputeId}/>
+                    <ShowArbitratorDialog/>
+                    <ShowRequestDialog/>
                 </main>
             }
         </Container>
