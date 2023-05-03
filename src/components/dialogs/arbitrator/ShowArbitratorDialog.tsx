@@ -32,7 +32,14 @@ import {
     CardBody,
     CardFooter,
     useDisclosure,
+    Table,
+    Tbody,
+    Tr,
+    Td,
+    TableContainer,
+    IconButton
 } from '@chakra-ui/react';
+import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { Form, Field, Formik, FormikProps } from 'formik';
 import { Info } from '@web3uikit/icons';
 import { Trans, t } from '@lingui/macro';
@@ -54,6 +61,7 @@ import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorData } from "../../arbitrator/ArbitratorsList";
+import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 
 const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
@@ -113,14 +121,114 @@ const ShowArbitratorDialog = () => {
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                 <Trans>Arbitrator {arbitrator?.name}</Trans>
                             </Text>
-                            <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
-                                <Trans>Here's a complete description</Trans>
-                            </Text>
                         </CardHeader>
 
-                        <CardBody my={{base: "20px"}}>
-
+                        <CardBody my={{base: "20px"}} width="100%">
+                            <TableContainer>
+                                <Table variant='simple'>
+                                    <Tbody>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Arbitrator's name:</Trans>
+                                            </Td>
+                                            <Td>
+                                                { arbitrator?.name }
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Arbitrator's contract:</Trans>
+                                            </Td>
+                                            <Td>
+                                                { arbitrator?.id }
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Supported operations:</Trans>
+                                                <Box>
+                                                    <IconButton
+                                                        aria-label={t`Add`}
+                                                        icon={<AddIcon />}
+                                                        size="sm"
+                                                        width={"auto"}
+                                                        variant="outline"
+                                                    />
+                                                    <IconButton
+                                                        aria-label={t`Edit`}
+                                                        icon={<EditIcon />}
+                                                        size="sm"
+                                                        width={"auto"}
+                                                        variant="outline"
+                                                    />
+                                                    <IconButton
+                                                        aria-label={t`Delete`}
+                                                        icon={<DeleteIcon />}
+                                                        size="sm"
+                                                        width={"auto"}
+                                                        variant="outline"
+                                                    />
+                                                </Box>
+                                            </Td>
+                                            <Td>
+                                            {    
+                                                arbitrator && arbitrator.operations?.length > 0 ? 
+                                                    arbitrator.operations?.map((operation) => operation.operation) 
+                                                        .map((value) => {
+                                                            return <Badge variant='solid' colorScheme='blue'>
+                                                                { metaEvidenceTypes.find(item => item.value === value.toString())?.label || t`unknown` }
+                                                            </Badge>
+                                                        }) : 
+                                                <Badge variant='solid' colorScheme='blue'>
+                                                    <Trans>All available</Trans>
+                                                </Badge>
+                                            }
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Supported collections:</Trans>
+                                                <Box>
+                                                    <IconButton
+                                                        aria-label={t`Add`}
+                                                        icon={<AddIcon />}
+                                                        size="sm"
+                                                        width={"auto"}
+                                                        variant="outline"
+                                                    />
+                                                    <IconButton
+                                                        aria-label={t`Delete`}
+                                                        icon={<DeleteIcon />}
+                                                        size="sm"
+                                                        width={"auto"}
+                                                        variant="outline"
+                                                    />
+                                                </Box>
+                                            </Td>
+                                            <Td>
+                                                {
+                                                arbitrator && arbitrator.contracts?.length > 0 ? 
+                                                    arbitrator.contracts.map((contract) => contract.contract) : 
+                                                    t`Any`
+                                                }
+                                            </Td>
+                                        </Tr>
+                                        
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
                         </CardBody>
+                        
+                        <CardFooter>
+                            <Box w={{base: "60%", xs: "50%"}}>
+                                <Button
+                                    //onClick={ openDispute }
+                                    variant="dark-outline"
+                                >
+                                    <Trans>Delete arbitrator</Trans>
+                                </Button>
+                            </Box>
+                        </CardFooter>
                     </Card>
                 </ModalBody>
             </ModalContent>

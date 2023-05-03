@@ -32,6 +32,8 @@ import {
     CardBody,
     CardFooter,
     useDisclosure,
+    Wrap, 
+    WrapItem
 } from '@chakra-ui/react';
 import { Form, Field, Formik, FormikProps } from 'formik';
 import { Info } from '@web3uikit/icons';
@@ -54,6 +56,36 @@ import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 
+export const metaEvidenceTypes = [
+    // Ultra
+    // {
+    //     label: 'burn',
+    //     value: '0'
+    // }, {
+    //     label: 'adjustOwnership',
+    //     value: '1'
+    // }, {
+    //     label: 'askOwnershipAdjustment',
+    //     value: '2'
+    // }, {
+    //     label: 'answerOwnershipAdjustment',
+    //     value: '3'
+    // }, 
+    {
+        label: t`Bona fide transfer`,
+        value: '4'
+    }, {
+        label: t`Incorrect address`,
+        value: '5'
+    }, {
+        label: t`Phishing attack`,
+        value: '6'
+    }, {
+        label: t`Protocol breach`,
+        value: '7'
+    }
+]
+
 const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisputeId?: Function}) => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
@@ -63,34 +95,6 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
     const { account, arbitratorRegistryContract, fee } = useAppContext()
-
-    const metaEvidenceTypes = [
-        {
-            label: 'burn',
-            value: '0'
-        }, {
-            label: 'adjustOwnership',
-            value: '1'
-        }, {
-            label: 'askOwnershipAdjustment',
-            value: '2'
-        }, {
-            label: 'answerOwnershipAdjustment',
-            value: '3'
-        }, {
-            label: 'askOwnershipAdjustmentArbitrate',
-            value: '4'
-        }, {
-            label: 'askOwnershipRestoreArbitrateMistake',
-            value: '5'
-        }, {
-            label: 'askOwnershipRestoreArbitratePhishing',
-            value: '6'
-        }, {
-            label: 'askOwnershipRestoreArbitrateProtocolBreach',
-            value: '7'
-        }
-    ]
 
     const DISPUTE_PRICE = '0.1'
 
@@ -356,16 +360,19 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
                                                                     ).sort()
                                                                     props.setValues({ ...props.values, operations })
                                                                 }}
-                                                            >
-                                                                {metaEvidenceTypes.map((option) => (
-                                                                    <Checkbox
-                                                                        key={option.label}
-                                                                        value={option.value}
-                                                                        //onChange={}
-                                                                    >
-                                                                        {option.label}
-                                                                    </Checkbox>
-                                                                ))}
+                                                            >    
+                                                                <Wrap spacing="20px" justify="left">
+                                                                    {metaEvidenceTypes.map((option) => (
+                                                                        <WrapItem key={option.label} width={"45%"}>
+                                                                            <Checkbox
+                                                                                key={option.label}
+                                                                                value={option.value}
+                                                                            >
+                                                                                {option.label}
+                                                                            </Checkbox>
+                                                                        </WrapItem>
+                                                                    ))}
+                                                                </Wrap>
                                                             </CheckboxGroup>
                                                             <FormErrorMessage>{form.errors.operations}</FormErrorMessage>
                                                         </FormControl>

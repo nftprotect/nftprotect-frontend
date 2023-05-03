@@ -90,35 +90,47 @@ const Home: NextPage = () => {
                 top="0" 
                 left="0"
                 h={active ? "auto" : "100%"}
-                bg={active ? "url('/images/phone.png') top right no-repeat" : "url('/images/banner.png') top left / cover no-repeat"}
-                pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
+                //bg={active ? "url('/images/phone.png') top right no-repeat" : "url('/images/banner.png') top left / cover no-repeat"}
+                //pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
             >
                 <Flex 
-                    flexDirection="column" 
-                    justifyContent="center"
+                    flexDirection={active ? "row" : "column"}
+                    justifyContent="left"
                     pt={{base:"2.5rem", md:"5.25rem", xl: "8.25rem" }}
                     px={['1rem', '3rem']}
                     pb={{base: "2rem"}}
                 >
                     {active &&
-                        <Box w={{base: "100%", sm: "50%"}}>
+                        <>
+                        <Box w={{base: "100%", sm: "70%"}}>
                             <Heading as="h1" fontStyle="h1">
-                                <Trans>Protect your digital <br />assets from bad<br /> actors</Trans>
+                                <Trans>Arbitrator management</Trans>
                             </Heading>
                             <Text 
                                 pt="1.25rem"
                                 pb="2rem"
                                 textStyle="h3"
                             >
-                                <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
+                                <Trans>Here you can register new arbitrator or change the parameters of the existing one</Trans>
                             </Text>
                         </Box>
+                        <Box w={{base: "100%", sm: "30%"}}>
+                            <Button 
+                                variant={ "primary-solid" }
+                                width="auto"
+                                float="right"
+                                onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}
+                            >
+                                <Trans>Register new arbitrator</Trans>
+                            </Button>
+                        </Box>
+                        </>
                     }
 
                     { !active &&
                         <>
                             <Text as="h1" textStyle="h1">
-                                <Trans>Connect your wallet<br></br>& get protected</Trans>
+                                <Trans>Connect your wallet<br></br>& register</Trans>
                             </Text>
                                 
                             <Text
@@ -126,7 +138,7 @@ const Home: NextPage = () => {
                                 pt="1.25rem"
                                 pb="2rem"
                             >
-                                <Trans>Please connect your wallet to see your digital <br></br>assets and protect them</Trans>
+                                <Trans>Please connect your wallet to register <br></br>a new arbitrator</Trans>
                             </Text>
                             <Box w={{base: "14rem", sm: "16rem"}} >
                                 <LoginForm buttonVariant={'primary-solid'} />
@@ -158,11 +170,6 @@ const Home: NextPage = () => {
                         <ArbitratorRequestList requests={ arbitratorsData.requests }/> :
                         <Box><Trans>You have no requests yet</Trans></Box>
                     }
-                    <br/>
-                    <Button onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}>
-                        <Trans>Register new arbitrator</Trans>
-                    </Button>
-
 
                     { /** Dialogs used on this page */ }
                     <RegisterArbitratorDialog setDisputeId={setDisputeId}/>

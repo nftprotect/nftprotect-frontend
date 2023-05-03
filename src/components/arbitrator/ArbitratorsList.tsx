@@ -9,9 +9,11 @@ import {
     Tfoot,
     TableCaption,
     Th,
+    Badge
 } from "@chakra-ui/react"
 import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import { metaEvidenceTypes } from "../dialogs/arbitrator/RegisterArbitratorDialog"
 
 export interface Operation {
     id: string,
@@ -64,8 +66,25 @@ const ArbitratorsList = ({arbitrators}: {
                                 }}>
                                     <Td>{arbitrator.name}</Td>
                                     <Td>{arbitrator.id}</Td>
-                                    <Td>{arbitrator.operations?.length > 0 ? arbitrator.operations?.map((operation) => operation.operation) : t`All available`}</Td>
-                                    <Td>{arbitrator.contracts?.length > 0 ? arbitrator.contracts.map((contract) => contract.contract) : t`All possible`}</Td>
+                                    <Td>{    
+                                        arbitrator.operations?.length > 0 ? 
+                                            arbitrator.operations?.map((operation) => operation.operation) 
+                                                .map((value) => {
+                                                    return <Badge variant='solid' colorScheme='blue'>
+                                                        { metaEvidenceTypes.find(item => item.value === value.toString())?.label || t`unknown` }
+                                                    </Badge>
+                                                }) : 
+                                            <Badge variant='solid' colorScheme='blue'>
+                                                <Trans>All available</Trans>
+                                            </Badge>
+                                        }
+                                    </Td>
+                                    <Td>{
+                                        arbitrator.contracts?.length > 0 ? 
+                                            arbitrator.contracts.map((contract) => contract.contract) : 
+                                            t`Any`
+                                        }
+                                    </Td>
                                 </Tr>
                             })
                         }

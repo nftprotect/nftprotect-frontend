@@ -54,6 +54,7 @@ import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorRequest } from "../../arbitrator/ArbitratorRequestList";
+import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 
 const ShowRequestDialog = () => {
     const disclosure = useDisclosure()
@@ -67,6 +68,12 @@ const ShowRequestDialog = () => {
         const result = await arbitratorRegistryContract.disputes(request?.id) 
         console.log(result)
         setLoadedRequestData(result)
+    }
+
+    const loadOperations = () => {
+        const supportedOperatons = metaEvidenceTypes.map(async (entry) => {
+            return await arbitratorRegistryContract.checkArbitratorByOperation()
+        })
     }
 
     useEffect(() => {
