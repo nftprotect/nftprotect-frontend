@@ -43,13 +43,10 @@ const ArbitratorRequestList = ({requests}: {
         <>        
             <TableContainer>
                 <Table variant='simple'>
-                    <TableCaption placement="top">
-                        <Trans>Existing requests:</Trans>
-                    </TableCaption>
                     <Thead>
                         <Tr>
-                            <Th><Trans>Arbitrator</Trans></Th>
-                            <Th><Trans>Operation</Trans></Th>
+                            <Th><Trans>Name</Trans></Th>
+                            <Th><Trans>Pending Action</Trans></Th>
                             <Th><Trans>Dispute</Trans></Th>
                         </Tr>
                     </Thead>
@@ -63,7 +60,7 @@ const ArbitratorRequestList = ({requests}: {
                                 }}>
                                     <Td>{request.name}</Td>
                                     <Td>{request.operation}</Td>
-                                    <Td>{request.disputeID}</Td>
+                                    <Td># {request.disputeID}</Td>
                                 </Tr>
                             })
                         }

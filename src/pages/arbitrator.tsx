@@ -8,7 +8,10 @@ import {
     Flex,
     Text,
     Box,
-    Button
+    Button,
+    Card,
+    CardBody,
+    CardHeader
 } from '@chakra-ui/react'
 import { useAppContext } from '../context/AppContextProvider'
 import { Trans } from '@lingui/macro'
@@ -162,14 +165,28 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
-                    { arbitratorsData?.requests?.length ?
-                        <ArbitratorsList arbitrators={ arbitratorsData.arbitrators }/> :
-                        <Box><Trans>You did not register any arbitrator yet</Trans></Box>
-                    }
-                    { arbitratorsData?.requests?.length ?
-                        <ArbitratorRequestList requests={ arbitratorsData.requests }/> :
-                        <Box><Trans>You have no requests yet</Trans></Box>
-                    }
+                    <Card mx="1em" mt="0">
+                        <CardHeader>
+                           <Heading as="h2" size='md'><Trans>Registered Arbitrators</Trans></Heading>
+                        </CardHeader>
+                        <CardBody>
+                            { arbitratorsData?.requests?.length ?
+                                <ArbitratorsList arbitrators={ arbitratorsData.arbitrators }/> :
+                                <Box><Trans>You did not register any arbitrator yet</Trans></Box>
+                            }
+                        </CardBody>
+                    </Card>
+                    <Card mx="1em" mt="0">
+                        <CardHeader>
+                            <Heading as="h2" size='md'><Trans>Pending Requests</Trans></Heading>
+                        </CardHeader>
+                        <CardBody>
+                            { arbitratorsData?.requests?.length ?
+                                <ArbitratorRequestList requests={ arbitratorsData.requests }/> :
+                                <Box><Trans>You have no requests yet</Trans></Box>
+                            }
+                        </CardBody>
+                    </Card>
 
                     { /** Dialogs used on this page */ }
                     <RegisterArbitratorDialog setDisputeId={setDisputeId}/>

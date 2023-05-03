@@ -1,4 +1,3 @@
-import React from "react"
 import { 
     TableContainer, 
     Table, 
@@ -9,11 +8,15 @@ import {
     Tfoot,
     TableCaption,
     Th,
-    Badge
+    Badge,
+    Flex,
+    Text,
+    Box
 } from "@chakra-ui/react"
 import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 import { metaEvidenceTypes } from "../dialogs/arbitrator/RegisterArbitratorDialog"
+import Davatar from '@davatar/react'
 
 export interface Operation {
     id: string,
@@ -45,14 +48,11 @@ const ArbitratorsList = ({arbitrators}: {
         <>        
             <TableContainer>
                 <Table variant='simple'>
-                    <TableCaption placement="top">
-                        <Trans>Existing arbitrators:</Trans>
-                    </TableCaption>
                     <Thead>
                         <Tr>
                             <Th><Trans>Name</Trans></Th>
                             <Th><Trans>Address</Trans></Th>
-                            <Th><Trans>Operations</Trans></Th>
+                            <Th><Trans>Cases admissible for arbitration</Trans></Th>
                             <Th><Trans>Supported contracts</Trans></Th>
                         </Tr>
                     </Thead>
@@ -64,7 +64,22 @@ const ArbitratorsList = ({arbitrators}: {
                                     dialog.setArbitrator(arbitrator)
                                     dialog.onOpen()
                                 }}>
-                                    <Td>{arbitrator.name}</Td>
+                                    <Td>
+                                        <Flex alignItems={"center"}>
+                                            <Box mr="0.8em">
+                                                <Davatar
+                                                    size={32}
+                                                    address={arbitrator.id}
+                                                    generatedAvatarType='jazzicon'
+                                                />
+                                            </Box>
+                                            <Box>
+                                            <Text>
+                                                {arbitrator.name}
+                                            </Text>
+                                            </Box>
+                                        </Flex>
+                                    </Td>
                                     <Td>{arbitrator.id}</Td>
                                     <Td>{    
                                         arbitrator.operations?.length > 0 ? 
