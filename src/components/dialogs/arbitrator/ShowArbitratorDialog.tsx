@@ -132,7 +132,7 @@ const ShowArbitratorDialog = () => {
                                     <Tbody>
                                         <Tr>
                                             <Td>
-                                                <Trans>Arbitrator's name:</Trans>
+                                                <Trans>{"Arbitrator's name:"}</Trans>
                                             </Td>
                                             <Td>
                                                 { arbitrator?.name }
@@ -140,7 +140,7 @@ const ShowArbitratorDialog = () => {
                                         </Tr>
                                         <Tr>
                                             <Td>
-                                                <Trans>Arbitrator's contract:</Trans>
+                                                <Trans>{"Arbitrator's contract:"}</Trans>
                                             </Td>
                                             <Td>
                                                 <FormattedAddress value={arbitrator?.id || ''} />

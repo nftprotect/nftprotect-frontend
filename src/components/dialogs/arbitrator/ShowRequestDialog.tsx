@@ -162,7 +162,7 @@ const ShowRequestDialog = () => {
                                 <Trans>Request for arbitrator {request?.name}</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
-                                <Trans>Here's a complete description</Trans>
+                                <Trans>{"Here's a complete description"}</Trans>
                             </Text>
                         </CardHeader>
 
@@ -173,7 +173,7 @@ const ShowRequestDialog = () => {
                                     <Tbody>
                                         <Tr>
                                             <Td>
-                                                <Trans>Arbitrator's name:</Trans>
+                                                <Trans>{"Arbitrator's name:"}</Trans>
                                             </Td>
                                             <Td>
                                                 { request?.name }
