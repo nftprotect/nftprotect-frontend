@@ -167,6 +167,7 @@ const ShowRequestDialog = () => {
                         </CardHeader>
 
                         <CardBody my={{base: "20px"}} width="100%">
+                            {!loadedRequestData && <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>}
                             {loadedRequestData && <TableContainer>
                                 <Table variant='simple'>
                                     <Tbody>
