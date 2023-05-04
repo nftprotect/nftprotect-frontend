@@ -65,6 +65,7 @@ import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 import AddOperationsDialog from "./AddOperationsDialog";
 import EditOperationsDialog from "./EditOperationsDialog";
 import AddContractsDialog from "./AddContractsDialog";
+import DeleteArbitratorDialog from "./DeleteArbitratorDialog";
 
 const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
@@ -229,7 +230,7 @@ const ShowArbitratorDialog = () => {
                         <CardFooter>
                             <Box w={{base: "60%", xs: "50%"}}>
                                 <Button
-                                    //onClick={ openDispute }
+                                    onClick={ () => { getDialog('DeleteArbitratorDialog').onOpen() }}
                                     variant="dark-outline"
                                 >
                                     <Trans>Delete arbitrator</Trans>
@@ -245,6 +246,7 @@ const ShowArbitratorDialog = () => {
         { arbitrator && <AddOperationsDialog arbitrator={arbitrator}/> }
         { arbitrator && <AddContractsDialog arbitrator={arbitrator}/> }
         { arbitrator && <EditOperationsDialog arbitrator={arbitrator}/> }
+        { arbitrator && <DeleteArbitratorDialog arbitrator={arbitrator}/>}
     </>)
 }
 
