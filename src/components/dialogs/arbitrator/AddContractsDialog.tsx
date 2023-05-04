@@ -108,7 +108,7 @@ const AddContractsDialog = ({
 
     const finalTransactionSent = () => {
         return (tx: any) => {
-            console.log('ARBITRATOR REGISTRATION TX', tx)
+            console.log('ARBITRATOR ADD CONTRACTS TX', tx)
             // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
             arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
@@ -306,7 +306,7 @@ const AddContractsDialog = ({
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                            <Trans>Add operations to arbitrator</Trans>
+                                            <Trans>Add collections to arbitrator</Trans>
                                         </Text>
                                     </CardHeader>
                                     
@@ -343,7 +343,7 @@ const AddContractsDialog = ({
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                        <Trans>Add operations to arbitrator</Trans>
+                                        <Trans>Add collections to arbitrator</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -361,7 +361,7 @@ const AddContractsDialog = ({
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                        <Trans>Add operations to arbitrator</Trans>
+                                        <Trans>Add collections to arbitrator</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>

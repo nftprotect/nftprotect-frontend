@@ -63,6 +63,7 @@ import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorData } from "../../arbitrator/ArbitratorsList";
 import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 import AddOperationsDialog from "./AddOperationsDialog";
+import EditOperationsDialog from "./EditOperationsDialog";
 import AddContractsDialog from "./AddContractsDialog";
 
 const ShowArbitratorDialog = () => {
@@ -164,6 +165,7 @@ const ShowArbitratorDialog = () => {
                                                         size="sm"
                                                         width={"auto"}
                                                         variant="outline"
+                                                        onClick={ () => { getDialog('EditOperationsDialog').onOpen() }}
                                                     />
                                                     <IconButton
                                                         aria-label={t`Delete`}
@@ -242,6 +244,7 @@ const ShowArbitratorDialog = () => {
         { /** Dialogs used on this page */ }
         { arbitrator && <AddOperationsDialog arbitrator={arbitrator}/> }
         { arbitrator && <AddContractsDialog arbitrator={arbitrator}/> }
+        { arbitrator && <EditOperationsDialog arbitrator={arbitrator}/> }
     </>)
 }
 

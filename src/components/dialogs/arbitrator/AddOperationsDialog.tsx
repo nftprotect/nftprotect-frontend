@@ -108,7 +108,7 @@ const AddOperationsDialog = ({
 
     const finalTransactionSent = () => {
         return (tx: any) => {
-            console.log('ARBITRATOR REGISTRATION TX', tx)
+            console.log('ARBITRATOR ADD OPERATIONS TX', tx)
             // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
             arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
