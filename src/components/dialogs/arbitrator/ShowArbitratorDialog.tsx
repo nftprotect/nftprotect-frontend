@@ -149,7 +149,7 @@ const ShowArbitratorDialog = () => {
                                         <Tr>
                                             <Td>
                                                 <Trans>Supported operations:</Trans>
-                                                <Box>
+                                                { arbitrator && arbitrator.operations?.length > 0 && <Box>
                                                     <IconButton
                                                         aria-label={t`Add`}
                                                         icon={<AddIcon />}
@@ -172,7 +172,7 @@ const ShowArbitratorDialog = () => {
                                                         width={"auto"}
                                                         variant="outline"
                                                     />
-                                                </Box>
+                                                </Box> }
                                             </Td>
                                             <Td>
                                             {    
@@ -192,7 +192,7 @@ const ShowArbitratorDialog = () => {
                                         <Tr>
                                             <Td>
                                                 <Trans>Supported collections:</Trans>
-                                                <Box>
+                                                { arbitrator && arbitrator.contracts?.length > 0 && <Box>
                                                     <IconButton
                                                         aria-label={t`Add`}
                                                         icon={<AddIcon />}
@@ -208,7 +208,7 @@ const ShowArbitratorDialog = () => {
                                                         width={"auto"}
                                                         variant="outline"
                                                     />
-                                                </Box>
+                                                </Box> }
                                             </Td>
                                             <Td>
                                                 {
