@@ -208,7 +208,8 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If there's no pending request then we can Release NFT or Dispute NFT
                     buttons = (<>
                         <Box mb={[2]}>
-                            <LostPNFTButton 
+                            <LostPNFTButton
+                                buttonTitle={"Lost pNFT"}
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
@@ -244,7 +245,8 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If there's an rejected request then we can only dispute this request
                     buttons = (<>
                         <Box mb={[2]}>
-                            <LostPNFTButton 
+                            <LostPNFTButton
+                                buttonTitle={"Lost pNFT"}
                                 nft={ nft } 
                                 nftReFetch={ nftReFetch }
                                 setRefreshPaused = { setRefreshPaused }
