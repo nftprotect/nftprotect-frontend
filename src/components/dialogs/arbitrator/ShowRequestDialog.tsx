@@ -32,6 +32,13 @@ import {
     CardBody,
     CardFooter,
     useDisclosure,
+    Table,
+    TableContainer,
+    Tr,
+    Td,
+    Tbody,
+    WrapItem,
+    Wrap
 } from '@chakra-ui/react';
 import { Form, Field, Formik, FormikProps } from 'formik';
 import { Info } from '@web3uikit/icons';
@@ -55,7 +62,16 @@ import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorRequest } from "../../arbitrator/ArbitratorRequestList";
 import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
-import { hexlify } from "@ethersproject/bytes";
+import { FormattedAddress } from "../../arbitrator/ArbitratorsList";
+import { OperationBadge } from "../../arbitrator/ArbitratorsList";
+import { MasterOperationBadge } from "../../arbitrator/ArbitratorRequestList";
+
+interface LoadedRequestData {
+    address: string,
+    extraData: string[],
+    contracts: string[],
+    operations: string[]
+}
 
 const ShowRequestDialog = () => {
     const disclosure = useDisclosure()
@@ -63,7 +79,7 @@ const ShowRequestDialog = () => {
     const { setDialog } = useCallableDialogContext()
     const { account, arbitratorRegistryContract, fee } = useAppContext()
     const [ request, setRequest ] = useState<ArbitratorRequest>()
-    const [ loadedRequestData, setLoadedRequestData ] = useState<any>()
+    const [ loadedRequestData, setLoadedRequestData ] = useState<LoadedRequestData>()
 
     const loadRequest = async () => {
         const {
@@ -71,6 +87,11 @@ const ShowRequestDialog = () => {
             contracts,
             extraData,
             operations
+        }: {
+            arb: string,
+            contracts: string,
+            extraData: string[],
+            operations: string
         } = await arbitratorRegistryContract.getRequest(request?.id) 
         
         const countUint256 = (value: string) => {
@@ -85,20 +106,14 @@ const ShowRequestDialog = () => {
             address: arb,
             extraData: extraData,
             contracts: (contractsCount > 0) ?
-                defaultAbiCoder.decode([`address[${contractsCount}]`], contracts):
+                defaultAbiCoder.decode([`address[${contractsCount}]`], contracts)[0]:
                 [],
             operations:  (contractsCount > 0) ?
-                defaultAbiCoder.decode([`uint256[${operationsCount}]`], operations):
+                defaultAbiCoder.decode([`uint256[${operationsCount}]`], operations)[0]:
                 []
         }
-        console.log('PARSED DATA', parsedData)
+        console.log('PARSED REQUEST DATA', parsedData)
         setLoadedRequestData(parsedData)
-    }
-
-    const loadOperations = () => {
-        const supportedOperatons = metaEvidenceTypes.map(async (entry) => {
-            return await arbitratorRegistryContract.checkArbitratorByOperation()
-        })
     }
 
     useEffect(() => {
@@ -106,7 +121,7 @@ const ShowRequestDialog = () => {
     }, [])
 
     useEffect(() => {
-        setLoadedRequestData({})
+        setLoadedRequestData(undefined)
         request && loadRequest()
     }, [request])
 
@@ -144,15 +159,82 @@ const ShowRequestDialog = () => {
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                <Trans>Request to add {request?.name}</Trans>
+                                <Trans>Request for arbitrator {request?.name}</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
                                 <Trans>Here's a complete description</Trans>
                             </Text>
                         </CardHeader>
 
-                        <CardBody my={{base: "20px"}}>
-
+                        <CardBody my={{base: "20px"}} width="100%">
+                            {loadedRequestData && <TableContainer>
+                                <Table variant='simple'>
+                                    <Tbody>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Arbitrator's name:</Trans>
+                                            </Td>
+                                            <Td>
+                                                { request?.name }
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>{"Arbitrator's contract:"}</Trans>
+                                            </Td>
+                                            <Td>
+                                                <FormattedAddress value={loadedRequestData.address} />
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Request type:</Trans>
+                                            </Td>
+                                            <Td>
+                                                <MasterOperationBadge value={request?.operation || ''}/>
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Supported operations:</Trans>
+                                            </Td>
+                                            <Td>
+                                                <Wrap justify="left">
+                                                {    
+                                                    loadedRequestData && loadedRequestData.operations?.length > 0 ? 
+                                                        loadedRequestData.operations?.map((value) => {
+                                                                return <WrapItem key={value} width={"auto"}>
+                                                                    <OperationBadge value={value}/>
+                                                                </WrapItem>
+                                                            }) : 
+                                                    <Badge variant='solid' colorScheme='blue'>
+                                                        <Trans>All available</Trans>
+                                                    </Badge>
+                                                }
+                                                </Wrap>
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Trans>Supported collections:</Trans>
+                                            </Td>
+                                            <Td>
+                                                <Wrap spacing="20px" justify="left">
+                                                    {loadedRequestData && loadedRequestData.contracts?.length > 0 ? 
+                                                        loadedRequestData.contracts.map((contract) => {
+                                                            return <WrapItem key={contract} width={"100%"}>
+                                                                <FormattedAddress value={contract} />
+                                                            </WrapItem>
+                                                        }) : 
+                                                        <Text><Trans>Any</Trans></Text>
+                                                    }
+                                                </Wrap>
+                                            </Td>
+                                        </Tr>
+                                        
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>}
                         </CardBody>
                     </Card>
                 </ModalBody>

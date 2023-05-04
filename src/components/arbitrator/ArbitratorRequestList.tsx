@@ -41,7 +41,7 @@ const masterOperationsMap: any = {
 }
 
 export const MasterOperationBadge = ({value} : {value: string}) => {
-    return <Badge variant='solid' colorScheme='blue' px={'0.5rem'} mx={'0.3rem'}>
+    return <Badge variant='solid' colorScheme='blue' px={'0.5em'} mr={'0.5em'}>
         { masterOperationsMap[value] || t`unknown` }
     </Badge>
 }
