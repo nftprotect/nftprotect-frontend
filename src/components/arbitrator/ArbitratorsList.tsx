@@ -11,12 +11,19 @@ import {
     Badge,
     Flex,
     Text,
-    Box
+    Box,
+    Wrap,
+    WrapItem,
+    IconButton,
+    Link,
+    VisuallyHiddenInput
 } from "@chakra-ui/react"
+import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons"
 import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 import { metaEvidenceTypes } from "../dialogs/arbitrator/RegisterArbitratorDialog"
 import Davatar from '@davatar/react'
+import { formatAddress, generateUUID, copyTextToClipboard } from "../../utils/helpers"
 
 export interface Operation {
     id: string,
@@ -36,6 +43,48 @@ export interface ContractData {
     id: string,
     contract: string,
     arbitrator?: string
+}
+
+export const OperationBadge = ({value} : {value: string}) => {
+    return <Badge variant='solid' colorScheme='blue' px={'0.5rem'} mx={'0.3rem'}>
+        { metaEvidenceTypes.find(item => item.value === value.toString())?.label || t`unknown` }
+    </Badge>
+}
+
+export const FormattedAddress = ({
+    value, 
+    withLink = true,
+    withCopy = false
+} : {
+    value: string, 
+    withLink?: boolean, 
+    withCopy?: boolean
+}) => {
+    const uuid = generateUUID()
+    return <Flex flexDirection={'row'}>
+        <Text>{ formatAddress(value, 4) }</Text>
+        {withCopy && <>
+            <VisuallyHiddenInput id={uuid} value={value} readOnly/>
+            <Link 
+                onClick={ () => {
+                    copyTextToClipboard(value, '#'+uuid).then(() => alert('Copied!'))
+                } } 
+                title={t`Copy`}
+                pl={"0.5em"}
+            >
+                <CopyIcon />
+            </Link>
+        </>}
+        {withLink && <Link 
+            href={"https://goerli.etherscan.io/address/"+value} 
+            title={t`View on Etherscan`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            pl={"0.5em"}
+        >
+            <ExternalLinkIcon/>
+        </Link>}
+    </Flex>
 }
 
 const ArbitratorsList = ({arbitrators}: {
@@ -59,16 +108,19 @@ const ArbitratorsList = ({arbitrators}: {
                     <Tbody>
                         {
                             arbitrators.map((arbitrator) => {
-                                return  <Tr key={`arb${arbitrator.id}`} onClick={() => {
-                                    const dialog = getDialog('ShowArbitratorDialog')
-                                    dialog.setArbitrator(arbitrator)
-                                    dialog.onOpen()
-                                }}>
-                                    <Td>
+                                return  <Tr key={`arb${arbitrator.id}`}>
+                                    <Td 
+                                        onClick={() => {
+                                            const dialog = getDialog('ShowArbitratorDialog')
+                                            dialog.setArbitrator(arbitrator)
+                                            dialog.onOpen()
+                                        }}
+                                        cursor={"pointer"}
+                                    >
                                         <Flex alignItems={"center"}>
                                             <Box mr="0.8em">
                                                 <Davatar
-                                                    size={32}
+                                                    size={32}       
                                                     address={arbitrator.id}
                                                     generatedAvatarType='jazzicon'
                                                 />
@@ -80,25 +132,35 @@ const ArbitratorsList = ({arbitrators}: {
                                             </Box>
                                         </Flex>
                                     </Td>
-                                    <Td>{arbitrator.id}</Td>
-                                    <Td>{    
-                                        arbitrator.operations?.length > 0 ? 
-                                            arbitrator.operations?.map((operation) => operation.operation) 
-                                                .map((value) => {
-                                                    return <Badge variant='solid' colorScheme='blue'>
-                                                        { metaEvidenceTypes.find(item => item.value === value.toString())?.label || t`unknown` }
-                                                    </Badge>
-                                                }) : 
-                                            <Badge variant='solid' colorScheme='blue'>
-                                                <Trans>All available</Trans>
-                                            </Badge>
-                                        }
+                                    <Td>
+                                        <FormattedAddress value={arbitrator.id}/>
                                     </Td>
-                                    <Td>{
-                                        arbitrator.contracts?.length > 0 ? 
-                                            arbitrator.contracts.map((contract) => contract.contract) : 
-                                            t`Any`
-                                        }
+                                    <Td>
+                                        <Wrap justify="left">
+                                            { arbitrator.operations?.length > 0 ? 
+                                                arbitrator.operations?.map((operation) => operation.operation) 
+                                                    .map((value) => {
+                                                        return <WrapItem key={value} width={"auto"}>
+                                                            <OperationBadge value={value}/>
+                                                        </WrapItem> 
+                                                    }) : 
+                                                <Badge variant='solid' colorScheme='blue'>
+                                                    <Trans>All available</Trans>
+                                                </Badge>
+                                            }
+                                        </Wrap>
+                                    </Td>
+                                    <Td>
+                                        <Wrap justify="left">
+                                            {arbitrator.contracts?.length > 0 ? 
+                                                arbitrator.contracts.map((contract) => {
+                                                    return <WrapItem key={contract.contract} width={"auto"}>
+                                                        <FormattedAddress value={contract.contract}/>
+                                                    </WrapItem>
+                                                }) : 
+                                                <Text><Trans>Any</Trans></Text>
+                                            }
+                                        </Wrap>
                                     </Td>
                                 </Tr>
                             })

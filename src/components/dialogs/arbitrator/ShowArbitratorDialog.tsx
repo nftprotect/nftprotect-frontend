@@ -37,7 +37,9 @@ import {
     Tr,
     Td,
     TableContainer,
-    IconButton
+    IconButton,
+    Wrap,
+    WrapItem
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { Form, Field, Formik, FormikProps } from 'formik';
@@ -66,6 +68,8 @@ import AddOperationsDialog from "./AddOperationsDialog";
 import EditOperationsDialog from "./EditOperationsDialog";
 import AddContractsDialog from "./AddContractsDialog";
 import DeleteArbitratorDialog from "./DeleteArbitratorDialog";
+import { OperationBadge, FormattedAddress } from "../../arbitrator/ArbitratorsList";
+import { formatAddress } from "../../../utils/helpers";
 
 const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
@@ -76,19 +80,12 @@ const ShowArbitratorDialog = () => {
     const [ loadedArbitratorData, setLoadedArbitratorData ] = useState<any>()
     const { getDialog } = useCallableDialogContext()
 
-    const loadArbitrator = async () => {
-        const result = await arbitratorRegistryContract.arbitrators(arbitrator?.id) 
-        console.log(result)
-        setLoadedArbitratorData(result)
-    }
-
     useEffect(() => {
         setDialog('ShowArbitratorDialog', {...disclosure, setArbitrator: setArbitrator})
     }, [])
 
     useEffect(() => {
         setLoadedArbitratorData({})
-        arbitrator && loadArbitrator()
     }, [arbitrator])
 
     return (<>
@@ -99,6 +96,7 @@ const ShowArbitratorDialog = () => {
             onClose={() => {
                 onClose()
             }}
+            size={"xl"}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 
@@ -145,7 +143,7 @@ const ShowArbitratorDialog = () => {
                                                 <Trans>Arbitrator's contract:</Trans>
                                             </Td>
                                             <Td>
-                                                { arbitrator?.id }
+                                                <FormattedAddress value={arbitrator?.id || ''} />
                                             </Td>
                                         </Tr>
                                         <Tr>
@@ -178,18 +176,20 @@ const ShowArbitratorDialog = () => {
                                                 </Box> }
                                             </Td>
                                             <Td>
-                                            {    
-                                                arbitrator && arbitrator.operations?.length > 0 ? 
-                                                    arbitrator.operations?.map((operation) => operation.operation) 
-                                                        .map((value) => {
-                                                            return <Badge variant='solid' colorScheme='blue'>
-                                                                { metaEvidenceTypes.find(item => item.value === value.toString())?.label || t`unknown` }
-                                                            </Badge>
-                                                        }) : 
-                                                <Badge variant='solid' colorScheme='blue'>
-                                                    <Trans>All available</Trans>
-                                                </Badge>
-                                            }
+                                                <Wrap justify="left">
+                                                {    
+                                                    arbitrator && arbitrator.operations?.length > 0 ? 
+                                                        arbitrator.operations?.map((operation) => operation.operation) 
+                                                            .map((value) => {
+                                                                return <WrapItem key={value} width={"auto"}>
+                                                                    <OperationBadge value={value}/>
+                                                                </WrapItem>
+                                                            }) : 
+                                                    <Badge variant='solid' colorScheme='blue'>
+                                                        <Trans>All available</Trans>
+                                                    </Badge>
+                                                }
+                                                </Wrap>
                                             </Td>
                                         </Tr>
                                         <Tr>
@@ -214,11 +214,16 @@ const ShowArbitratorDialog = () => {
                                                 </Box> }
                                             </Td>
                                             <Td>
-                                                {
-                                                arbitrator && arbitrator.contracts?.length > 0 ? 
-                                                    arbitrator.contracts.map((contract) => contract.contract) : 
-                                                    t`Any`
-                                                }
+                                                <Wrap spacing="20px" justify="left">
+                                                    {arbitrator && arbitrator.contracts?.length > 0 ? 
+                                                        arbitrator.contracts.map((contract) => {
+                                                            return <WrapItem key={contract.contract} width={"100%"}>
+                                                                <FormattedAddress value={contract.contract} />
+                                                            </WrapItem>
+                                                        }) : 
+                                                        <Text><Trans>Any</Trans></Text>
+                                                    }
+                                                </Wrap>
                                             </Td>
                                         </Tr>
                                         

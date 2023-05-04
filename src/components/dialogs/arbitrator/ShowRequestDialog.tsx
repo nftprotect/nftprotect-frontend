@@ -55,6 +55,7 @@ import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorRequest } from "../../arbitrator/ArbitratorRequestList";
 import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
+import { hexlify } from "@ethersproject/bytes";
 
 const ShowRequestDialog = () => {
     const disclosure = useDisclosure()
@@ -65,9 +66,33 @@ const ShowRequestDialog = () => {
     const [ loadedRequestData, setLoadedRequestData ] = useState<any>()
 
     const loadRequest = async () => {
-        const result = await arbitratorRegistryContract.disputes(request?.id) 
-        console.log(result)
-        setLoadedRequestData(result)
+        const {
+            arb,
+            contracts,
+            extraData,
+            operations
+        } = await arbitratorRegistryContract.getRequest(request?.id) 
+        
+        const countUint256 = (value: string) => {
+            const data = value ? value.substring(2) : ""
+            return data.length/64
+        }
+
+        const contractsCount = countUint256(contracts)
+        const operationsCount = countUint256(operations)
+
+        const parsedData = {
+            address: arb,
+            extraData: extraData,
+            contracts: (contractsCount > 0) ?
+                defaultAbiCoder.decode([`address[${contractsCount}]`], contracts):
+                [],
+            operations:  (contractsCount > 0) ?
+                defaultAbiCoder.decode([`uint256[${operationsCount}]`], operations):
+                []
+        }
+        console.log('PARSED DATA', parsedData)
+        setLoadedRequestData(parsedData)
     }
 
     const loadOperations = () => {
@@ -93,6 +118,7 @@ const ShowRequestDialog = () => {
             onClose={() => {
                 onClose()
             }}
+            size={"xl"}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

@@ -9,8 +9,9 @@ import {
     Tfoot,
     TableCaption,
     Th,
+    Badge
 } from "@chakra-ui/react"
-import { Trans } from "@lingui/macro"
+import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 
 export enum ArbitratorRequestStatus {
@@ -33,6 +34,18 @@ export interface ArbitratorRequest {
     name: string,
 }
 
+const masterOperationsMap: any = {
+    AddArbitrator: t`Add new arbitrator`,
+    AddOperations: t`Add operations`,
+    AddContract: t`Add collections`,
+}
+
+export const MasterOperationBadge = ({value} : {value: string}) => {
+    return <Badge variant='solid' colorScheme='blue' px={'0.5rem'} mx={'0.3rem'}>
+        { masterOperationsMap[value] || t`unknown` }
+    </Badge>
+}
+
 const ArbitratorRequestList = ({requests}: {
     requests: ArbitratorRequest[]
 }) => {
@@ -53,13 +66,20 @@ const ArbitratorRequestList = ({requests}: {
                     <Tbody>
                         {
                             requests.map((request) => {
-                                return <Tr key={`arb${request.id}`} onClick={() => {
-                                    const dialog = getDialog('ShowRequestDialog')
-                                    dialog.setRequest(request)
-                                    dialog.onOpen()
-                                }}>
-                                    <Td>{request.name}</Td>
-                                    <Td>{request.operation}</Td>
+                                return <Tr key={`arb${request.id}`}>
+                                    <Td
+                                        onClick={() => {
+                                            const dialog = getDialog('ShowRequestDialog')
+                                            dialog.setRequest(request)
+                                            dialog.onOpen()
+                                        }}
+                                        cursor={"pointer"}
+                                    >
+                                        {request.name}
+                                    </Td>
+                                    <Td>
+                                        <MasterOperationBadge value={request.operation}/>
+                                    </Td>
                                     <Td># {request.disputeID}</Td>
                                 </Tr>
                             })

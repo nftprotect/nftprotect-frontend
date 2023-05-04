@@ -177,7 +177,7 @@ const Home: NextPage = () => {
                 </Box>
             { active &&
                 <main>
-                    <Card mx="1em" mt="0">
+                    <Card mx="2em" mt="0" mb="1em">
                         <CardHeader>
                            <Heading as="h2" size='md'><Trans>Registered Arbitrators</Trans></Heading>
                         </CardHeader>
@@ -188,7 +188,7 @@ const Home: NextPage = () => {
                             }
                         </CardBody>
                     </Card>
-                    <Card mx="1em" mt="0">
+                    <Card mx="2em" mt="0" mb="2em">
                         <CardHeader>
                             <Heading as="h2" size='md'><Trans>Pending Requests</Trans></Heading>
                         </CardHeader>
