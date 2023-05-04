@@ -86,7 +86,7 @@ export const metaEvidenceTypes = [
     }
 ]
 
-const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisputeId?: Function}) => {
+const RegisterArbitratorDialog = () => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
@@ -131,12 +131,11 @@ const RegisterArbitratorDialog = ({setDisputeId: setDisputeIdExternal}: {setDisp
     const finalTransactionSent = () => {
         return (tx: any) => {
             console.log('ARBITRATOR REGISTRATION TX', tx)
-            // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
             arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
-                    setDisputeIdExternal && setDisputeIdExternal(disputeId)
+                    setDisputeId(disputeId)
                     setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);
                     setTimeout(onClose, dialogsTimeout)

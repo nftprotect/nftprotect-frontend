@@ -64,6 +64,7 @@ const Home: NextPage = () => {
         arbitrators: ArbitratorData[]
         requests: ArbitratorRequest[]
     }>()
+    const graphUpdateTimeout = 3000
 
     const reloadDyArbitrators = () => {
         if (active) {
@@ -74,9 +75,20 @@ const Home: NextPage = () => {
         }
     }
 
+    const reloadDyArbitratorsWithTimeout = () => {
+        console.log('FIRED')
+        setTimeout(reloadDyArbitrators, graphUpdateTimeout)
+    }
+
     useEffect(() => {
         setBaseUrl(window.location.origin)
-    }, [])
+        if (active && account) {
+            arbitratorRegistryContract.on({}, reloadDyArbitratorsWithTimeout)
+            return () => {
+                arbitratorRegistryContract.removeAllListeners()
+            }
+        }
+    }, [active, account])
 
     useEffect(reloadDyArbitrators, [active, account])
 
@@ -189,7 +201,7 @@ const Home: NextPage = () => {
                     </Card>
 
                     { /** Dialogs used on this page */ }
-                    <RegisterArbitratorDialog setDisputeId={setDisputeId}/>
+                    <RegisterArbitratorDialog/>
                     <ShowArbitratorDialog/>
                     <ShowRequestDialog/>
                 </main>

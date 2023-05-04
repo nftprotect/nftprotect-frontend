@@ -57,7 +57,11 @@ import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorData } from "../../arbitrator/ArbitratorsList";
 
-const DeleteArbitratorDialog = ({arbitrator}: {arbitrator: ArbitratorData}) => {
+const DeleteArbitratorDialog = ({
+    arbitrator,
+}: {
+    arbitrator: ArbitratorData
+}) => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
@@ -67,7 +71,6 @@ const DeleteArbitratorDialog = ({arbitrator}: {arbitrator: ArbitratorData}) => {
     // Naming of wizard step numbers
     enum StepMapping {
         start,
-        payArbitrationFee,
         confirmTransaction,
         waitingForTransaction,
         success,
@@ -97,7 +100,6 @@ const DeleteArbitratorDialog = ({arbitrator}: {arbitrator: ArbitratorData}) => {
     const finalTransactionSent = () => {
         return (tx: any) => {
             console.log('ARBITRATOR DELETION TX', tx)
-            // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
             arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {

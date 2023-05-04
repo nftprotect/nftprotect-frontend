@@ -60,7 +60,7 @@ import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 
 const AddOperationsDialog = ({
     setDisputeId: setDisputeIdExternal,
-    arbitrator
+    arbitrator,
 }: {
     setDisputeId?: Function,
     arbitrator: ArbitratorData
@@ -109,11 +109,11 @@ const AddOperationsDialog = ({
     const finalTransactionSent = () => {
         return (tx: any) => {
             console.log('ARBITRATOR ADD OPERATIONS TX', tx)
-            // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
             arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
+                    setDisputeId(disputeId)
                     setDisputeIdExternal && setDisputeIdExternal(disputeId)
                     setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);

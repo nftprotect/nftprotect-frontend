@@ -62,6 +62,7 @@ export function useTheGraph() {
             query,
             variables: { managerAddress: account }
         })
+        console.log('GRAPH RETURNS', result)
         return result
     }
 
