@@ -449,11 +449,11 @@ const AddOperationsDialog = ({
                                             <Trans>If you{'\u0027'}ve missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link</Trans>
                                         </Text>
                                         
-                                        <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
+                                        {/* <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
                                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                                 <Trans>case</Trans>{` ${disputeId}`}
                                             </Text>
-                                        </Link>
+                                        </Link> */}
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                             <Trans>Follow the status of the dispute through our app or on the website Kleros.</Trans>
                                         </Text>
