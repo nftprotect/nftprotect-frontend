@@ -32,6 +32,8 @@ import {
     CardBody,
     CardFooter,
     useDisclosure,
+    Wrap,
+    WrapItem
 } from '@chakra-ui/react';
 import { Form, Field, Formik, FormikProps } from 'formik';
 import { Info } from '@web3uikit/icons';
@@ -53,13 +55,15 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
+import { ArbitratorData, Operation } from "../../arbitrator/ArbitratorsList";
+import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
 
 const AddOperationsDialog = ({
     setDisputeId: setDisputeIdExternal,
-    arbitratorAddress
+    arbitrator
 }: {
     setDisputeId?: Function,
-    arbitratorAddress: string
+    arbitrator: ArbitratorData
 }) => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
@@ -69,34 +73,6 @@ const AddOperationsDialog = ({
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
     const { account, arbitratorRegistryContract, fee } = useAppContext()
-
-    const metaEvidenceTypes = [
-        {
-            label: 'burn',
-            value: '0'
-        }, {
-            label: 'adjustOwnership',
-            value: '1'
-        }, {
-            label: 'askOwnershipAdjustment',
-            value: '2'
-        }, {
-            label: 'answerOwnershipAdjustment',
-            value: '3'
-        }, {
-            label: 'askOwnershipAdjustmentArbitrate',
-            value: '4'
-        }, {
-            label: 'askOwnershipRestoreArbitrateMistake',
-            value: '5'
-        }, {
-            label: 'askOwnershipRestoreArbitratePhishing',
-            value: '6'
-        }, {
-            label: 'askOwnershipRestoreArbitrateProtocolBreach',
-            value: '7'
-        }
-    ]
 
     const DISPUTE_PRICE = '0.1'
 
@@ -155,28 +131,25 @@ const AddOperationsDialog = ({
                 description: 'The evidence of competencies',
                 fileURI: evidenceUpload?.getRelativeIPFSUrl()
             },
-            name: data.name,
-            operations: data.operations?.map((item: BigNumber) => defaultAbiCoder.encode(["uint8"],[item])) || [],
+            operations: data.operations?.map((item: string) => defaultAbiCoder.encode(["uint8"],[item])) || [],
             extraDatas: splitByLines(data.extraDatas).map((item: string) => arrayify(item)),
-            arbitratorContractAddress: data.arbitratorContractAddress,
-            contractAddresses: splitByLines(data.contractAddresses).map((item: string) => getAddress(item))
         }
-        console.log('RESULT', result)
         setSubmissionData(result)
         setNextStep(StepMapping.payArbitrationFee)
     }
 
-    // Textarea input validation
-    const validateName = (value: string) => {
-        let error
-        if (!value) {
-            error = t`Arbitrator name is required`
-        }
-        return error
+    const isExistingOperation = ({value}: {value: string}) => {
+        const existingOperations = arbitrator.operations
+        return existingOperations.find(exOp => exOp.operation === value) ? true : false
     }
 
-    const validateOperations = (value: BigNumber[]) => {
+    // Textarea input validation
+
+    const validateOperations = (value: string[]) => {
         let error
+        if (value && value.length === 0) {
+            error = t`You have to choose at least one operation`
+        }
         // Do some check
         return error
     }
@@ -185,40 +158,16 @@ const AddOperationsDialog = ({
         return (value: string) => {
             let error
             if (!value) {
-                error = t`At least one extraData must be specified`
+                error = t`ExtraData not specified`
             } else {
                 const extraDatasLength = splitByLines(values.extraDatas)?.length
                 const operationsLength = values.operations?.length
                 console.log(values.operations)
-                if (operationsLength > 0 && extraDatasLength !== operationsLength) {
+                if (extraDatasLength !== operationsLength) {
                     error = t`Extra Datas must contain the same number of lines as Operations`
                 }
             }
             return error
-        }
-    }
-
-    const validateContractAdresses = (value: string) => {
-        const valueList = splitByLines(value)
-        let error
-        valueList.forEach((address: string) => {
-            if (!isAddress(address)) {
-                error = t`Incorrect address`
-            }
-        })
-        return error
-    }
-
-    const validateArbitratorContractAddress = async (value: string) => {
-        if (!value) {
-            return t`Contract address is required`
-        }
-        if (!isAddress(value)) {
-            return t`Incorrect address`
-        }
-        const checkAddress = await arbitratorRegistryContract.checkArbitrator(value)
-        if (checkAddress) {
-            return t`Address already registered`
         }
     }
 
@@ -229,16 +178,13 @@ const AddOperationsDialog = ({
     const openDispute = () => {
         setNextStep(StepMapping.confirmTransaction)
         try {
-            arbitratorRegistryContract.addArbitrator(
-                submissionData.name,
-                submissionData.arbitratorContractAddress,
+            arbitratorRegistryContract.addOperations(
+                arbitrator.id,
                 submissionData.operations,
                 submissionData.extraDatas,
-                submissionData.contractAddresses,
                 submissionData.evidence.fileURI, 
                 {
                     value: parseEther(DISPUTE_PRICE),
-                    gasLimit: 1000000
                 }
             )
                 .then( finalTransactionSent() )
@@ -332,16 +278,21 @@ const AddOperationsDialog = ({
                                                                     ).sort()
                                                                     props.setValues({ ...props.values, operations })
                                                                 }}
-                                                            >
-                                                                {metaEvidenceTypes.map((option) => (
-                                                                    <Checkbox
-                                                                        key={option.label}
-                                                                        value={option.value}
-                                                                        //onChange={}
-                                                                    >
-                                                                        {option.label}
-                                                                    </Checkbox>
-                                                                ))}
+                                                            >    
+                                                                <Wrap spacing="20px" justify="left">
+                                                                    {metaEvidenceTypes.map((option) => (
+                                                                        <WrapItem key={option.label} width={"45%"}>
+                                                                            <Checkbox
+                                                                                key={option.label}
+                                                                                value={option.value}
+                                                                                disabled={isExistingOperation(option)}
+                                                                                defaultChecked={isExistingOperation(option)}
+                                                                            >
+                                                                                {option.label}
+                                                                            </Checkbox>
+                                                                        </WrapItem>
+                                                                    ))}
+                                                                </Wrap>
                                                             </CheckboxGroup>
                                                             <FormErrorMessage>{form.errors.operations}</FormErrorMessage>
                                                         </FormControl>

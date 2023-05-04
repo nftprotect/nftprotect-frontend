@@ -170,7 +170,7 @@ const Home: NextPage = () => {
                            <Heading as="h2" size='md'><Trans>Registered Arbitrators</Trans></Heading>
                         </CardHeader>
                         <CardBody>
-                            { arbitratorsData?.requests?.length ?
+                            { arbitratorsData?.arbitrators?.length ?
                                 <ArbitratorsList arbitrators={ arbitratorsData.arbitrators }/> :
                                 <Box><Trans>You did not register any arbitrator yet</Trans></Box>
                             }

@@ -62,6 +62,7 @@ import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorData } from "../../arbitrator/ArbitratorsList";
 import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
+import AddOperationsDialog from "./AddOperationsDialog";
 
 const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
@@ -70,6 +71,7 @@ const ShowArbitratorDialog = () => {
     const { account, arbitratorRegistryContract, fee } = useAppContext()
     const [ arbitrator, setArbitrator ] = useState<ArbitratorData>()
     const [ loadedArbitratorData, setLoadedArbitratorData ] = useState<any>()
+    const { getDialog } = useCallableDialogContext()
 
     const loadArbitrator = async () => {
         const result = await arbitratorRegistryContract.arbitrators(arbitrator?.id) 
@@ -153,6 +155,7 @@ const ShowArbitratorDialog = () => {
                                                         size="sm"
                                                         width={"auto"}
                                                         variant="outline"
+                                                        onClick={ () => { getDialog('AddOperationsDialog').onOpen() }}
                                                     />
                                                     <IconButton
                                                         aria-label={t`Edit`}
@@ -233,6 +236,9 @@ const ShowArbitratorDialog = () => {
                 </ModalBody>
             </ModalContent>
         </Modal>
+
+        { /** Dialogs used on this page */ }
+        { arbitrator && <AddOperationsDialog arbitrator={arbitrator}/> }
     </>)
 }
 
