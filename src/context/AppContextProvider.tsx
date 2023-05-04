@@ -1,8 +1,15 @@
 import { useWeb3React } from "@web3-react/core";
 import { createContext, useContext, useEffect, useState } from "react";
-import { nftpContractAddress, userRegistryContractAddress, supportedChains, defaultChain } from "../utils/config";
+import { 
+    nftpContractAddress, 
+    userRegistryContractAddress, 
+    supportedChains,
+    arbitratorRegistryContractAddress,
+    defaultChain 
+} from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
+import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../utils/config";
 
@@ -13,6 +20,7 @@ export interface AppContextInterface {
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
+    arbitratorRegistryContract: Contract,
     referrerAddress: string,
     didRegistered: boolean | undefined,
     currentBlock: number,
@@ -26,6 +34,7 @@ export function AppContextProvider({ children }:any) {
     const { chainId, active, account, library } = useWeb3React()
     const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library?.getSigner())
     const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, library?.getSigner())
+    const arbitratorRegistryContract = new Contract(arbitratorRegistryContractAddress, ArbitratorRegistryABI, library?.getSigner())
     const referrerAddress = '0x0000000000000000000000000000000000000000'
     const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
     const defaultChain = defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined
@@ -81,6 +90,7 @@ export function AppContextProvider({ children }:any) {
             currentChain,
             defaultChain,
             nftProtectContract,
+            arbitratorRegistryContract,
             referrerAddress,
             didRegistered,
             currentBlock,
