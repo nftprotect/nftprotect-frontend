@@ -70,6 +70,7 @@ import AddContractsDialog from "./AddContractsDialog";
 import DeleteArbitratorDialog from "./DeleteArbitratorDialog";
 import { OperationBadge, FormattedAddress } from "../../arbitrator/ArbitratorsList";
 import { formatAddress } from "../../../utils/helpers";
+import RemoveOperationsDialog from "./RemoveOperationsDialog";
 
 const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
@@ -172,6 +173,7 @@ const ShowArbitratorDialog = () => {
                                                         size="sm"
                                                         width={"auto"}
                                                         variant="outline"
+                                                        onClick={ () => { getDialog('RemoveOperationsDialog').onOpen() }}
                                                     />
                                                 </Box> }
                                             </Td>
@@ -251,6 +253,7 @@ const ShowArbitratorDialog = () => {
         { arbitrator && <AddOperationsDialog arbitrator={arbitrator}/> }
         { arbitrator && <AddContractsDialog arbitrator={arbitrator}/> }
         { arbitrator && <EditOperationsDialog arbitrator={arbitrator}/> }
+        { arbitrator && <RemoveOperationsDialog arbitrator={arbitrator}/>}
         { arbitrator && <DeleteArbitratorDialog arbitrator={arbitrator}/>}
     </>)
 }
