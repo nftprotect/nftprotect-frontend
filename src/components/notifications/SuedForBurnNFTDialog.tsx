@@ -108,27 +108,26 @@ const SuedForBurnNFTDialog = ({nft, setRefreshPaused, originalOwner }: ButtonIni
                             { getNftImage() }
 
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
-                                <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
-                                    <Trans>The owner of the original NFT</Trans>
-                                    {" "}
-                                    <Popover placement='top'>
+                                <Popover placement='top'>
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
+                                        <Trans>The owner of the original NFT</Trans>
+                                        {" "}
                                         <PopoverTrigger>
-                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                         </PopoverTrigger>
-                                        <PopoverContent w="150px">
-                                            <PopoverArrow />
-                                            <PopoverCloseButton />
-                                            <PopoverBody >
-                                                <Trans>Copied{"!"}</Trans>
-                                            </PopoverBody>
-                                        </PopoverContent>
-                                    </Popover>
-                                    
-                                    <span id='originalOwnerAddressHolder'>
-                                        { " (" + formatAddress(originalOwner, 4) + ") " }
-                                    </span>
-                                    <Trans>has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT.</Trans>
-                                </Text>
+                                        <chakra.span id='originalOwnerAddressHolder'>
+                                            { " " + formatAddress(originalOwner, 4) + " " }
+                                        </chakra.span>
+                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT.</Trans>
+                                    </Text>
+                                    <PopoverContent w="150px">
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverBody >
+                                            <Trans>Copied{"!"}</Trans>
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
 
                                 <Text mb={{base: "20px"}}>
                                     <Trans>Check out the details<br/> </Trans>
