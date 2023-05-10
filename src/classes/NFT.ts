@@ -23,14 +23,15 @@ export interface OriginalNFTData {
 }
 
 export interface ActionRequest {
-    id: number,
+    id: BigNumber,
     reqtype: number,
-    tokenId: number,
+    tokenId: BigNumber,
     newowner: string,
-    timeout: number,
+    timeout: BigNumber,
     status: RequestStatus,
     arbitrator: string,
-    disputeId: number
+    localDisputeId: BigNumber,
+    externalDisputeId: BigNumber
 }
 
 export enum RequestStatus {

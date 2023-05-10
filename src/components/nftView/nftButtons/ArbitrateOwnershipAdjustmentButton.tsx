@@ -65,7 +65,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const numberOfVotes = 3
     const DISPUTE_PRICE = '0.03'
 
-    const disputeId = pendingRequest?.disputeId
+    const disputeId = pendingRequest?.externalDisputeId
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -162,7 +162,8 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
                 nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, evidenceJSONUrl, {
-                    value: parseEther(DISPUTE_PRICE)
+                    value: parseEther(DISPUTE_PRICE),
+                //    gasLimit: 1000000
                 })
                     .then( finalTransactionSent() )
                     .catch( 

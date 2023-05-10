@@ -54,7 +54,7 @@ export enum Arbitrators {
     Dummy,
     Kleros
 }
-export const defaultArbitrator = 1
+export const defaultArbitrator = 2
 
 // Kleros
 export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'

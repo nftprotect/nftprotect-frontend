@@ -209,7 +209,10 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                     defaultArbitrator,
                     lostReason && evidenceTypes[lostReason],
                     evidenceJSONUrl,
-                    {value: parseEther(DISPUTE_PRICE)}
+                    {
+                        value: parseEther(DISPUTE_PRICE),
+                    //    gasLimit: 1000000
+                    }
                 )
                     .then( finalTransactionSent() )
                     .catch( 

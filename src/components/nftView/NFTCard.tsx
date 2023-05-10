@@ -197,7 +197,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                         filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
                                     >
                                         <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            {`Under dispute ${pendingRequest.disputeId}…`}
+                                            {`Under dispute ${pendingRequest.externalDisputeId}…`}
                                         </Text>
                                     </Flex>
                     }
@@ -270,7 +270,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                     filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
                                 >
                                     <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                        {`Under dispute ${pendingRequest.disputeId}…`}
+                                        {`Under dispute ${pendingRequest.externalDisputeId}…`}
                                     </Text>
                                 </Flex>
                 }

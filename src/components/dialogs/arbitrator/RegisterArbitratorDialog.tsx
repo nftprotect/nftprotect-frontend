@@ -235,7 +235,7 @@ const RegisterArbitratorDialog = () => {
                 submissionData.evidence.fileURI, 
                 {
                     value: parseEther(DISPUTE_PRICE),
-                    gasLimit: 1000000
+                //    gasLimit: 1000000
                 }
             )
                 .then( finalTransactionSent() )
