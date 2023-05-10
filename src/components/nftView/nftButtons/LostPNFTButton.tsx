@@ -207,7 +207,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                     nft.tokenId,
                     account, // TODO: Must be replaced by new address
                     defaultArbitrator,
-                    //lostReason && evidenceTypes[lostReason],
+                    lostReason && evidenceTypes[lostReason],
                     evidenceJSONUrl,
                     {value: parseEther(DISPUTE_PRICE)}
                 )

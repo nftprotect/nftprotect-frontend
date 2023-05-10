@@ -161,7 +161,9 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
         if (evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, evidenceJSONUrl, {value: parseEther(DISPUTE_PRICE)})
+                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, evidenceJSONUrl, {
+                    value: parseEther(DISPUTE_PRICE)
+                })
                     .then( finalTransactionSent() )
                     .catch( 
                         handleContractError({

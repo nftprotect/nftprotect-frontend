@@ -38,10 +38,10 @@ export const defaultChain = 5 // Goerli
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 
 export const libraryPollingInterval = 12000
-export const nftpContractAddress = '0x0f89a90ca6b0e193bd1beb6cef24da76d4434d77'
-export const userRegistryContractAddress = '0x6062b6588955e25a2d09292ccfe1a28b49f3b4e1'
+export const nftpContractAddress = '0xdccFE315E42c05c8699F3AC046b0A2F3115f4B02'
+export const userRegistryContractAddress = '0xE2E809F3Aec329B8Af5482eB3B1AD6A90510e808'
 export const arbitratorRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
-export const couponsContractAddress = '0x479213ab22d41999DF143aDBce000831b9B7C736'
+export const couponsContractAddress = '0x03d8899BDad1F05F28373f04F05a0A9dC6BDad64'
 
 export const dialogsTimeout = 5000
 

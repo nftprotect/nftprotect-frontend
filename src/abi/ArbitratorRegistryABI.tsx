@@ -10,51 +10,26 @@ const ArbitratorRegistryABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "requestId",
+				"name": "id",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "string",
 				"name": "name",
 				"type": "string"
-			}
-		],
-		"name": "ArbitratorAddRequested",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
+			},
 			{
-				"indexed": true,
+				"indexed": false,
 				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
+				"name": "arbitratorProxy",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
 			}
 		],
 		"name": "ArbitratorAdded",
@@ -65,100 +40,12 @@ const ArbitratorRegistryABI = [
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
 			}
 		],
 		"name": "ArbitratorDeleted",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
-			}
-		],
-		"name": "ArbitratorManagerChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "contr",
-				"type": "address"
-			}
-		],
-		"name": "ContractAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "contr",
-				"type": "address"
-			}
-		],
-		"name": "ContractRemoved",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			}
-		],
-		"name": "ContractsAddRequested",
 		"type": "event"
 	},
 	{
@@ -173,39 +60,7 @@ const ArbitratorRegistryABI = [
 			{
 				"indexed": true,
 				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			}
-		],
-		"name": "DisputeAccepted",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			}
-		],
-		"name": "DisputeRejected",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "operation",
+				"name": "id",
 				"type": "uint256"
 			},
 			{
@@ -215,82 +70,7 @@ const ArbitratorRegistryABI = [
 				"type": "bytes"
 			}
 		],
-		"name": "OperationAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "operation",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "OperationChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "operation",
-				"type": "uint256"
-			}
-		],
-		"name": "OperationRemoved",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			}
-		],
-		"name": "OperationsAddRequested",
+		"name": "ExtraDataChanged",
 		"type": "event"
 	},
 	{
@@ -313,38 +93,6 @@ const ArbitratorRegistryABI = [
 		"type": "event"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbitratorProxy",
-				"type": "address"
-			}
-		],
-		"name": "SetMasterArbitrator",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "operation",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes",
-				"name": "extraData",
-				"type": "bytes"
-			}
-		],
-		"name": "SetMasterOperation",
-		"type": "event"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -357,92 +105,27 @@ const ArbitratorRegistryABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint256[]",
-				"name": "operations",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes[]",
+				"internalType": "bytes",
 				"name": "extraData",
-				"type": "bytes[]"
-			},
-			{
-				"internalType": "address[]",
-				"name": "contracts",
-				"type": "address[]"
-			},
-			{
-				"internalType": "string",
-				"name": "evidence",
-				"type": "string"
+				"type": "bytes"
 			}
 		],
 		"name": "addArbitrator",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "address[]",
-				"name": "contracts",
-				"type": "address[]"
-			},
-			{
-				"internalType": "string",
-				"name": "evidence",
-				"type": "string"
-			}
-		],
-		"name": "addContracts",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "operations",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes[]",
-				"name": "extraData",
-				"type": "bytes[]"
-			},
-			{
-				"internalType": "string",
-				"name": "evidence",
-				"type": "string"
-			}
-		],
-		"name": "addOperations",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "operation",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
 				"type": "uint256"
 			}
 		],
@@ -460,9 +143,33 @@ const ArbitratorRegistryABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "arbitrator",
+		"outputs": [
+			{
 				"internalType": "contract IArbitrableProxy",
 				"name": "",
 				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"name": "arbitrators",
@@ -473,14 +180,14 @@ const ArbitratorRegistryABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "manager",
+				"internalType": "contract IArbitrableProxy",
+				"name": "arbitrator",
 				"type": "address"
 			},
 			{
-				"internalType": "bool",
-				"name": "allContracts",
-				"type": "bool"
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
 			}
 		],
 		"stateMutability": "view",
@@ -489,50 +196,9 @@ const ArbitratorRegistryABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "newManager",
-				"type": "address"
-			}
-		],
-		"name": "changeArbitratorManager",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "operations",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes[]",
-				"name": "extraData",
-				"type": "bytes[]"
-			}
-		],
-		"name": "changeOperations",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
 			}
 		],
 		"name": "checkArbitrator",
@@ -547,29 +213,13 @@ const ArbitratorRegistryABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "operation",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "contr",
-				"type": "address"
-			}
-		],
-		"name": "checkArbitratorByOperation",
+		"inputs": [],
+		"name": "counter",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -578,195 +228,14 @@ const ArbitratorRegistryABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
 			}
 		],
 		"name": "deleteArbitrator",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "disputes",
-		"outputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "master",
-				"type": "address"
-			},
-			{
-				"internalType": "enum DyArbitratorRegistry.MasterOperations",
-				"name": "op",
-				"type": "uint8"
-			},
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arb",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "operation",
-				"type": "uint256"
-			}
-		],
-		"name": "extraDataForOperation",
-		"outputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "disputeId",
-				"type": "uint256"
-			}
-		],
-		"name": "fetchRuling",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			}
-		],
-		"name": "getRequest",
-		"outputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "m",
-				"type": "address"
-			},
-			{
-				"internalType": "enum DyArbitratorRegistry.MasterOperations",
-				"name": "op",
-				"type": "uint8"
-			},
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arb",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "manager",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "operations",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes[]",
-				"name": "extraData",
-				"type": "bytes[]"
-			},
-			{
-				"internalType": "bytes",
-				"name": "contracts",
-				"type": "bytes"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "master",
-		"outputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "enum DyArbitratorRegistry.MasterOperations",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"name": "masterExtraData",
-		"outputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "enum DyArbitratorRegistry.MasterOperations",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"name": "metaEvidences",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -783,42 +252,6 @@ const ArbitratorRegistryABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "address[]",
-				"name": "contracts",
-				"type": "address[]"
-			}
-		],
-		"name": "removeContracts",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arbAddr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "operations",
-				"type": "uint256[]"
-			}
-		],
-		"name": "removeOperations",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -828,22 +261,17 @@ const ArbitratorRegistryABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IArbitrableProxy",
-				"name": "arb",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
 			},
 			{
-				"internalType": "bytes[]",
+				"internalType": "bytes",
 				"name": "extraData",
-				"type": "bytes[]"
-			},
-			{
-				"internalType": "string[]",
-				"name": "evidence",
-				"type": "string[]"
+				"type": "bytes"
 			}
 		],
-		"name": "setMaster",
+		"name": "setExtraData",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
