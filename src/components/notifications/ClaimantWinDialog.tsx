@@ -128,6 +128,7 @@ const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: 
             nft={ nft } 
             nftReFetch={ nftReFetch }
             setRefreshPaused={ setRefreshPaused }
+            variant={"primary-solid"}
         /> }
     </>)
 }
