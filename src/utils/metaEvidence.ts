@@ -37,7 +37,8 @@ export const metaEvidenceTypes = [
             claimantText: t`Claimant was the Original Owner of the NFT and insured it through the Protocol:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`Defendant acquired the pNFT through this transaction:`,
-            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`        }
+            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`
+        }
     }, {
         label: t`Phishing attack`,
         value: '6',

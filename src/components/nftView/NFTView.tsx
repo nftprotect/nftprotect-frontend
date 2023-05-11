@@ -299,9 +299,7 @@ const NFTView = () => {
                     </AccordionItem>
                 }
             </Accordion>
-            <KlerosCaseDialog
-                nftReFetch={ reFetch }
-            />
+            <KlerosCaseDialog/>
         </>
 )}
 

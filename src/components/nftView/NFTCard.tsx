@@ -295,7 +295,14 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     <Button
                         onClick={ () => { 
                             const dialog = getDialog('KlerosCaseDialog')
-                            dialog.setNft(nft)
+                            dialog.setCaseData({
+                                nft: nft,
+                                metaEvidenceId: 4,
+                                claimantAddress: '0xVictim', 
+                                defendantAddress: '0xScammer', 
+                                caseDescription: 'I put some text here',
+                                evidences: []
+                            })
                             dialog.onOpen() 
                         } }
                         variant={ "primary-solid" }

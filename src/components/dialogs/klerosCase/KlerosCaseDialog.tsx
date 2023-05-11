@@ -50,13 +50,20 @@ import { Step, Steps, useSteps } from "chakra-ui-steps";
 import StepLabel from './step/StepLabel';
 import StepContent from './step/StepContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import { metaEvidenceTypes } from '../../../utils/metaEvidence';
+import IPFSUpload from '../../../classes/IPFSUpload';
 
-interface ButtonInitialData {
-    nftReFetch: Function, // function to update nft list
-    // originalOwner: string, // Owner address of original NFT,
+export interface KlerosCaseInitialData {
+    nft: NFT,
+    metaEvidenceId: number,
+    claimantAddress: string,
+    defendantAddress: string,
+    contractAddress?: string,
+    caseDescription: string,
+    evidences?: IPFSUpload[]
 }
 
-const KlerosCaseDialog = ({ nftReFetch }: ButtonInitialData) => {
+const KlerosCaseDialog = () => {
 
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
@@ -64,25 +71,27 @@ const KlerosCaseDialog = ({ nftReFetch }: ButtonInitialData) => {
         initialStep: 0,
     });
     const { setDialog } = useCallableDialogContext()
-    const [ nft, setNft ] = useState<NFT>()
+    const [ caseData, setCaseData ] = useState<KlerosCaseInitialData>()
+    const { nft, metaEvidenceId } = caseData || {}
+    const pageData = metaEvidenceId && metaEvidenceTypes.find((item) => item.value === metaEvidenceId.toString() )?.page
 
     // Step content mapping
     // Label refers to name of the step and displayed on steps bar
     // description is displayed under label. 
     // TODO replace descriptions with counters!!!
     const steps = [
-        { key: "Evidence period", label: <StepLabel labelKey={"Evidence period"} />, description:"1d 06h 09m", content: nft && <StepContent stepKey={"Evidence period"} nft={nft} /> },
-        { key: "Voting period", label: <StepLabel labelKey={"Voting period"} />, description:"3d 18h 00m", content: nft && <StepContent stepKey="Voting period" nft={nft} /> },
-        { key: "Apealing period", label: <StepLabel labelKey={"Apealing period"} />, description:"3d 12h 00m", content: nft && <StepContent stepKey={"Apealing period"} nft={nft} /> },
-        { key: "Decision period", label: <StepLabel labelKey={"Decision period"} />, content: nft && <StepContent stepKey={"Decision period"} nft={nft} /> }
+        { key: "Evidence period", label: <StepLabel labelKey={t`Evidence period`} />, description:"1d 06h 09m", content: pageData && caseData && <StepContent stepKey={"Evidence period"} {...caseData} pageData={pageData}/> },
+        { key: "Voting period", label: <StepLabel labelKey={t`Voting period`} />, description:"3d 18h 00m", content: pageData && caseData && <StepContent stepKey="Voting period" {...caseData} pageData={pageData}/> },
+        { key: "Apealing period", label: <StepLabel labelKey={t`Apealing period`} />, description:"3d 12h 00m", content: pageData && caseData && <StepContent stepKey={"Apealing period"} {...caseData} pageData={pageData}/> },
+        { key: "Decision period", label: <StepLabel labelKey={t`Decision period`} />, content: pageData && caseData && <StepContent stepKey={"Decision period"}{...caseData} pageData={pageData}/> }
     ];
 
     useEffect(() => {
-        setDialog('KlerosCaseDialog', {...disclosure, setNft})
+        setDialog('KlerosCaseDialog', {...disclosure, setCaseData})
     }, [])
 
-    return (
-        <>
+    return (<>{
+        pageData && <>
             <Modal
                 variant="stepModal"
                 closeOnOverlayClick={false}
@@ -159,7 +168,7 @@ const KlerosCaseDialog = ({ nftReFetch }: ButtonInitialData) => {
                 </ModalContent>
             </Modal>
         </>
-    )
+    }</>)
 }
 
 export default KlerosCaseDialog

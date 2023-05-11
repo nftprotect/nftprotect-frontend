@@ -28,13 +28,35 @@ import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons
 import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
+import { KlerosCaseInitialData } from '../KlerosCaseDialog';
 
-interface stepContentData {
-    stepKey: string,
+interface StepContentInitialData extends KlerosCaseInitialData {
+    stepKey?: string,
     nft: NFT,
+    pageData: PageData
 }
 
-const StepContent = ({stepKey, nft}: stepContentData) => {
+interface PageData {
+    title: string,
+    summary: string,
+    policyURL: string,
+    claimantText: string,
+    claimantText2?: string,
+    claimantTooltip: string,
+    defendantText: string,
+    defendantTooltip: string
+}
+
+const StepContent = ({
+    stepKey,
+    nft, 
+    pageData, 
+    claimantAddress, 
+    defendantAddress, 
+    contractAddress,
+    caseDescription,
+    evidences
+}: StepContentInitialData) => {
 
     function getNftImage() {
         return <Flex
@@ -53,7 +75,7 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
     return(
         <Flex flexDirection="column" flexWrap="nowrap" mt={{base: "30px"}}>
             <Text fontSize="30px" lineHeight="38px" fontWeight="600" color="#333333">
-                <Trans>Ownership restoration in case of loss of pNFT in phishing attack</Trans>
+                { pageData.title }
             </Text>
 
             <Flex mt={{base: "5px"}} mb={{base: "30px"}}>
@@ -62,13 +84,13 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         <Text mr={{base: '8px'}}>
                             <Trans>Dispute policy</Trans>
                         </Text>
-                        <ExternalLink fontSize="22px" />
+                        <ExternalLink fontSize="22px" href={pageData.policyURL}/>
                     </Flex>
                 </Link>
                 <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="h3" textDecoration="underline">
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
-                            <Trans>Open court{'\u0027'}s page in Kleros</Trans>
+                            <Trans>{"Open court's page in Kleros"}</Trans>
                         </Text>
                         <ExternalLink fontSize="22px" />
                     </Flex>
@@ -151,7 +173,7 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                     <Text fontSize={{base: "18px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>
                         {" "}
-                        <Trans>Protection NFT (pNFT)</Trans>
+                        <Trans>Original NFT</Trans>
                     </Text>
                     <Text textStyle="paragraph">
                     <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>
@@ -166,7 +188,7 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Creator{":"}</Trans></chakra.span>
                         {" "}
-                        Futoii
+                        { nft.contract.contractDeployer }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT creation date{":"}</Trans></chakra.span>
@@ -196,7 +218,7 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                             <PopoverContent w={{base: "280px"}} color="#FFF" bgColor="#030303" textStyle="paragraph" textAlign="left">
                                 <PopoverArrow bgColor="#030303"/>
                                 <PopoverBody  borderRadius="16px" color="#FFF" px={{base: "10px"}} py={{base: "10px"}} >
-                                     <Trans>The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)</Trans>
+                                    { pageData.claimantTooltip }
                                 </PopoverBody>
                             </PopoverContent>
                         </Popover>
@@ -207,7 +229,7 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         {' '}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline"ml={{base: "5px"}}>
                             <chakra.span wordBreak="break-all">
-                                0xe0e1bc8c6cd1b81993e2fcfb80832d814886ea38
+                                { claimantAddress }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
@@ -225,14 +247,14 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                         {" "}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
                             <chakra.span wordBreak="break-all">
-                                0xe0e1bc8c6cd1b81993e2fcfb80832d814886ea38 (id: 57...65)
+                                {nft.originalData?.contractAddress} (id: {nft.originalData?.tokenId})
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
                     </Text>
 
                     <Text fontWeight="600" textStyle="paragraph">
-                        <Trans>Claimant was the Original Owner of the NFT and insured it through the Protocol{":"}</Trans>
+                        { pageData.claimantText }
                         {" "}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
                             <chakra.span wordBreak="break-all">
@@ -241,6 +263,19 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                             <ExternalLinkIcon mx='5px' />
                         </Link>
                     </Text>
+
+                    { pageData.claimantText2 && 
+                        <Text fontWeight="600" textStyle="paragraph">
+                            { pageData.claimantText2 }
+                            {" "}
+                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                                <chakra.span wordBreak="break-all">
+                                    0xbabd69e432388644...60c9bf6e743aed40505055
+                                </chakra.span>
+                                <ExternalLinkIcon mx='5px' />
+                            </Link>
+                        </Text> 
+                    }
                 </Flex>
 
                 <Flex flexDirection="column" w="50%" pl={{base: "10px"}} >
@@ -257,43 +292,50 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
                             <PopoverContent w={{base: "280px"}} color="#FFF" bgColor="#030303" textStyle="paragraph" textAlign="left">
                                 <PopoverArrow bgColor="#030303"/>
                                 <PopoverBody borderRadius="16px" color="#FFF" px={{base: "10px"}} py={{base: "10px"}} >
-                                     <Trans>The Defendant is the party that has aquired th pNFT and is challenged.</Trans>
+                                    { pageData.defendantTooltip }
                                 </PopoverBody>
                             </PopoverContent>
                         </Popover>
                     </Flex>
 
                     <Text fontWeight="600" fontSize={{base: "14px"}}>
-                        <Trans>Wallet{":"}</Trans>
+                        {
+                            contractAddress ? 
+                                <Trans>{"Smart contract:"}</Trans> :
+                                <Trans>{"Wallet:"}</Trans>
+                        }
                         {' '}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline" ml={{base: "5px"}}>
                             <chakra.span wordBreak="break-all">
-                                0xe0e1bc8c6cd1b81993e2fcfb80832d814886ea38
+                                { contractAddress || defendantAddress }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
                     </Text>
 
-                    <Text textStyle="paragraph" fontWeight="600">
-                        <Trans>DID{":"}</Trans>
-                        <chakra.span bgColor="rgba(246, 12, 54, 0.12)" borderRadius="3px" fontSize={{base: "12px"}} lineHeight={{base: "15px"}} fontWeight="500" ml={{base: "5px"}} px={{base: "6px"}} py={{base: "2px"}}>
-                            <Trans>None</Trans>
-                        </chakra.span>
-                    </Text>
+                    {/* Visible only if defendant is not a smart contract */}
+                    { !contractAddress && 
+                        <Text textStyle="paragraph" fontWeight="600">
+                            <Trans>DID{":"}</Trans>
+                            <chakra.span bgColor="rgba(246, 12, 54, 0.12)" borderRadius="3px" fontSize={{base: "12px"}} lineHeight={{base: "15px"}} fontWeight="500" ml={{base: "5px"}} px={{base: "6px"}} py={{base: "2px"}}>
+                                <Trans>None</Trans>
+                            </chakra.span>
+                        </Text>
+                    }
 
                     <Text fontWeight="600" textStyle="paragraph">
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
                             <chakra.span wordBreak="break-all">
-                                0xe0e1bc8c6cd1b81993e2fcfb80832d814886ea38 (id: 57...65)
+                                { nft.contract.address } (id: { nft.tokenId })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
                     </Text>
 
                     <Text fontWeight="600" textStyle="paragraph">
-                        <Trans>Defendant acquired the pNFT through this transaction{":"}</Trans>
+                        { pageData.defendantText }
                         {" "}
                         <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
                             <chakra.span wordBreak="break-all">
@@ -307,70 +349,72 @@ const StepContent = ({stepKey, nft}: stepContentData) => {
 
             <Flex flexDirection="column" mb={{base: "35px"}}>
                 <Text fontWeight="700" fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                    <Trans>The Claimant claims that he lost his pNFT due to a phishing attack</Trans>
+                    { pageData.summary }
                 </Text>
 
                 <Text fontWeight="400" textStyle="paragraph" mb={{base: "15px"}}>
                     <Trans>This is how he described the situation:</Trans>
                 </Text>
 
-                <Textarea value="(Текстовая часть от истца, которую он вписывал в модальном окне.В ней он описывает своими словами, что произошло, и как он страдает)" py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&::focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} fontSize={{base: "14px"}} />
+                <Textarea value={ caseDescription } py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&::focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} fontSize={{base: "14px"}} />
             </Flex>
 
-            <Accordion allowToggle mb={{base: "30px"}}>
-                <AccordionItem>
-                    {({ isExpanded }) => (
-                        <>
-                            <AccordionButton pl={{base: "30px"}} color="#FFF" bgColor="#2D7BD6" fontWeight="600" fontSize={{base: "16px"}} lineHeight={{base: "22px"}} _hover={{bgColor: "#2D7BD6"}}>
-                                <Box as="span" flex='1' textAlign='left'>
-                                    <Trans>Evidence</Trans>
-                                </Box>
-                                {isExpanded ? ( <MinusIcon fontSize='16px' /> ) : ( <AddIcon fontSize='16px' /> )}
-                            </AccordionButton>
+            {evidences && evidences.length > 0 &&
+                <Accordion allowToggle mb={{base: "30px"}}>
+                    <AccordionItem>
+                        {({ isExpanded }) => (
+                            <>
+                                <AccordionButton pl={{base: "30px"}} color="#FFF" bgColor="#2D7BD6" fontWeight="600" fontSize={{base: "16px"}} lineHeight={{base: "22px"}} _hover={{bgColor: "#2D7BD6"}}>
+                                    <Box as="span" flex='1' textAlign='left'>
+                                        <Trans>Evidence</Trans>
+                                    </Box>
+                                    {isExpanded ? ( <MinusIcon fontSize='16px' /> ) : ( <AddIcon fontSize='16px' /> )}
+                                </AccordionButton>
 
-                            <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
-                                <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
-                                    <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
-                                        <Text>
-                                            <Trans>Sort by{": "} date</Trans>
-                                        </Text>
+                                <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
+                                    <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
+                                        <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
+                                            <Text>
+                                                <Trans>Sort by{": "} date</Trans>
+                                            </Text>
 
-                                        <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
+                                            <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
+                                        </Flex>
+
+                                        {/* Visible only on step 1 "Evidence period" */}
+                                        <Button variant="primary-solid" w={{base: "200px"}}>Submit new evidence</Button>
                                     </Flex>
 
-                                    {/* Visible only on step 1 "Evidence period" */}
-                                    <Button variant="primary-solid" w={{base: "200px"}}>Submit new evidence</Button>
-                                </Flex>
-
-                                <Flex flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
-                                    <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
-                                        {"#"}1 Evidence of a phishing atack
-                                    </Text>
-                                    <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
-                                        <Text textStyle="paragraph">
-                                            <Trans>
-                                                Submitted by the 0x12...3456
-                                            </Trans>
+                                    <Flex flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
+                                        <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
+                                            {"#"}1 Evidence of a phishing atack
                                         </Text>
-                                        <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
-                                            <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
-                                                Jan 09, 2020 05:00 GMT
+                                        <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
+                                            <Text textStyle="paragraph">
+                                                <Trans>
+                                                    Submitted by the 0x12...3456
+                                                </Trans>
                                             </Text>
-                                            
-                                            <Text textStyle="paragraph" color="#2D7BD6">
-                                                <Trans>File link</Trans>
-                                                <Link href='#' isExternal rel="noreferrer" color="#2D7BD6">
-                                                    <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
-                                                </Link>
-                                            </Text>
+                                            <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
+                                                <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
+                                                    Jan 09, 2020 05:00 GMT
+                                                </Text>
+                                                
+                                                <Text textStyle="paragraph" color="#2D7BD6">
+                                                    <Trans>File link</Trans>
+                                                    <Link href='#' isExternal rel="noreferrer" color="#2D7BD6">
+                                                        <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                                    </Link>
+                                                </Text>
+                                            </Flex>
                                         </Flex>
                                     </Flex>
-                                </Flex>
-                            </AccordionPanel>
-                        </>
-                    )}
-                </AccordionItem>
-            </Accordion>
+                                </AccordionPanel>
+                            </>
+                        )}
+                    </AccordionItem>
+                </Accordion>
+            }
         </Flex>
     )
 }
