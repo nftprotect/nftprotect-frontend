@@ -55,36 +55,7 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
-
-export const metaEvidenceTypes = [
-    // Ultra
-    // {
-    //     label: 'burn',
-    //     value: '0'
-    // }, {
-    //     label: 'adjustOwnership',
-    //     value: '1'
-    // }, {
-    //     label: 'askOwnershipAdjustment',
-    //     value: '2'
-    // }, {
-    //     label: 'answerOwnershipAdjustment',
-    //     value: '3'
-    // }, 
-    {
-        label: t`Bona fide transfer`,
-        value: '4'
-    }, {
-        label: t`Incorrect address`,
-        value: '5'
-    }, {
-        label: t`Phishing attack`,
-        value: '6'
-    }, {
-        label: t`Protocol breach`,
-        value: '7'
-    }
-]
+import { metaEvidenceTypes } from "../../../utils/metaEvidence";
 
 const RegisterArbitratorDialog = () => {
     const disclosure = useDisclosure()

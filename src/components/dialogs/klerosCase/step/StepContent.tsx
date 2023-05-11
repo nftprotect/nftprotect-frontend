@@ -27,7 +27,7 @@ import {
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
 import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import NFT from '../../../classes/NFT';
+import NFT from '../../../../classes/NFT';
 
 interface stepContentData {
     stepKey: string,

@@ -7,6 +7,7 @@ import {
     Spinner,
     Image,
     Flex,
+    Button,
     propNames,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
@@ -21,8 +22,9 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
-import KlerosCase from '../klerosCase/KlerosCase'
+import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog'
 import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
+import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 
 interface NFTInitialData {
     nft: NFT,
@@ -51,6 +53,7 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
     const [ requestTimedOut, setRequestTimedOut] = useState(false)
 
     const [components, setComponents] = useState(["Sample Component"]); 
+    const { getDialog } = useCallableDialogContext()
 
     // Fetching metadata if it's unawailable by default
     // const fetchMetadataUri = async (uri: string) => {  
@@ -289,12 +292,17 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
             </Box>
             {
                 (process.env.NODE_ENV !== 'production') && <Box mb={[2]}>
-                    <KlerosCase
-                        nft={ nft } 
-                        nftReFetch={ nftReFetch }
-                        setRefreshPaused = { setRefreshPaused }
+                    <Button
+                        onClick={ () => { 
+                            const dialog = getDialog('KlerosCaseDialog')
+                            dialog.setNft(nft)
+                            dialog.onOpen() 
+                        } }
                         variant={ "primary-solid" }
-                    />
+                        w="100%"
+                    >
+                        <Trans>Open Kleros Case</Trans>
+                    </Button>
                 </Box>
             }
             </>

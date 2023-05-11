@@ -1,7 +1,7 @@
-import { dialogsTimeout } from '../../utils/config'
+import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../dialogs/DidRequiredDialog';
-import { useState } from 'react';
+import DidRequiredDialog from '../DidRequiredDialog';
+import { useState, useEffect } from 'react';
 import {
     chakra,
     Button,
@@ -36,36 +36,38 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
-import SwitchableOutside from '../wizardHelpers/SwitchableOutside';
-import { useAppContext } from '../../context/AppContextProvider';
-import { handleContractError } from '../../utils/errorHandling';
-import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
+import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
+import { useAppContext } from '../../../context/AppContextProvider';
+import { handleContractError } from '../../../utils/errorHandling';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
-import NFT from '../../classes/NFT';
+import NFT from '../../../classes/NFT';
 // import { StepsTheme as Steps } from 'chakra-ui-steps';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import StepLabel from './step/StepLabel';
 import StepContent from './step/StepContent';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
 interface ButtonInitialData {
-    nft: NFT,
     nftReFetch: Function, // function to update nft list
     setRefreshPaused: Function, // Function to pause/unpause nft list updating
     // originalOwner: string, // Owner address of original NFT,
-    variant: any
 }
 
-const KlerosCase = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialData) => {
+const KlerosCaseDialog = ({ nftReFetch, setRefreshPaused}: ButtonInitialData) => {
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
-      });
+    });
+    const { setDialog } = useCallableDialogContext()
+    const [ nft, setNft ] = useState<NFT>()
     
-    const mainButtonOnClick = () => {
+    const onOpenWithPause = () => {
         onOpen()
         setRefreshPaused(true)
     }
@@ -75,22 +77,18 @@ const KlerosCase = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialD
     // description is displayed under label. 
     // TODO replace descriptions with counters!!!
     const steps = [
-        { key: "Evidence period", label: <StepLabel labelKey={"Evidence period"} />, description:"1d 06h 09m", content: <StepContent stepKey={"Evidence period"} nft={nft} /> },
-        { key: "Voting period", label: <StepLabel labelKey={"Voting period"} />, description:"3d 18h 00m", content: <StepContent stepKey="Voting period" nft={nft} /> },
-        { key: "Apealing period", label: <StepLabel labelKey={"Apealing period"} />, description:"3d 12h 00m", content: <StepContent stepKey={"Apealing period"} nft={nft} /> },
-        { key: "Decision period", label: <StepLabel labelKey={"Decision period"} />, content: <StepContent stepKey={"Decision period"} nft={nft} /> }
+        { key: "Evidence period", label: <StepLabel labelKey={"Evidence period"} />, description:"1d 06h 09m", content: nft && <StepContent stepKey={"Evidence period"} nft={nft} /> },
+        { key: "Voting period", label: <StepLabel labelKey={"Voting period"} />, description:"3d 18h 00m", content: nft && <StepContent stepKey="Voting period" nft={nft} /> },
+        { key: "Apealing period", label: <StepLabel labelKey={"Apealing period"} />, description:"3d 12h 00m", content: nft && <StepContent stepKey={"Apealing period"} nft={nft} /> },
+        { key: "Decision period", label: <StepLabel labelKey={"Decision period"} />, content: nft && <StepContent stepKey={"Decision period"} nft={nft} /> }
     ];
+
+    useEffect(() => {
+        setDialog('KlerosCaseDialog', {...disclosure, onOpen: onOpenWithPause, setNft})
+    }, [])
 
     return (
         <>
-            <Button
-                onClick={ mainButtonOnClick }
-                variant={ variant }
-                w="100%"
-            >
-                <Trans>Open Kleros Case</Trans>
-            </Button>
-
             <Modal
                 variant="stepModal"
                 closeOnOverlayClick={false}
@@ -173,4 +171,4 @@ const KlerosCase = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialD
     )
 }
 
-export default KlerosCase
+export default KlerosCaseDialog

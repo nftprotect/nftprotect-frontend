@@ -21,6 +21,7 @@ import { useState, useEffect } from 'react';
 import { useAlchemy } from '../../hooks/useAlchemy';
 import { Nft as NFTInterface, NftFilters } from 'alchemy-sdk';
 import NFT from '../../classes/NFT';
+import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
 
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
@@ -298,6 +299,10 @@ const NFTView = () => {
                     </AccordionItem>
                 }
             </Accordion>
+            <KlerosCaseDialog
+                nftReFetch={ reFetch }
+                setRefreshPaused = { setRefreshPaused }
+            />
         </>
 )}
 
