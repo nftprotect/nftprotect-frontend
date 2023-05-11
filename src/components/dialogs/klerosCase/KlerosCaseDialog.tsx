@@ -53,11 +53,10 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 
 interface ButtonInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
     // originalOwner: string, // Owner address of original NFT,
 }
 
-const KlerosCaseDialog = ({ nftReFetch, setRefreshPaused}: ButtonInitialData) => {
+const KlerosCaseDialog = ({ nftReFetch }: ButtonInitialData) => {
 
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
@@ -66,11 +65,6 @@ const KlerosCaseDialog = ({ nftReFetch, setRefreshPaused}: ButtonInitialData) =>
     });
     const { setDialog } = useCallableDialogContext()
     const [ nft, setNft ] = useState<NFT>()
-    
-    const onOpenWithPause = () => {
-        onOpen()
-        setRefreshPaused(true)
-    }
 
     // Step content mapping
     // Label refers to name of the step and displayed on steps bar
@@ -84,7 +78,7 @@ const KlerosCaseDialog = ({ nftReFetch, setRefreshPaused}: ButtonInitialData) =>
     ];
 
     useEffect(() => {
-        setDialog('KlerosCaseDialog', {...disclosure, onOpen: onOpenWithPause, setNft})
+        setDialog('KlerosCaseDialog', {...disclosure, setNft})
     }, [])
 
     return (
@@ -93,10 +87,7 @@ const KlerosCaseDialog = ({ nftReFetch, setRefreshPaused}: ButtonInitialData) =>
                 variant="stepModal"
                 closeOnOverlayClick={false}
                 isOpen={isOpen}
-                onClose={() => {
-                    onClose()
-                    setRefreshPaused(false)
-                }}
+                onClose={onClose}
                 size="full"
             >
                 <ModalOverlay />
