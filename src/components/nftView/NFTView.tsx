@@ -301,7 +301,6 @@ const NFTView = () => {
             </Accordion>
             <KlerosCaseDialog
                 nftReFetch={ reFetch }
-                setRefreshPaused = { setRefreshPaused }
             />
         </>
 )}
