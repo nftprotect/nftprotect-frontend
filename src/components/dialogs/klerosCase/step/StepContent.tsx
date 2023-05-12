@@ -29,11 +29,13 @@ import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
 import { KlerosCaseInitialData } from '../KlerosCaseDialog';
+import { BigNumber } from '@ethersproject/bignumber'
 
 interface StepContentInitialData extends KlerosCaseInitialData {
     stepKey?: string,
     nft: NFT,
-    pageData: PageData
+    pageData: PageData,
+    disputeData?: DisputeData
 }
 
 interface PageData {
@@ -47,6 +49,11 @@ interface PageData {
     defendantTooltip: string
 }
 
+interface DisputeData {
+    disputeId: BigNumber,
+    dateCreated?: Date
+}
+
 const StepContent = ({
     stepKey,
     nft, 
@@ -55,7 +62,8 @@ const StepContent = ({
     defendantAddress, 
     contractAddress,
     caseDescription,
-    evidences
+    evidences,
+    disputeData
 }: StepContentInitialData) => {
 
     function getNftImage() {
@@ -106,7 +114,7 @@ const StepContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             {"#"}
                         </InputLeftElement>
-                        <Input value="1369" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -118,7 +126,7 @@ const StepContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value="24/05/2022" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={(disputeData?.dateCreated || new Date()).toLocaleDateString("en-US") } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -148,24 +156,28 @@ const StepContent = ({
             </Flex>
             
             {/* Visible only on step 3 "Apealing period" and step 4 "Decision period" */}
-            <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
-                <Flex>
-                    <Box mr={{base: "20px"}}>
-                        <Info fontSize="24px" color="#009AFF" />
-                    </Box>
-                    
-                    <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                        <Trans>Winner{":"}</Trans>
-                        {" "}the Claimant
-                    </Text>
+            { (stepKey === 'Decision period' || stepKey === 'Apealing period') &&
+                <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
+                    { stepKey === 'Decision period' &&
+                        <Flex>
+                            <Box mr={{base: "20px"}}>
+                                <Info fontSize="24px" color="#009AFF" />
+                            </Box>
+                            
+                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                <Trans>Winner{":"}</Trans>
+                                {" "}the Claimant
+                            </Text>
+                        </Flex>
+                    }
+                    {/* Visible only on step 3 "Apealing period" */}
+                    { stepKey === 'Apealing period' &&
+                        <Flex w={{base: "200px"}}>
+                            <Button variant="primary-solid">File an appeal</Button>
+                        </Flex>
+                    }
                 </Flex>
-
-                {/* Visible only on step 3 "Apealing period" */}
-                <Flex w={{base: "200px"}}>
-                    <Button variant="primary-solid">File an appeal</Button>
-                </Flex>
-                
-            </Flex>
+            }
 
             <Flex bgColor="#F8F8F8" p={{base: "18px"}} alignItems="flex-start" mb={{base: "30px"}}>
                 { getNftImage() }

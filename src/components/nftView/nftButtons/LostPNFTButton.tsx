@@ -50,6 +50,7 @@ import IPFSUpload from '../../../classes/IPFSUpload';
 import KlerosCaseForm from './steps/KlerosCaseForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { parseEther } from '@ethersproject/units';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -68,7 +69,9 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
+    const [ evidenceData, setEvidenceData ] = useState<any>()
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
+    const { getDialog } = useCallableDialogContext()
     const DISPUTE_PRICE = '0.03'
 
     enum StepMapping {
@@ -165,11 +168,12 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
-    const klerosFormSubmit = (evidenceData: any) => {
+    const klerosFormSubmit = (data: any) => {
+        setEvidenceData(data)
         const evidenceJSON = {
             evidenceSide: 0,
             name: t`Evidence of` + ` ${klerosCaseFormTitle}`,
-            ...evidenceData
+            ...data
         }
         uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
             console.log('EVIDENCE', evidenceJSON, result)
@@ -236,6 +240,14 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                 (lostReason === 'sending to an incorrect address') ?
                                     t`Sending to an incorrect address` :
                                 undefined
+
+    const metaEvidenceId = (lostReason === 'protocol breach') ?
+                                7 :
+                            (lostReason === 'phishing attack') ?
+                                6 :
+                            (lostReason === 'sending to an incorrect address') ?
+                                5 :
+                            undefined
     return (<>
         <Button
             onClick={ mainButtonOnClick }
@@ -531,7 +543,24 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
                                             We{'\u0027'}ve worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the 
-                                            <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
+                                            <Link 
+                                                href='#' 
+                                                textDecoration="underline" 
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                    const dialog = getDialog('KlerosCaseDialog')
+                                                    dialog.setCaseData({
+                                                        nft,
+                                                        metaEvidenceId,
+                                                        claimantAddress: account,
+                                                        defendantAddress: nft.ownerAddress,
+                                                        contractAddress: evidenceData.protocolAddress,
+                                                        caseDescription: evidenceData.description,
+                                                        evidences: []
+                                                    })
+                                                    dialog.onOpen() 
+                                                }}
+                                            >
                                                 <Trans>link</Trans>
                                             </Link>
                                             , and file it in court.

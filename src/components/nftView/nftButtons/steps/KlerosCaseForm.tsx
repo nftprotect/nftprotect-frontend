@@ -58,8 +58,8 @@ const KlerosCaseForm = ({
 
     const onSubmit = (data:any) => {
         const evidence = {
-            description: data.description,
-            fileURI: evidenceUpload?.getRelativeIPFSUrl()
+            fileURI: evidenceUpload?.getRelativeIPFSUrl(),
+            ...data
         }
         outerOnSubmit && outerOnSubmit(evidence)
     }
