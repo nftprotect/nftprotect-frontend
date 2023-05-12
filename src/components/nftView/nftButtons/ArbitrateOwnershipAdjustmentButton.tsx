@@ -42,6 +42,7 @@ import NFT from '../../../classes/NFT';
 import SecureNFTButton from './SecureNFTButton';
 import { Contract } from "@ethersproject/contracts";
 import IPFSUpload from '../../../classes/IPFSUpload';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
 interface ButtonInitialData {
     nft: NFT,
@@ -60,10 +61,13 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
+    const [ evidenceData, setEvidenceData ] = useState<any>()
     const [url, setUrl] = useState<string>()
+    const { getDialog } = useCallableDialogContext()
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
     const DISPUTE_PRICE = '0.03'
+    const metaEvidenceId = 4
 
     const disputeId = pendingRequest?.externalDisputeId
 
@@ -123,11 +127,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
         setRefreshPaused(true)
     }
 
-    const klerosFormSubmit = (evidenceData: any) => {
+    const klerosFormSubmit = (data: any) => {
+        setEvidenceData(data)
         const evidenceJSON = {
             evidenceSide: 0,
             name: t`Evidence of Bona Fide transfer`,
-            ...evidenceData
+            ...data
         }
         uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
             console.log('EVIDENCE', evidenceJSON, result)
@@ -381,7 +386,23 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
                                             We{'\u0027'}ve worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the 
-                                            <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
+                                            <Link 
+                                                href='#' 
+                                                textDecoration="underline" 
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                    const dialog = getDialog('KlerosCaseDialog')
+                                                    dialog.setCaseData({
+                                                        nft,
+                                                        metaEvidenceId,
+                                                        claimantAddress: account,
+                                                        defendantAddress: nft.ownerAddress,
+                                                        caseDescription: evidenceData.description,
+                                                        evidences: []
+                                                    })
+                                                    dialog.onOpen() 
+                                                }}
+                                            >
                                                 <Trans>link</Trans>
                                             </Link>
                                             , and file it in court.
