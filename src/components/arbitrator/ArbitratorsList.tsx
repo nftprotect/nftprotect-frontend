@@ -21,7 +21,7 @@ import {
 import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons"
 import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import { metaEvidenceTypes } from "../dialogs/arbitrator/RegisterArbitratorDialog"
+import { metaEvidenceTypes } from "../../utils/metaEvidence"
 import Davatar from '@davatar/react'
 import { formatAddress, generateUUID, copyTextToClipboard } from "../../utils/helpers"
 

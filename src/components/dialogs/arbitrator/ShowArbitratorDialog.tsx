@@ -63,7 +63,7 @@ import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorData } from "../../arbitrator/ArbitratorsList";
-import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
+import { metaEvidenceTypes } from "../../../utils/metaEvidence";
 import AddOperationsDialog from "./AddOperationsDialog";
 import EditOperationsDialog from "./EditOperationsDialog";
 import AddContractsDialog from "./AddContractsDialog";

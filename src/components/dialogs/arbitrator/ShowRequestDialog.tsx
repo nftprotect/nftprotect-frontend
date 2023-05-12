@@ -61,7 +61,7 @@ import { arrayify } from "@ethersproject/bytes";
 import { getAddress } from "@ethersproject/address";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { ArbitratorRequest } from "../../arbitrator/ArbitratorRequestList";
-import { metaEvidenceTypes } from "./RegisterArbitratorDialog";
+import { metaEvidenceTypes } from "../../../utils/metaEvidence";
 import { FormattedAddress } from "../../arbitrator/ArbitratorsList";
 import { OperationBadge } from "../../arbitrator/ArbitratorsList";
 import { MasterOperationBadge } from "../../arbitrator/ArbitratorRequestList";
