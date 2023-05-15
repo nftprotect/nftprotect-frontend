@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-12 15:15+0700\n"
+"POT-Creation-Date: 2023-05-15 13:49+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -500,7 +500,7 @@ msgstr "Not yet"
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/nftView/NFTCard.tsx:311
+#: src/components/nftView/NFTCard.tsx:325
 msgid "Open Kleros Case"
 msgstr "Open Kleros Case"
 
@@ -580,7 +580,7 @@ msgstr "Pending Action"
 msgid "Pending Requests"
 msgstr "Pending Requests"
 
-#: src/components/nftView/NFTCard.tsx:184
+#: src/components/nftView/NFTCard.tsx:186
 msgid "Pending..."
 msgstr "Pending..."
 
@@ -1009,6 +1009,11 @@ msgstr "Transfer the original NFT<0/> to the new owner?"
 #: src/components/nftView/NFTView.tsx:239
 msgid "Transfered pNFT"
 msgstr "Transfered pNFT"
+
+#: src/components/nftView/NFTCard.tsx:210
+#: src/components/nftView/NFTCard.tsx:289
+msgid "Under dispute"
+msgstr "Under dispute"
 
 #: src/components/nftView/DidVerificationRequiredCard.tsx:26
 msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"

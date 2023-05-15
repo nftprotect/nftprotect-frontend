@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-12 15:15+0700\n"
+"POT-Creation-Date: 2023-05-15 13:49+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -500,7 +500,7 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: src/components/nftView/NFTCard.tsx:311
+#: src/components/nftView/NFTCard.tsx:325
 msgid "Open Kleros Case"
 msgstr ""
 
@@ -580,7 +580,7 @@ msgstr ""
 msgid "Pending Requests"
 msgstr ""
 
-#: src/components/nftView/NFTCard.tsx:184
+#: src/components/nftView/NFTCard.tsx:186
 msgid "Pending..."
 msgstr ""
 
@@ -1008,6 +1008,11 @@ msgstr ""
 
 #: src/components/nftView/NFTView.tsx:239
 msgid "Transfered pNFT"
+msgstr ""
+
+#: src/components/nftView/NFTCard.tsx:210
+#: src/components/nftView/NFTCard.tsx:289
+msgid "Under dispute"
 msgstr ""
 
 #: src/components/nftView/DidVerificationRequiredCard.tsx:26

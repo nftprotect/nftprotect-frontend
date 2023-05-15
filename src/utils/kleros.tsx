@@ -1,4 +1,5 @@
 import { t } from "@lingui/macro"
+import { BigNumber } from '@ethersproject/bignumber'
 
 interface MetaEvidence {
     title: string,
@@ -76,4 +77,8 @@ export enum KlerosCourts {
     ChineseEnglishTranslation,
     CorteGeneralEnEspanol,
     HumanityCourt
+}
+
+export const createDisputeLink = (disputeId: BigNumber | string) => {
+    return `https://resolve.kleros.io/cases/${disputeId.toString()}`
 }

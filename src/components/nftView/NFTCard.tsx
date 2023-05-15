@@ -9,6 +9,7 @@ import {
     Flex,
     Button,
     propNames,
+    Link,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import SecureNFTButton from './nftButtons/SecureNFTButton';
@@ -25,6 +26,7 @@ import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog'
 import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
+import { createDisputeLink } from '../../utils/kleros';
 
 interface NFTInitialData {
     nft: NFT,
@@ -200,7 +202,13 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                         filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
                                     >
                                         <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                            {`Under dispute ${pendingRequest.externalDisputeId}…`}
+                                            <Link
+                                                isExternal 
+                                                rel="noreferrer"
+                                                href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                            >
+                                                <Trans>Under dispute</Trans>
+                                            </Link>
                                         </Text>
                                     </Flex>
                     }
@@ -273,7 +281,13 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                     filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
                                 >
                                     <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                        {`Under dispute ${pendingRequest.externalDisputeId}…`}
+                                        <Link
+                                            isExternal 
+                                            rel="noreferrer"
+                                            href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                        >
+                                            <Trans>Under dispute</Trans>
+                                        </Link>
                                     </Text>
                                 </Flex>
                 }
