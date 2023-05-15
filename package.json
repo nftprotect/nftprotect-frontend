@@ -47,7 +47,7 @@
     "@types/react-dom": "18.0.10",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect": "^8.0.1-beta.0",
+    "@web3-react/walletconnect": "^8.2.0",
     "@web3-react/walletconnect-connector": "^6.2.13",
     "@web3uikit/core": "^0.2.38",
     "alchemy-sdk": "^2.7.0",
