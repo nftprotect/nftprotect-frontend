@@ -293,7 +293,7 @@ const StepContent = ({
                 <Flex flexDirection="column" w="50%" pl={{base: "10px"}} >
                     <Flex  alignItems="center" mb={{base: "10px"}}>
                         <Text fontSize="18px" fontWeight="700" textTransform="capitalize">
-                            <Trans>The defendant</Trans>
+                            <Trans>The Defendant</Trans>
                         </Text>
                         <Popover placement="right">
                             <PopoverTrigger>

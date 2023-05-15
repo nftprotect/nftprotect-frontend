@@ -50,11 +50,10 @@ interface ButtonInitialData {
     setRefreshPaused: Function // Function to pause/unpause nft list updating
     pendingRequest: any,
     requestTimedOut: boolean,
-    originalOwner: string, // Owner address of original NFT,
     variant: any // apearance of the button (see variants in theme/index.tsx)
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, pendingRequest, variant, requestTimedOut}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant, requestTimedOut}: ButtonInitialData) => {
 
     const { nftProtectContract, account, library, fee } = useAppContext()
     const { ipfs } = useIPFSContext()
@@ -186,7 +185,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     }
 
     const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(nft.originalData?.ownerAddress || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
     }
 
     function getNftImage() {
@@ -290,7 +289,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                             </Popover>
                                             
                                             <span id='originalOwnerAddressHolder'>
-                                                { " (" + formatAddress(originalOwner, 4) + ") " }
+                                                { " (" + formatAddress(nft.originalData?.ownerAddress || '', 4) + ") " }
                                             </span>
                                             <Trans>
                                                 {"has transferred the original NFT to you"}
@@ -359,7 +358,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                 onClose={onClose}
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
-                                defendant={originalOwner}
+                                defendant={nft.originalData?.ownerAddress || ''}
                                 title={t`Bona fide transfer`}
                                 requireProtocolAddress={false}
                             >
@@ -396,7 +395,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                                         nft,
                                                         metaEvidenceId,
                                                         claimantAddress: account,
-                                                        defendantAddress: nft.ownerAddress,
+                                                        defendantAddress: nft.originalData?.ownerAddress,
                                                         caseDescription: evidenceData.description,
                                                         evidences: []
                                                     })

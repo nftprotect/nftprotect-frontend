@@ -161,7 +161,6 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                     nftReFetch={ nftReFetch }
                                     setRefreshPaused = { setRefreshPaused }
                                     pendingRequest={ pendingRequest }
-                                    originalOwner={ originalNFTData.ownerAddress }
                                     variant={"primary-solid"}
                                     requestTimedOut={ requestTimedOut }
                                 />
