@@ -384,7 +384,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                             </Popover>
                                             
                                             <span id='pNftOwnerAddressHolder'>
-                                                { " (" + formatAddress(nft.ownerAddress, 4) + ") " }
+                                                { " (" + formatAddress(nft.ownerAddress || '', 4) + ") " }
                                             </span>
                                             <Trans>
                                                 {"before resorting to legal action."}
@@ -605,7 +605,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                         </Text>
 
                                         <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
-                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                            {"Ξ"}{ DISPUTE_PRICE } 
                                         </Text>
                                     </CardBody>
                                 </Flex>

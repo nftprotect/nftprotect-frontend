@@ -447,7 +447,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                         </Text>
 
                                         <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
-                                            {"Ξ"}{ formatEther(fee || 0) } 
+                                            {"Ξ"}{ DISPUTE_PRICE } 
                                         </Text>
                                     </CardBody>
                                 </Flex>
