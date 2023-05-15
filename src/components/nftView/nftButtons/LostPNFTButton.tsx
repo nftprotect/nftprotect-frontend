@@ -164,8 +164,8 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         setNextStep(StepMapping.evidenceFillForm)
     }
 
-    const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
+    const copyNftOwnerToClipboard = () => {
+        copyTextToClipboard(nft.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
     const klerosFormSubmit = (data: any) => {
@@ -372,7 +372,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                             {" "}
                                             <Popover placement='top'>
                                                 <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                    <CopyIcon onClick={ copyNftOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
                                                 </PopoverTrigger>
                                                 <PopoverContent w="150px">
                                                     <PopoverArrow />
@@ -383,8 +383,8 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                                 </PopoverContent>
                                             </Popover>
                                             
-                                            <span id='originalOwnerAddressHolder'>
-                                                { " (" + formatAddress(originalOwner, 4) + ") " }
+                                            <span id='pNftOwnerAddressHolder'>
+                                                { " (" + formatAddress(nft.ownerAddress, 4) + ") " }
                                             </span>
                                             <Trans>
                                                 {"before resorting to legal action."}
