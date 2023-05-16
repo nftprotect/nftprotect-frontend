@@ -2,7 +2,8 @@ import { hexValue } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
 
 export function formatAddress(value: string, length: number = 4) {
-    return `${value.substring(0, length + 2)}...${value.substring(value.length - length)}`
+    if (value.length <= length*2+2) return value
+    return `${value.substring(0, length + 2)}…${value.substring(value.length - length)}`
 }
 
 export async function copyTextToClipboard(text: string, selector: string|null = null) {

@@ -30,6 +30,13 @@ import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
 import { KlerosCaseInitialData } from '../KlerosCaseDialog';
 import { BigNumber } from '@ethersproject/bignumber'
+import { useAppContext } from '../../../../context/AppContextProvider';
+import { useEffect, useState } from 'react';
+import { useAlchemy } from '../../../../hooks/useAlchemy';
+import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
+import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
+import { formatAddress } from '../../../../utils/helpers';
+import { createDisputeLink } from '../../../../utils/kleros';
 
 interface StepContentInitialData extends KlerosCaseInitialData {
     stepKey?: string,
@@ -66,6 +73,22 @@ const StepContent = ({
     disputeData
 }: StepContentInitialData) => {
 
+    const { account, currentChain, library } = useAppContext()
+    const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
+
+    // Holds TX hash for pNFT minting transaction
+    const [ mintTx, setMintTx ] = useState<string>()
+    // Holds TX date for pNFT minting transaction
+    const [ mintDate, setMintDate ] = useState<Date>()
+    // Holds TX hash for original NFT minting transaction
+    const [ mintOriginalTx, setMintOriginalTx ] = useState<string>()
+    // Holds TX date for original NFT minting transaction
+    const [ mintOriginalDate, setMintOriginalDate ] = useState<Date>()
+    // Holds TX hash for acquiring pNFT by current owner
+    const [ acquireTx, setAcquireTx ] = useState<string>()
+    // Holds TX hash for acquiring pNFT by current owner
+    const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+
     function getNftImage() {
         return <Flex
             overflow="hidden"
@@ -79,6 +102,111 @@ const StepContent = ({
             />
         </Flex>
     }
+
+    const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
+
+    const getBlockDate = async (blockNumber: string) => {
+        const block = await library.getBlock(blockNumber)
+        return new Date(block.timestamp * 1000)
+    }
+
+    const formatDate = (date: Date) => date.toLocaleDateString("en-US")
+
+    // First transaction in form for claimant
+    const claimantTx1 = claimantIsPNftOwner() ? mintTx : acquireTx
+    // Second transaction in form for claimant (if sent to protocol)
+    const claimantTx2 = sentToProtocolTx
+    // First transaction in form for defendant
+    const defendantTx1 = claimantIsPNftOwner() ? acquireTx : mintTx
+
+    useEffect(() => {
+        if (nft) {
+            // Find pNFT minting TX
+            getTransfersForOwner([
+                nft.originalData?.ownerAddress || '',
+                GetTransfersForOwnerTransferType.TO,
+                {
+                    contractAddresses: [nft.contract.address]
+                }
+            ]).then((result) => {
+                const mintTransfer = result.nfts.find((transfer) => {
+                    return transfer.tokenId === nft.tokenId
+                })
+                if (mintTransfer) {
+                    setMintTx(mintTransfer.transactionHash)
+                    // Take mint TX and it's timestamp
+                    getBlockDate(mintTransfer.blockNumber).then((date) => {
+                        setMintDate(date)
+                    })
+                } else {
+                    setMintTx(undefined)
+                    setMintDate(undefined)
+                }
+            })
+            // Find original minting TX
+            // We have to search for transactions after NFTProtect was deployed
+            const startBlockNumber = nft.contract.deployedBlockNumber
+            getTransfersForContract([
+                nft.originalData?.contractAddress || '',
+                {
+                    fromBlock: startBlockNumber,
+                }
+            ]).then((result) => {
+                const mintTransfer = result.nfts.find((transfer) => {
+                    return transfer.tokenId === nft.originalData?.tokenId
+                })
+                if (mintTransfer) {
+                    setMintOriginalTx(mintTransfer.transactionHash)
+                    // Take mint TX and it's timestamp
+                    getBlockDate(mintTransfer.blockNumber).then((date) => {
+                        setMintOriginalDate(date)
+                    })
+                } else {
+                    setMintOriginalTx(undefined)
+                    setMintOriginalDate(undefined)
+                }
+            })
+            // Find acquiring pNFT transaction. It's the last pNFT moving transaction
+            getTransfersForOwner([
+                nft.ownerAddress || '',
+                GetTransfersForOwnerTransferType.TO,
+                {
+                    contractAddresses: [nft.contract.address]
+                }
+            ]).then((result) => {
+                const acquireTransfer = result.nfts.reverse().find((transfer) => {
+                    return transfer.tokenId === nft.tokenId
+                })
+                if (acquireTransfer) {
+                    setAcquireTx(acquireTransfer.transactionHash)
+                } else {
+                    setAcquireTx(undefined)
+                }
+            })
+            if (contractAddress) {
+                // Find transaction of sending token to a hacked protocol
+                // It's the last transaction of original owner to sent this pNFT
+                getTransfersForOwner([
+                    nft.ownerAddress || '',
+                    GetTransfersForOwnerTransferType.FROM,
+                    {
+                        contractAddresses: [nft.contract.address]
+                    }
+                ]).then((result) => {
+                    const sentTransfer = result.nfts.reverse().find((transfer) => {
+                        return transfer.tokenId === nft.tokenId
+                    })
+                    if (sentTransfer) {
+                        setSentToProtocolTx(sentTransfer.transactionHash)
+                    } else {
+                        setSentToProtocolTx(undefined)
+                    }
+                })
+            } else {
+                setSentToProtocolTx(undefined)
+            }
+        }
+    }, [nft, account, currentChain])
 
     return(
         <Flex flexDirection="column" flexWrap="nowrap" mt={{base: "30px"}}>
@@ -95,14 +223,21 @@ const StepContent = ({
                         <ExternalLink fontSize="22px" href={pageData.policyURL}/>
                     </Flex>
                 </Link>
-                <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="h3" textDecoration="underline">
+                { disputeData && <Link
+                    href={ createDisputeLink(disputeData?.disputeId) } 
+                    isExternal 
+                    rel="noreferrer" 
+                    color="#2D7BD6" 
+                    textStyle="h3" 
+                    textDecoration="underline"
+                >
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
                             <Trans>{"Open court's page in Kleros"}</Trans>
                         </Text>
                         <ExternalLink fontSize="22px" />
                     </Flex>
-                </Link>
+                </Link> }
             </Flex>
 
             <Flex mb={{base: "30px"}}>
@@ -126,7 +261,7 @@ const StepContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={(disputeData?.dateCreated || new Date()).toLocaleDateString("en-US") } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={formatDate(disputeData?.dateCreated || new Date()) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -205,12 +340,12 @@ const StepContent = ({
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT creation date{":"}</Trans></chakra.span>
                         {" "}
-                        21.04.2021
+                        { mintOriginalDate && formatDate(mintOriginalDate) }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT protection date{":"}</Trans></chakra.span>
                         {" "}
-                        17.05.2023
+                        { mintDate && formatDate(mintDate) }
                     </Text>
                 </Flex>
             </Flex>
@@ -239,9 +374,16 @@ const StepContent = ({
                     <Text fontWeight="600" textStyle="paragraph">
                         <Trans>Wallet{":"}</Trans>
                         {' '}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline"ml={{base: "5px"}}>
+                        <Link 
+                            href={ generateAddressURL(claimantAddress, currentChain.chainId) }
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline"
+                            ml={{base: "5px"}}
+                        >
                             <chakra.span wordBreak="break-all">
-                                { claimantAddress }
+                                { formatAddress(claimantAddress, 8) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
@@ -257,20 +399,32 @@ const StepContent = ({
                     <Text fontWeight="600" textStyle="paragraph">
                         <Trans>Original{":"}</Trans>
                         {" "}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                        { nft.originalData && <Link 
+                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, currentChain.chainId) }
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline"
+                        >
                             <chakra.span wordBreak="break-all">
-                                {nft.originalData?.contractAddress} (id: {nft.originalData?.tokenId})
+                                { formatAddress(nft.originalData?.contractAddress, 4) } (id: {nft.originalData?.tokenId})
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
-                        </Link>
+                        </Link> }
                     </Text>
 
                     <Text fontWeight="600" textStyle="paragraph">
                         { pageData.claimantText }
                         {" "}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                        <Link 
+                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.chainId) : '#'} 
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline"
+                        >
                             <chakra.span wordBreak="break-all">
-                                0xbabd69e432388644...60c9bf6e743aed40505055
+                               { claimantTx1 ? formatAddress(claimantTx1, 10) : '' }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
@@ -280,9 +434,15 @@ const StepContent = ({
                         <Text fontWeight="600" textStyle="paragraph">
                             { pageData.claimantText2 }
                             {" "}
-                            <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                            <Link 
+                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.chainId) : '#'} 
+                                isExternal 
+                                rel="noreferrer" 
+                                color="#2D7BD6" 
+                                textDecoration="underline"
+                            >
                                 <chakra.span wordBreak="break-all">
-                                    0xbabd69e432388644...60c9bf6e743aed40505055
+                                { claimantTx2 ? formatAddress(claimantTx2, 10) : '' }
                                 </chakra.span>
                                 <ExternalLinkIcon mx='5px' />
                             </Link>
@@ -317,9 +477,16 @@ const StepContent = ({
                                 <Trans>{"Wallet:"}</Trans>
                         }
                         {' '}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline" ml={{base: "5px"}}>
+                        <Link 
+                            href={ generateAddressURL(contractAddress || defendantAddress, currentChain.chainId) }
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline" 
+                            ml={{base: "5px"}}
+                        >
                             <chakra.span wordBreak="break-all">
-                                { contractAddress || defendantAddress }
+                                { formatAddress(contractAddress || defendantAddress, 8) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
@@ -338,9 +505,15 @@ const StepContent = ({
                     <Text fontWeight="600" textStyle="paragraph">
                         <Trans>pNFT{":"}</Trans>
                         {" "}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                        <Link
+                            href={ generateTokenURL(nft.contract.address, nft.tokenId, currentChain.chainId) }
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline"
+                        >
                             <chakra.span wordBreak="break-all">
-                                { nft.contract.address } (id: { nft.tokenId })
+                                { formatAddress(nft.contract.address, 4) } (id: { nft.tokenId })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>
@@ -349,9 +522,15 @@ const StepContent = ({
                     <Text fontWeight="600" textStyle="paragraph">
                         { pageData.defendantText }
                         {" "}
-                        <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+                        <Link 
+                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.chainId) : '#'} 
+                            isExternal 
+                            rel="noreferrer" 
+                            color="#2D7BD6" 
+                            textDecoration="underline"
+                        >
                             <chakra.span wordBreak="break-all">
-                                0xbabd69e432388644...60c9bf6e743aed40505055
+                               { defendantTx1 ? formatAddress(defendantTx1, 10) : '' }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' />
                         </Link>

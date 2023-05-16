@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Alchemy } from "alchemy-sdk";
+import { Alchemy, GetTransfersForContractOptions, GetTransfersForOwnerOptions, GetTransfersForOwnerTransferType, TransfersNftResponse } from "alchemy-sdk";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 
 export interface AlchemyContextInterface {
@@ -87,6 +87,21 @@ export function useAlchemy() {
         getOwnersForNft: async (params: any) => {
             checkChain();
             return await alchemyFetch(currentChain.alchemyId, 'nft.getOwnersForNft', params)
+        },
+        getTransfersForContract: async (params: [
+            contract: string,
+            options?: GetTransfersForContractOptions
+        ]) : Promise<TransfersNftResponse> => {
+            checkChain();
+            return await alchemyFetch(currentChain.alchemyId, 'nft.getTransfersForContract', params)
+        },
+        getTransfersForOwner: async (params: [
+            owner: string,
+            category?: GetTransfersForOwnerTransferType,
+            options?: GetTransfersForOwnerOptions
+        ]) : Promise<TransfersNftResponse> => {
+            checkChain();
+            return await alchemyFetch(currentChain.alchemyId, 'nft.getTransfersForOwner', params)
         },
     };
 }

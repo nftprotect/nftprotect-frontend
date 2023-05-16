@@ -124,9 +124,9 @@ const KlerosCaseDialog = () => {
                                 variant={"circles"} 
                                 colorScheme="#1316DD"
                                 activeStep={activeStep}
-                                onClickStep={(i) => {
-                                    setStep(i);
-                                }}
+                                // onClickStep={(i) => {
+                                //     setStep(i);
+                                // }}
                                 py="30px"
                                 sx={{
                                     "& .cui-steps__step-icon-container": {
