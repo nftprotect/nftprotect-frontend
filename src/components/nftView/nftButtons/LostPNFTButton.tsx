@@ -89,9 +89,9 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     }
 
     const evidenceTypes: any = {
-        'protocol breach': 5,
+        'protocol breach': 7,
         'phishing attack': 6,
-        'sending to an incorrect address': 7
+        'sending to an incorrect address': 5
     }
 
     const handleUnknownError = (error: any) => {
