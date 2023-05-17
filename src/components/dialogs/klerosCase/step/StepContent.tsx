@@ -215,7 +215,7 @@ const StepContent = ({
             </Text>
 
             <Flex mt={{base: "5px"}} mb={{base: "30px"}}>
-                <Link href='#' isExternal rel="noreferrer" color="#2D7BD6" textStyle="h3" textDecoration="underline" textTransform="capitalize">
+                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textStyle="h3" textDecoration="underline" textTransform="capitalize">
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
                             <Trans>Dispute policy</Trans>
