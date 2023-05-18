@@ -15,7 +15,7 @@ interface stepLabelData {
     labelKey: string
 }
 
-const StepLabel = ({labelKey}: stepLabelData) => {
+const KlerosCaseLabel = ({labelKey}: stepLabelData) => {
 
     return(
         <Flex flexDirection="row" flexWrap="nowrap">
@@ -44,4 +44,4 @@ const StepLabel = ({labelKey}: stepLabelData) => {
     )
 }
 
-export default StepLabel
+export default KlerosCaseLabel
