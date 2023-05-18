@@ -17,19 +17,7 @@ import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { useIPFSContext } from '../context/IPFSContextProvider'
 import { useEffect } from 'react'
-
-async function loadTranslation(locale: string, isProduction = true) {
-    let data
-    if (isProduction) {
-        data = await import(`../locales/${locale}/messages`)
-    } else {
-        data = await import(
-            `@lingui/loader!../locales/${locale}/messages.po`
-        )
-    }
-  
-    return data.messages
-}
+import { loadTranslation } from '../utils/lingui'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
