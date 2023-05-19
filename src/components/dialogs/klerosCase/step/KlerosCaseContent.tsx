@@ -29,7 +29,6 @@ import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAppContext } from '../../../../context/AppContextProvider';
 import { useEffect, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
@@ -39,6 +38,7 @@ import { createDisputeLink } from '../../../../utils/kleros';
 import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import IPFSUpload from '../../../../classes/IPFSUpload';
+import { BaseProvider } from '@ethersproject/providers';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -51,6 +51,8 @@ export interface KlerosCaseInitialData {
 }
 
 interface StepContentInitialData extends KlerosCaseInitialData {
+    account?: string,
+    library: BaseProvider,
     stepKey?: string,
     pageData: PageData,
     disputeData?: DisputeData
@@ -74,6 +76,8 @@ interface DisputeData {
 
 const StepContent = ({
     stepKey,
+    library,
+    account,
     nft, 
     pageData, 
     claimantAddress, 
@@ -103,7 +107,6 @@ const StepContent = ({
         }
     ];
 
-    const { account, currentChain, library } = useAppContext()
     const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction
@@ -240,7 +243,7 @@ const StepContent = ({
                 setSentToProtocolTx(undefined)
             }
         }
-    }, [nft, account, currentChain])
+    }, [nft, account, library])
 
     const mainContent = <>
         <Flex flexDirection="column" flexWrap="nowrap" mt={{base: "30px"}}>
@@ -409,7 +412,7 @@ const StepContent = ({
                         <Trans>Wallet{":"}</Trans>
                         {' '}
                         <Link 
-                            href={ generateAddressURL(claimantAddress, currentChain.chainId) }
+                            href={ generateAddressURL(claimantAddress, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -434,7 +437,7 @@ const StepContent = ({
                         <Trans>Original{":"}</Trans>
                         {" "}
                         { nft.originalData && <Link 
-                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, currentChain.chainId) }
+                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -451,7 +454,7 @@ const StepContent = ({
                         { pageData.claimantText }
                         {" "}
                         <Link 
-                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.chainId) : '#'} 
+                            href={claimantTx1 ? generateTxURL(claimantTx1, library.network.chainId) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -469,7 +472,7 @@ const StepContent = ({
                             { pageData.claimantText2 }
                             {" "}
                             <Link 
-                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.chainId) : '#'} 
+                                href={claimantTx2 ? generateTxURL(claimantTx2, library.network.chainId) : '#'} 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
@@ -512,7 +515,7 @@ const StepContent = ({
                         }
                         {' '}
                         <Link 
-                            href={ generateAddressURL(contractAddress || defendantAddress, currentChain.chainId) }
+                            href={ generateAddressURL(contractAddress || defendantAddress, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -540,7 +543,7 @@ const StepContent = ({
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link
-                            href={ generateTokenURL(nft.contract.address, nft.tokenId, currentChain.chainId) }
+                            href={ generateTokenURL(nft.contract.address, nft.tokenId, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -557,7 +560,7 @@ const StepContent = ({
                         { pageData.defendantText }
                         {" "}
                         <Link 
-                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.chainId) : '#'} 
+                            href={defendantTx1 ? generateTxURL(defendantTx1, library.network.chainId) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
