@@ -4,17 +4,15 @@ import { loadTranslation } from '../../utils/lingui'
 import { useEffect, useState } from 'react'
 import { defaultChain } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
-import { BaseProvider, getDefaultProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { nftpContractAddress } from '../../utils/config'
 import NFTProtectABI from '../../abi/NFTProtectABI'
 import { Contract } from '@ethersproject/contracts'
 import { useAlchemy } from '../../hooks/useAlchemy'
-import { supportedChains } from '../../utils/config'
 import NFT from '../../classes/NFT'
+import { useAppContext } from '../../context/AppContextProvider'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
-    const chainId = params?.chainId
     const translation = await loadTranslation(
         locale!,
         process.env.NODE_ENV === 'production'
@@ -52,18 +50,13 @@ interface Request {
 }
 
 const RequestPage: NextPage = () => {
+    const context = useAppContext()
+    const { account, library, currentChain } = context
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
-    const [ library, setLibrary ] = useState<BaseProvider>()
     const [ requestData, setRequestData ] = useState<Request>()
     const [ nft, setNft ] = useState<NFT>()
-    const [ currentChain, setCurrentChain ] = useState<any>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
-    const supportedChainIds = supportedChains.map(it => it.id)
-    const rpc:any = {}
-    supportedChains.forEach(({id, nodeUrl}) => {
-        rpc[id] = nodeUrl
-    })
 
     useEffect(() => {
         try {
@@ -83,15 +76,8 @@ const RequestPage: NextPage = () => {
         } else {
             chainId = defaultChain
         }
-        const currChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
-
-        // setLibrary(getDefaultProvider(chainId, {
-        //     supportedChainIds,
-        //     rpc
-        // }))
-        if (currChain) {
-            setCurrentChain(currChain)
-            setLibrary(new JsonRpcProvider(currChain?.nodeUrl, chainId))
+        if (chainId) {
+            context.setChainId(chainId)
         } else {
             console.error('Unsupported chain', chainId)
         }
@@ -107,7 +93,7 @@ const RequestPage: NextPage = () => {
                     nftProtectContract.address,
                     result.tokenId
                 ]).then((alchemyNft) => {
-                    const currentNFT = new NFT(alchemyNft, {library, nftProtectContract, currentChain})
+                    const currentNFT = new NFT(alchemyNft, context)
                     currentNFT.loadInitialData()
                     setNft(currentNFT)
                 })
