@@ -12,6 +12,7 @@ import NFT from '../../classes/NFT'
 import { useAppContext } from '../../context/AppContextProvider'
 import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
+import { NFTEvents } from '../../classes/NFT'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -60,6 +61,15 @@ const RequestPage: NextPage = () => {
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
+    const [ claimantAddress, setClaimaintAddress ] = useState<string>()
+    const [ defendantAddress, setDefendantAddress ] = useState<string>()
+
+    // Temporarily mapping
+    const metaEvidenceType = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+                                metaEvidenceTypes.find(item => item.value === '4') :
+                             (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                                metaEvidenceTypes.find(item => item.value === '5') :
+                             undefined
 
     useEffect(() => {
         try {
@@ -105,6 +115,32 @@ const RequestPage: NextPage = () => {
     }, [requestId, library])
 
     useEffect(() => {
+        if (nft) {
+            // Load all secondary NFT data
+            nft.loadOriginalNFTData()
+            const originalNFTDataLoadedListener = () => {
+                console.log('ORIGINAL NFT DATA:', nft.originalData)
+                const claimantAddress = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+                                            nft?.ownerAddress :
+                                        (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                                            nft?.originalData?.ownerAddress :
+                                        undefined
+                const defendantAddress = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+                                            nft?.originalData?.ownerAddress :
+                                        (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                                            nft?.ownerAddress :
+                                        undefined
+                setClaimaintAddress(claimantAddress)
+                setDefendantAddress(defendantAddress)
+            }
+            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
+            return () => {
+                nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
+            }
+        }
+    }, [nft])
+
+    useEffect(() => {
         if (requestData) {
             console.log("REQUEST DATA", requestData)
         }
@@ -118,15 +154,16 @@ const RequestPage: NextPage = () => {
 
     return (<>
         { !requestId && <h1>Wrong request</h1> }
-        { requestData && nft && <KlerosCaseContent
+        { requestData && nft && metaEvidenceType && <KlerosCaseContent
             stepKey={''}
+            metaEvidenceId={parseInt(metaEvidenceType.value)}
             nft={nft}
-            claimantAddress='0xSCAMMER'
-            defendantAddress='0xVICTIM'
+            claimantAddress={claimantAddress || ''}
+            defendantAddress={defendantAddress || ''}
             caseDescription='efsdf'
             evidences={[]}
             disputeData={{disputeId: requestData.externalDisputeId}}
-            pageData={{}}
+            pageData={ metaEvidenceType.page }
         />}
     </>)
 }
