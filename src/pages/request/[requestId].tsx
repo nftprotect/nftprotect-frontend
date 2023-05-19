@@ -10,6 +10,8 @@ import { Contract } from '@ethersproject/contracts'
 import { useAlchemy } from '../../hooks/useAlchemy'
 import NFT from '../../classes/NFT'
 import { useAppContext } from '../../context/AppContextProvider'
+import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
+import { metaEvidenceTypes } from '../../utils/metaEvidence'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -57,6 +59,7 @@ const RequestPage: NextPage = () => {
     const [ requestData, setRequestData ] = useState<Request>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
+    //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
 
     useEffect(() => {
         try {
@@ -114,10 +117,17 @@ const RequestPage: NextPage = () => {
     }, [nft])
 
     return (<>
-        { requestId && <div>
-            <h1>Страница запроса {requestId.toString()}</h1>
-        </div> }
         { !requestId && <h1>Wrong request</h1> }
+        { requestData && nft && <KlerosCaseContent
+            stepKey={''}
+            nft={nft}
+            claimantAddress='0xSCAMMER'
+            defendantAddress='0xVICTIM'
+            caseDescription='efsdf'
+            evidences={[]}
+            disputeData={{disputeId: requestData.externalDisputeId}}
+            pageData={{}}
+        />}
     </>)
 }
 

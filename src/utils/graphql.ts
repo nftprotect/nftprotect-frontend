@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, DefaultOptions } from "@apollo/client";
-import { graphURI } from "./config";
+import { dynamicArbRegistryGraphURI, NFTProtectGraphURI } from "./config";
 
 const defaultOptions: DefaultOptions = {
     watchQuery: {
@@ -12,10 +12,14 @@ const defaultOptions: DefaultOptions = {
     },
 }
 
-const graphClient = new ApolloClient({
-    uri: graphURI,
+export const dynamicArbRegistryGraph = new ApolloClient({
+    uri: dynamicArbRegistryGraphURI,
     cache: new InMemoryCache(),
     defaultOptions: defaultOptions
 });
 
-export default graphClient;
+export const NFTProtectGraph = new ApolloClient({
+    uri: NFTProtectGraphURI,
+    cache: new InMemoryCache(),
+    defaultOptions: defaultOptions
+});

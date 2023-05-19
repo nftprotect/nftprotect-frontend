@@ -39,6 +39,7 @@ import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import IPFSUpload from '../../../../classes/IPFSUpload';
 import { BaseProvider } from '@ethersproject/providers';
+import { useAppContext } from '../../../../context/AppContextProvider';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -51,8 +52,6 @@ export interface KlerosCaseInitialData {
 }
 
 interface StepContentInitialData extends KlerosCaseInitialData {
-    account?: string,
-    library: BaseProvider,
     stepKey?: string,
     pageData: PageData,
     disputeData?: DisputeData
@@ -74,10 +73,8 @@ interface DisputeData {
     dateCreated?: Date
 }
 
-const StepContent = ({
+const KlerosCaseContent = ({
     stepKey,
-    library,
-    account,
     nft, 
     pageData, 
     claimantAddress, 
@@ -125,6 +122,7 @@ const StepContent = ({
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
     });
+    const { library, account } = useAppContext()
 
     function getNftImage() {
         return <Flex
@@ -695,4 +693,4 @@ const StepContent = ({
     </>)
 }
 
-export default StepContent
+export default KlerosCaseContent

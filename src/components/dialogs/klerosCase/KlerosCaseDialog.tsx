@@ -84,8 +84,6 @@ const KlerosCaseDialog = () => {
                         <Flex flexDir="column" width="100%">
                            { nft && caseData && <KlerosCaseContent
                                 pageData={pageData}
-                                library={library}
-                                account={account || undefined}
                                 {...caseData}
                             /> }
                         </Flex>
