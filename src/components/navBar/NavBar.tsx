@@ -55,9 +55,9 @@ const NavBar = () => {
                                 <LocaleMenu/> 
                             </Box>
                         }
-                        <Box mr={[2, 4]}>
+                        {/* <Box mr={[2, 4]}>
                             <MainMenu />
-                        </Box>
+                        </Box> */}
                         <Box mr={[2, 4]}>
                             <LoginForm buttonVariant={'light-outline'} />
                         </Box>
