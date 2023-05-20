@@ -268,6 +268,7 @@ const NFTView = () => {
                         bgPosition="right 110px top 76px, top left"
                         bgSize="auto calc(100% - 76px), cover"
                         px={['1rem', '3rem']}
+                        borderBottom="none"
                     >
                         <Flex color="#FFF" alignItems="center" justifyContent="space-between">
                             <AccordionButton px="0" py={[4, 6]}>

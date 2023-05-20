@@ -1,6 +1,6 @@
 import {
+    chakra,
     Box,
-    Text,
     Flex,
     Image,
 } from '@chakra-ui/react'
@@ -16,18 +16,17 @@ const NavBar = () => {
     const { active } = useAppContext()
 
     return (
-        <Box
-            position="sticky"
-            top="0"
-            zIndex="1"
-            bgColor="#000"
-            color="#FFF"
-            w="100%"
-            maxW="1920px"
-            px={[3, 6]}
-            py="0.375rem"
-        >
-            <nav key="navBar">
+        <chakra.nav>
+            <Box
+                position="sticky"
+                top="0"
+                zIndex="1"
+                bgColor="#000"
+                color="#FFF"
+                w="100%"
+                px={[3, 6]}
+                py="0.375rem"
+            >
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
@@ -69,8 +68,8 @@ const NavBar = () => {
                         </Box>
                     </Flex>
                 </Flex>
-            </nav>
-        </Box>
+            </Box>
+        </chakra.nav>
     )
 }
 
