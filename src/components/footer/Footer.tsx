@@ -24,7 +24,7 @@ const Footer = () => {
                 flexDirection="row"
                 alignItems="center"
                 flexWrap='wrap'
-                justifyContent="space-between"
+                justifyContent="flex-start"
             >
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" mr={{base: "50px"}}>
                     <Image
@@ -43,17 +43,17 @@ const Footer = () => {
                 </Flex>
 
                 <Flex justifyContent="space-between">
-                    <Link href="https://nftprotect.app/" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "120px"}}>
+                    <Link href="https://nftprotect.app/" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "20px"}}>
                         <Text>
                             <Trans>Website</Trans>
                         </Text>
                     </Link>
-                    <Link href="https://docs.nftprotect.app/" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "120px"}}>
+                    <Link href="https://docs.nftprotect.app/" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "20px"}}>
                         <Text>
                             <Trans>Whitepapers</Trans>
                         </Text>
                     </Link>
-                    <Link href="https://nftprotect.app/links" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "120px"}}>
+                    <Link href="https://nftprotect.app/links" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase">
                         <Text>
                             <Trans>Links</Trans>
                         </Text>
