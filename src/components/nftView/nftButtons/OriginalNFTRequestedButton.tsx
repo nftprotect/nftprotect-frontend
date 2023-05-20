@@ -86,7 +86,7 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
             variant={ variant }
             w="100%"
         >
-            <Trans>Original requested</Trans>
+            <Trans>Answer request</Trans>
         </Button>
 
         <Modal
