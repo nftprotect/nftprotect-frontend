@@ -175,12 +175,8 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                                         minH="2.25rem"
                                         px="16px"
                                         py="8px"
-                                        borderRadius="16px"
-                                        bgGradient="linear(315deg, accent.dark 0%, accent.light 100%)"
-                                        color="#FFF"
-                                        filter="drop-shadow(-4px 4px 10px rgba(0, 0, 0, 0.25))"
                                     >
-                                        <Spinner borderWidth='2px' h={{base: "20px"}} w={{base: "20px"}} speed='0.65s' mr={{base: "10px"}} color="#FFF"></Spinner>
+                                        <Spinner borderWidth='2px' h={{base: "20px"}} w={{base: "20px"}} speed='0.65s' mr={{base: "10px"}}></Spinner>
                                         <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
                                             <Trans>{"Pending..."}</Trans>
                                         </Text>
