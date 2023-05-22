@@ -260,14 +260,14 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                     {/* NFT owner refused transfer */}
                                     { pendingRequest?.status == RequestStatus.Rejected &&
                                         <Text as="h3" textStyle="h3" >
-                                            {t`The original NFT owner refused`}
+                                            {t`The original NFT`}<br/>{t`owner refused`}
                                         </Text>
                                     }
                                     
                                     {/* NFT owner unresponsive */}
                                     { requestTimedOut &&
                                         <Text as="h3" textStyle="h3">
-                                            {t`The original NFT owner unresponsive`}
+                                            {t`The original NFT`}<br/>{t` owner unresponsive`}
                                         </Text>
                                     }
                                 </CardHeader>

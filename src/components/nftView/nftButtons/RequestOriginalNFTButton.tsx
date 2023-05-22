@@ -290,14 +290,6 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                     </Flex>
                                 </CardBody>
                                 <CardFooter flexDirection="column" alignItems="center">
-                                    <Box w={{base: "50%"}} mb={{base: "20px"}}>
-                                        <Button 
-                                            onClick={ onClose}
-                                            variant="dark-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
                                     <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
                                         <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
@@ -336,16 +328,6 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                         </Text>
                                     </CardBody>
                                 </Flex>
-                                <CardFooter>
-                                    <Box w={{base: "100%", xs: "50%"}}>
-                                        <Button 
-                                            onClick={ onClose}
-                                            variant="light-outline"
-                                        >
-                                            <Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
-                                </CardFooter>
                             </Card>
                         </SwitchableOutside>
 

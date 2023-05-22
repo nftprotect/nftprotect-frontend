@@ -245,11 +245,9 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
                                         </Image>
                                     </Box>
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" textTransform="uppercase">
-                                        <Trans values={{name}}>You can protect your NFT <b>{name}</b> again.</Trans>
+                                        <Trans>You can protect your NFT again.</Trans>
                                     </Text>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
-                                        <Trans>We recomend always keep your assets secure</Trans>
-                                    </Text>
+
                                 </CardBody>
                                 <CardFooter>
                                     <Box w={{base: "60%"}}>
