@@ -60,4 +60,5 @@ export const defaultArbitrator = 2
 export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'
 
 // The Graph
-export const graphURI = 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
+export const dynamicArbRegistryGraphURI = 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
+export const NFTProtectGraphURI = 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'

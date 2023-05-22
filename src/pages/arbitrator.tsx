@@ -26,19 +26,7 @@ import ArbitratorRequestList,  { ArbitratorRequest } from '../components/arbitra
 import ArbitratorsList, { ArbitratorData } from '../components/arbitrator/ArbitratorsList'
 import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitratorDialog'
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
-
-async function loadTranslation(locale: string, isProduction = true) {
-    let data
-    if (isProduction) {
-        data = await import(`../locales/${locale}/messages`)
-    } else {
-        data = await import(
-            `@lingui/loader!../locales/${locale}/messages.po`
-        )
-    }
-  
-    return data.messages
-}
+import { loadTranslation } from '../utils/lingui'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -53,7 +41,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     }
 }
 
-const Home: NextPage = () => {
+const ArbitratorPage: NextPage = () => {
 
     const { account, active, arbitratorRegistryContract } = useAppContext()
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
@@ -211,4 +199,4 @@ const Home: NextPage = () => {
     )
 }
 
-export default Home
+export default ArbitratorPage

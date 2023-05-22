@@ -1,12 +1,8 @@
 import { useContext } from "react";
-import { Alchemy } from "alchemy-sdk";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
-import graphClient from '../utils/graphql'
+import { NFTProtectGraph, dynamicArbRegistryGraph } from '../utils/graphql'
 import { gql } from "@apollo/client"
-
-export interface AlchemyContextInterface {
-    alchemy: Alchemy,
-}
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function useTheGraph() {
     const currentContext = useContext(AppContext);
@@ -58,9 +54,23 @@ export function useTheGraph() {
                 }
             }          
         `;
-        const result = await graphClient.query({
+        const result = await dynamicArbRegistryGraph.query({
             query,
             variables: { managerAddress: account }
+        })
+        console.log('GRAPH RETURNS', result)
+        return result
+    }
+
+    const loadNFTPRequest = async (requestId: BigNumber) => {
+        checkAccount()
+        const query = gql`
+            query loadRequest($requestId: Bytes!) {
+            }          
+        `;
+        const result = await NFTProtectGraph.query({
+            query,
+            variables: { requestId: requestId }
         })
         console.log('GRAPH RETURNS', result)
         return result

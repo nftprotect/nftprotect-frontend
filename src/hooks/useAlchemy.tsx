@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { Alchemy, GetTransfersForContractOptions, GetTransfersForOwnerOptions, GetTransfersForOwnerTransferType, TransfersNftResponse } from "alchemy-sdk";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
+import { NftTokenType, BigNumberish, Nft } from "alchemy-sdk";
 
 export interface AlchemyContextInterface {
     alchemy: Alchemy,
@@ -21,7 +22,7 @@ const alchemyFetch = async (alchemyChainId: string, method: string, params: any)
     return response.json()
 }
 
-export function useAlchemy() {
+export function useAlchemy(alchemyChainId?: string) {
     const currentContext = useContext(AppContext);
     if (!currentContext) {
         throw new Error(
@@ -30,9 +31,10 @@ export function useAlchemy() {
     }
 
     const { currentChain } = useAppContext()
+    const chainId = alchemyChainId || currentChain?.alchemyId
 
     const checkChain = () => {
-        if (!currentChain) {
+        if (!chainId) {
             throw new Error(
                 "Invalid chain!"
             );
@@ -42,58 +44,63 @@ export function useAlchemy() {
     return {
         getBlockNumber: async () => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'core.getBlockNumber', {})
+            return await alchemyFetch(chainId, 'core.getBlockNumber', {})
         },
         getNftsForOwner: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftsForOwner', params)
+            return await alchemyFetch(chainId, 'nft.getNftsForOwner', params)
         },
-        getNftMetadata: async (params: any) => {
+        getNftMetadata: async (params: [
+            contractAddress: string, 
+            tokenId: BigNumberish, 
+            tokenType?: NftTokenType | undefined, 
+            tokenUriTimeoutInMs?: number | undefined
+        ]) : Promise<Nft> => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftMetadata', params)
+            return await alchemyFetch(chainId, 'nft.getNftMetadata', params)
         },
         getNftMetadataBatch: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftMetadataBatch', params)
+            return await alchemyFetch(chainId, 'nft.getNftMetadataBatch', params)
         },
         refreshNftMetadata: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.refreshNftMetadata', params)
+            return await alchemyFetch(chainId, 'nft.refreshNftMetadata', params)
         },
         searchContractMetadata: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.searchContractMetadata', params)
+            return await alchemyFetch(chainId, 'nft.searchContractMetadata', params)
         },
         getNftsForOwnerIterator: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftsForOwnerIterator', params)
+            return await alchemyFetch(chainId, 'nft.getNftsForOwnerIterator', params)
         },
         getNftsForContractIterator: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftsForContractIterator', params)
+            return await alchemyFetch(chainId, 'nft.getNftsForContractIterator', params)
         },
         getContractMetadata: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getContractMetadata', params)
+            return await alchemyFetch(chainId, 'nft.getContractMetadata', params)
         },
         getNftsForContract: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getNftsForContract', params)
+            return await alchemyFetch(chainId, 'nft.getNftsForContract', params)
         },
         getMintedNfts: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getMintedNfts', params)
+            return await alchemyFetch(chainId, 'nft.getMintedNfts', params)
         },
         getOwnersForNft: async (params: any) => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getOwnersForNft', params)
+            return await alchemyFetch(chainId, 'nft.getOwnersForNft', params)
         },
         getTransfersForContract: async (params: [
             contract: string,
             options?: GetTransfersForContractOptions
         ]) : Promise<TransfersNftResponse> => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getTransfersForContract', params)
+            return await alchemyFetch(chainId, 'nft.getTransfersForContract', params)
         },
         getTransfersForOwner: async (params: [
             owner: string,
@@ -101,7 +108,7 @@ export function useAlchemy() {
             options?: GetTransfersForOwnerOptions
         ]) : Promise<TransfersNftResponse> => {
             checkChain();
-            return await alchemyFetch(currentChain.alchemyId, 'nft.getTransfersForOwner', params)
+            return await alchemyFetch(chainId, 'nft.getTransfersForOwner', params)
         },
     };
 }

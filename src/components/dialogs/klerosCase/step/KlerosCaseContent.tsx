@@ -28,19 +28,31 @@ import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons
 import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
-import { KlerosCaseInitialData } from '../KlerosCaseDialog';
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAppContext } from '../../../../context/AppContextProvider';
 import { useEffect, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
 import { formatAddress } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
+import KlerosCaseLabel from './KlerosCaseLabel';
+import { Step, Steps, useSteps } from "chakra-ui-steps";
+import IPFSUpload from '../../../../classes/IPFSUpload';
+import { BaseProvider } from '@ethersproject/providers';
+import { useAppContext } from '../../../../context/AppContextProvider';
+
+export interface KlerosCaseInitialData {
+    nft: NFT,
+    metaEvidenceId: number,
+    claimantAddress: string,
+    defendantAddress: string,
+    contractAddress?: string,
+    caseDescription: string,
+    evidences?: IPFSUpload[]
+}
 
 interface StepContentInitialData extends KlerosCaseInitialData {
     stepKey?: string,
-    nft: NFT,
     pageData: PageData,
     disputeData?: DisputeData
 }
@@ -61,7 +73,7 @@ interface DisputeData {
     dateCreated?: Date
 }
 
-const StepContent = ({
+const KlerosCaseContent = ({
     stepKey,
     nft, 
     pageData, 
@@ -73,7 +85,25 @@ const StepContent = ({
     disputeData
 }: StepContentInitialData) => {
 
-    const { account, currentChain, library } = useAppContext()
+    // Step content mapping
+    // Label refers to name of the step and displayed on steps bar
+    // description is displayed under label. 
+    // TODO replace descriptions with counters!!!
+    const steps = [
+        { 
+            key: "Evidence period", 
+            description:"1d 06h 09m"
+        }, { 
+            key: "Voting period", 
+            description:"3d 18h 00m"
+        }, { 
+            key: "Apealing period", 
+            description:"3d 12h 00m"
+        }, { 
+            key: "Decision period",
+        }
+    ];
+
     const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction
@@ -88,6 +118,11 @@ const StepContent = ({
     const [ acquireTx, setAcquireTx ] = useState<string>()
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+    // Steps for header
+    const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
+        initialStep: 0,
+    });
+    const { library, account } = useAppContext()
 
     function getNftImage() {
         return <Flex
@@ -206,9 +241,9 @@ const StepContent = ({
                 setSentToProtocolTx(undefined)
             }
         }
-    }, [nft, account, currentChain])
+    }, [nft, account, library])
 
-    return(
+    const mainContent = <>
         <Flex flexDirection="column" flexWrap="nowrap" mt={{base: "30px"}}>
             <Text fontSize="30px" lineHeight="38px" fontWeight="600" color="#333333">
                 { pageData.title }
@@ -375,7 +410,7 @@ const StepContent = ({
                         <Trans>Wallet{":"}</Trans>
                         {' '}
                         <Link 
-                            href={ generateAddressURL(claimantAddress, currentChain.chainId) }
+                            href={ generateAddressURL(claimantAddress, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -400,7 +435,7 @@ const StepContent = ({
                         <Trans>Original{":"}</Trans>
                         {" "}
                         { nft.originalData && <Link 
-                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, currentChain.chainId) }
+                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -417,7 +452,7 @@ const StepContent = ({
                         { pageData.claimantText }
                         {" "}
                         <Link 
-                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.chainId) : '#'} 
+                            href={claimantTx1 ? generateTxURL(claimantTx1, library.network.chainId) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -435,7 +470,7 @@ const StepContent = ({
                             { pageData.claimantText2 }
                             {" "}
                             <Link 
-                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.chainId) : '#'} 
+                                href={claimantTx2 ? generateTxURL(claimantTx2, library.network.chainId) : '#'} 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
@@ -478,7 +513,7 @@ const StepContent = ({
                         }
                         {' '}
                         <Link 
-                            href={ generateAddressURL(contractAddress || defendantAddress, currentChain.chainId) }
+                            href={ generateAddressURL(contractAddress || defendantAddress, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -506,7 +541,7 @@ const StepContent = ({
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link
-                            href={ generateTokenURL(nft.contract.address, nft.tokenId, currentChain.chainId) }
+                            href={ generateTokenURL(nft.contract.address, nft.tokenId, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -523,7 +558,7 @@ const StepContent = ({
                         { pageData.defendantText }
                         {" "}
                         <Link 
-                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.chainId) : '#'} 
+                            href={defendantTx1 ? generateTxURL(defendantTx1, library.network.chainId) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -607,7 +642,55 @@ const StepContent = ({
                 </Accordion>
             }
         </Flex>
-    )
+    </>
+
+    return (<>
+        { stepKey && <Steps
+            borderBottom="2px solid #ADADAD"
+            variant={"circles"} 
+            colorScheme="#1316DD"
+            activeStep={activeStep}
+            // onClickStep={(i) => {
+            //     setStep(i);
+            // }}
+            py="30px"
+            sx={{
+                "& .cui-steps__step-icon-container": {
+                    w: "26px",
+                    h: "26px",
+                    // bg: "#1316DD", 
+                    // {activeStep === 0}
+                },
+                ".cui-steps__step-icon-container span": {
+                    fontFamily: "Open Sans",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    lineHeight: "19px",
+                    color: "#FFF"
+                },
+                "& .cui-steps__horizontal-step": {
+                    color: "#FFF",
+                    "::after": {
+                        height: "1px",
+                        bg: "#ADADAD"
+                    }
+                },
+
+            }}
+        >
+            
+            {steps.map(({ key, description }) => (
+                <Step 
+                    key={key}
+                    label={ <KlerosCaseLabel labelKey={key} /> } 
+                    description={description}
+                >
+                    {/* {content} */}
+                </Step>
+            ))}
+        </Steps> }
+        { mainContent }
+    </>)
 }
 
-export default StepContent
+export default KlerosCaseContent

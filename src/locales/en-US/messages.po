@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-16 14:12+0700\n"
+"POT-Creation-Date: 2023-05-18 14:31+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -89,8 +89,7 @@ msgstr "Any"
 msgid "Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 msgstr "Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
 
-#: src/components/dialogs/klerosCase/KlerosCaseDialog.tsx:85
-#: src/components/dialogs/klerosCase/step/StepLabel.tsx:36
+#: src/components/dialogs/klerosCase/step/KlerosCaseLabel.tsx:36
 msgid "Apealing period"
 msgstr "Apealing period"
 
@@ -237,20 +236,20 @@ msgstr "Copied!"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:282
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:316
 msgid "Court"
 msgstr "Court"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:336
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:370
 msgid "Creator:"
 msgstr "Creator:"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:393
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:498
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:427
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:532
 msgid "DID:"
 msgstr "DID:"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:258
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:292
 msgid "Date of creation"
 msgstr "Date of creation"
 
@@ -258,8 +257,7 @@ msgstr "Date of creation"
 msgid "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 msgstr "Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise"
 
-#: src/components/dialogs/klerosCase/KlerosCaseDialog.tsx:86
-#: src/components/dialogs/klerosCase/step/StepLabel.tsx:38
+#: src/components/dialogs/klerosCase/step/KlerosCaseLabel.tsx:38
 msgid "Decision period"
 msgstr "Decision period"
 
@@ -289,11 +287,11 @@ msgid "Detailed"
 msgstr "Detailed"
 
 #: src/components/arbitrator/ArbitratorRequestList.tsx:63
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:246
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:280
 msgid "Dispute"
 msgstr "Dispute"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:221
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:255
 msgid "Dispute policy"
 msgstr "Dispute policy"
 
@@ -323,7 +321,7 @@ msgstr "English"
 msgid "Enjoy your new life in protected world!"
 msgstr "Enjoy your new life in protected world!"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:560
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:594
 msgid "Evidence"
 msgstr "Evidence"
 
@@ -334,10 +332,6 @@ msgstr "Evidence of"
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:133
 msgid "Evidence of Bona Fide transfer"
 msgstr "Evidence of Bona Fide transfer"
-
-#: src/components/dialogs/klerosCase/KlerosCaseDialog.tsx:83
-msgid "Evidence period"
-msgstr "Evidence period"
 
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:167
 #: src/components/dialogs/arbitrator/EditOperationsDialog.tsx:150
@@ -368,7 +362,7 @@ msgstr "Fee for Protection your NFT:"
 msgid "Fetching balance…"
 msgstr "Fetching balance…"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:595
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:629
 msgid "File link"
 msgstr "File link"
 
@@ -385,7 +379,7 @@ msgstr "Follow the status of the dispute through our app or on the website Klero
 msgid "Get Started"
 msgstr "Get Started"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:395
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:429
 msgid "Gitcoin passport: 70%"
 msgstr "Gitcoin passport: 70%"
 
@@ -431,7 +425,7 @@ msgstr "Incorrect address"
 msgid "It's all not protected yet"
 msgstr "It's all not protected yet"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:270
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:304
 msgid "Jurors"
 msgstr "Jurors"
 
@@ -451,7 +445,7 @@ msgstr "Kleros is an open source online dispute resolution protocol that uses bl
 msgid "Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence."
 msgstr "Law enforcement reports: If the loss of pNFT has been reported to law enforcement, any relevant reports or documentation related to the dispute may be used as evidence."
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:101
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:135
 #: src/components/nftView/nftButtons/ArbitrateOwnershipAdjustmentButton.tsx:203
 #: src/components/nftView/nftButtons/DoNotTransferOriginalNFTButton.tsx:72
 #: src/components/nftView/nftButtons/LostPNFTButton.tsx:151
@@ -472,7 +466,7 @@ msgstr "NFT image"
 msgid "Name"
 msgstr "Name"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:331
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:365
 msgid "Name:"
 msgstr "Name:"
 
@@ -488,11 +482,11 @@ msgstr "New extraData is set"
 msgid "No"
 msgstr "No"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:500
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:534
 msgid "None"
 msgstr "None"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:252
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:286
 msgid "Not yet"
 msgstr "Not yet"
 
@@ -504,7 +498,7 @@ msgstr "Notifications"
 msgid "Open Kleros Case"
 msgstr "Open Kleros Case"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:236
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:270
 msgid "Open court's page in Kleros"
 msgstr "Open court's page in Kleros"
 
@@ -540,15 +534,15 @@ msgstr "Operations removed successfully!"
 msgid "Operations updated successfully!"
 msgstr "Operations updated successfully!"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:323
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:357
 msgid "Original NFT"
 msgstr "Original NFT"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:341
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:375
 msgid "Original NFT creation date:"
 msgstr "Original NFT creation date:"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:346
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:380
 msgid "Original NFT protection date:"
 msgstr "Original NFT protection date:"
 
@@ -556,7 +550,7 @@ msgstr "Original NFT protection date:"
 msgid "Original requested"
 msgstr "Original requested"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:400
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:434
 msgid "Original:"
 msgstr "Original:"
 
@@ -801,7 +795,7 @@ msgstr "Sending to an incorrect address"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:476
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:510
 msgid "Smart contract:"
 msgstr "Smart contract:"
 
@@ -813,7 +807,7 @@ msgstr "Smart contract:"
 msgid "Some error occured"
 msgstr "Some error occured"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:569
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:603
 msgid "Sort by:  date"
 msgstr "Sort by:  date"
 
@@ -823,7 +817,7 @@ msgstr "Sort by:  date"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:585
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:619
 msgid "Submitted by the 0x12...3456"
 msgstr "Submitted by the 0x12...3456"
 
@@ -852,15 +846,15 @@ msgstr "Supported operations:"
 msgid "Terms of service"
 msgstr "Terms of service"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:456
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:490
 msgid "The Defendant"
 msgstr "The Defendant"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:321
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:355
 msgid "The Subject of the Dispute:"
 msgstr "The Subject of the Dispute:"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:357
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:391
 msgid "The claimant"
 msgstr "The claimant"
 
@@ -939,7 +933,7 @@ msgstr "The pNFT will be burned and the original NFT will be sent to you"
 msgid "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT (by opening the dispute)"
 msgstr "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT (by opening the dispute)"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:547
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:581
 msgid "This is how he described the situation:"
 msgstr "This is how he described the situation:"
 
@@ -1036,8 +1030,7 @@ msgstr "User"
 msgid "View on Etherscan"
 msgstr "View on Etherscan"
 
-#: src/components/dialogs/klerosCase/KlerosCaseDialog.tsx:84
-#: src/components/dialogs/klerosCase/step/StepLabel.tsx:34
+#: src/components/dialogs/klerosCase/step/KlerosCaseLabel.tsx:34
 msgid "Voting period"
 msgstr "Voting period"
 
@@ -1062,8 +1055,8 @@ msgstr "Wait for transaction to confirm..."
 msgid "Wait for transaction to confirm…"
 msgstr "Wait for transaction to confirm…"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:375
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:477
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:409
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:511
 msgid "Wallet:"
 msgstr "Wallet:"
 
@@ -1092,7 +1085,7 @@ msgstr "We've worked very hard to prepare a strong dispute with compelling evide
 msgid "Whitepaper"
 msgstr "Whitepaper"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:303
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:337
 msgid "Winner:"
 msgstr "Winner:"
 
@@ -1222,7 +1215,7 @@ msgstr "has transferred the original NFT to you"
 msgid "is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT."
 msgstr "is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT."
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:506
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:540
 msgid "pNFT:"
 msgstr "pNFT:"
 
@@ -1239,10 +1232,10 @@ msgstr "your asset may have been stolen!"
 msgid "{buttonTitle}"
 msgstr "{buttonTitle}"
 
-#: src/components/dialogs/klerosCase/step/StepLabel.tsx:32
+#: src/components/dialogs/klerosCase/step/KlerosCaseLabel.tsx:32
 msgid "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
 msgstr "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
 
-#: src/components/dialogs/klerosCase/step/StepContent.tsx:326
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:360
 msgid "Сollection:"
 msgstr "Сollection:"

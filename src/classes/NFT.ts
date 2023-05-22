@@ -279,8 +279,8 @@ export default class NFT implements NFTInterface {
         }
 
         this.loadedContract = (this.tokenType === NftTokenType.ERC721) ?
-            new Contract(this.contract.address, ERC721ABI, context.library?.getSigner()) :
-            new Contract(this.contract.address, ERC1155ABI, context.library?.getSigner())
+            new Contract(this.contract.address, ERC721ABI, context.active ? context.library.getSigner() : context.library) :
+            new Contract(this.contract.address, ERC1155ABI, context.active ? context.library.getSigner() : context.library)
     }
   
 }
