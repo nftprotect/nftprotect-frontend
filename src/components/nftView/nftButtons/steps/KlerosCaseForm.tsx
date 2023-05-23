@@ -61,7 +61,10 @@ const KlerosCaseForm = ({
             fileURI: evidenceUpload?.getRelativeIPFSUrl(),
             ...data
         }
-        outerOnSubmit && outerOnSubmit(evidence)
+        outerOnSubmit && outerOnSubmit({
+            data: evidence,
+            upload: evidenceUpload
+        })
     }
 
     // Textarea input validation
@@ -115,7 +118,7 @@ const KlerosCaseForm = ({
                                             type='text' 
                                             {...field} 
                                             placeholder={t`Describe the situation in details…`}
-                                            variant='primary' resize="vertical" 
+                                            variant='primary' resize="vertical"
                                         />
                                         <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                                     </FormControl>
@@ -142,7 +145,6 @@ const KlerosCaseForm = ({
                             { children }
                             
                             <Box w="100%">
-                                { evidenceUpload && evidenceUpload.fileName }
                                 <IPFSFileUpload returnUploadedFiles={ setEvidenceUpload }/>
                             </Box>
                             
