@@ -12,8 +12,7 @@ import {
     Link,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
-import SecureNFTButton from './nftButtons/SecureNFTButton';
-import UnSecureNFTButton from './nftButtons/UnSecureNFTButton';
+import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
 import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
 import TransferOriginalNFTButton from './nftButtons/TransferOriginalNFTButton';
 import LostPNFTButton from './nftButtons/LostPNFTButton';
@@ -23,7 +22,6 @@ import { useNotificationContext } from '../../context/NotificationContextProvide
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
-import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog'
 import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { createDisputeLink } from '../../utils/kleros';
@@ -128,13 +126,16 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                 // Original NFT and pNFT are both belong to user
                 buttons = 
                     <Box mb={[2]}>
-                        <UnSecureNFTButton 
-                            nft={ nft } 
-                            nftReFetch={ nftReFetch }
-                            setRefreshPaused = { setRefreshPaused }
-                            tokenContract={ nft.loadedContract }
+                        <Button
                             variant={"dark-outline"}
-                        />
+                            onClick={ () => {
+                                const dialog = getDialog('UnProtectNftDialog')
+                                dialog.setNft(nft)
+                                dialog.onOpen()
+                            } }
+                        >
+                            <Trans>Restore original</Trans>
+                        </Button>
                     </Box>
             } else if (!nft.isOnAnotherAddress() && !nft.isOriginalOwnedByAccount()) {
                 // This pNFT belongs to user but original is not
@@ -284,12 +285,16 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
         buttons = (
             <>
             <Box mb={[2]}>
-                <SecureNFTButton 
-                    nft={ nft } 
-                    nftReFetch={ nftReFetch }
-                    setRefreshPaused={ setRefreshPaused }
+                <Button
                     variant={"primary-solid"}
-                />
+                    onClick={ () => {
+                        const dialog = getDialog('ProtectNftDialog')
+                        dialog.setNft(nft)
+                        dialog.onOpen()
+                    } }
+                >
+                    <Trans>Protect NFT</Trans>
+                </Button>
             </Box>
             {
                 (process.env.NODE_ENV !== 'production') && <Box mb={[2]}>
