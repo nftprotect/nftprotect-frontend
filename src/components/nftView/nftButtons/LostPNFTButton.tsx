@@ -48,6 +48,7 @@ import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import KlerosCaseForm from './steps/KlerosCaseForm';
+import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from './steps/KlerosEvidencesForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
@@ -67,17 +68,22 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     const { ipfs } = useIPFSContext()
     const didDialogDisclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { getDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
+    //* Stores evidence initial data and result json */
     const [ evidenceData, setEvidenceData ] = useState<any>()
+    //* Stores evidence files uploaded by user */
+    const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
+    //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
-    const { getDialog } = useCallableDialogContext()
     const DISPUTE_PRICE = '0.03'
 
     enum StepMapping {
         start,
         lostReason,
         evidenceFillForm,
+        evidenceDescribeFiles,
         evidenceReview,
         payArbitrationFee,
         confirmTransaction,
@@ -168,38 +174,16 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         copyTextToClipboard(nft.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
-    const klerosFormSubmit = (data: any) => {
+    const klerosFormSubmit = ({data, upload}: {data: EvidenceData, upload: IPFSUpload}) => {
         setEvidenceData(data)
-        const evidenceJSON = {
-            evidenceSide: 0,
-            name: t`Evidence of` + ` ${klerosCaseFormTitle}`,
-            ...data
-        }
-        uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
-            console.log('EVIDENCE', evidenceJSON, result)
-            setEvidence(result)
-            setNextStep(StepMapping.evidenceReview)
-        })
+        setEvidenceFiles(upload)
+        setNextStep(StepMapping.evidenceDescribeFiles)
     }
 
-    const uploadEvidence = async (evidence: any) => {
-        const fileName = 'evidence.json'
-        if (ipfs) {
-            const result = await ipfs.add(
-                {
-                    path: fileName,
-                    content: JSON.stringify(evidence)
-                }, 
-                {wrapWithDirectory: true}
-            )
-            return new IPFSUpload({
-                uploadResult: result,
-                fileName: fileName,
-                wrappedWithDirectory: true
-            })
-        } else {
-            throw Error('IPFS client not configured!')
-        }
+    const klerosEvidenceFormSubmit = ({data, upload}: {data: EvidenceJson, upload: IPFSUpload}) => {
+        setEvidenceData(data)
+        setEvidence(upload)
+        setNextStep(StepMapping.evidenceReview)
     }
 
     const openDispute = () => {
@@ -530,8 +514,24 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                     </Flex>
                             </KlerosCaseForm>
                         </SwitchableOutside>
-                        
-                        {/* Step 4. evidenceReview */}
+
+                        {/* Step 4. evidenceDescribeFiles */}
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            {evidenceFiles && <KlerosEvidencesForm
+                                goBack={() => setNextStep(StepMapping.evidenceFillForm)}
+                                onSubmit={ klerosEvidenceFormSubmit }
+                                title={ klerosCaseFormTitle }
+                                ipfsUpload={ evidenceFiles }
+                                evidenceData={{
+                                    name: `Evidence of ${klerosCaseFormTitle}`,
+                                    description: evidenceData.description,
+                                    evidenceSide: 0,
+                                    protocolAddress: (lostReason === 'protocol breach') && evidenceData.protocolAddress
+                                }}
+                            />}
+                        </SwitchableOutside>
+
+                        {/* Step 5. evidenceReview */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
@@ -585,7 +585,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                             </Card>
                         </SwitchableOutside>
 
-                        {/* Step 5. payArbitrationFee */}
+                        {/* Step 6. payArbitrationFee */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <Flex flexDirection="column" alignItems="center">
@@ -623,7 +623,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                             </Card>
                         </SwitchableOutside>
 
-                        {/* Step 6. confirmTransaction */}
+                        {/* Step 7. confirmTransaction */}
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>

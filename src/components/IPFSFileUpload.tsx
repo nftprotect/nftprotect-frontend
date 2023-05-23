@@ -4,39 +4,62 @@ import { FileUploader } from "react-drag-drop-files";
 import {
     Box,
     Flex,
+    Spinner
 } from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
 import IPFSUpload from '../classes/IPFSUpload';
+import all from 'it-all'
 
 interface UploaderInitialData {
-    returnLoadedFile?: Function,
-    returnUploadedFile?: Function
+    multiple?: boolean,
+    returnLoadedFiles?: Function,
+    returnUploadedFiles?: Function
 }
 
-export const IPFSFileUpload = ({ returnLoadedFile, returnUploadedFile }:UploaderInitialData) => {
+export const IPFSFileUpload = ({
+    multiple = true,
+    returnLoadedFiles, 
+    returnUploadedFiles 
+} : UploaderInitialData ) => {
     const { ipfs } = useIPFSContext()
-    const [loadedFile, setLoadedFile] = useState<any>()
-    const [uploadedFile, setUploadedFile] = useState<IPFSUpload>()
-    const [loading, setLoading] = useState(false)
-    const [uploaded, setUploaded] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [loadedFiles, setLoadedFiles] = useState<File|FileList>()
+    const [uploadedFiles, setUploadedFiles] = useState<IPFSUpload>()
     const fileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF"];
 
-    const uploadFile = async (file: any) => {
-        if (!file) {
+    const uploadFile = async (files: File|FileList) => {
+        if (!files) {
             console.error('No file attached')
             return
         }
 
         if (ipfs) {
-            const result = await ipfs.add({
-                path: file.name,
-                content: file
-            }, {wrapWithDirectory: true})
-
-            return {
-                fileName: file.name,
-                wrappedWithDirectory: true,
-                uploadResult: result
+            if (multiple) {
+                files = files as FileList
+                const result = await all( ipfs.addAll(
+                    Array.from(files).map((file: File) => {
+                        return {
+                            path: file.name,
+                            content: file
+                        }
+                    }
+                ), { wrapWithDirectory: true }))
+                return {
+                    fileNames: Array.from(files).map(file => file.name),
+                    wrappedWithDirectory: true,
+                    uploadResult: result
+                }
+            } else {
+                const file = files as File
+                const result = await ipfs.add({
+                    path: file.name,
+                    content: file
+                }, { wrapWithDirectory: true })
+                return {
+                    fileName: file.name,
+                    wrappedWithDirectory: true,
+                    uploadResult: result
+                }
             }
         } else {
             throw Error('IPFS client not configured!')
@@ -44,32 +67,44 @@ export const IPFSFileUpload = ({ returnLoadedFile, returnUploadedFile }:Uploader
     }
 
     const returnFileUrl = async () => {
-        setLoading(true)
-        const result = await uploadFile(loadedFile)
-        if (result) {
-            const ipfsUpload = new IPFSUpload(result)
-            setUploadedFile(ipfsUpload)
-            setLoading(false)
-            setUploaded(true)
-            // return upload data
-            returnUploadedFile && returnUploadedFile(ipfsUpload)
+        if (loadedFiles) {
+            setLoading(true)
+            const result = await uploadFile(loadedFiles)
+            if (result) {
+                const ipfsUpload = new IPFSUpload(result)
+                setUploadedFiles(ipfsUpload)
+                setLoading(false)
+                // return upload data
+                returnUploadedFiles && returnUploadedFiles(ipfsUpload)
+            }
         }
     }
 
     useEffect(() => {
         // return file object loaded to uploader
-        returnLoadedFile && returnLoadedFile(loadedFile)
+        returnLoadedFiles && returnLoadedFiles(loadedFiles)
         // and start uploading
         returnFileUrl()
-    }, [loadedFile])
+    }, [loadedFiles])
 
-    return <FileUploader 
-                handleChange={setLoadedFile} 
+    return <>
+            <FileUploader 
+                handleChange={(data: File|FileList) => {
+                    setLoadedFiles(data)
+                }}
                 name="file"
                 types={fileTypes}
+                multiple={multiple}
+                fileOrFiles={null}
             >
                 <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer">
-                        <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />
-                    </Flex>
+                    { loading && <Spinner variant="primary" speed='0.65s' my={{base: "10px"}} w="1.5em" h="1.5em" /> }
+                    { !loading && <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />}
+                    
+                </Flex>
+                { uploadedFiles && uploadedFiles.listFileNames().map((item) => {
+                    return <p key={item}>{ item }</p>
+                }) }
             </FileUploader>
+        </>
 }

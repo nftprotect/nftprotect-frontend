@@ -318,7 +318,7 @@ const AddOperationsDialog = ({
 
                                                 <Box w="100%">
                                                     { evidenceUpload && evidenceUpload.fileName }
-                                                    <IPFSFileUpload returnUploadedFile={ setEvidenceUpload }/>
+                                                    <IPFSFileUpload returnUploadedFiles={ setEvidenceUpload }/>
                                                 </Box>
 
                                                 <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>

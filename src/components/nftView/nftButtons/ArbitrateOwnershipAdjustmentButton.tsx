@@ -33,8 +33,9 @@ import { CopyIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
-import { generateArbitratorExtraData, KlerosCourts } from '../../../utils/kleros';
+import { KlerosCourts } from '../../../utils/kleros';
 import KlerosCaseForm from './steps/KlerosCaseForm';
+import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from './steps/KlerosEvidencesForm';
 import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther, formatEther } from '@ethersproject/units';
@@ -59,8 +60,12 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const { ipfs } = useIPFSContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const [ evidence, setEvidence ] = useState<IPFSUpload>()
+    //* Stores evidence initial data and result json */
     const [ evidenceData, setEvidenceData ] = useState<any>()
+    //* Stores evidence files uploaded by user */
+    const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
+    //* Stores evidenceJson file*/
+    const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const [url, setUrl] = useState<string>()
     const { getDialog } = useCallableDialogContext()
     const subcourtID = KlerosCourts.General
@@ -74,6 +79,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     enum StepMapping {
         start,
         klerosForm,
+        evidenceDescribeFiles,
         evidenceReview,
         payArbitrationFee,
         confirmTransaction,
@@ -126,38 +132,16 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
         setRefreshPaused(true)
     }
 
-    const klerosFormSubmit = (data: any) => {
+    const klerosFormSubmit = ({data, upload}: {data: EvidenceData, upload: IPFSUpload}) => {
         setEvidenceData(data)
-        const evidenceJSON = {
-            evidenceSide: 0,
-            name: t`Evidence of Bona Fide transfer`,
-            ...data
-        }
-        uploadEvidence(evidenceJSON).then((result:IPFSUpload) => {
-            console.log('EVIDENCE', evidenceJSON, result)
-            setEvidence(result)
-            setNextStep(StepMapping.evidenceReview)
-        })
+        setEvidenceFiles(upload)
+        setNextStep(StepMapping.evidenceDescribeFiles)
     }
 
-    const uploadEvidence = async (evidence: any) => {
-        const fileName = 'evidence.json'
-        if (ipfs) {
-            const result = await ipfs.add(
-                {
-                    path: fileName,
-                    content: JSON.stringify(evidence)
-                }, 
-                {wrapWithDirectory: true}
-            )
-            return new IPFSUpload({
-                uploadResult: result,
-                fileName: fileName,
-                wrappedWithDirectory: true
-            })
-        } else {
-            throw Error('IPFS client not configured!')
-        }
+    const klerosEvidenceFormSubmit = ({data, upload}: {data: EvidenceJson, upload: IPFSUpload}) => {
+        setEvidenceData(data)
+        setEvidence(upload)
+        setNextStep(StepMapping.evidenceReview)
     }
 
     const openDispute = () => {
@@ -371,6 +355,20 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                     </Text>
                                 </Flex>
                             </KlerosCaseForm>
+                        </SwitchableOutside>
+
+                        <SwitchableOutside nextStepNumber={nextStep}>
+                            {evidenceFiles && <KlerosEvidencesForm
+                                goBack={() => setNextStep(StepMapping.klerosForm)}
+                                onSubmit={ klerosEvidenceFormSubmit }
+                                title={t`Bona fide transfer`}
+                                ipfsUpload={ evidenceFiles }
+                                evidenceData={{
+                                    name: `Evidence of Bona fide transfer`,
+                                    description: evidenceData.description,
+                                    evidenceSide: 0,
+                                }}
+                            />}
                         </SwitchableOutside>
 
                         {/* evidenceReview */}
