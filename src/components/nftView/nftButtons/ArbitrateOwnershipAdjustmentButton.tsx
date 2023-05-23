@@ -40,8 +40,6 @@ import { useIPFSContext } from '../../../context/IPFSContextProvider';
 import { t } from '@lingui/macro';
 import { parseEther, formatEther } from '@ethersproject/units';
 import NFT from '../../../classes/NFT';
-import SecureNFTButton from './SecureNFTButton';
-import { Contract } from "@ethersproject/contracts";
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
@@ -317,12 +315,16 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
 
                                         {/* NFT owner accepted transfer */}
                                         { pendingRequest?.status == RequestStatus.Accepted &&
-                                            <SecureNFTButton 
-                                                nft={nft} 
-                                                nftReFetch={nftReFetch}
-                                                setRefreshPaused={setRefreshPaused}
+                                            <Button
                                                 variant={"dark-outline"}
-                                            />
+                                                onClick={ () => {
+                                                    const dialog = getDialog('ProtectNftDialog')
+                                                    dialog.setNft(nft)
+                                                    dialog.onOpen()
+                                                } }
+                                            >
+                                                <Trans>Protect NFT</Trans>
+                                            </Button>
                                         }
                                     </Box>
                                     <Box w={{base: "60%", sm: "50%"}}>

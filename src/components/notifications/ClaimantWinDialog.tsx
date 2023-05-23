@@ -21,7 +21,6 @@ import {
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import SecureNFTButton from '../nftView/nftButtons/SecureNFTButton'
 
 interface DialogInitialData {
     nft: NFT,
@@ -113,9 +112,14 @@ const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: 
                         <CardFooter flexDirection="column" alignItems="center">
                             <Box w={{base: "60%", sm: "40%"}} mb={{base: "20px"}}>
                                 <Button
-                                    onClick={ () => { getDialog('SecureNFTButton').onOpen() }}
-                                    variant="dark-outline"
-                                ><Trans>Protect NFT</Trans>
+                                    variant={"dark-outline"}
+                                    onClick={ () => {
+                                        const dialog = getDialog('ProtectNftDialog')
+                                        dialog.setNft(nft)
+                                        dialog.onOpen()
+                                    } }
+                                >
+                                    <Trans>Protect NFT</Trans>
                                 </Button>
                             </Box>
                         </CardFooter>
@@ -123,13 +127,6 @@ const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: 
                 </ModalBody>
             </ModalContent>
         </Modal>
-        { /* Dialogs used on this page */ }
-        { <SecureNFTButton
-            nft={ nft } 
-            nftReFetch={ nftReFetch }
-            setRefreshPaused={ setRefreshPaused }
-            variant={"primary-solid"}
-        /> }
     </>)
 }
 

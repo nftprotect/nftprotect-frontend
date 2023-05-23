@@ -1,7 +1,7 @@
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
-import { useState } from 'react';
+import DidRequiredDialog from '../DidRequiredDialog';
+import { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -31,12 +31,10 @@ import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    variant: any
 }
 
 enum NFTPTokenStandard
@@ -46,11 +44,14 @@ enum NFTPTokenStandard
     ERC20
 }
 
-const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonInitialData) => {
+const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
+    const [ nft, setNft ] = useState<NFT>()
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
+    const { setDialog } = useCallableDialogContext()
     const didDialogDisclosure = useDisclosure()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     enum StepMapping {
@@ -112,7 +113,6 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
             didDialogDisclosure.onOpen();
             return
         }
-        setRefreshPaused(true)
         setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
@@ -165,16 +165,10 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
             })
     }
 
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start)
-        onOpen()
-        setRefreshPaused(true)
-    }
-
     const startButtonOnClick = () => {
-        const tokenContract = nft.loadedContract
         try {
-            if (nft.tokenType === NftTokenType.ERC721) {
+            if (nft?.tokenType === NftTokenType.ERC721) {
+                const tokenContract = nft.loadedContract
                 secureNFT(
                     tokenContract,
                     () => tokenContract.getApproved(nft.tokenId),
@@ -182,7 +176,8 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
                     () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, 0, referrerAddress, {value: fee})
                 )
-            } else if (nft.tokenType === NftTokenType.ERC1155) {
+            } else if (nft?.tokenType === NftTokenType.ERC1155) {
+                const tokenContract = nft.loadedContract
                 secureNFT(
                     tokenContract,
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
@@ -191,7 +186,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
                     () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
                 )
             } else {
-                console.log(`Unknown NFT contract type: ${nft.tokenType}`)
+                console.log(`Unknown NFT contract type: ${nft?.tokenType}`)
             }
         } catch (err: any) {
             handleUnknownError(err)
@@ -199,7 +194,7 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
     }
 
     function getNftImage() {
-        return <Flex
+        return nft && <Flex
             borderRadius={{base: "16px"}}
             filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
             overflow="hidden"
@@ -216,14 +211,15 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
         </Flex>
     }
 
-    return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={variant}
-        >
-           <Trans>Protect NFT</Trans>
-        </Button>
+    useEffect(() => {
+        setDialog('ProtectNftDialog', {...disclosure, setNft})
+    }, [])
 
+    useEffect(() => {
+        isOpen && setNextStep(StepMapping.start)
+    }, [isOpen])
+
+    return (<>
         {/* <DidRequiredDialog disclosure={didDialogDisclosure}/> */}
         <Modal
             variant="stepModal"
@@ -232,7 +228,6 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -493,4 +488,4 @@ const SecureNFTButton = ({nft, nftReFetch, setRefreshPaused, variant}: ButtonIni
     </>)
 }
 
-export default SecureNFTButton
+export default ProtectNftDialog

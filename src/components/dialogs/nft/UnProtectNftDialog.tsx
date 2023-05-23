@@ -1,6 +1,6 @@
 import { dialogsTimeout } from '../../../utils/config';
 import { Contract } from "@ethersproject/contracts";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -22,28 +22,29 @@ import {
 } from '@chakra-ui/react';
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
-import SecureNFTButton from './SecureNFTButton';
+import ProtectNftDialog from './ProtectNftDialog';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import { defaultArbitrator } from '../../../utils/config';
 import { t } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract,
-    variant: any
 }
 
-const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, variant}: ButtonInitialData) => {
+const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
+    const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract, account } = useAppContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const name = nft.title
+    const { getDialog, setDialog } = useCallableDialogContext()
+
+    const name = nft?.title
 
     enum StepMapping {
         start,
@@ -91,30 +92,26 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
     }
 
     const startButtonOnClick = () => {
-        try {
-            setNextStep(StepMapping.confirmTransaction);
-            onOpen()
-            nftProtectContract.burn(nft.tokenId, account, defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
-                .then( finalTransactionSent(tokenContract) )
-                .catch(
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    })
-                )
-        } catch (err: any) {
-            handleUnknownError(err)
+        if (nft) {
+            try {
+                setNextStep(StepMapping.confirmTransaction);
+                onOpen()
+                nftProtectContract.burn(nft.tokenId, account, defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
+                    .then( finalTransactionSent(nftProtectContract) )
+                    .catch(
+                        handleContractError({
+                            'ACTION_REJECTED': handleRejected,
+                            default: handleUnknownError
+                        })
+                    )
+            } catch (err: any) {
+                handleUnknownError(err)
+            }
         }
     }
 
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start)
-        onOpen()
-        setRefreshPaused(true)
-    }
-
     function getNftImage() {
-        return <Flex
+        return nft && <Flex
             borderRadius={{base: "16px"}}
             filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
             overflow="hidden"
@@ -131,10 +128,15 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
         </Flex>
     }
 
+    useEffect(() => {
+        setDialog('UnProtectNftDialog', {...disclosure, setNft})
+    }, [])
+
+    useEffect(() => {
+        isOpen && setNextStep(StepMapping.start)
+    }, [isOpen])
+
     return (<>
-        <Button onClick={ mainButtonOnClick } variant={variant} w="100%">
-            <Trans>Restore original</Trans>
-        </Button>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -142,7 +144,6 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -251,12 +252,16 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
                                 </CardBody>
                                 <CardFooter>
                                     <Box w={{base: "60%"}}>
-                                        <SecureNFTButton 
-                                            nft={nft} 
-                                            nftReFetch={nftReFetch}
-                                            setRefreshPaused={setRefreshPaused}
+                                        <Button
                                             variant={"dark-outline"}
-                                        />
+                                            onClick={ () => {
+                                                const dialog = getDialog('ProtectNftDialog')
+                                                dialog.setNft(nft)
+                                                dialog.onOpen()
+                                            } }
+                                        >
+                                            <Trans>Protect NFT</Trans>
+                                        </Button>
                                     </Box>
                                 </CardFooter>
                             </Card>
@@ -322,4 +327,4 @@ const UnSecureNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, va
     </>)
 }
 
-export default UnSecureNFTButton
+export default UnProtectNftDialog

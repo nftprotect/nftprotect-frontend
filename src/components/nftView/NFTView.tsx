@@ -22,6 +22,8 @@ import { useAlchemy } from '../../hooks/useAlchemy';
 import { Nft as NFTInterface, NftFilters } from 'alchemy-sdk';
 import NFT from '../../classes/NFT';
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
+import ProtectNftDialog from '../dialogs/nft/ProtectNftDialog';
+import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
 
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
@@ -300,7 +302,10 @@ const NFTView = () => {
                     </AccordionItem>
                 }
             </Accordion>
+            {/** Dialogs registration following */}
             <KlerosCaseDialog/>
+            <ProtectNftDialog nftReFetch={ reFetch } />
+            <UnProtectNftDialog nftReFetch={ reFetch } />
         </>
 )}
 
