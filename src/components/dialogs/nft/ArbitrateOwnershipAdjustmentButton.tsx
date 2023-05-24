@@ -41,6 +41,7 @@ import { parseEther, formatEther } from '@ethersproject/units';
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -159,24 +160,6 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
         copyTextToClipboard(nft?.originalData?.ownerAddress || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
     }
 
-    function getNftImage() {
-        return nft && <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     // Check request timeout on every block
     useEffect(() => {
         if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
@@ -275,7 +258,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         </Text>
                                     }
 
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
                                     {/* NFT owner rejected transfer */}
                                     { nft?.pendingRequest?.status == RequestStatus.Rejected &&
                                         <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">

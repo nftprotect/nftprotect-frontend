@@ -22,14 +22,13 @@ import {
 } from '@chakra-ui/react';
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
-import ProtectNftDialog from './ProtectNftDialog';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import { defaultArbitrator } from '../../../utils/config';
-import { t } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -110,24 +109,6 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
-    function getNftImage() {
-        return nft && <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     useEffect(() => {
         setDialog('UnProtectNftDialog', {...disclosure, setNft})
     }, [])
@@ -158,7 +139,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                         <Trans>The pNFT will be burned and the original NFT will be sent to you</Trans>
                                     </Text>

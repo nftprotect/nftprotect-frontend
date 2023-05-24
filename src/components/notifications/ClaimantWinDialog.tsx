@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
     chakra,
     Box,
@@ -17,45 +17,20 @@ import {
     CardFooter,
     useDisclosure
 } from '@chakra-ui/react'
-
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import NFTImage from "../nftView/NFTImage";
 
-interface DialogInitialData {
-    nft: NFT,
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-    nftReFetch: Function, // function to update nft list
-}
+const ClaimantWinDialog = () => {
 
-const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: DialogInitialData) => {
-
+    const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog, getDialog } = useCallableDialogContext()
-    // const { getDialog } = useCallableDialogContext()
-
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
 
     useEffect(() => {
-        setDialog('ClaimantWinDialog', disclosure)
+        setDialog('ClaimantWinDialog', {...disclosure, setNft})
     }, [])
 
     return (<>
@@ -65,7 +40,6 @@ const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: 
             isOpen={disclosure.isOpen}
             onClose={() => {
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -95,7 +69,7 @@ const ClaimantWinDialog = ({nft, setRefreshPaused, nftReFetch, originalOwner }: 
                         </CardHeader>
                         <CardBody>
 
-                            { getNftImage() }
+                            { nft && <NFTImage nft={nft} /> }
 
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                 <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "10px"}}>

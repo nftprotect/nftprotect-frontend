@@ -36,12 +36,11 @@ import { CopyIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
-import { t } from '@lingui/macro';
-import CancelledStepContent from '../../steps/CancelledStepContent'
 import ErrorStepContent from '../../steps/ErrorStepContent'
 import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -122,24 +121,6 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
-    function getNftImage() {
-        return nft && <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     useEffect(() => {
         setDialog('RequestOriginalNftDialog', {...disclosure, setNft})
     }, [])
@@ -194,7 +175,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         </span>
                                     </Text>
 
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
 
                                 </CardBody>
 

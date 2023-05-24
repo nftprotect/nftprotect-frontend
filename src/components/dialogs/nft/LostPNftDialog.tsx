@@ -46,6 +46,7 @@ import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
 import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -123,24 +124,6 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 }
             })
         }
-    }
-
-    function getNftImage() {
-        return nft && <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
     }
 
     const handleLostReasonSelection = (event: any) => {
@@ -261,7 +244,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 <CardBody>
 
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
 
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                         {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
@@ -324,7 +307,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 
                                 <CardBody mb={{base: "20px"}}>
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
 
                                     <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                         <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>

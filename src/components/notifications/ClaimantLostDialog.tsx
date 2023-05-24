@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
     chakra,
     Box,
@@ -24,59 +24,35 @@ import {
 } from '@chakra-ui/react'
 
 import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
-import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
-import { Trans, t } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import NFTImage from "../nftView/NFTImage";
 
-interface ButtonInitialData {
-    nft: NFT,
-    nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-}
+const ClaimantLostDialog = () => {
 
-const ClaimantLostDialog = ({nft, nftReFetch, setRefreshPaused, originalOwner }: ButtonInitialData) => {
-
+    const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
+    const originalOwner = nft?.originalData?.ownerAddress
 
     const copyOriginalOwnerToClipboard = () => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     useEffect(() => {
-        setDialog('ClaimantLostDialog', disclosure)
+        setDialog('ClaimantLostDialog', {...disclosure, setNft})
     }, [])
 
     return (<>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
-            isOpen={disclosure.isOpen}
+            isOpen={isOpen}
             onClose={() => {
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -106,7 +82,7 @@ const ClaimantLostDialog = ({nft, nftReFetch, setRefreshPaused, originalOwner }:
                         </CardHeader>
 
                         <CardBody>
-                            { getNftImage() }
+                            { nft && <NFTImage nft={nft} /> }
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                 <Popover placement='top'>
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
@@ -126,7 +102,7 @@ const ClaimantLostDialog = ({nft, nftReFetch, setRefreshPaused, originalOwner }:
                                         
                                         {/* TODO add condition original NFT owner win */}
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { " " + formatAddress(originalOwner, 4) + " " }
+                                            { originalOwner && (" " + formatAddress(originalOwner, 4) + " ") }
                                         </chakra.span>
                                         <Trans>is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
                                     </Text>
