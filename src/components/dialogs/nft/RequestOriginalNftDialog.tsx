@@ -1,6 +1,6 @@
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -37,25 +37,25 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
 import { t } from '@lingui/macro';
-import CancelledStepContent from './steps/CancelledStepContent'
-import ErrorStepContent from './steps/ErrorStepContent'
-import TimeoutStepContent from './steps/TimeoutStepContent'
+import CancelledStepContent from '../../steps/CancelledStepContent'
+import ErrorStepContent from '../../steps/ErrorStepContent'
+import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    tokenContract: Contract,
-    originalOwner: string, // Owner address of original NFT
-    variant: any // Button apearance variant from theme
 }
 
-const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContract, originalOwner, variant}: ButtonInitialData) => {
+const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
-    const { nftProtectContract, account } = useAppContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [ nft, setNft ] = useState<NFT>()
+    const { account, nftProtectContract, referrerAddress } = useAppContext()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const originalOwner = nft?.originalData?.ownerAddress
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -103,16 +103,10 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
         }
     }
 
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start);
-        onOpen()
-        setRefreshPaused(true)
-    }
-
     const startButtonOnClick = () => {
         try {
-            nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
-                .then( finalTransactionSent(tokenContract) )
+            nft && nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
+                .then( finalTransactionSent(nftProtectContract) )
                 .catch( 
                     handleContractError({
                         'ACTION_REJECTED': handleRejected,
@@ -129,7 +123,7 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
     }
 
     function getNftImage() {
-        return <Flex
+        return nft && <Flex
             borderRadius={{base: "16px"}}
             filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
             overflow="hidden"
@@ -146,13 +140,11 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
         </Flex>
     }
 
+    useEffect(() => {
+        setDialog('RequestOriginalNftDialog', {...disclosure, setNft})
+    }, [])
+
     return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={variant}
-        >
-            <Trans>Request original</Trans>
-        </Button>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -160,7 +152,6 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -199,7 +190,7 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
                                             </Popover>
                                         
                                         <span id='originalOwnerAddressHolder'>
-                                            { formatAddress(originalOwner, 4) }
+                                            { originalOwner && formatAddress(originalOwner, 4) }
                                         </span>
                                     </Text>
 
@@ -347,4 +338,4 @@ const RequestOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, tokenContr
     </>)
 }
 
-export default RequestOriginalNFTButton
+export default RequestOriginalNftDialog

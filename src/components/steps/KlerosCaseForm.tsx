@@ -31,9 +31,9 @@ import {
 import { Form, Field, Formik } from 'formik';
 import { Info } from '@web3uikit/icons';
 import { Trans, t } from '@lingui/macro';
-import { IPFSFileUpload } from '../../../IPFSFileUpload';
-import { generateMetaEvidence, KlerosCourts } from '../../../../utils/kleros';
-import IPFSUpload from '../../../../classes/IPFSUpload';
+import { IPFSFileUpload } from '../IPFSFileUpload';
+import { generateMetaEvidence, KlerosCourts } from '../../utils/kleros';
+import IPFSUpload from '../../classes/IPFSUpload';
 
 interface FormInitialData {
     onSubmit?: Function | undefined,

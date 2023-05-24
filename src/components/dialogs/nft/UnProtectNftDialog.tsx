@@ -132,10 +132,6 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         setDialog('UnProtectNftDialog', {...disclosure, setNft})
     }, [])
 
-    useEffect(() => {
-        isOpen && setNextStep(StepMapping.start)
-    }, [isOpen])
-
     return (<>
         <Modal
             variant="stepModal"

@@ -1,7 +1,5 @@
 import { defaultArbitrator, dialogsTimeout } from '../../../utils/config'
-import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../../dialogs/DidRequiredDialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     chakra,
     Button,
@@ -40,35 +38,26 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { Info } from '@web3uikit/icons'
 import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import { IPFSFileUpload } from '../../IPFSFileUpload';
-import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
-import KlerosCaseForm from './steps/KlerosCaseForm';
-import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from './steps/KlerosEvidencesForm';
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import KlerosCaseForm from '../../steps/KlerosCaseForm';
+import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
 import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-    variant: any,
-    buttonTitle: string,
 }
 
-const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, buttonTitle}: ButtonInitialData) => {
+const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
+    const [ nft, setNft ] = useState<NFT>()
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { ipfs } = useIPFSContext()
-    const didDialogDisclosure = useDisclosure()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const { getDialog } = useCallableDialogContext()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
     //* Stores evidence initial data and result json */
@@ -123,7 +112,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
             setNextStep(StepMapping.waitForTransactionConfirmation);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    nft.loadPendingRequest()
+                    nft && nft.loadPendingRequest()
                     // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
@@ -136,14 +125,8 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
         }
     }
 
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start)
-        onOpen()
-        setRefreshPaused(true)
-    }
-
     function getNftImage() {
-        return <Flex
+        return nft && <Flex
             borderRadius={{base: "16px"}}
             filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
             overflow="hidden"
@@ -171,7 +154,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     }
 
     const copyNftOwnerToClipboard = () => {
-        copyTextToClipboard(nft.ownerAddress || '', '#pNftOwnerAddressHolder')
+        copyTextToClipboard(nft?.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
     const klerosFormSubmit = ({data, upload}: {data: EvidenceData, upload: IPFSUpload}) => {
@@ -188,7 +171,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
 
     const openDispute = () => {
         setNextStep(StepMapping.confirmTransaction)
-        if (evidence) {
+        if (nft && evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
                 nftProtectContract.askOwnershipRestoreArbitrate(
@@ -232,16 +215,12 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                             (lostReason === 'sending to an incorrect address') ?
                                 5 :
                             undefined
-    return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={ variant }
-            w="100%"
-        >
-            <Trans>{ buttonTitle }</Trans>
-        </Button>
 
-        {/* <DidRequiredDialog disclosure={didDialogDisclosure}/> */}
+    useEffect(() => {
+        setDialog('LostPNftDialog', {...disclosure, setNft})
+    }, [])
+
+    return (<>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -249,7 +228,6 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -368,7 +346,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                             </Popover>
                                             
                                             <span id='pNftOwnerAddressHolder'>
-                                                { " (" + formatAddress(nft.ownerAddress || '', 4) + ") " }
+                                                { " (" + formatAddress(nft?.ownerAddress || '', 4) + ") " }
                                             </span>
                                             <Trans>
                                                 {"before resorting to legal action."}
@@ -420,7 +398,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                 onClose={onClose}
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
-                                defendant={originalOwner}
+                                defendant={nft?.ownerAddress || ''}
                                 title={ klerosCaseFormTitle }
                                 requireProtocolAddress={(lostReason === 'protocol breach')}
                             >
@@ -553,7 +531,7 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
                                                         nft,
                                                         metaEvidenceId,
                                                         claimantAddress: account,
-                                                        defendantAddress: nft.ownerAddress,
+                                                        defendantAddress: nft?.ownerAddress,
                                                         contractAddress: evidenceData.protocolAddress,
                                                         caseDescription: evidenceData.description,
                                                         evidences: []
@@ -746,4 +724,4 @@ const LostPNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, varia
     </>)
 }
 
-export default LostPNFTButton
+export default LostPNftDialog

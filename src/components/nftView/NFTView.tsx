@@ -24,6 +24,12 @@ import NFT from '../../classes/NFT';
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
 import ProtectNftDialog from '../dialogs/nft/ProtectNftDialog';
 import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
+import LostPNftDialog from '../dialogs/nft/LostPNftDialog';
+import DoNotTransferOriginalNftDialog from '../dialogs/nft/DoNotTransferOriginalNftDialog';
+import OriginalNftRequestedDialog from '../dialogs/nft/OriginalNftRequestedDialog';
+import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog';
+import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
+import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentButton';
 
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
@@ -306,6 +312,12 @@ const NFTView = () => {
             <KlerosCaseDialog/>
             <ProtectNftDialog nftReFetch={ reFetch } />
             <UnProtectNftDialog nftReFetch={ reFetch } />
+            <LostPNftDialog nftReFetch={ reFetch } />
+            <OriginalNftRequestedDialog nftReFetch={ reFetch } />
+            <TransferOriginalNftDialog nftReFetch={ reFetch } />
+            <DoNotTransferOriginalNftDialog nftReFetch={ reFetch } />
+            <RequestOriginalNftDialog nftReFetch={ reFetch } />
+            <ArbitrateOwnershipAdjustmentDialog nftReFetch={ reFetch } />
         </>
 )}
 
