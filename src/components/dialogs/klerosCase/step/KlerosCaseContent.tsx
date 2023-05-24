@@ -38,8 +38,8 @@ import { createDisputeLink } from '../../../../utils/kleros';
 import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import IPFSUpload from '../../../../classes/IPFSUpload';
-import { BaseProvider } from '@ethersproject/providers';
 import { useAppContext } from '../../../../context/AppContextProvider';
+import NFTImage from '../../../nftView/NFTImage';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -123,20 +123,6 @@ const KlerosCaseContent = ({
         initialStep: 0,
     });
     const { library, account } = useAppContext()
-
-    function getNftImage() {
-        return <Flex
-            overflow="hidden"
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-            />
-        </Flex>
-    }
 
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
@@ -350,7 +336,7 @@ const KlerosCaseContent = ({
             }
 
             <Flex bgColor="#F8F8F8" p={{base: "18px"}} alignItems="flex-start" mb={{base: "30px"}}>
-                { getNftImage() }
+                { nft && <NFTImage nft={nft} /> }
                 <Flex flexDirection="column" ml={{base: "18px"}} >
                     <Text fontSize={{base: "18px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>

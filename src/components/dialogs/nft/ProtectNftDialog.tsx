@@ -32,6 +32,7 @@ import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -193,34 +194,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
-    function getNftImage() {
-        return nft && <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     useEffect(() => {
         setDialog('ProtectNftDialog', {...disclosure, setNft})
     }, [])
 
-    useEffect(() => {
-        isOpen && setNextStep(StepMapping.start)
-    }, [isOpen])
-
     return (<>
-        {/* <DidRequiredDialog disclosure={didDialogDisclosure}/> */}
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -247,7 +225,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
 
                                 <CardBody mb={{base: "20px"}} >
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                         <Trans>Fee for Protection your NFT:</Trans>
                                     </Text>

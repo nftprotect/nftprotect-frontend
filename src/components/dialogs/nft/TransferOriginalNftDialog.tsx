@@ -1,6 +1,6 @@
 import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     chakra,
     Button,
@@ -37,24 +37,23 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { defaultArbitrator } from '../../../utils/config';
 import { t } from '@lingui/macro';
-import CancelledStepContent from './steps/CancelledStepContent'
-import ErrorStepContent from './steps/ErrorStepContent'
-import TimeoutStepContent from './steps/TimeoutStepContent'
+import CancelledStepContent from '../../steps/CancelledStepContent'
+import ErrorStepContent from '../../steps/ErrorStepContent'
+import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import NFT from '../../../classes/NFT';
-import LostPNFTButton from './LostPNFTButton';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    pendingRequest: number | undefined,
-    variant: any
 }
 
-const TransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant}: ButtonInitialData) => {
-
+const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
+    
+    const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract } = useAppContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     // Naming of wizard step numbers
@@ -100,71 +99,51 @@ const TransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRe
         }
     }
 
-    const mainButtonOnClick = () => {
+    const startTransaction = () => {
         try {
-            console.log('ANSWER ADJUSTMENT OK')
-            setNextStep(StepMapping.confirmTransaction)
-            onOpen()
-            setRefreshPaused(true)
-            const performAnswer = () => {
-                if (pendingRequest) {
-                    return nftProtectContract.answerOwnershipAdjustment(pendingRequest, true, '')
-                } else {
-                    return nftProtectContract.adjustOwnership(nft.tokenId, defaultArbitrator, '')
+            if (nft && nft.pendingRequest) {
+                console.log('ANSWER ADJUSTMENT OK')
+                onOpen()
+                const performAnswer = () => {
+                    if (nft.pendingRequest) {
+                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest, true, '')
+                    } else {
+                        return nftProtectContract.adjustOwnership(nft.tokenId, defaultArbitrator, '')
+                    }
                 }
+                performAnswer().then( finalTransactionSent(
+                    nft.loadedContract,
+                    StepMapping.pendingTransaction,
+                    StepMapping.transferredSuccessfully
+                ))
+                .catch(
+                    handleContractError({
+                        'ACTION_REJECTED': handleRejected,
+                        default: handleUnknownError
+                    })
+                )
             }
-            performAnswer().then( finalTransactionSent(
-                nft.loadedContract,
-                StepMapping.pendingTransaction,
-                StepMapping.transferredSuccessfully
-            ))
-            .catch(
-                handleContractError({
-                    'ACTION_REJECTED': handleRejected,
-                    default: handleUnknownError
-                })
-            )
         } catch (err: any) {
             handleUnknownError(err)
         }
     }
 
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
+    useEffect(() => {
+        setDialog('TransferOriginalNftDialog', {...disclosure, setNft})
+    }, [])
+
+    useEffect(() => {
+        isOpen && startTransaction()
+    }, [isOpen])
 
     return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={ variant }
-            w="100%"
-        >
-            <Trans>Transfer original</Trans>
-        </Button>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen} 
             onClose={() => {
-                setNextStep(
-                    StepMapping.confirmTransaction
-                )
+                setNextStep( StepMapping.confirmTransaction )
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -270,4 +249,4 @@ const TransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, pendingRe
     </>)
 }
 
-export default TransferOriginalNFTButton
+export default TransferOriginalNftDialog

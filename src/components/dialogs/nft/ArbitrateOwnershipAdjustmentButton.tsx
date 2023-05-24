@@ -1,5 +1,5 @@
 import { dialogsTimeout } from '../../../utils/config' 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -34,29 +34,26 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import { KlerosCourts } from '../../../utils/kleros';
-import KlerosCaseForm from './steps/KlerosCaseForm';
-import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from './steps/KlerosEvidencesForm';
-import { useIPFSContext } from '../../../context/IPFSContextProvider';
+import KlerosCaseForm from '../../steps/KlerosCaseForm';
+import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
 import { t } from '@lingui/macro';
 import { parseEther, formatEther } from '@ethersproject/units';
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function // Function to pause/unpause nft list updating
-    pendingRequest: any,
-    requestTimedOut: boolean,
-    variant: any // apearance of the button (see variants in theme/index.tsx)
 }
 
-const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, pendingRequest, variant, requestTimedOut}: ButtonInitialData) => {
+const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
 
-    const { nftProtectContract, account, library, fee } = useAppContext()
-    const { ipfs } = useIPFSContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [ nft, setNft ] = useState<NFT>()
+    const { nftProtectContract, account, library, fee, currentBlock } = useAppContext()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     //* Stores evidence initial data and result json */
     const [ evidenceData, setEvidenceData ] = useState<any>()
@@ -64,14 +61,13 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
-    const [url, setUrl] = useState<string>()
-    const { getDialog } = useCallableDialogContext()
+    const [ requestTimedOut, setRequestTimedOut ] = useState(false)
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
     const DISPUTE_PRICE = '0.03'
     const metaEvidenceId = 4
 
-    const disputeId = pendingRequest?.externalDisputeId
+    const disputeId = nft?.pendingRequest?.externalDisputeId
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -111,7 +107,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    nft.loadPendingRequest()
+                    nft && nft.loadPendingRequest()
                     // after mined fire wrap
                     setNextStep(StepMapping.caseSent)
                     console.log("Transaction successful", tx.hash);
@@ -122,12 +118,6 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                 }
             })
         }
-    }
-
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start);
-        onOpen()
-        setRefreshPaused(true)
     }
 
     const klerosFormSubmit = ({data, upload}: {data: EvidenceData, upload: IPFSUpload}) => {
@@ -147,7 +137,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
         if (evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nftProtectContract.askOwnershipAdjustmentArbitrate(pendingRequest?.id, evidenceJSONUrl, {
+                nftProtectContract.askOwnershipAdjustmentArbitrate(nft?.pendingRequest?.id, evidenceJSONUrl, {
                     value: parseEther(DISPUTE_PRICE),
                 //    gasLimit: 1000000
                 })
@@ -167,35 +157,25 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     }
 
     const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(nft.originalData?.ownerAddress || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
+        copyTextToClipboard(nft?.originalData?.ownerAddress || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
     }
 
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
+    // Check request timeout on every block
+    useEffect(() => {
+        if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+            library.getBlock(currentBlock).then((blockData: any) => {
+                if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
+                    setRequestTimedOut(true)
+                }
+            })
+        }
+    }, [currentBlock])
+
+    useEffect(() => {
+        setDialog('ArbitrateOwnershipAdjustmentDialog', {...disclosure, setNft})
+    }, [])
 
     return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={ variant }
-            w="100%"
-        >
-            <Trans>Open dispute</Trans>
-        </Button>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -203,7 +183,6 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay 
@@ -233,14 +212,14 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                             <Card variant="stepContent">
                                 <CardHeader mb={{base: "20px"}}>
                                     {/* NFT owner confirmed transfer */}
-                                    { pendingRequest?.status == RequestStatus.Accepted &&
+                                    { nft?.pendingRequest?.status == RequestStatus.Accepted &&
                                         <Text as="h3" textStyle="h3">
                                             {t`Congrats`}{"!"}
                                         </Text>
                                     } 
                                     
                                     {/* NFT owner refused transfer */}
-                                    { pendingRequest?.status == RequestStatus.Rejected &&
+                                    { nft?.pendingRequest?.status == RequestStatus.Rejected &&
                                         <Text as="h3" textStyle="h3" >
                                             {t`The original NFT`}<br/>{t`owner refused`}
                                         </Text>
@@ -255,7 +234,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
                                     {/* NFT owner confirmed transfer */}
-                                    { pendingRequest?.status == RequestStatus.Accepted &&
+                                    { nft?.pendingRequest?.status == RequestStatus.Accepted &&
                                         <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
                                             <Popover placement='top'>
                                                 <PopoverTrigger>
@@ -279,9 +258,9 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                         </Text>
                                     }
 
-                                    { getNftImage() }
+                                    { nft && <NFTImage nft={nft} /> }
                                     {/* NFT owner rejected transfer */}
-                                    { pendingRequest?.status == RequestStatus.Rejected &&
+                                    { nft?.pendingRequest?.status == RequestStatus.Rejected &&
                                         <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">
                                             { t`Don't agree? Initiate a dispute in the Kleros decentralized court.`}
                                         </Text>
@@ -295,7 +274,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                     }
 
                                     {/* NFT owner rejected transfer or unresponsive*/}
-                                    { (pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                    { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
                                         <Text textStyle="paragraph"  textAlign="center" letterSpacing="0.04em">
                                                 {t`(Paid separately)`}
                                         </Text>
@@ -305,7 +284,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                     
                                     <Box w={{base: "60%", sm: "50%"}} mb={{base: "20px"}}>
                                         {/* NFT owner rejected transfer or unresponsive*/}
-                                        { (pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                        { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
                                             <Button
                                                 variant="dark-outline"
                                                 onClick={ () => setNextStep(StepMapping.klerosForm) }
@@ -314,7 +293,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                         }
 
                                         {/* NFT owner accepted transfer */}
-                                        { pendingRequest?.status == RequestStatus.Accepted &&
+                                        { nft?.pendingRequest?.status == RequestStatus.Accepted &&
                                             <Button
                                                 variant={"dark-outline"}
                                                 onClick={ () => {
@@ -344,7 +323,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                 onClose={onClose}
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
-                                defendant={nft.originalData?.ownerAddress || ''}
+                                defendant={nft?.originalData?.ownerAddress || ''}
                                 title={t`Bona fide transfer`}
                                 requireProtocolAddress={false}
                             >
@@ -395,7 +374,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                                         nft,
                                                         metaEvidenceId,
                                                         claimantAddress: account,
-                                                        defendantAddress: nft.originalData?.ownerAddress,
+                                                        defendantAddress: nft?.originalData?.ownerAddress,
                                                         caseDescription: evidenceData.description,
                                                         evidences: []
                                                     })
@@ -520,7 +499,7 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
                                         
                                         <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
                                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                                <Trans values={{disputeId}}>case {disputeId}</Trans>
+                                                <Trans values={{disputeId}}>case {disputeId?.toString()}</Trans>
                                             </Text>
                                         </Link>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
@@ -593,4 +572,4 @@ const ArbitrateOwnershipAdjustmentButton = ({nft, nftReFetch, setRefreshPaused, 
     </>)
 }
 
-export default ArbitrateOwnershipAdjustmentButton
+export default ArbitrateOwnershipAdjustmentDialog

@@ -12,27 +12,20 @@ import {
     Link,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
-import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
-import RequestOriginalNFTButton from './nftButtons/RequestOriginalNFTButton';
-import TransferOriginalNFTButton from './nftButtons/TransferOriginalNFTButton';
-import LostPNFTButton from './nftButtons/LostPNFTButton';
 import { useAppContext } from '../../context/AppContextProvider';
-import ArbitrateOwnershipAdjustmentButton from './nftButtons/ArbitrateOwnershipAdjustmentButton';
 import { useNotificationContext } from '../../context/NotificationContextProvider';
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
-import OriginalNFTRequestedButton from './nftButtons/OriginalNFTRequestedButton';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { createDisputeLink } from '../../utils/kleros';
 
 interface NFTInitialData {
     nft: NFT,
     nftReFetch: Function,
-    setRefreshPaused: Function
 }
 
-const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
+const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
     const {
         addNotifications, 
@@ -143,28 +136,32 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If no request pending then we can sent it, so showing the button
                     buttons = 
                         <Box mb={[2]}>
-                            <RequestOriginalNFTButton
-                                nft={ nft } 
-                                nftReFetch={ nftReFetch }
-                                setRefreshPaused = { setRefreshPaused }
-                                tokenContract={ nft.loadedContract }
-                                originalOwner={ originalNFTData.ownerAddress }
+                            <Button
                                 variant={"primary-solid"}
-                            />
+                                onClick={ () => {
+                                    const dialog = getDialog('RequestOriginalNftDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Request original</Trans>
+                            </Button>
                         </Box>
                 } else {
                     // If request is timed out or rejected we can create a court
                     if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
                         buttons = 
                             <Box mb={[2]}>
-                                <ArbitrateOwnershipAdjustmentButton
-                                    nft={ nft } 
-                                    nftReFetch={ nftReFetch }
-                                    setRefreshPaused = { setRefreshPaused }
-                                    pendingRequest={ pendingRequest }
+                                <Button
                                     variant={"primary-solid"}
-                                    requestTimedOut={ requestTimedOut }
-                                />
+                                    onClick={ () => {
+                                        const dialog = getDialog('ArbitrateOwnershipAdjustmentDialog')
+                                        dialog.setNft(nft)
+                                        dialog.onOpen()
+                                    } }
+                                >
+                                    <Trans>Open dispute</Trans>
+                                </Button>
                             </Box>
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
@@ -211,51 +208,60 @@ const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) =
                     // If there's no pending request then we can Release NFT or Dispute NFT
                     buttons = (<>
                         <Box mb={[2]}>
-                            <LostPNFTButton
-                                buttonTitle={"Lost pNFT"}
-                                nft={ nft } 
-                                nftReFetch={ nftReFetch }
-                                setRefreshPaused = { setRefreshPaused }
-                                originalOwner={ originalNFTData.ownerAddress }
-                                variant={ "primary-solid" }
-                            />
+                            <Button
+                                variant={"primary-solid"}
+                                onClick={ () => {
+                                    const dialog = getDialog('LostPNftDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Lost pNFT</Trans>
+                            </Button>
                         </Box>
                         <Box mb={[2]}>
-                            <TransferOriginalNFTButton
-                                nft={ nft } 
-                                nftReFetch={ nftReFetch }
-                                setRefreshPaused = { setRefreshPaused }
-                                pendingRequest={ undefined }
+                            <Button
                                 variant={"primary-solid"}
-                            /> 
+                                onClick={ () => {
+                                    const dialog = getDialog('TransferOriginalNftDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Transfer original</Trans>
+                            </Button>
                         </Box>
                     </>)
                 } else if (pendingRequest.status === RequestStatus.Initial) {
                     // If there's an initial request then we can only answer this request
                     buttons = (<>
                         <Box mb={[2]}>
-                            <OriginalNFTRequestedButton
-                                nft={ nft } 
-                                nftReFetch={ nftReFetch }
-                                setRefreshPaused = { setRefreshPaused }
-                                originalOwner = { originalNFTData.ownerAddress }
-                                pendingRequest={ pendingRequest?.id }
+                            <Button
                                 variant={"primary-solid"}
-                            />
+                                onClick={ () => {
+                                    const dialog = getDialog('OriginalNftRequestedDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Answer request</Trans>
+                            </Button>
                         </Box>
                     </>)
                 } else if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
                     // If there's an rejected request then we can only dispute this request
                     buttons = (<>
                         <Box mb={[2]}>
-                            <LostPNFTButton
-                                buttonTitle={"Lost pNFT"}
-                                nft={ nft } 
-                                nftReFetch={ nftReFetch }
-                                setRefreshPaused = { setRefreshPaused }
-                                originalOwner={ originalNFTData.ownerAddress }
-                                variant={ "primary-solid" }
-                            />
+                            <Button
+                                variant={"primary-solid"}
+                                onClick={ () => {
+                                    const dialog = getDialog('LostPNftDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Lost pNFT</Trans>
+                            </Button>
                         </Box>
                     </>)
                 } else if (pendingRequest.status === RequestStatus.Disputed) {

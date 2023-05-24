@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
     chakra,
     Box,
@@ -26,46 +26,25 @@ import {
 import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
-import { Trans, t } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import NFTImage from "../nftView/NFTImage";
 
-interface DialogInitialData {
-    nft: NFT,
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-}
+const SuedForReturnTheOriginalNFTDialog = () => {
 
-const SuedForReturnTheOriginalNFTDialog = ({nft, setRefreshPaused, originalOwner }: DialogInitialData) => {
-
+    const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
+    const originalOwner = nft?.originalData?.ownerAddress
 
     const copyOriginalOwnerToClipboard = () => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
-
     useEffect(() => {
-        setDialog('SuedForReturnTheOriginalNFTDialog', disclosure)
+        setDialog('SuedForReturnTheOriginalNFTDialog', {...disclosure, setNft})
     }, [])
 
     return (<>
@@ -75,7 +54,6 @@ const SuedForReturnTheOriginalNFTDialog = ({nft, setRefreshPaused, originalOwner
             isOpen={disclosure.isOpen}
             onClose={() => {
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -105,7 +83,7 @@ const SuedForReturnTheOriginalNFTDialog = ({nft, setRefreshPaused, originalOwner
                         </CardHeader>
                         <CardBody>
 
-                            { getNftImage() }
+                            { nft && <NFTImage nft={nft} /> }
 
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                 <Popover placement='top'>
@@ -116,7 +94,7 @@ const SuedForReturnTheOriginalNFTDialog = ({nft, setRefreshPaused, originalOwner
                                             <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                         </PopoverTrigger>
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { " " + formatAddress(originalOwner, 4) + " " }
+                                            { originalOwner && (" " + formatAddress(originalOwner, 4) + " ") }
                                         </chakra.span>
                                         <Trans>has initiated a dispute in the Kleros decentralized court, in order to obtain</Trans>
                                     </Text>

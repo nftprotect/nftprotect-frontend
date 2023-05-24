@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -22,29 +22,27 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { Info } from '@web3uikit/icons'
 import { Trans, t } from '@lingui/macro';
-import CancelledStepContent from './steps/CancelledStepContent'
-import TimeoutStepContent from './steps/TimeoutStepContent'
-import ErrorStepContent from './steps/ErrorStepContent'
-import TransferOriginalNFTButton from './TransferOriginalNFTButton'
-import LostPNFTButton from './LostPNFTButton';
+import CancelledStepContent from '../../steps/CancelledStepContent'
+import TimeoutStepContent from '../../steps/TimeoutStepContent'
+import ErrorStepContent from '../../steps/ErrorStepContent'
 import NFT from "../../../classes/NFT";
 import { dialogsTimeout } from '../../../utils/config';
 import { Contract } from '@ethersproject/contracts';
 import { handleContractError } from '../../../utils/errorHandling';
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
 interface ButtonInitialData {
-    nft: NFT,
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-    pendingRequest: any | undefined,
-    variant: any
 }
 
-const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
+const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
+    const [ nft, setNft ] = useState<NFT>()
     const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [lostReason, setLostReason ] = useState<string>()
 
@@ -55,24 +53,6 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
         canceled,
         error,
         timeout
-    }
-
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
     }
 
     const handleUnknownError = (error: any) => {
@@ -109,36 +89,35 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
         }
     }
 
-    const mainButtonOnClick = () => {
+    const startTransaction = () => {
         try {
-            setNextStep(StepMapping.confirmTransaction)
-            console.log('ANSWER ADJUSTMENT REJECT')
-            onOpen()
-            setRefreshPaused(true)
-            nftProtectContract.answerOwnershipAdjustment(pendingRequest, false, '')
-                .then( finalTransactionSent(
-                    nft.loadedContract,
-                ))
-                .catch(
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    })
-                )
+            if (nft && nft.pendingRequest) {
+                console.log('ANSWER ADJUSTMENT REJECT')
+                nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest, false, '')
+                    .then( finalTransactionSent(
+                        nft.loadedContract,
+                    ))
+                    .catch(
+                        handleContractError({
+                            'ACTION_REJECTED': handleRejected,
+                            default: handleUnknownError
+                        })
+                    )
+            }
         } catch (err: any) {
             handleUnknownError(err)
         }
     }
 
-    return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={ variant }
-            w="100%"
-        >
-            <Trans>Do not transfer original</Trans>
-        </Button>
+    useEffect(() => {
+        setDialog('DoNotTransferOriginalNftDialog', {...disclosure, setNft})
+    }, [])
 
+    useEffect(() => {
+        isOpen && startTransaction()
+    }, [isOpen])
+
+    return (<>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -146,7 +125,6 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
             onClose={() => {
                 setNextStep(StepMapping.confirmTransaction)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -215,7 +193,7 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
                                     </CardHeader>
 
                                     <CardBody mb={{base: "20px"}}>
-                                        { getNftImage() }
+                                        { nft && <NFTImage nft={nft} /> }
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
                                             <Trans>
                                                 The pNFT is at user 1234...1234
@@ -242,23 +220,28 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
                                             mb={{base: "20px"}}
                                         >
                                             <Box w={{base: "100%", sm: "45%"}}>
-                                                <TransferOriginalNFTButton 
-                                                    nft={ nft } 
-                                                    nftReFetch={ nftReFetch }
-                                                    setRefreshPaused = { setRefreshPaused }
-                                                    pendingRequest={ pendingRequest?.id }
+                                                <Button
                                                     variant={"dark-outline"}
-                                                />
+                                                    onClick={ () => {
+                                                        const dialog = getDialog('TransferOriginalNftDialog')
+                                                        dialog.setNft(nft)
+                                                        dialog.onOpen()
+                                                    } }
+                                                >
+                                                    <Trans>Transfer original</Trans>
+                                                </Button>
                                             </Box>
                                             <Box w={{base: "100%", sm: "45%"}}>
-                                                <LostPNFTButton
-                                                    buttonTitle={"Open dispute"}
-                                                    nft={ nft } 
-                                                    nftReFetch={ nftReFetch }
-                                                    setRefreshPaused = { setRefreshPaused }
-                                                    originalOwner={originalOwner}
+                                                <Button
                                                     variant={"dark-outline"}
-                                                />
+                                                    onClick={ () => {
+                                                        const dialog = getDialog('LostPNftDialog')
+                                                        dialog.setNft(nft)
+                                                        dialog.onOpen()
+                                                    } }
+                                                >
+                                                    <Trans>Open dispute</Trans>
+                                                </Button>
                                             </Box>
                                         </Flex>
                                 </CardFooter>
@@ -287,4 +270,4 @@ const DoNotTransferOriginalNFTButton = ({nft, nftReFetch, setRefreshPaused, orig
     </>)
 }
 
-export default DoNotTransferOriginalNFTButton
+export default DoNotTransferOriginalNftDialog

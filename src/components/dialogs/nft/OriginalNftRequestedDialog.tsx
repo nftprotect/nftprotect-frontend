@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     chakra,
     Button,
@@ -29,66 +29,36 @@ import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import TransferOriginalNFTButton from './TransferOriginalNFTButton';
-import DoNotTransferOriginalNFTButton from './DoNotTransferOriginalNFTButton';
 import NFT from "../../../classes/NFT";
+import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import NFTImage from '../../nftView/NFTImage';
 
-interface ButtonInitialData {
-    nft: NFT,
+interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
-    setRefreshPaused: Function, // Function to pause/unpause nft list updating
-    originalOwner: string, // Owner address of original NFT,
-    pendingRequest: any | undefined,
-    variant: any
 }
 
-const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, originalOwner, variant, pendingRequest}: ButtonInitialData) => {
+const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
 
-    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [ nft, setNft ] = useState<NFT>()
+    const disclosure = useDisclosure()
+    const { isOpen, onOpen, onClose } = disclosure
+    const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const originalOwner = nft?.originalData?.ownerAddress
 
     enum StepMapping {
         start,
-    }
-
-    const mainButtonOnClick = () => {
-        setNextStep(StepMapping.start)
-        onOpen()
-        setRefreshPaused(true)
     }
 
     const copyOriginalOwnerToClipboard = () => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
-    function getNftImage() {
-        return <Flex
-            borderRadius={{base: "16px"}}
-            filter="drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.25))"
-            overflow="hidden"
-            my={{base: "20px"}}
-            justifyContent="center"
-            h="150px"
-            w="150px"
-        >
-            <Image 
-                src={ nft.thumbnail }
-                alt={ nft.title || t`NFT image`}
-                borderRadius="1rem"
-            />
-        </Flex>
-    }
+    useEffect(() => {
+        setDialog('OriginalNftRequestedDialog', {...disclosure, setNft})
+    }, [])
 
     return (<>
-        <Button
-            onClick={ mainButtonOnClick }
-            variant={ variant }
-            w="100%"
-        >
-            <Trans>Answer request</Trans>
-        </Button>
-
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
@@ -96,7 +66,6 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
             onClose={() => {
                 setNextStep(StepMapping.start)
                 onClose()
-                setRefreshPaused(false)
             }}
         >
             <ModalOverlay />
@@ -125,7 +94,7 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                         </CardHeader>
                         <CardBody>
 
-                            { getNftImage() }
+                            { nft && <NFTImage nft={nft} /> }
 
                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                 <Trans>If you transferred the pNFT to user</Trans>
@@ -144,7 +113,7 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 </Popover>
                                 
                                 <chakra.span id='originalOwnerAddressHolder'>
-                                    { " (" + formatAddress(originalOwner, 4) + "), " }
+                                    { originalOwner && (" (" + formatAddress(originalOwner, 4) + "), ") }
                                 </chakra.span>
                                 {" "}
                                 <chakra.span>
@@ -154,13 +123,16 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center" mb={{base: "20px"}}>
                             <Box w={{base: "60%", sm: "50%"}}>
-                                <TransferOriginalNFTButton 
-                                    nft={ nft } 
-                                    nftReFetch={ nftReFetch }
-                                    setRefreshPaused = { setRefreshPaused }
-                                    pendingRequest={ pendingRequest?.id }
+                                <Button
                                     variant={"dark-outline"}
-                                />
+                                    onClick={ () => {
+                                        const dialog = getDialog('TransferOriginalNftDialog')
+                                        dialog.setNft(nft)
+                                        dialog.onOpen()
+                                    } }
+                                >
+                                    <Trans>Transfer original</Trans>
+                                </Button>
                             </Box>
                         </CardFooter>
                     </Card>
@@ -185,7 +157,7 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                                 </Popover>
                                 
                                 <chakra.span id='originalOwnerAddressHolder'>
-                                    { " (" + formatAddress(originalOwner, 4) + ") " }
+                                    { originalOwner && (" (" + formatAddress(originalOwner, 4) + ") ") }
                                 </chakra.span>
                             </Text>
                             <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" textTransform="uppercase" color="danger">
@@ -197,14 +169,16 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center">
                             <Box w={{base: "60%"}} mb={{base: "20px"}} >
-                                <DoNotTransferOriginalNFTButton
-                                    nft={nft}
-                                    nftReFetch={nftReFetch}
-                                    setRefreshPaused={setRefreshPaused}
-                                    originalOwner={originalOwner}
-                                    pendingRequest={pendingRequest}
+                                <Button
                                     variant={"dark-outline"}
-                                />
+                                    onClick={ () => {
+                                        const dialog = getDialog('DoNotTransferOriginalNftDialog')
+                                        dialog.setNft(nft)
+                                        dialog.onOpen()
+                                    } }
+                                >
+                                    <Trans>Do not transfer original</Trans>
+                                </Button>
                             </Box>
                         </CardFooter>
                     </Card>
@@ -229,4 +203,4 @@ const OriginalNFTRequestedButton = ({nft, nftReFetch, setRefreshPaused, original
     </>)
 }
 
-export default OriginalNFTRequestedButton
+export default OriginalNftRequestedDialog
