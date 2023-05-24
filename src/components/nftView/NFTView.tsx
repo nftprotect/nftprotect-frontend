@@ -36,39 +36,19 @@ const NFTView = () => {
     const appContext = useAppContext()
     const { currentChain, account, active, library, nftProtectContract } = appContext
     const { isOpen, onToggle } = useDisclosure()
-    // Holds component data refresh while refreshPaused
-    const [ refreshPaused, setRefreshPaused ] = useState(false)
-    const [ refreshNeeded, setRefreshNeeded ] = useState(false)
-
-    const reFetch = (force = false) => {
-        if (force) {
-            setRefreshNeeded(false)
-            console.log('Fetching NFTs forced...')
-            fetchAllNfts()
-        } else {
-            if (refreshPaused) {
-                console.log('Fetching NFTs paused, waiting...')
-                setRefreshNeeded(true)
-            } else if (!refreshNeeded) {
-                console.log('Fetching NFTs...')
-                fetchAllNfts()
-            }
-        }
-    }
 
     const renderNFT = (nft: NFT) => {
         console.log('NFT: ', nft.title, nft)
         return <NFTCard
             key={`${nft.contract.address}:${nft.tokenId}`}
             nft={nft}
-            nftReFetch={reFetch}
-            setRefreshPaused={setRefreshPaused}
+            nftReFetch={fetchAllNfts}
         />
     }
 
     const subscribeNftTransfers = () => {
         const nftEventReceived = () => {
-            reFetch()
+            fetchAllNfts()
         }
         let fromMe:any 
         let toMe:any
@@ -149,17 +129,6 @@ const NFTView = () => {
 
     // Reload NFTs when chain or account changed
     useEffect(fetchAllNfts, [currentChain, account])
-
-    useEffect(() => {
-        // Update data when refresh unpaused if needed
-        if (!refreshPaused) {
-            if (refreshNeeded) {
-                fetchAllNfts()
-                setRefreshNeeded(false)
-                console.log('Fetching NFTs after pause...')
-            }
-        }
-    }, [refreshPaused, refreshNeeded])
 
     useEffect(() => {
         // non-protected NFTs owned by account
@@ -310,14 +279,14 @@ const NFTView = () => {
             </Accordion>
             {/** Dialogs registration following */}
             <KlerosCaseDialog/>
-            <ProtectNftDialog nftReFetch={ reFetch } />
-            <UnProtectNftDialog nftReFetch={ reFetch } />
-            <LostPNftDialog nftReFetch={ reFetch } />
-            <OriginalNftRequestedDialog nftReFetch={ reFetch } />
-            <TransferOriginalNftDialog nftReFetch={ reFetch } />
-            <DoNotTransferOriginalNftDialog nftReFetch={ reFetch } />
-            <RequestOriginalNftDialog nftReFetch={ reFetch } />
-            <ArbitrateOwnershipAdjustmentDialog nftReFetch={ reFetch } />
+            <ProtectNftDialog nftReFetch={ fetchAllNfts } />
+            <UnProtectNftDialog nftReFetch={ fetchAllNfts } />
+            <LostPNftDialog nftReFetch={ fetchAllNfts } />
+            <OriginalNftRequestedDialog nftReFetch={ fetchAllNfts } />
+            <TransferOriginalNftDialog nftReFetch={ fetchAllNfts } />
+            <DoNotTransferOriginalNftDialog nftReFetch={ fetchAllNfts } />
+            <RequestOriginalNftDialog nftReFetch={ fetchAllNfts } />
+            <ArbitrateOwnershipAdjustmentDialog nftReFetch={ fetchAllNfts } />
         </>
 )}
 

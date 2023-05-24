@@ -23,10 +23,9 @@ import { createDisputeLink } from '../../utils/kleros';
 interface NFTInitialData {
     nft: NFT,
     nftReFetch: Function,
-    setRefreshPaused: Function
 }
 
-const NFTCard = ({ nft: _nft, nftReFetch, setRefreshPaused }: NFTInitialData ) => {
+const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const { account, library, nftProtectContract, currentBlock } = useAppContext()
     const {
         addNotifications, 
