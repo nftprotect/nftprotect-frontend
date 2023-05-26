@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-24 13:57+0700\n"
+"POT-Creation-Date: 2023-05-26 13:43+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -182,10 +182,10 @@ msgstr "Close"
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:468
 #: src/components/dialogs/arbitrator/RemoveOperationsDialog.tsx:281
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:458
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:162
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:175
 #: src/components/dialogs/nft/LostPNftDialog.tsx:599
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:338
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:217
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:218
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:170
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:186
 msgid "Confirm the transaction in the wallet"
@@ -229,10 +229,11 @@ msgid "Contract address is required"
 msgstr "Contract address is required"
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:247
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:222
 #: src/components/dialogs/nft/LostPNftDialog.tsx:326
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:110
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:154
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:168
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:155
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:169
 #: src/components/notifications/ClaimantLostDialog.tsx:113
 #: src/components/notifications/SuedForBurnNFTDialog.tsx:105
 #: src/components/notifications/SuedForReturnTheOriginalNFTDialog.tsx:106
@@ -243,20 +244,19 @@ msgstr "Copied!"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:303
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:306
 msgid "Court"
 msgstr "Court"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:357
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:360
 msgid "Creator:"
 msgstr "Creator:"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:414
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:519
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:523
 msgid "DID:"
 msgstr "DID:"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:279
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:282
 msgid "Date of creation"
 msgstr "Date of creation"
 
@@ -298,15 +298,15 @@ msgid "Detailed"
 msgstr "Detailed"
 
 #: src/components/arbitrator/ArbitratorRequestList.tsx:63
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:267
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:270
 msgid "Dispute"
 msgstr "Dispute"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:242
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:244
 msgid "Dispute policy"
 msgstr "Dispute policy"
 
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:180
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:182
 msgid "Do not transfer original"
 msgstr "Do not transfer original"
 
@@ -332,7 +332,7 @@ msgstr "English"
 msgid "Enjoy your new life in protected world!"
 msgstr "Enjoy your new life in protected world!"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:581
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:585
 msgid "Evidence"
 msgstr "Evidence"
 
@@ -350,7 +350,7 @@ msgstr "ExtraData not specified"
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:519
 #: src/components/dialogs/nft/LostPNftDialog.tsx:655
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:413
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:290
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:291
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:221
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:252
 #: src/components/steps/CancelledStepContent.tsx:26
@@ -365,7 +365,7 @@ msgstr "Fee for Protection your NFT:"
 msgid "Fetching balance…"
 msgstr "Fetching balance…"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:616
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:626
 msgid "File link"
 msgstr "File link"
 
@@ -382,10 +382,6 @@ msgstr "Follow the status of the dispute through our app or on the website Klero
 msgid "Get Started"
 msgstr "Get Started"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:416
-msgid "Gitcoin passport: 70%"
-msgstr "Gitcoin passport: 70%"
-
 #: src/components/dialogs/nft/LostPNftDialog.tsx:242
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr "Have you lost<0/> access to your pNFT?"
@@ -398,7 +394,7 @@ msgstr "Here you can register new arbitrator or change the parameters of the exi
 msgid "Here's a complete description"
 msgstr "Here's a complete description"
 
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:144
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:145
 msgid "If you did not transfer the pNFT to"
 msgstr "If you did not transfer the pNFT to"
 
@@ -428,7 +424,7 @@ msgstr "Incorrect address"
 msgid "It's all not protected yet"
 msgstr "It's all not protected yet"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:291
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:294
 msgid "Jurors"
 msgstr "Jurors"
 
@@ -437,7 +433,7 @@ msgid "Keep screenshots of all conversations as evidence if you need to submit a
 msgstr "Keep screenshots of all conversations as evidence if you need to submit a case to Kleros."
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:363
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:269
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:270
 #: src/components/notifications/SuedForBurnNFTDialog.tsx:128
 #: src/components/notifications/SuedForReturnTheOriginalNFTDialog.tsx:129
 msgid "Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing to resolve disputes fairly."
@@ -466,7 +462,7 @@ msgstr "NFT image"
 msgid "Name"
 msgstr "Name"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:352
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:355
 msgid "Name:"
 msgstr "Name:"
 
@@ -482,11 +478,11 @@ msgstr "New extraData is set"
 msgid "No"
 msgstr "No"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:521
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:525
 msgid "None"
 msgstr "None"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:273
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:276
 msgid "Not yet"
 msgstr "Not yet"
 
@@ -498,13 +494,13 @@ msgstr "Notifications"
 msgid "Open Kleros Case"
 msgstr "Open Kleros Case"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:257
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:260
 msgid "Open court's page in Kleros"
 msgstr "Open court's page in Kleros"
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:291
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:401
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:243
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:274
 #: src/components/dialogs/nft/LostPNftDialog.tsx:356
 #: src/components/dialogs/nft/LostPNftDialog.tsx:542
 #: src/components/nftView/NFTCard.tsx:163
@@ -537,19 +533,19 @@ msgstr "Operations removed successfully!"
 msgid "Operations updated successfully!"
 msgstr "Operations updated successfully!"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:344
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:347
 msgid "Original NFT"
 msgstr "Original NFT"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:362
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:365
 msgid "Original NFT creation date:"
 msgstr "Original NFT creation date:"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:367
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:370
 msgid "Original NFT protection date:"
 msgstr "Original NFT protection date:"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:421
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:425
 msgid "Original:"
 msgstr "Original:"
 
@@ -622,7 +618,7 @@ msgstr "Please fill the form to add operations"
 msgid "Please fill the form to register"
 msgstr "Please fill the form to register"
 
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:195
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:197
 msgid "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court."
 msgstr "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court."
 
@@ -631,7 +627,7 @@ msgstr "Please note that refusing to hand over the original NFT to its rightful 
 msgid "Please note that the review process can take several weeks to several months."
 msgstr "Please note that the review process can take several weeks to several months."
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:197
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:198
 msgid "Please note that when you receive the original NFT, pNFT will be burned."
 msgstr "Please note that when you receive the original NFT, pNFT will be burned."
 
@@ -733,9 +729,9 @@ msgstr "Remove arbitrator's operations"
 msgid "Remove operations"
 msgstr "Remove operations"
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:150
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:210
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:228
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:151
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:211
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:229
 msgid "Request <0/> the original NFT?"
 msgstr "Request <0/> the original NFT?"
 
@@ -743,16 +739,16 @@ msgstr "Request <0/> the original NFT?"
 msgid "Request for arbitrator {0}"
 msgstr "Request for arbitrator {0}"
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:188
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:189
 #: src/components/nftView/NFTCard.tsx:147
 msgid "Request original"
 msgstr "Request original"
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:257
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:258
 msgid "Request sent to the original NFT owner. Please wait for the transfer of rights."
 msgstr "Request sent to the original NFT owner. Please wait for the transfer of rights."
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:245
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:246
 msgid "Request sent!"
 msgstr "Request sent!"
 
@@ -800,7 +796,7 @@ msgstr "Sending to an incorrect address"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:497
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:501
 msgid "Smart contract:"
 msgstr "Smart contract:"
 
@@ -812,7 +808,7 @@ msgstr "Smart contract:"
 msgid "Some error occured"
 msgstr "Some error occured"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:590
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:593
 msgid "Sort by:  date"
 msgstr "Sort by:  date"
 
@@ -822,9 +818,13 @@ msgstr "Sort by:  date"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:606
-msgid "Submitted by the 0x12...3456"
-msgstr "Submitted by the 0x12...3456"
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:601
+msgid "Submit new evidence"
+msgstr "Submit new evidence"
+
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:612
+msgid "Submitted by"
+msgstr "Submitted by"
 
 #: src/components/dialogs/arbitrator/DeleteArbitratorDialog.tsx:245
 #: src/components/dialogs/arbitrator/EditOperationsDialog.tsx:359
@@ -851,15 +851,15 @@ msgstr "Supported operations:"
 msgid "Terms of service"
 msgstr "Terms of service"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:477
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:481
 msgid "The Defendant"
 msgstr "The Defendant"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:342
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:345
 msgid "The Subject of the Dispute:"
 msgstr "The Subject of the Dispute:"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:378
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:381
 msgid "The claimant"
 msgstr "The claimant"
 
@@ -895,7 +895,7 @@ msgstr "The final step to register is to pay for the arbitration fees."
 msgid "The original NFT"
 msgstr "The original NFT"
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:191
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:204
 msgid "The original NFT <0/> remains in your <1/> wallet"
 msgstr "The original NFT <0/> remains in your <1/> wallet"
 
@@ -919,9 +919,9 @@ msgstr "The owner of the original NFT"
 msgid "The owner of the pNFT"
 msgstr "The owner of the pNFT"
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:198
-msgid "The pNFT is at user 1234...1234"
-msgstr "The pNFT is at user 1234...1234"
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:212
+msgid "The pNFT is at user"
+msgstr "The pNFT is at user"
 
 #: src/components/notifications/ClaimantWinDialog.tsx:79
 msgid "The pNFT was burned."
@@ -931,11 +931,11 @@ msgstr "The pNFT was burned."
 msgid "The pNFT will be burned and the original NFT will be sent to you"
 msgstr "The pNFT will be burned and the original NFT will be sent to you"
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:208
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:237
 msgid "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT (by opening the dispute)"
 msgstr "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT (by opening the dispute)"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:568
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:572
 msgid "This is how he described the situation:"
 msgstr "This is how he described the situation:"
 
@@ -958,13 +958,13 @@ msgstr "To ensure a fair review by expert arbitrators, be sure to provide eviden
 #: src/components/dialogs/nft/LostPNftDialog.tsx:368
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:264
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:293
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:274
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:275
 #: src/components/notifications/SuedForBurnNFTDialog.tsx:133
 #: src/components/notifications/SuedForReturnTheOriginalNFTDialog.tsx:134
 msgid "To learn more"
 msgstr "To learn more"
 
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:156
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:157
 msgid "To obtain the original NFT, send a request to the owner"
 msgstr "To obtain the original NFT, send a request to the owner"
 
@@ -989,14 +989,17 @@ msgstr "Transaction is still in progress…"
 msgid "Transfer <0/>the original NFT <1/>to a new owner?"
 msgstr "Transfer <0/>the original NFT <1/>to a new owner?"
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:231
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:134
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:261
+msgid "Transfer NFT"
+msgstr "Transfer NFT"
+
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:135
 #: src/components/nftView/NFTCard.tsx:231
 msgid "Transfer original"
 msgstr "Transfer original"
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:155
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:173
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:168
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:186
 msgid "Transfer the <0/>original NFT to <1/> the new owner"
 msgstr "Transfer the <0/>original NFT to <1/> the new owner"
 
@@ -1050,17 +1053,17 @@ msgstr "Wait for transaction to confirm..."
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:485
 #: src/components/dialogs/arbitrator/RemoveOperationsDialog.tsx:298
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:475
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:179
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:192
 #: src/components/dialogs/nft/LostPNftDialog.tsx:616
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:377
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:234
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:235
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:191
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:205
 msgid "Wait for transaction to confirm…"
 msgstr "Wait for transaction to confirm…"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:396
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:498
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:399
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:502
 msgid "Wallet:"
 msgstr "Wallet:"
 
@@ -1072,7 +1075,7 @@ msgstr "Want to initiate a dispute in the Kleros decentralized court?"
 msgid "We recommend protecting<0/>your nft at once"
 msgstr "We recommend protecting<0/>your nft at once"
 
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:167
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:168
 msgid "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker's wallet."
 msgstr "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker's wallet."
 
@@ -1093,7 +1096,7 @@ msgstr "Whitepaper"
 msgid "Whitepapers"
 msgstr "Whitepapers"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:324
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:327
 msgid "Winner:"
 msgstr "Winner:"
 
@@ -1146,7 +1149,7 @@ msgstr "You can try to find the owner through social media or use services like 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentButton.tsx:528
 #: src/components/dialogs/nft/LostPNftDialog.tsx:664
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:422
-#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:299
+#: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:300
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:230
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:261
 #: src/components/steps/CancelledStepContent.tsx:35
@@ -1231,7 +1234,7 @@ msgstr "owner refused"
 msgid "owner unresponsive"
 msgstr "owner unresponsive"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:527
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:531
 msgid "pNFT:"
 msgstr "pNFT:"
 
@@ -1240,7 +1243,7 @@ msgstr "pNFT:"
 msgid "unknown"
 msgstr "unknown"
 
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:164
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:165
 msgid "your asset may have been stolen!"
 msgstr "your asset may have been stolen!"
 
@@ -1248,6 +1251,6 @@ msgstr "your asset may have been stolen!"
 msgid "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
 msgstr "Период сбора доказательств по делу. Любой может загрузить доказательства, которые считает нужными для принятия решения"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:347
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:350
 msgid "Сollection:"
 msgstr "Сollection:"
