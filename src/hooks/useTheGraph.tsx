@@ -1,10 +1,30 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
-import { NFTProtectGraph, dynamicArbRegistryGraph } from '../utils/graphql'
-import { gql } from "@apollo/client"
+import { NormalizedCacheObject, gql } from "@apollo/client"
 import { BigNumber } from '@ethersproject/bignumber'
+import { ApolloClient, InMemoryCache, DefaultOptions } from "@apollo/client";
 
-export function useTheGraph() {
+const defaultOptions: DefaultOptions = {
+    watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'ignore',
+    },
+    query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+}
+
+interface GraphData{
+    uri: string,
+    client: ApolloClient<NormalizedCacheObject>
+}
+
+export const useTheGraph = () => {
+
+    const [ graphs, setGraphs ] = useState<Array<GraphData>>([])
+
+    //TODO: needs actual bind to context
     const currentContext = useContext(AppContext);
     if (!currentContext) {
         throw new Error(
@@ -12,72 +32,28 @@ export function useTheGraph() {
         );
     }
 
-    const { account, active } = useAppContext()
-
-    const checkAccount= () => {
-        if (!account) {
-            throw new Error(
-                "Invalid account!"
-            );
-        }
-        if (!active) {
-            throw new Error(
-                "Invalid account!"
-            );
-        }
-    }
-
-    const loadDyArbitrators = async () => {
-        checkAccount()
-        const query = gql`
-            query GetAllArbitrators($managerAddress: Bytes!) {
-                requests(where: {status: InDispute, manager: $managerAddress}) {
-                    id
-                    name
-                    disputeID
-                    operation
-                    manager
-                }
-
-                arbitrators(where: {manager: $managerAddress}) {
-                    id
-                    name
-                    operations {
-                        id
-                        operation
-                        extraData
-                    }
-                    contracts {
-                        id
-                        contract
-                    }
-                }
-            }          
-        `;
-        const result = await dynamicArbRegistryGraph.query({
-            query,
-            variables: { managerAddress: account }
+    const performQuery = async (graphURI: string, query: string, variables: any) => {
+        const { client } = graphs.find(({ uri }) => uri === graphURI) || { client: createGraph(graphURI) }
+        const result = await client.query({
+            query: gql(query),
+            variables
         })
         console.log('GRAPH RETURNS', result)
         return result
     }
 
-    const loadNFTPRequest = async (requestId: BigNumber) => {
-        checkAccount()
-        const query = gql`
-            query loadRequest($requestId: Bytes!) {
-            }          
-        `;
-        const result = await NFTProtectGraph.query({
-            query,
-            variables: { requestId: requestId }
+    const createGraph = (graphURI: string) => {
+        const client = new ApolloClient({
+            uri: graphURI,
+            cache: new InMemoryCache(),
+            defaultOptions: defaultOptions
         })
-        console.log('GRAPH RETURNS', result)
-        return result
+        setGraphs((graphs) => [...graphs, { uri: graphURI, client }]);
+        return client
     }
 
     return {
-        loadDyArbitrators
+        performQuery
     }
         
 }

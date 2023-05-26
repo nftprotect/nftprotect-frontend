@@ -21,12 +21,12 @@ import { useEffect, useState } from 'react'
 import { useCallableDialogContext } from '../context/CallableDialogContextProvider'
 import RegisterArbitratorDialog from '../components/dialogs/arbitrator/RegisterArbitratorDialog'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useTheGraph } from '../hooks/useTheGraph'
 import ArbitratorRequestList,  { ArbitratorRequest } from '../components/arbitrator/ArbitratorRequestList'
 import ArbitratorsList, { ArbitratorData } from '../components/arbitrator/ArbitratorsList'
 import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitratorDialog'
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 import { loadTranslation } from '../utils/lingui'
+import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -43,11 +43,11 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const ArbitratorPage: NextPage = () => {
 
-    const { account, active, arbitratorRegistryContract } = useAppContext()
+    const { account, active, arbitratorRegistryContract, currentChain } = useAppContext()
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
-    const { loadDyArbitrators } = useTheGraph()
+    const { loadDyArbitrators } = useDyArbitratorGraph(currentChain.id)
     const [ arbitratorsData, setArbitratorsData ] = useState<{
         arbitrators: ArbitratorData[]
         requests: ArbitratorRequest[]
