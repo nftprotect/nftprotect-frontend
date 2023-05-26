@@ -161,7 +161,7 @@ const RequestPage: NextPage = () => {
             claimantAddress={claimantAddress || ''}
             defendantAddress={defendantAddress || ''}
             caseDescription='efsdf'
-            evidences={[]}
+            //evidence={}
             disputeData={{disputeId: requestData.externalDisputeId}}
             pageData={ metaEvidenceType.page }
         />}

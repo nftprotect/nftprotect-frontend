@@ -40,6 +40,8 @@ import { Step, Steps, useSteps } from "chakra-ui-steps";
 import IPFSUpload from '../../../../classes/IPFSUpload';
 import { useAppContext } from '../../../../context/AppContextProvider';
 import NFTImage from '../../../nftView/NFTImage';
+import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
+import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -48,7 +50,7 @@ export interface KlerosCaseInitialData {
     defendantAddress: string,
     contractAddress?: string,
     caseDescription: string,
-    evidences?: IPFSUpload[]
+    evidence?: EvidenceJson
 }
 
 interface StepContentInitialData extends KlerosCaseInitialData {
@@ -81,7 +83,7 @@ const KlerosCaseContent = ({
     defendantAddress, 
     contractAddress,
     caseDescription,
-    evidences,
+    evidence,
     disputeData
 }: StepContentInitialData) => {
 
@@ -571,61 +573,68 @@ const KlerosCaseContent = ({
                 <Textarea value={ caseDescription } py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&::focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} fontSize={{base: "14px"}} />
             </Flex>
 
-            {evidences && evidences.length > 0 &&
+            {evidence && evidence.files.length > 0 &&
                 <Accordion allowToggle mb={{base: "30px"}}>
-                    <AccordionItem>
-                        {({ isExpanded }) => (
-                            <>
-                                <AccordionButton pl={{base: "30px"}} color="#FFF" bgColor="#2D7BD6" fontWeight="600" fontSize={{base: "16px"}} lineHeight={{base: "22px"}} _hover={{bgColor: "#2D7BD6"}}>
-                                    <Box as="span" flex='1' textAlign='left'>
-                                        <Trans>Evidence</Trans>
-                                    </Box>
-                                    {isExpanded ? ( <MinusIcon fontSize='16px' /> ) : ( <AddIcon fontSize='16px' /> )}
-                                </AccordionButton>
-
-                                <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
-                                    <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
-                                        <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
-                                            <Text>
-                                                <Trans>Sort by{": "} date</Trans>
-                                            </Text>
-
-                                            <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
-                                        </Flex>
-
-                                        {/* Visible only on step 1 "Evidence period" */}
-                                        <Button variant="primary-solid" w={{base: "200px"}}>Submit new evidence</Button>
-                                    </Flex>
-
-                                    <Flex flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
-                                        <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
-                                            {"#"}1 Evidence of a phishing atack
-                                        </Text>
-                                        <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
-                                            <Text textStyle="paragraph">
-                                                <Trans>
-                                                    Submitted by the 0x12...3456
-                                                </Trans>
-                                            </Text>
-                                            <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
-                                                <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
-                                                    Jan 09, 2020 05:00 GMT
+                        <AccordionItem>
+                            {({ isExpanded }) => (
+                                <>
+                                    <AccordionButton pl={{base: "30px"}} color="#FFF" bgColor="#2D7BD6" fontWeight="600" fontSize={{base: "16px"}} lineHeight={{base: "22px"}} _hover={{bgColor: "#2D7BD6"}}>
+                                        <Box as="span" flex='1' textAlign='left'>
+                                            <Trans>Evidence</Trans>
+                                        </Box>
+                                        {isExpanded ? ( <MinusIcon fontSize='16px' /> ) : ( <AddIcon fontSize='16px' /> )}
+                                    </AccordionButton>
+                                    <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
+                                        <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
+                                            <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
+                                                <Text>
+                                                    <Trans>Sort by{": "} date</Trans>
                                                 </Text>
-                                                
-                                                <Text textStyle="paragraph" color="#2D7BD6">
-                                                    <Trans>File link</Trans>
-                                                    <Link href='#' isExternal rel="noreferrer" color="#2D7BD6">
-                                                        <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
-                                                    </Link>
-                                                </Text>
+
+                                                <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
                                             </Flex>
+
+                                            {/* Visible only on step 1 "Evidence period" */}
+                                            { (stepKey === 'Evidence period') && <Button variant="primary-solid" w={{base: "200px"}}>
+                                                <Trans>Submit new evidence</Trans>
+                                            </Button> }
                                         </Flex>
-                                    </Flex>
-                                </AccordionPanel>
-                            </>
-                        )}
-                    </AccordionItem>
-                </Accordion>
+
+                                        { evidence.files.map((file, idx) => {
+                                            return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
+                                                <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
+                                                    {`#${idx} ${file.description}`}
+                                                </Text>
+                                                <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
+                                                    <Text textStyle="paragraph">
+                                                        <Trans>Submitted by</Trans> {
+                                                            evidence.evidenceSide === 0 ? 
+                                                                formatAddress(claimantAddress, 4) : 
+                                                            evidence.evidenceSide === 1 ?
+                                                                formatAddress(defendantAddress, 4) :
+                                                            ''
+                                                        }
+                                                    </Text>
+                                                    <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
+                                                        <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
+                                                            Jan 09, 2020 05:00 GMT
+                                                        </Text>
+                                                        
+                                                        <Text textStyle="paragraph" color="#2D7BD6">
+                                                            <Trans>File link</Trans>
+                                                            <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
+                                                                <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                                            </Link>
+                                                        </Text>
+                                                    </Flex>
+                                                </Flex>
+                                            </Flex>
+                                        })}
+                                    </AccordionPanel>
+                                </>
+                            )}
+                        </AccordionItem>
+               </Accordion>
             }
         </Flex>
     </>
