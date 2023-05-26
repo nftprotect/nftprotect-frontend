@@ -237,13 +237,13 @@ const KlerosCaseContent = ({
                 { pageData.title }
             </Text>
 
-            <Flex mt={{base: "5px"}} mb={{base: "30px"}}>
-                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textStyle="h3" textDecoration="underline" textTransform="capitalize">
+            <Flex mt={{base: "5px"}} mb={{base: "30px"}} fontSize="18px" lineHeight="22px">
+                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline" textTransform="capitalize">
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
                             <Trans>Dispute policy</Trans>
                         </Text>
-                        <ExternalLink fontSize="22px" href={pageData.policyURL}/>
+                        <ExternalLink fontSize="18px" href={pageData.policyURL}/>
                     </Flex>
                 </Link>
                 { disputeData && <Link
@@ -251,7 +251,8 @@ const KlerosCaseContent = ({
                     isExternal 
                     rel="noreferrer" 
                     color="#2D7BD6" 
-                    textStyle="h3" 
+                    fontSize="18px" 
+                    lineHeight="22px"
                     textDecoration="underline"
                 >
                     <Flex mr={{base: "30px"}} alignItems="center">
@@ -412,12 +413,13 @@ const KlerosCaseContent = ({
                         </Link>
                     </Text>
 
-                    <Text fontWeight="600" textStyle="paragraph" >
+                    {/* Hided for now */}
+                    {/* <Text fontWeight="600" textStyle="paragraph" >
                         <Trans>DID{":"}</Trans>
                         <chakra.span bgColor="rgba(138, 255, 147, 0.5)" borderRadius="3px" fontSize={{base: "12px"}} lineHeight={{base: "15px"}} fontWeight="500" ml={{base: "5px"}} px={{base: "6px"}} py={{base: "2px"}}>
                             <Trans>Gitcoin passport{":"}{" "}70%</Trans>
                         </chakra.span>
-                    </Text>
+                    </Text> */}
 
                     <Text fontWeight="600" textStyle="paragraph">
                         <Trans>Original{":"}</Trans>

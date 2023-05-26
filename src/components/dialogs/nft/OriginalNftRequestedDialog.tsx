@@ -50,8 +50,8 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
         start,
     }
 
-    const copyOriginalOwnerToClipboard = () => {
-        copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
+    const copyPNftOwnerToClipboard = () => {
+        copyTextToClipboard(nft?.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
     useEffect(() => {
@@ -101,7 +101,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 {" "}
                                 <Popover placement='top'>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                     </PopoverTrigger>
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
@@ -112,8 +112,8 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     </PopoverContent>
                                 </Popover>
                                 
-                                <chakra.span id='originalOwnerAddressHolder'>
-                                    { originalOwner && (" (" + formatAddress(originalOwner, 4) + "), ") }
+                                <chakra.span id='pNftOwnerAddressHolder'>
+                                    { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
                                 </chakra.span>
                                 {" "}
                                 <chakra.span>
@@ -127,6 +127,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     variant={"dark-outline"}
                                     onClick={ () => {
                                         const dialog = getDialog('TransferOriginalNftDialog')
+                                        onClose()
                                         dialog.setNft(nft)
                                         dialog.onOpen()
                                     } }
@@ -145,7 +146,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 {" "}
                                 <Popover placement='top'>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                     </PopoverTrigger>
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
@@ -156,8 +157,8 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     </PopoverContent>
                                 </Popover>
                                 
-                                <chakra.span id='originalOwnerAddressHolder'>
-                                    { originalOwner && (" (" + formatAddress(originalOwner, 4) + ") ") }
+                                <chakra.span id='pNftOwnerAddressHolder'>
+                                    { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
                                 </chakra.span>
                             </Text>
                             <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" textTransform="uppercase" color="danger">
@@ -173,6 +174,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     variant={"dark-outline"}
                                     onClick={ () => {
                                         const dialog = getDialog('DoNotTransferOriginalNftDialog')
+                                        onClose()
                                         dialog.setNft(nft)
                                         dialog.onOpen()
                                     } }

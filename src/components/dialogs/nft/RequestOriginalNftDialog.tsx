@@ -104,6 +104,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const startButtonOnClick = () => {
         try {
+            setNextStep(StepMapping.confirmTransaction)
             nft && nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(nftProtectContract) )
                 .catch( 
