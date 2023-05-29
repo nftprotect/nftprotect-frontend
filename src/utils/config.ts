@@ -81,7 +81,7 @@ export const arbitratorGraphs = [
         arbitrators: [
             {
                 arbitratorId: 5,
-                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/klerosboard'
             }
         ]
     }
