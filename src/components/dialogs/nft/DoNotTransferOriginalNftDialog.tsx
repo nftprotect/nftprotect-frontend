@@ -67,19 +67,19 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
@@ -122,6 +122,11 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
         copyTextToClipboard(nft?.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.confirmTransaction)
+        onClose()
+    }
+
     useEffect(() => {
         setDialog('DoNotTransferOriginalNftDialog', {...disclosure, setNft})
     }, [])
@@ -135,10 +140,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen}
-            onClose={() => {
-                setNextStep(StepMapping.confirmTransaction)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay />
             <ModalContent

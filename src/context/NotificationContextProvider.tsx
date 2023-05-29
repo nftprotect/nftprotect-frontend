@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export interface NotificationContextInterface {
     getNotification: Function,
+    getNotificationIndex: Function,
     addNotifications: Function,
     deleteNotifications: Function,
     listNotifications: Function,
@@ -25,15 +26,18 @@ export enum SeverityLevel {
     Critical
 }
 
-const NotificationContext = createContext<NotificationContextInterface|null>(null);
+export const NotificationContext = createContext<NotificationContextInterface|null>(null);
 
 export function NotificationContextProvider({ children }:any) {
 
-    const [ notifications, setNotifications ] = useState<{[P in string]: Notification}>({})
-    const count = Object.keys(notifications).length
+    const [ notifications, setNotifications ] = useState<Array<Notification>>([])
 
     const getNotification = (id: string) => {
-        return notifications[id]
+        return notifications.find(it => it.id === id)
+    }
+
+    const getNotificationIndex = (id: string) => {
+        return notifications.findIndex(it => it.id === id)
     }
 
     const addNotifications = (newNotifications: {
@@ -45,9 +49,13 @@ export function NotificationContextProvider({ children }:any) {
         callback: Function|undefined,
         image: {url: string, text: string}|undefined
     }[]) => {
-        const updatingData:{[P in string]: Notification} = {}
+        const updatingData: Notification[] = []
         newNotifications.forEach((notification) => {
-            updatingData[notification.id] = {
+            const existing = getNotification(notification.id)
+            if (existing) {
+                throw new Error(`Notification with ID ${notification.id} already exists`)
+            }
+            updatingData.push({
                 id: notification.id,
                 children: notification.children,
                 severity: (notification.severity === undefined) ? SeverityLevel.Info : notification.severity,
@@ -55,7 +63,7 @@ export function NotificationContextProvider({ children }:any) {
                 closeable: (notification.closeable === undefined) ? true : notification.closeable,
                 callback: notification.callback,
                 image: notification.image
-            }
+            })
         })
         setNotifications({
             ...notifications,
@@ -64,7 +72,7 @@ export function NotificationContextProvider({ children }:any) {
     }
 
     const deleteNotifications = (toDelete: any[]) => {
-        const newState = {...notifications}
+        const newState = [...notifications]
         if (toDelete.length > 0) {
             toDelete.forEach((notification) => {
                 let id: string
@@ -73,13 +81,14 @@ export function NotificationContextProvider({ children }:any) {
                 } else {
                     id = notification.id
                 }
-                if (newState.hasOwnProperty(id)) {
-                    delete(newState[id])
+                const idx = getNotificationIndex(id)
+                if (idx > -1) {
+                    newState.splice(idx, 1)
                 } else {
-                    console.error('No such notification:', id, notifications)
+                    console.error('No such notification:', id)
                 }
             })
-            if (count > Object.keys(newState).length) {
+            if (notifications.length > newState.length) {
                 setNotifications(newState)
             }
         }
@@ -96,30 +105,19 @@ export function NotificationContextProvider({ children }:any) {
     }
 
     const listNotifications = (compareFunction: Function = defaultSort) => {
-        return Object.keys(notifications)
-                .map(key => notifications[key])
-                .sort(compareFunction as any)
+        return notifications.sort(compareFunction as any)
     }
 
     return (
         <NotificationContext.Provider value={{
             getNotification,
+            getNotificationIndex,
             addNotifications,
             deleteNotifications,
             listNotifications,
-            notificationsCount: count
+            notificationsCount: notifications.length
         }}>
             {children}
         </NotificationContext.Provider>
     );
-}
-
-export function useNotificationContext() {
-    const currentContext = useContext(NotificationContext);
-    if (!currentContext) {
-        throw new Error(
-            "useAppContext has to be used within <NotificationContext.Provider>"
-        );
-    }
-    return currentContext;
 }

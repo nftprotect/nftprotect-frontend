@@ -38,10 +38,10 @@ export const defaultChain = 5 // Goerli
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 
 export const libraryPollingInterval = 12000
-export const nftpContractAddress = '0xdccFE315E42c05c8699F3AC046b0A2F3115f4B02'
-export const userRegistryContractAddress = '0xE2E809F3Aec329B8Af5482eB3B1AD6A90510e808'
-export const arbitratorRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
-export const couponsContractAddress = '0x03d8899BDad1F05F28373f04F05a0A9dC6BDad64'
+export const nftpContractAddress = '0xf837fB19Ffd6c87700fb98743F29acCa43454299'
+export const userRegistryContractAddress = '0xcAD5C3a950667EEa1E9E7eAb92dFdB56502792aD'
+export const dynamicArbRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
+export const couponsContractAddress = '0x5512F1beb7078329c6f437E03ff845243B8b6179'
 
 export const dialogsTimeout = 5000
 
@@ -60,5 +60,29 @@ export const defaultArbitrator = 2
 export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'
 
 // The Graph
-export const dynamicArbRegistryGraphURI = 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
-export const NFTProtectGraphURI = 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+// ChainId: URI
+export const dynamicArbRegistryGraphs = [
+    {
+        chainId: 5,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
+    }
+]
+
+export const nftProtectGraphs = [
+    {
+        chainId: 5,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+    }
+]
+
+export const arbitratorGraphs = [
+    {
+        chainId: 5,
+        arbitrators: [
+            {
+                arbitratorId: 5,
+                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/klerosboard'
+            }
+        ]
+    }
+]

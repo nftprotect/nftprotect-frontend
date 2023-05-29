@@ -93,19 +93,19 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = () => {
@@ -118,7 +118,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(onClose, dialogsTimeout)
+                    setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -199,6 +199,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 5 :
                             undefined
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.start)
+        onClose()
+    }
+
     useEffect(() => {
         setDialog('LostPNftDialog', {...disclosure, setNft})
     }, [])
@@ -208,10 +213,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen}
-            onClose={() => {
-                setNextStep(StepMapping.start)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay />
             <ModalContent

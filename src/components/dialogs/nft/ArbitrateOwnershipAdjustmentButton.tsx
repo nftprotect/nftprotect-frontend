@@ -87,19 +87,19 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = () => {
@@ -112,7 +112,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                     setNextStep(StepMapping.caseSent)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(onClose, dialogsTimeout)
+                    setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -160,6 +160,11 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
         copyTextToClipboard(nft?.originalData?.ownerAddress || '', '#originalOwnerAddressHolder').then(() => alert('Copied!'))
     }
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.start)
+        onClose()
+    }
+
     // Check request timeout on every block
     useEffect(() => {
         if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
@@ -180,10 +185,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen} 
-            onClose={() => {
-                setNextStep(StepMapping.start)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 

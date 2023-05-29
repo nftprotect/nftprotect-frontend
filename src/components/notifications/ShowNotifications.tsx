@@ -17,7 +17,7 @@ import {
     Button
 } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { useNotificationContext } from "../../context/NotificationContextProvider"
+import { useNotifications } from "../../hooks/useNotifications"
 import {Bell} from '@web3uikit/icons'
 import { Trans } from '@lingui/macro'
 
@@ -39,7 +39,7 @@ const ShowNotifications = () => {
     const {
         listNotifications,
         notificationsCount
-    } = useNotificationContext()
+    } = useNotifications()
 
     useEffect(() => {
         console.log(listNotifications())
@@ -128,7 +128,7 @@ const ShowNotifications = () => {
 const NotificationAlert = ({
     notification
 }: any) => {
-    const { deleteNotifications } = useNotificationContext()
+    const { deleteNotifications } = useNotifications()
 
     return (
         <Flex 

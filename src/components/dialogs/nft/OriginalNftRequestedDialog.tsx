@@ -54,6 +54,11 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
         copyTextToClipboard(nft?.ownerAddress || '', '#pNftOwnerAddressHolder')
     }
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.start)
+        onClose()
+    }
+
     useEffect(() => {
         setDialog('OriginalNftRequestedDialog', {...disclosure, setNft})
     }, [])
@@ -63,10 +68,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen}
-            onClose={() => {
-                setNextStep(StepMapping.start)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay />
             <ModalContent
