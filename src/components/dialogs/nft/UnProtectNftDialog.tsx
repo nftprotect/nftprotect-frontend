@@ -58,19 +58,19 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
@@ -82,7 +82,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(onClose, dialogsTimeout)
+                    setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -109,6 +109,11 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.start)
+        onClose()
+    }
+
     useEffect(() => {
         setDialog('UnProtectNftDialog', {...disclosure, setNft})
     }, [])
@@ -118,10 +123,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen} 
-            onClose={() => {
-                setNextStep(StepMapping.start)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay />
             <ModalContent

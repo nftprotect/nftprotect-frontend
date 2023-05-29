@@ -70,19 +70,19 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
+        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {
@@ -94,7 +94,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(onClose, dialogsTimeout)
+                    setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -122,6 +122,11 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
         copyTextToClipboard(originalOwner || '', '#originalOwnerAddressHolder')
     }
 
+    const dialogClose = () => {
+        setNextStep(StepMapping.start)
+        onClose()
+    }
+
     useEffect(() => {
         setDialog('RequestOriginalNftDialog', {...disclosure, setNft})
     }, [])
@@ -131,10 +136,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
             variant="stepModal"
             closeOnOverlayClick={false}
             isOpen={isOpen} 
-            onClose={() => {
-                setNextStep(StepMapping.start)
-                onClose()
-            }}
+            onClose={dialogClose}
         >
             <ModalOverlay />
             <ModalContent
