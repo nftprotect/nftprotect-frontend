@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContextProvider';
-import { useNotificationContext } from '../../context/NotificationContextProvider';
+import { useNotifications } from '../../context/NotificationContextProvider';
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
@@ -30,7 +30,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const {
         addNotifications, 
         notificationsCount
-    } = useNotificationContext()
+    } = useNotifications()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason

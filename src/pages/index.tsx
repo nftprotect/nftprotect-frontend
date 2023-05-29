@@ -15,7 +15,7 @@ import { useAppContext } from '../context/AppContextProvider'
 import NFTView from '../components/nftView/NFTView'
 import Footer from '../components/footer/Footer'
 import ShowNotifications from '../components/notifications/ShowNotifications'
-import { useNotificationContext } from '../context/NotificationContextProvider'
+import { useNotifications } from '../hooks/useNotifications'
 import { Trans } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { useIPFSContext } from '../context/IPFSContextProvider'
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
     const {
         addNotifications, 
         notificationsCount
-    } = useNotificationContext()
+    } = useNotifications()
     const { setBaseUrl } = useIPFSContext()
 
     useEffect(() => {
