@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContextProvider';
-import { useNotifications } from '../../context/NotificationContextProvider';
+import { useNotifications } from '../../hooks/useNotifications';
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';

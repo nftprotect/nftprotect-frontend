@@ -17,7 +17,7 @@ import {
     Button
 } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { useNotifications } from "../../context/NotificationContextProvider"
+import { useNotifications } from "../../hooks/useNotifications"
 import {Bell} from '@web3uikit/icons'
 import { Trans } from '@lingui/macro'
 
