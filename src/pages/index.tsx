@@ -9,6 +9,8 @@ import {
     Flex,
     Text,
     Box,
+    Grid,
+    GridItem,
     ChakraBaseProvider
 } from '@chakra-ui/react'
 import { useAppContext } from '../context/AppContextProvider'
@@ -81,7 +83,12 @@ const Home: NextPage = () => {
 
     return (
         <>
-        <Flex
+        <Grid
+            templateAreas={`"nav"
+                            "main"
+                            "footer"`}
+            gridTemplateRows={'60px 1fr 60px'}
+            gridTemplateColumns={'1fr'}
             maxW="1920px"
             minH="100vh"
             p={0}
@@ -89,10 +96,22 @@ const Home: NextPage = () => {
             flexDirection="column"
             position="relative"
         >
-            
-            <NavBar />
+            <GridItem 
+                area={'nav'} 
+                position="sticky"
+                top="0"
+                zIndex="1"
+                bgColor="#000"
+                color="#FFF"
+                w="100%"
+                px={[3, 6]}
+                py="0.375rem"
+            >
+                <NavBar />
+            </GridItem>
 
-            <chakra.main>
+            <GridItem area={'main'}>
+                <chakra.main>
                 <Box
                     position="relative"
                     top="0" 
@@ -163,10 +182,13 @@ const Home: NextPage = () => {
                         { active && <NFTView />}
                     </>
                 }
-            </chakra.main>
+                </chakra.main>
+            </GridItem>
 
-            <Footer />
-        </Flex>
+            <GridItem area={'footer'}>
+                <Footer />
+            </GridItem>
+        </Grid>
     </>
     )
 }
