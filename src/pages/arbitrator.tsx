@@ -55,8 +55,8 @@ const ArbitratorPage: NextPage = () => {
     const graphUpdateTimeout = 3000
 
     const reloadDyArbitrators = () => {
-        if (active) {
-            loadDyArbitrators().then(({data}) => {
+        if (account && active) {
+            loadDyArbitrators(account).then(({data}) => {
                 console.log('GRAPH ARBITRATORS DATA', data)
                 setArbitratorsData(data)
             })

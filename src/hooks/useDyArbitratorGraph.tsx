@@ -1,82 +1,71 @@
 import { useContext } from "react";
-import { AppContext, useAppContext } from "../context/AppContextProvider";
-import { BigNumber } from '@ethersproject/bignumber'
 import { dynamicArbRegistryGraphs } from "../utils/config";
+import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { useTheGraph } from "./useTheGraph";
 
 export const useDyArbitratorGraph = (chainId: number) => {
-    const currentContext = useContext(AppContext);
+    const currentContext = useContext(TheGraphContext)
     if (!currentContext) {
         throw new Error(
-            "useNftProtectGraph has to be used within <AppContext.Provider>"
+            "useDyArbitratorGraph has to be used within <TheGraphContext.Provider>"
         );
     }
     const { performQuery } = useTheGraph()
-    const graphURI = dynamicArbRegistryGraphs[chainId.toString()]
+    const { uri: graphURI } = dynamicArbRegistryGraphs.find( it => it.chainId === chainId ) || { uri: undefined }
 
-    const loadNFTPRequest = async (requestId: BigNumber) => {
-        if (!graphURI) {
-            throw new Error(
-                `The Graph URI not found for chainId: ${chainId}`
-            );
-        }
-        const query = `
-            query loadRequest($requestId: Bytes!) {
-        }          
-        `
-        const result = await performQuery(graphURI, query, { requestId: requestId })
-        return result
-    }
-
-    const { account, active } = useAppContext()
-
-    const checkAccount= () => {
+    const checkAccount = (account: string) => {
         if (!account) {
             throw new Error(
                 "Invalid account!"
             );
         }
-        if (!active) {
+    }
+
+    const checkURI = () => {
+        if (!graphURI) {
             throw new Error(
-                "Invalid account!"
+                `The Graph URI not found for chainId: ${chainId}`
             );
         }
     }
 
-    const loadDyArbitrators = async () => {
-        checkAccount()
-        const query = `
-            query GetAllArbitrators($managerAddress: Bytes!) {
-                requests(where: {status: InDispute, manager: $managerAddress}) {
-                    id
-                    name
-                    disputeID
-                    operation
-                    manager
-                }
-
-                arbitrators(where: {manager: $managerAddress}) {
-                    id
-                    name
-                    operations {
+    const loadDyArbitrators = async (account: string) => {
+        checkURI()
+        checkAccount(account)
+        if (graphURI) {
+            const query = `
+                query GetAllArbitrators($managerAddress: Bytes!) {
+                    requests(where: {status: InDispute, manager: $managerAddress}) {
                         id
+                        name
+                        disputeID
                         operation
-                        extraData
+                        manager
                     }
-                    contracts {
+    
+                    arbitrators(where: {manager: $managerAddress}) {
                         id
-                        contract
+                        name
+                        operations {
+                            id
+                            operation
+                            extraData
+                        }
+                        contracts {
+                            id
+                            contract
+                        }
                     }
-                }
-            }          
-        `
-        const result = await performQuery(
-            graphURI,
-            query,
-            { managerAddress: account }
-        )
-        console.log('GRAPH RETURNS', result)
-        return result
+                }          
+            `
+            const result = await performQuery(
+                graphURI,
+                query,
+                { managerAddress: account }
+            )
+            console.log('GRAPH RETURNS', result)
+            return result
+        }
     }
 
     return {

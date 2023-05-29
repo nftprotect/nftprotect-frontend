@@ -61,16 +61,28 @@ export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe
 
 // The Graph
 // ChainId: URI
-export const dynamicArbRegistryGraphs = {
-    5: 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
-}
-
-export const nftProtectGraphs = {
-    5: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
-}
-
-export const arbitratorGraphs = {
-    5: { // ChainID
-        2: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect' // ArbitratorID
+export const dynamicArbRegistryGraphs = [
+    {
+        chainId: 5,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/dyarbitr-subgraph'
     }
-}
+]
+
+export const nftProtectGraphs = [
+    {
+        chainId: 5,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+    }
+]
+
+export const arbitratorGraphs = [
+    {
+        chainId: 5,
+        arbitrators: [
+            {
+                arbitratorId: 5,
+                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+            }
+        ]
+    }
+]
