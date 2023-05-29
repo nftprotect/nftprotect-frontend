@@ -4,7 +4,7 @@ import {
     nftpContractAddress, 
     userRegistryContractAddress, 
     supportedChains,
-    arbitratorRegistryContractAddress,
+    dynamicArbRegistryContractAddress,
     defaultChain 
 } from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
@@ -42,7 +42,7 @@ export function AppContextProvider({ children }:any) {
     const chainId = providedLibrary?.network?.chainId || defaultChainId
     const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library)
     const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library)
-    const arbitratorRegistryContract = new Contract(arbitratorRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library)
+    const arbitratorRegistryContract = new Contract(dynamicArbRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library)
     const referrerAddress = '0x0000000000000000000000000000000000000000'
     const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
     const defaultChain = defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined

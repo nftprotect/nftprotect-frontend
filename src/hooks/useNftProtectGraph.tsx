@@ -25,7 +25,6 @@ export const useNftProtectGraph = (chainId: number) => {
         }          
         `
         const result = await performQuery(graphURI, query, { requestId: requestId })
-        console.log('GRAPH RETURNS', result)
         return result
     }
 
