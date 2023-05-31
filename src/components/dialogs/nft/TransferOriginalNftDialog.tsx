@@ -106,7 +106,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 onOpen()
                 const performAnswer = () => {
                     if (nft.pendingRequest) {
-                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest, true, '')
+                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, true, '')
                     } else {
                         return nftProtectContract.adjustOwnership(nft.tokenId, defaultArbitrator, '')
                     }

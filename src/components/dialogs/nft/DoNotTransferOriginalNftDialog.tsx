@@ -102,7 +102,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
         try {
             if (nft && nft.pendingRequest) {
                 console.log('ANSWER ADJUSTMENT REJECT')
-                nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest, false, '')
+                nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, false, '')
                     .then( finalTransactionSent(
                         nft.loadedContract,
                     ))
