@@ -576,7 +576,7 @@ const KlerosCaseContent = ({
             </Flex>
 
             {evidence && evidence.files.length > 0 &&
-                <Accordion allowToggle mb={{base: "30px"}}>
+                <Accordion defaultIndex={[0]} allowToggle mb={{base: "30px"}}>
                         <AccordionItem>
                             {({ isExpanded }) => (
                                 <>
@@ -602,7 +602,7 @@ const KlerosCaseContent = ({
                                             </Button> }
                                         </Flex>
 
-                                        { evidence.files.map((file, idx) => {
+                                        { evidence && evidence.files.map((file, idx) => {
                                             return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
                                                 <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
                                                     {`#${idx} ${file.description}`}
