@@ -4,14 +4,14 @@ import { nftProtectGraphs } from "../utils/config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
 
-enum ReqType
+export enum ReqType
 {
     OwnershipAdjustment,
     OwnershipRestore,
     Burn
 }
 
-enum ReqStatus
+export enum ReqStatus
 {
     Initial,
     Accepted,

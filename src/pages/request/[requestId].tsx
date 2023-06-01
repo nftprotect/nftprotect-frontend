@@ -13,26 +13,15 @@ import { useAppContext } from '../../context/AppContextProvider'
 import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
-
-enum RequestType {
-    OwnershipAdjustment,
-    OwnershipRestore,
-    Burn
-}
-
-enum RequestStatus {
-    Initial,
-    Accepted,
-    Rejected,
-    Disputed
-}
+import { Trans } from '@lingui/macro'
+import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
 
 interface Request {
-    reqtype: RequestType, 
+    reqtype: ReqType, 
     tokenId: BigNumber,
     newowner: String,
     timeout: BigNumber,
-    status: RequestStatus,
+    status: ReqStatus,
     arbitratorId: BigNumber,
     localDisputeId: BigNumber,
     externalDisputeId: BigNumber
@@ -65,9 +54,9 @@ const RequestPage: NextPage = () => {
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
 
     // Temporarily mapping
-    const metaEvidenceType = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+    const metaEvidenceType = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
                                 metaEvidenceTypes.find(item => item.value === '4') :
-                             (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                             (requestData?.reqtype === ReqType.OwnershipRestore) ?
                                 metaEvidenceTypes.find(item => item.value === '5') :
                              undefined
 
@@ -120,14 +109,14 @@ const RequestPage: NextPage = () => {
             nft.loadOriginalNFTData()
             const originalNFTDataLoadedListener = () => {
                 console.log('ORIGINAL NFT DATA:', nft.originalData)
-                const claimantAddress = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+                const claimantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
                                             nft?.ownerAddress :
-                                        (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                                        (requestData?.reqtype === ReqType.OwnershipRestore) ?
                                             nft?.originalData?.ownerAddress :
                                         undefined
-                const defendantAddress = (requestData?.reqtype === RequestType.OwnershipAdjustment) ?
+                const defendantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
                                             nft?.originalData?.ownerAddress :
-                                        (requestData?.reqtype === RequestType.OwnershipRestore) ?
+                                        (requestData?.reqtype === ReqType.OwnershipRestore) ?
                                             nft?.ownerAddress :
                                         undefined
                 setClaimaintAddress(claimantAddress)
