@@ -14,20 +14,6 @@ import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCa
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
 
-export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
-    const requestId = params?.requestId
-    const translation = await loadTranslation(
-        locale!,
-        process.env.NODE_ENV === 'production'
-    )
-    return {
-        props: {
-            translation,
-            requestId,
-        }
-    }
-}
-
 enum RequestType {
     OwnershipAdjustment,
     OwnershipRestore,
@@ -50,6 +36,20 @@ interface Request {
     arbitratorId: BigNumber,
     localDisputeId: BigNumber,
     externalDisputeId: BigNumber
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
+    const requestId = params?.requestId
+    const translation = await loadTranslation(
+        locale!,
+        process.env.NODE_ENV === 'production'
+    )
+    return {
+        props: {
+            translation,
+            requestId,
+        }
+    }
 }
 
 const RequestPage: NextPage = () => {
