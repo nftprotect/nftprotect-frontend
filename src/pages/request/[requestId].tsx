@@ -15,6 +15,7 @@ import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
 import { Trans } from '@lingui/macro'
 import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
+import { Container } from '@chakra-ui/react'
 
 interface Request {
     reqtype: ReqType, 
@@ -141,20 +142,28 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    return (<>
-        { !requestId && <h1>Wrong request</h1> }
-        { requestData && nft && metaEvidenceType && <KlerosCaseContent
-            stepKey={''}
-            metaEvidenceId={parseInt(metaEvidenceType.value)}
-            nft={nft}
-            claimantAddress={claimantAddress || ''}
-            defendantAddress={defendantAddress || ''}
-            caseDescription='efsdf'
-            //evidence={}
-            disputeData={{disputeId: requestData.externalDisputeId}}
-            pageData={ metaEvidenceType.page }
-        />}
-    </>)
+    return (
+        <Container 
+            p={0}
+            maxW="1920px"
+            width={"auto"}
+            h={"auto"}
+            mx={'2em'}
+        >
+            { !requestId && <h1>Wrong request</h1> }
+            { requestData && nft && metaEvidenceType && <KlerosCaseContent
+                stepKey={''}
+                metaEvidenceId={parseInt(metaEvidenceType.value)}
+                nft={nft}
+                claimantAddress={claimantAddress || ''}
+                defendantAddress={defendantAddress || ''}
+                caseDescription='efsdf'
+                //evidence={}
+                disputeData={{disputeId: requestData.externalDisputeId}}
+                pageData={ metaEvidenceType.page }
+            />}
+        </Container>
+    )
 }
 
 export default RequestPage;
