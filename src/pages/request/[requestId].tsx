@@ -13,7 +13,7 @@ import { useAppContext } from '../../context/AppContextProvider'
 import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
 
@@ -53,6 +53,7 @@ const RequestPage: NextPage = () => {
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
+    const [ error, setError ] = useState<string>()
 
     // Temporarily mapping
     const metaEvidenceType = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
@@ -67,22 +68,24 @@ const RequestPage: NextPage = () => {
             setRequestId(pRequestId)
         } catch (ex) {
             console.error('Incorrect requestId', ex)
+            setError(t`Incorrect requestId`)
         }
-        let chainId: number
+        let chainId: number = -1
         if (query.chainId) {
             try {
                 chainId = parseInt(query.chainId?.toString())
             } catch (ex) {
                 console.error('Incorrect chainId', ex)
-                chainId = defaultChain
+                setError(t`Incorrect requestId`)
             }
         } else {
             chainId = defaultChain
         }
-        if (chainId) {
+        if (chainId > -1) {
             context.setChainId(chainId)
         } else {
             console.error('Unsupported chain', chainId)
+            setError(t`Unsupported chain`)
         }
     }, [query])
 
@@ -150,8 +153,9 @@ const RequestPage: NextPage = () => {
             h={"auto"}
             mx={'2em'}
         >
-            { !requestId && <h1>Wrong request</h1> }
-            { requestData && nft && metaEvidenceType && <KlerosCaseContent
+            { error && <h1>{error}</h1> }
+            { !error && !(requestData && nft && metaEvidenceType) && <h1>Loading...</h1> }
+            { !error && requestData && nft && metaEvidenceType && <KlerosCaseContent
                 stepKey={''}
                 metaEvidenceId={parseInt(metaEvidenceType.value)}
                 nft={nft}
