@@ -31,7 +31,8 @@ export interface ActionRequest {
     status: RequestStatus,
     arbitrator: string,
     localDisputeId: BigNumber,
-    externalDisputeId: BigNumber
+    externalDisputeId: BigNumber,
+    metaevidence: number
 }
 
 export enum RequestStatus {
@@ -270,7 +271,7 @@ export default class NFT implements NFTInterface {
         this.rawMetadata = alchemyNFT.rawMetadata;
         this.media = alchemyNFT.media;
         this.spamInfo = alchemyNFT.spamInfo;
-        this.thumbnail = this.media && this.media[0] && this.media[0].thumbnail || './images/noImage.png'
+        this.thumbnail = this.media && this.media[0] && this.media[0].thumbnail || '/images/noImage.png'
         this.context = context
         this.events = new EventTarget();
 

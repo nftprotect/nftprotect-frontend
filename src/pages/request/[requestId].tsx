@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { defaultChain } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftpContractAddress } from '../../utils/config'
@@ -13,19 +13,10 @@ import { useAppContext } from '../../context/AppContextProvider'
 import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
-
-interface Request {
-    reqtype: ReqType, 
-    tokenId: BigNumber,
-    newowner: String,
-    timeout: BigNumber,
-    status: ReqStatus,
-    arbitratorId: BigNumber,
-    localDisputeId: BigNumber,
-    externalDisputeId: BigNumber
-}
+import { Container } from '@chakra-ui/react'
+import { ActionRequest } from '../../classes/NFT'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -46,19 +37,19 @@ const RequestPage: NextPage = () => {
     const { account, library, currentChain } = context
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
-    const [ requestData, setRequestData ] = useState<Request>()
+    const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
-
-    // Temporarily mapping
-    const metaEvidenceType = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                metaEvidenceTypes.find(item => item.value === '4') :
-                             (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                metaEvidenceTypes.find(item => item.value === '5') :
-                             undefined
+    const [ error, setError ] = useState<string>()
+    const metaEvidenceType = useMemo(() => {
+        let meType = requestData?.metaevidence
+        // temporarily workaround contract mistake
+        meType = (meType === 3) ? 4 : meType
+        return metaEvidenceTypes.find( item => item.value === meType?.toString() )
+    }, [requestData])
 
     useEffect(() => {
         try {
@@ -66,22 +57,24 @@ const RequestPage: NextPage = () => {
             setRequestId(pRequestId)
         } catch (ex) {
             console.error('Incorrect requestId', ex)
+            setError(t`Incorrect requestId`)
         }
-        let chainId: number
+        let chainId: number = -1
         if (query.chainId) {
             try {
                 chainId = parseInt(query.chainId?.toString())
             } catch (ex) {
                 console.error('Incorrect chainId', ex)
-                chainId = defaultChain
+                setError(t`Incorrect requestId`)
             }
         } else {
             chainId = defaultChain
         }
-        if (chainId) {
+        if (chainId > -1) {
             context.setChainId(chainId)
         } else {
             console.error('Unsupported chain', chainId)
+            setError(t`Unsupported chain`)
         }
     }, [query])
 
@@ -89,7 +82,7 @@ const RequestPage: NextPage = () => {
         console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
             const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library)
-            nftProtectContract.requests(requestId.toString()).then((result: Request) => {
+            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
                 setRequestData(result)
                 getNftMetadata && getNftMetadata([
                     nftProtectContract.address,
@@ -141,20 +134,29 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    return (<>
-        { !requestId && <h1>Wrong request</h1> }
-        { requestData && nft && metaEvidenceType && <KlerosCaseContent
-            stepKey={''}
-            metaEvidenceId={parseInt(metaEvidenceType.value)}
-            nft={nft}
-            claimantAddress={claimantAddress || ''}
-            defendantAddress={defendantAddress || ''}
-            caseDescription='efsdf'
-            //evidence={}
-            disputeData={{disputeId: requestData.externalDisputeId}}
-            pageData={ metaEvidenceType.page }
-        />}
-    </>)
+    return (
+        <Container 
+            p={0}
+            maxW="1920px"
+            width={"auto"}
+            h={"auto"}
+            mx={'2em'}
+        >
+            { error && <h1>{error}</h1> }
+            { !error && !(requestData && nft && metaEvidenceType) && <h1>Loading...</h1> }
+            { !error && requestData && nft && metaEvidenceType && <KlerosCaseContent
+                stepKey={''}
+                metaEvidenceId={parseInt(metaEvidenceType.value)}
+                nft={nft}
+                claimantAddress={claimantAddress || ''}
+                defendantAddress={defendantAddress || ''}
+                caseDescription='efsdf'
+                //evidence={}
+                disputeData={{disputeId: requestData.externalDisputeId}}
+                pageData={ metaEvidenceType.page }
+            />}
+        </Container>
+    )
 }
 
 export default RequestPage;
