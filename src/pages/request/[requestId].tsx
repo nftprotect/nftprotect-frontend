@@ -82,7 +82,7 @@ const RequestPage: NextPage = () => {
         console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
             const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library)
-            nftProtectContract.requests(requestId.toString()).then((result: Request) => {
+            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
                 setRequestData(result)
                 getNftMetadata && getNftMetadata([
                     nftProtectContract.address,
