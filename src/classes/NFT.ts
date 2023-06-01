@@ -31,7 +31,8 @@ export interface ActionRequest {
     status: RequestStatus,
     arbitrator: string,
     localDisputeId: BigNumber,
-    externalDisputeId: BigNumber
+    externalDisputeId: BigNumber,
+    metaevidence: number
 }
 
 export enum RequestStatus {

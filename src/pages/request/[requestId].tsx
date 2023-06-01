@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { defaultChain } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftpContractAddress } from '../../utils/config'
@@ -16,17 +16,7 @@ import { NFTEvents } from '../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
-
-interface Request {
-    reqtype: ReqType, 
-    tokenId: BigNumber,
-    newowner: String,
-    timeout: BigNumber,
-    status: ReqStatus,
-    arbitratorId: BigNumber,
-    localDisputeId: BigNumber,
-    externalDisputeId: BigNumber
-}
+import { ActionRequest } from '../../classes/NFT'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -47,20 +37,19 @@ const RequestPage: NextPage = () => {
     const { account, library, currentChain } = context
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
-    const [ requestData, setRequestData ] = useState<Request>()
+    const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
     const [ error, setError ] = useState<string>()
-
-    // Temporarily mapping
-    const metaEvidenceType = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                metaEvidenceTypes.find(item => item.value === '4') :
-                             (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                metaEvidenceTypes.find(item => item.value === '5') :
-                             undefined
+    const metaEvidenceType = useMemo(() => {
+        let meType = requestData?.metaevidence
+        // temporarily workaround contract mistake
+        meType = (meType === 3) ? 4 : meType
+        return metaEvidenceTypes.find( item => item.value === meType?.toString() )
+    }, [requestData])
 
     useEffect(() => {
         try {
