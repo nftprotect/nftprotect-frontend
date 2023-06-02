@@ -154,17 +154,27 @@ const KlerosEvidencesForm = ({
                                             }}
                                         >
                                             {({ field, form }: any) => (<>
+                                                <FormControl isInvalid={form.errors[idx.toString()] && form.touched[idx.toString()]} >
+                                                    <Input 
+                                                        type='text' 
+                                                        {...field} 
+                                                        placeholder={t`Describe the file…`}
+                                                        required
+                                                        mb={{base: "10px"}}
+                                                    />
+                                                    <FormErrorMessage>{form.errors[idx.toString()]}</FormErrorMessage>
+                                                </FormControl>
                                                 <Flex 
                                                     flexWrap="nowrap" 
                                                     alignItems="center" 
-                                                    py={{base: "15px"}} 
-                                                    px={{base: "20px"}} 
-                                                    my={"1em"} 
+                                                    py={{base: "16px"}} 
+                                                    px={{base: "16px"}} 
                                                     border="1px dashed" 
-                                                    borderColor="accent.light" 
-                                                    borderRadius="16px"
+                                                    borderColor="#53AC5A" 
+                                                    borderRadius="3px"
                                                     width="100%"
-                                                    backgroundColor={"lightgreen"}
+                                                    backgroundColor="#EEFFEF"
+                                                    mb={{base: "24px"}}
                                                 >
                                                     <Image src="/images/statusIcons/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
                                                     <Flex flexDirection="column">
@@ -177,25 +187,34 @@ const KlerosEvidencesForm = ({
                                                         </Text>
                                                     </Flex>
                                                 </Flex>
-                                                <FormControl isInvalid={form.errors[idx.toString()] && form.touched[idx.toString()]} mb={{base: "20px"}}>
-                                                    <Input 
-                                                        type='text' 
-                                                        {...field} 
-                                                        placeholder={t`Describe the file…`}
-                                                        //variant='primary' 
-                                                        required
-                                                    />
-                                                    <FormErrorMessage>{form.errors[idx.toString()]}</FormErrorMessage>
-                                                </FormControl>
                                             </>)}
-                                        </Field>     
+                                        </Field>
                                     </>
                                 }) }
                             </>
+                            <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid #2D7BD6" borderRadius="16px">
+                                <Box mr={{base: "20px"}}>
+                                    <Info fontSize="24px" color="#009AFF" />
+                                </Box>
+                                <Flex flexDirection="column">
+                                    <Text textStyle="paragraph" color="muted">
+                                        <Trans>On the next screen you can view the generated document before sending</Trans>
+                                    </Text>
+                                </Flex>
+                            </Flex>
                         </CardBody>
 
-                        <CardFooter flexDirection="column" alignItems="center">
-                            <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
+                        <CardFooter alignItems="center">
+                            <Box w={{base: "60%", sm: "40%"}} mb={{base: "10px"}}>
+                                <Button 
+                                    onClick={goBack as any}
+                                    variant="dark-outline"
+                                >
+                                    <Trans>Back</Trans>
+                                </Button>
+                            </Box>
+                            <Box w={{base: "60%", sm: "40%"}}>
+                                
                                 <Button
                                     type="submit"
                                     variant="dark-outline"
@@ -203,14 +222,6 @@ const KlerosEvidencesForm = ({
                                     isDisabled={ !props.isValid }
                                 >
                                     <Trans>Open dispute</Trans>
-                                </Button>
-                            </Box>
-                            <Box w={{base: "60%", sm: "50%"}}>
-                                <Button 
-                                    onClick={goBack as any}
-                                    variant="dark-outline"
-                                >
-                                    <Trans>Back</Trans>
                                 </Button>
                             </Box>
                         </CardFooter>
