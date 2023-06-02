@@ -160,14 +160,6 @@ const KlerosCaseForm = ({
                                     <Trans>Open dispute</Trans>
                                 </Button>
                             </Box>
-                            <Box w={{base: "60%", sm: "50%"}}>
-                                <Button 
-                                    onClick={onClose as any}
-                                    variant="dark-outline"
-                                >
-                                    Close
-                                </Button>
-                            </Box>
                         </CardFooter>
                     </Card>
                 </Form>
