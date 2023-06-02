@@ -19,6 +19,7 @@ import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { createDisputeLink } from '../../utils/kleros';
+import { ExternalLinkIcon } from "@chakra-ui/icons"
 
 interface NFTInitialData {
     nft: NFT,
@@ -194,9 +195,13 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                             <Link
                                                 isExternal 
                                                 rel="noreferrer"
-                                                href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                                href={'createDisputeLink(pendingRequest.externalDisputeId)'}
+                                                whiteSpace="nowrap"
+                                                display="flex"
+                                                alignItems="center"
                                             >
                                                 <Trans>Under dispute</Trans>
+                                                <ExternalLinkIcon fontSize='16px' ml="5px" />
                                             </Link>
                                         </Text>
                                     </Flex>
@@ -278,9 +283,13 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         <Link
                                             isExternal 
                                             rel="noreferrer"
-                                            href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                            href={'createDisputeLink(pendingRequest.externalDisputeId)'}
+                                            whiteSpace="nowrap"
+                                            display="flex"
+                                            alignItems="center"
                                         >
                                             <Trans>Under dispute</Trans>
+                                            <ExternalLinkIcon fontSize='16px' ml="5px" />
                                         </Link>
                                     </Text>
                                 </Flex>
