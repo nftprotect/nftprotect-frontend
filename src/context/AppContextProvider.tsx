@@ -13,6 +13,7 @@ import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../utils/config";
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { getTokenPrice } from "../utils/coimarketcap";
 
 export interface AppContextInterface {
     active: boolean,
@@ -25,6 +26,7 @@ export interface AppContextInterface {
     referrerAddress: string,
     didRegistered: boolean | undefined,
     currentBlock: number,
+    baseTokenPrice: number | undefined,
     fee: number | undefined,
     setChainId: Function
 }
@@ -39,6 +41,7 @@ export function AppContextProvider({ children }:any) {
         library: providedLibrary
     } = useWeb3React()
     const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
+    const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     const chainId = providedLibrary?.network?.chainId || defaultChainId
     const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library)
     const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library)
@@ -98,6 +101,15 @@ export function AppContextProvider({ children }:any) {
             console.error('You can set chainId only when fallback provider is used')
         }
     }
+    
+    // Loads and sets current base token price in USD
+    const updateBaseTokenPrice = () => {
+        if (currentChain) {
+            getTokenPrice(currentChain.symbol).then((result) => {
+                setBaseTokenPrice(result)
+            })
+        }
+    }
 
     useEffect(setDidState, [active, account, chainId])
     useEffect(subscribeBlockUpdates, [active, account, chainId])
@@ -109,6 +121,8 @@ export function AppContextProvider({ children }:any) {
             setChainId(chainId)
         }
     }, [providedLibrary])
+    
+   useEffect(updateBaseTokenPrice, [chainId])
 
     return (
         <AppContext.Provider value={{
@@ -123,7 +137,8 @@ export function AppContextProvider({ children }:any) {
             didRegistered,
             currentBlock,
             fee,
-            setChainId
+            setChainId,
+            baseTokenPrice
         }}>
             {children}
         </AppContext.Provider>

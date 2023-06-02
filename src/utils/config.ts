@@ -49,6 +49,9 @@ export const dialogsTimeout = 5000
 export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'
 export const ipfsUrlMask = 'https://cloudflare-ipfs.com/ipfs/{HASH}/{FILENAME}'
 
+// Coinmarketcap
+export const coinmarketcapUrl = 'https://pro-api.coinmarketcap.com/v1'
+
 // Arbitrators
 export enum Arbitrators {
     Dummy,

@@ -25,7 +25,7 @@ export const IPFSFileUpload = ({
     const [loading, setLoading] = useState<boolean>(false)
     const [loadedFiles, setLoadedFiles] = useState<File|FileList>()
     const [uploadedFiles, setUploadedFiles] = useState<IPFSUpload>()
-    const fileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF"];
+    const fileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"];
 
     const uploadFile = async (files: File|FileList) => {
         if (!files) {
@@ -75,6 +75,7 @@ export const IPFSFileUpload = ({
                 setUploadedFiles(ipfsUpload)
                 setLoading(false)
                 // return upload data
+                console.log(ipfsUpload.getRelativeIPFSUrl())
                 returnUploadedFiles && returnUploadedFiles(ipfsUpload)
             }
         }
