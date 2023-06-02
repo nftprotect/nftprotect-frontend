@@ -43,6 +43,7 @@ export enum RequestStatus {
 }
 
 export enum NFTEvents {
+    InitialNFTDataLoaded = 'initialNFTDataLoaded',
     OriginalNFTDataLoaded = 'originalNFTDataLoaded',
     PendingRequestLoaded = 'pendingRequestLoaded'
 }
@@ -178,7 +179,9 @@ export default class NFT implements NFTInterface {
         return Promise.all([
             this.loadOwnerAddress(),
             this.loadTokenAmount()
-        ])
+        ]).then(() => {
+            this.dispatchEvent(new Event(NFTEvents.InitialNFTDataLoaded));
+        })
     }
 
     //** If our NFT is pNFT we have to know about the original NFT */
