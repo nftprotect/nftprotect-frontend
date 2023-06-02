@@ -646,7 +646,7 @@ const KlerosCaseContent = ({
                                         { evidence && evidence.files.map((file, idx) => {
                                             return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
                                                 <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
-                                                    {`#${idx} ${file.description}`}
+                                                    {`#${idx+1} ${file.description}`}
                                                 </Text>
                                                 <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                                     <Text textStyle="paragraph">
