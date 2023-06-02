@@ -51,6 +51,7 @@ const RequestPage: NextPage = () => {
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
 
+    // Process request params
     useEffect(() => {
         try {
             const pRequestId = BigNumber.from(query.requestId?.toString())
@@ -78,39 +79,48 @@ const RequestPage: NextPage = () => {
         }
     }, [query])
 
+    // Load NFT
     useEffect(() => {
         console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
             const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library)
+            let currentNFT: NFT
+            const initialDataLoadedListener = () => {
+                setNft(currentNFT)
+            }
             nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
                 setRequestData(result)
                 getNftMetadata && getNftMetadata([
                     nftProtectContract.address,
                     result.tokenId
                 ]).then((alchemyNft) => {
-                    const currentNFT = new NFT(alchemyNft, context)
+                    currentNFT = new NFT(alchemyNft, context)
+                    currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                     currentNFT.loadInitialData()
-                    setNft(currentNFT)
+                    
                 })
             })
+            return () => {
+                currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
+            }
         }
     }, [requestId, library])
 
+    // Load original NFT data
     useEffect(() => {
         if (nft) {
-            // Load all secondary NFT data
             nft.loadOriginalNFTData()
             const originalNFTDataLoadedListener = () => {
                 console.log('ORIGINAL NFT DATA:', nft.originalData)
                 const claimantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                            nft?.ownerAddress :
+                                            nft.ownerAddress :
                                         (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                            nft?.originalData?.ownerAddress :
+                                            nft.originalData?.ownerAddress :
                                         undefined
                 const defendantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                            nft?.originalData?.ownerAddress :
+                                            nft.originalData?.ownerAddress :
                                         (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                            nft?.ownerAddress :
+                                            nft.ownerAddress :
                                         undefined
                 setClaimaintAddress(claimantAddress)
                 setDefendantAddress(defendantAddress)
@@ -148,9 +158,9 @@ const RequestPage: NextPage = () => {
                 stepKey={''}
                 metaEvidenceId={parseInt(metaEvidenceType.value)}
                 nft={nft}
-                claimantAddress={claimantAddress || ''}
-                defendantAddress={defendantAddress || ''}
-                caseDescription='efsdf'
+                claimantAddress={claimantAddress || t`Loading...`}
+                defendantAddress={defendantAddress || t`Loading...`}
+                caseDescription='Will be loaded from graph'
                 //evidence={}
                 disputeData={{disputeId: requestData.externalDisputeId}}
                 pageData={ metaEvidenceType.page }
