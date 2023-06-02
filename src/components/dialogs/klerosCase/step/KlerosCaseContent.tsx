@@ -42,6 +42,7 @@ import { useAppContext } from '../../../../context/AppContextProvider';
 import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
+import { NFTEvents } from '../../../../classes/NFT';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -142,11 +143,11 @@ const KlerosCaseContent = ({
     // First transaction in form for defendant
     const defendantTx1 = claimantIsPNftOwner() ? acquireTx : mintTx
 
-    useEffect(() => {
-        if (nft) {
-            // Find pNFT minting TX
+    // Finds pNFT minting TX
+    const findPNftMintingTx = () => {
+        if (nft.originalData) {
             getTransfersForOwner([
-                nft.originalData?.ownerAddress || '',
+                nft.originalData.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
                     contractAddresses: [nft.contract.address]
@@ -166,11 +167,16 @@ const KlerosCaseContent = ({
                     setMintDate(undefined)
                 }
             })
-            // Find original minting TX
+        }
+    }
+    
+    // Finds original NFT minting TX
+    const findOriginalMintingTx = () => {
+        if (nft?.originalData) {
             // We have to search for transactions after NFTProtect was deployed
             const startBlockNumber = nft.contract.deployedBlockNumber
             getTransfersForContract([
-                nft.originalData?.contractAddress || '',
+                nft.originalData.contractAddress,
                 {
                     fromBlock: startBlockNumber,
                 }
@@ -189,9 +195,15 @@ const KlerosCaseContent = ({
                     setMintOriginalDate(undefined)
                 }
             })
-            // Find acquiring pNFT transaction. It's the last pNFT moving transaction
+        }
+    }
+
+    // Finds acquiring pNFT transaction by current owner
+    const findAcquiringPNftTx = () => {
+        if (nft?.ownerAddress) {
+            // It's the last pNFT moving transaction
             getTransfersForOwner([
-                nft.ownerAddress || '',
+                nft.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
                     contractAddresses: [nft.contract.address]
@@ -206,28 +218,57 @@ const KlerosCaseContent = ({
                     setAcquireTx(undefined)
                 }
             })
-            if (contractAddress) {
-                // Find transaction of sending token to a hacked protocol
-                // It's the last transaction of original owner to sent this pNFT
-                getTransfersForOwner([
-                    nft.ownerAddress || '',
-                    GetTransfersForOwnerTransferType.FROM,
-                    {
-                        contractAddresses: [nft.contract.address]
-                    }
-                ]).then((result) => {
-                    const sentTransfer = result.nfts.reverse().find((transfer) => {
-                        return transfer.tokenId === nft.tokenId
-                    })
-                    if (sentTransfer) {
-                        setSentToProtocolTx(sentTransfer.transactionHash)
-                    } else {
-                        setSentToProtocolTx(undefined)
-                    }
+        }
+    }
+
+    // Finds snding to hacked protocol transaction
+    const findSendingToHackedContractTx = () => {
+        if (nft?.ownerAddress && contractAddress) {
+            // Find transaction of sending token to a hacked protocol
+            // It's the last transaction of original owner to sent this pNFT
+            getTransfersForOwner([
+                nft.ownerAddress,
+                GetTransfersForOwnerTransferType.FROM,
+                {
+                    contractAddresses: [nft.contract.address]
+                }
+            ]).then((result) => {
+                const sentTransfer = result.nfts.reverse().find((transfer) => {
+                    return transfer.tokenId === nft.tokenId
                 })
-            } else {
-                setSentToProtocolTx(undefined)
-            }
+                if (sentTransfer) {
+                    setSentToProtocolTx(sentTransfer.transactionHash)
+                } else {
+                    setSentToProtocolTx(undefined)
+                }
+            })
+        } else {
+            setSentToProtocolTx(undefined)
+        }
+    }
+
+    useEffect(() => {
+        const loadDependingOnInitial = () => {
+            findPNftMintingTx()
+            findSendingToHackedContractTx()
+        }
+        const loadDependingOnOriginal = () => {
+            findAcquiringPNftTx()
+            findOriginalMintingTx()
+        }
+        if (nft.ownerAddress) {
+            loadDependingOnInitial()
+        } else {
+            nft.addEventListener(NFTEvents.InitialNFTDataLoaded, loadDependingOnInitial)
+        }
+        if (nft.originalData) {
+            loadDependingOnOriginal()
+        } else {
+            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, loadDependingOnOriginal)
+        }
+        return () => {
+            nft.removeEventListener(NFTEvents.InitialNFTDataLoaded, loadDependingOnInitial)
+            nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, loadDependingOnOriginal)
         }
     }, [nft, account, library])
 
