@@ -249,7 +249,7 @@ const KlerosCaseContent = ({
 
     useEffect(() => {
         const loadDependingOnInitial = () => {
-            findAcquiringPNftTx()
+            findPNftMintingTx()
             findSendingToHackedContractTx()
         }
         const loadDependingOnOriginal = () => {
