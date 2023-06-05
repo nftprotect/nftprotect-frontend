@@ -13,7 +13,7 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const symbol = req.query?.symbol
-    if (symbol) {
+    if (symbol && (typeof(symbol) === 'string')) {
         try {
             const response = await axios.get(
                 `${coinmarketcapUrl}/cryptocurrency/quotes/latest?symbol=${symbol}&convert=USD`,

@@ -107,6 +107,7 @@ export const IPFSFileUpload = ({
                 </Flex>
                 { uploadedFiles && uploadedFiles.listFileNames().map((item) => {
                     return <Flex 
+                            key={item}
                             flexWrap="nowrap" 
                             alignItems="center" 
                             py={{base: "16px"}} 
