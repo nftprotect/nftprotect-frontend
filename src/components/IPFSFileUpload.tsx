@@ -3,6 +3,8 @@ import { useIPFSContext } from '../context/IPFSContextProvider'
 import { FileUploader } from "react-drag-drop-files";
 import {
     Box,
+    Image,
+    Text,
     Flex,
     Spinner
 } from '@chakra-ui/react'
@@ -98,13 +100,31 @@ export const IPFSFileUpload = ({
                 multiple={multiple}
                 fileOrFiles={null}
             >
-                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer">
+                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer" mb={{base: "10px"}}>
                     { loading && <Spinner variant="primary" speed='0.65s' my={{base: "10px"}} w="1.5em" h="1.5em" /> }
                     { !loading && <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />}
                     
                 </Flex>
                 { uploadedFiles && uploadedFiles.listFileNames().map((item) => {
-                    return <p key={item}>{ item }</p>
+                    return <Flex 
+                            flexWrap="nowrap" 
+                            alignItems="center" 
+                            py={{base: "16px"}} 
+                            px={{base: "16px"}} 
+                            border="1px dashed" 
+                            borderColor="#53AC5A" 
+                            borderRadius="3px"
+                            width="100%"
+                            backgroundColor="#EEFFEF"
+                            mb={{base: "24px"}}
+                        >
+                            <Image src="/images/statusIcons/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
+                            <Flex flexDirection="column">
+                                <Text textStyle="paragraph" color="muted" key={item}>
+                                { item }
+                                </Text>
+                            </Flex>
+                        </Flex>
                 }) }
             </FileUploader>
         </>
