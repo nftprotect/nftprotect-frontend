@@ -1,6 +1,7 @@
 import { dialogsTimeout } from '../../../utils/config' 
 import React, { useEffect, useState } from 'react';
 import {
+    chakra,
     Button,
     Box,
     Image,
@@ -365,7 +366,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <CardBody mb={{base: "20px"}}>
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            We{'\u0027'}ve worked very hard to prepare a strong dispute with compelling evidence. Please review the dispute file provided via the 
+                                            We{'\u0027'}ve built your dispute package with strong evidence. Check it via the 
                                             <Link 
                                                 href='#' 
                                                 textDecoration="underline" 
@@ -385,12 +386,8 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             >
                                                 <Trans>link</Trans>
                                             </Link>
-                                            , and file it in court.
+                                            <chakra.span>{" "}before opening it in Kleros</chakra.span>
                                         </Trans>
-                                    </Text>
-
-                                    <Text textStyle="paragraph"  textAlign="center">
-                                        <Trans>Please note that the review process can take several weeks to several months.</Trans>
                                     </Text>
                                 </CardBody>
 

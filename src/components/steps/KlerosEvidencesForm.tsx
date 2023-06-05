@@ -4,24 +4,9 @@ import {
     Box,
     Image,
     Flex,
-    Heading,
     Text,
-    Modal,
-    ModalOverlay,
-    ModalBody,
-    ModalContent,
-    ModalHeader,
-    Spinner,
     FormControl,
-    FormLabel,
     FormErrorMessage,
-    Container,
-    Badge,
-    Progress,
-    List,
-    ListItem,
-    ListIcon,
-    Textarea,
     Card,
     CardHeader,
     CardBody,
@@ -192,16 +177,6 @@ const KlerosEvidencesForm = ({
                                     </>
                                 }) }
                             </>
-                            <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid #2D7BD6" borderRadius="16px">
-                                <Box mr={{base: "20px"}}>
-                                    <Info fontSize="24px" color="#009AFF" />
-                                </Box>
-                                <Flex flexDirection="column">
-                                    <Text textStyle="paragraph" color="muted">
-                                        <Trans>On the next screen you can view the generated document before sending</Trans>
-                                    </Text>
-                                </Flex>
-                            </Flex>
                         </CardBody>
 
                         <CardFooter alignItems="center">

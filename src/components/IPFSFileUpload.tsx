@@ -106,26 +106,7 @@ export const IPFSFileUpload = ({
                     
                 </Flex>
                 { uploadedFiles && uploadedFiles.listFileNames().map((item) => {
-                    return <Flex 
-                            key={item}
-                            flexWrap="nowrap" 
-                            alignItems="center" 
-                            py={{base: "16px"}} 
-                            px={{base: "16px"}} 
-                            border="1px dashed" 
-                            borderColor="#53AC5A" 
-                            borderRadius="3px"
-                            width="100%"
-                            backgroundColor="#EEFFEF"
-                            mb={{base: "24px"}}
-                        >
-                            <Image src="/images/statusIcons/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
-                            <Flex flexDirection="column">
-                                <Text textStyle="paragraph" color="muted" key={item}>
-                                { item }
-                                </Text>
-                            </Flex>
-                        </Flex>
+                    return <p key={item}>{ item }</p>
                 }) }
             </FileUploader>
         </>
