@@ -29,7 +29,7 @@ import DoNotTransferOriginalNftDialog from '../dialogs/nft/DoNotTransferOriginal
 import OriginalNftRequestedDialog from '../dialogs/nft/OriginalNftRequestedDialog';
 import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog';
 import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
-import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentButton';
+import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
 
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()

@@ -316,19 +316,10 @@ const AddOperationsDialog = ({
                                                     )}
                                                 </Field>
 
-                                                <Box w="100%">
+                                                <Box w="100%" mb={{base: "10px"}}>
                                                     { evidenceUpload && evidenceUpload.fileName }
                                                     <IPFSFileUpload returnUploadedFiles={ setEvidenceUpload }/>
                                                 </Box>
-
-                                                <Flex flexWrap="nowrap" alignItems="center" mt={{base: "8px"}} mb={{base: "10px"}}>
-                                                    <Box color="#2D7BD6" mr={[2]}>
-                                                        <Info fontSize='20px' />
-                                                    </Box>
-                                                    <Text textStyle="paragraph" color="muted">
-                                                        <Trans>You can add an external file in PDF or add multiple files in a single .zip file.</Trans>
-                                                    </Text>
-                                                </Flex>
                                             </CardBody>
 
                                             <CardFooter flexDirection="column" alignItems="center">
