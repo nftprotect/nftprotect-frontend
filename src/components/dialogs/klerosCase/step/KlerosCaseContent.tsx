@@ -615,7 +615,9 @@ const KlerosCaseContent = ({
                     <Trans>This is how he described the situation:</Trans>
                 </Text>
 
-                <Textarea value={ caseDescription } py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&::focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} fontSize={{base: "14px"}} />
+                <Flex w="100%" border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" fontSize={{base: "14px"}} py={{base: "8px"}} px="1rem" wordBreak="break-word" >
+                    <Text>{ caseDescription }</Text>
+                </Flex>
             </Flex>
 
             {evidence && evidence.files.length > 0 &&
