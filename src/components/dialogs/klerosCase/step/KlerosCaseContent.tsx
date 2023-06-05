@@ -57,7 +57,8 @@ export interface KlerosCaseInitialData {
 interface StepContentInitialData extends KlerosCaseInitialData {
     stepKey?: string,
     pageData: PageData,
-    disputeData?: DisputeData
+    disputeData?: DisputeData,
+    caseSubject?: String
 }
 
 interface PageData {
@@ -84,6 +85,7 @@ const KlerosCaseContent = ({
     defendantAddress, 
     contractAddress,
     caseDescription,
+    caseSubject,
     evidence,
     disputeData
 }: StepContentInitialData) => {
@@ -385,7 +387,7 @@ const KlerosCaseContent = ({
                     <Text fontSize={{base: "18px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>
                         {" "}
-                        <Trans>Original NFT</Trans>
+                        <Trans>{ caseSubject }</Trans>
                     </Text>
                     <Text textStyle="paragraph">
                     <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>

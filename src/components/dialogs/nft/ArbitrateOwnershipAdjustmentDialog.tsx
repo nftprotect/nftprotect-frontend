@@ -379,7 +379,8 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                                         claimantAddress: account,
                                                         defendantAddress: nft?.originalData?.ownerAddress,
                                                         caseDescription: evidenceData.description,
-                                                        evidence: evidenceData 
+                                                        evidence: evidenceData,
+                                                        caseSubject: 'Original NFT'
                                                     })
                                                     dialog.onOpen() 
                                                 }}

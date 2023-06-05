@@ -519,7 +519,8 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                         defendantAddress: nft?.ownerAddress,
                                                         contractAddress: evidenceData.protocolAddress,
                                                         caseDescription: evidenceData.description,
-                                                        evidence: evidenceData
+                                                        evidence: evidenceData,
+                                                        caseSubject: 'Protection NFT'
                                                     })
                                                     dialog.onOpen() 
                                                 }}
