@@ -57,7 +57,8 @@ export interface KlerosCaseInitialData {
 interface StepContentInitialData extends KlerosCaseInitialData {
     stepKey?: string,
     pageData: PageData,
-    disputeData?: DisputeData
+    disputeData?: DisputeData,
+    caseSubject?: String
 }
 
 interface PageData {
@@ -84,6 +85,7 @@ const KlerosCaseContent = ({
     defendantAddress, 
     contractAddress,
     caseDescription,
+    caseSubject,
     evidence,
     disputeData
 }: StepContentInitialData) => {
@@ -385,7 +387,7 @@ const KlerosCaseContent = ({
                     <Text fontSize={{base: "18px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>
                         {" "}
-                        <Trans>Original NFT</Trans>
+                        <Trans>{ caseSubject }</Trans>
                     </Text>
                     <Text textStyle="paragraph">
                     <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>
@@ -613,7 +615,9 @@ const KlerosCaseContent = ({
                     <Trans>This is how he described the situation:</Trans>
                 </Text>
 
-                <Textarea value={ caseDescription } py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&::focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} fontSize={{base: "14px"}} />
+                <Flex w="100%" border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" fontSize={{base: "14px"}} py={{base: "8px"}} px="1rem" wordBreak="break-word" >
+                    <Text>{ caseDescription }</Text>
+                </Flex>
             </Flex>
 
             {evidence && evidence.files.length > 0 &&
