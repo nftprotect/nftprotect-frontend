@@ -12,7 +12,6 @@ import {
     ModalBody,
     ModalContent,
     ModalCloseButton,
-    Textarea,
     ListItem,
     OrderedList,
     Link,
@@ -503,42 +502,41 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
-                                    <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
+                                    <Text textStyle="paragraph" mt={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            We{'\u0027'}ve built your dispute package with strong evidence. Check it via the 
-                                            <Link 
-                                                href='#' 
-                                                textDecoration="underline" 
-                                                cursor="pointer"
-                                                onClick={() => {
-                                                    const dialog = getDialog('KlerosCaseDialog')
-                                                    dialog.setCaseData({
-                                                        nft,
-                                                        metaEvidenceId,
-                                                        claimantAddress: account,
-                                                        defendantAddress: nft?.ownerAddress,
-                                                        contractAddress: evidenceData.protocolAddress,
-                                                        caseDescription: evidenceData.description,
-                                                        evidence: evidenceData,
-                                                        caseSubject: 'Protection NFT'
-                                                    })
-                                                    dialog.onOpen() 
-                                                }}
-                                            >
-                                                <Trans>link</Trans>
-                                            </Link>
-                                            <chakra.span>{" "}before opening it in Kleros</chakra.span>
+                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence
                                         </Trans>
                                     </Text>
                                 </CardBody>
 
                                 <CardFooter>
-                                    <Box w={{base: "60%", xs: "50%"}}>
+                                    <Box w={{base: "60%", sm: "45%"}}>
+                                        <Button
+                                            variant="dark-outline"
+                                            onClick={() => {
+                                                const dialog = getDialog('KlerosCaseDialog')
+                                                dialog.setCaseData({
+                                                    nft,
+                                                    metaEvidenceId,
+                                                    claimantAddress: account,
+                                                    defendantAddress: nft?.ownerAddress,
+                                                    contractAddress: evidenceData.protocolAddress,
+                                                    caseDescription: evidenceData.description,
+                                                    evidence: evidenceData,
+                                                    caseSubject: 'Protection NFT'
+                                                })
+                                                dialog.onOpen() 
+                                            }}
+                                        >
+                                            <Trans>Review the case</Trans>
+                                        </Button>
+                                    </Box>
+                                    <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
                                             variant="dark-outline"
                                         >
-                                            <Trans>Open dispute</Trans>
+                                            <Trans>Proceed to payment</Trans>
                                         </Button>
                                     </Box>
                                 </CardFooter>

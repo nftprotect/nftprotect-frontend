@@ -38,6 +38,7 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import { metaEvidenceTypes } from '../../../utils/metaEvidence';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
 import { useAppContext } from '../../../context/AppContextProvider';
+import { Trans, t } from '@lingui/macro';
 
 const KlerosCaseDialog = () => {
 
@@ -82,11 +83,39 @@ const KlerosCaseDialog = () => {
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody mx={{base: "220px"}}>
                         <Flex flexDir="column" width="100%">
-                           { nft && caseData && <KlerosCaseContent
+                            { nft && caseData && <KlerosCaseContent
                                 pageData={pageData}
                                 {...caseData}
                             /> }
                         </Flex>
+
+                        <Flex 
+                            flexDirection="row"
+                            flexWrap={{base: "wrap", sm: "nowrap"}}
+                            alignSelf="flex-start"
+                            justifyContent="center"
+                            w="100%"
+                            p="0"
+                            mb={{base: "30px"}}
+                        >
+                            <Box w={{base: "14rem"}} mr={{base: "20px"}}>
+                                <Button
+                                    onClick={ onClose }
+                                    variant="dark-outline"
+                                >
+                                    <Trans>Cancel</Trans>
+                                </Button>
+                            </Box>
+                            <Box w={{base: "14rem"}} ml={{base: "20px"}}>
+                                <Button
+                                    onClick={ onClose }
+                                    variant="dark-outline"
+                                >
+                                    <Trans>Proceed to payment</Trans>
+                                </Button>
+                            </Box>
+                        </Flex>
+                        
                     </ModalBody>
                 </ModalContent>
             </Modal>
