@@ -64,7 +64,7 @@ const RequestPage: NextPage = () => {
     const loadEvidences = async () => {
         if (requestData) {
             const evidences = await listEvidences(requestData.arbitratorId, requestData.localDisputeId, 9083542)
-            const promises = evidences.map(async ({evidenceURI, blockNumber, party}) => {
+            const promises = evidences.map(async ({evidenceURI, blockNumber, submittedBy}) => {
                 const uri = centralizeIpfsUrl(evidenceURI)
                 const fetchResp = await fetch(uri)
                 const evidenceJson = await fetchResp.json()
@@ -72,7 +72,7 @@ const RequestPage: NextPage = () => {
                 return {
                     evidenceJson,
                     submitDate,
-                    party
+                    submittedBy
                 }
             })
             const result = await Promise.all(promises)
@@ -194,7 +194,6 @@ const RequestPage: NextPage = () => {
                 nft={nft}
                 claimantAddress={claimantAddress || t`Loading...`}
                 defendantAddress={defendantAddress || t`Loading...`}
-                caseDescription='Will be loaded from graph'
                 evidences={evidences}
                 disputeData={{disputeId: requestData.externalDisputeId}}
                 pageData={ metaEvidenceType.page }
