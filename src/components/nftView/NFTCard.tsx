@@ -321,7 +321,6 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 metaEvidenceId: 4,
                                 claimantAddress: '0xVictim', 
                                 defendantAddress: '0xScammer', 
-                                caseDescription: 'I put some text here',
                                 evidences: []
                             })
                             dialog.onOpen() 
