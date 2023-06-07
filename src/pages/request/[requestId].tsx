@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultChain } from '../../utils/config'
+import { defaultArbitrator, defaultChain } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftpContractAddress } from '../../utils/config'
 import NFTProtectABI from '../../abi/NFTProtectABI'
@@ -10,13 +10,15 @@ import { Contract } from '@ethersproject/contracts'
 import { useAlchemy } from '../../hooks/useAlchemy'
 import NFT from '../../classes/NFT'
 import { useAppContext } from '../../context/AppContextProvider'
-import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
+import KlerosCaseContent, { EvidenceUpload } from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
 import { ActionRequest } from '../../classes/NFT'
+import { useArbitrableProxy } from '../../hooks/useArbitrableProxy'
+import { centralizeIpfsUrl } from '../../utils/ipfs'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -35,9 +37,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
 const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, library, currentChain } = context
+    const { listEvidences } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
+    const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
@@ -50,6 +54,31 @@ const RequestPage: NextPage = () => {
         meType = (meType === 3) ? 4 : meType
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
+
+    const getBlockDate = async (blockNumber: number) => {
+        const block = await library.getBlock(blockNumber)
+        return new Date(block.timestamp * 1000)
+    }
+
+    // Loads all submitted evidence data
+    const loadEvidences = async () => {
+        if (requestData) {
+            const evidences = await listEvidences(requestData.arbitratorId, requestData.localDisputeId, 9083542)
+            const promises = evidences.map(async ({evidenceURI, blockNumber, party}) => {
+                const uri = centralizeIpfsUrl(evidenceURI)
+                const fetchResp = await fetch(uri)
+                const evidenceJson = await fetchResp.json()
+                const submitDate = await getBlockDate(blockNumber)
+                return {
+                    evidenceJson,
+                    submitDate,
+                    party
+                }
+            })
+            const result = await Promise.all(promises)
+            setEvidences(result)
+        }
+    }
 
     // Process request params
     useEffect(() => {
@@ -132,6 +161,11 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
+    // Load evidences
+    useEffect(() => {
+        loadEvidences()
+    }, [requestData])
+
     useEffect(() => {
         if (requestData) {
             console.log("REQUEST DATA", requestData)
@@ -161,7 +195,7 @@ const RequestPage: NextPage = () => {
                 claimantAddress={claimantAddress || t`Loading...`}
                 defendantAddress={defendantAddress || t`Loading...`}
                 caseDescription='Will be loaded from graph'
-                //evidence={}
+                evidences={evidences}
                 disputeData={{disputeId: requestData.externalDisputeId}}
                 pageData={ metaEvidenceType.page }
             />}

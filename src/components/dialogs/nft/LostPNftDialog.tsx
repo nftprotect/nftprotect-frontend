@@ -519,7 +519,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                         defendantAddress: nft?.ownerAddress,
                                                         contractAddress: evidenceData.protocolAddress,
                                                         caseDescription: evidenceData.description,
-                                                        evidence: evidenceData
+                                                        evidences: [{
+                                                            evidenceJson: evidenceData,
+                                                            submittedBy: account,
+                                                            submitDate: new Date()
+                                                        }]
                                                     })
                                                     dialog.onOpen() 
                                                 }}
