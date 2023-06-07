@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const ArbitratorPage: NextPage = () => {
 
-    const { account, active, arbitratorRegistryContract, currentChain } = useAppContext()
+    const { account, active, dynamicArbRegistryContract, currentChain } = useAppContext()
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
@@ -71,9 +71,9 @@ const ArbitratorPage: NextPage = () => {
     useEffect(() => {
         setBaseUrl(window.location.origin)
         if (active && account) {
-            arbitratorRegistryContract.on({}, reloadDyArbitratorsWithTimeout)
+            dynamicArbRegistryContract.on({}, reloadDyArbitratorsWithTimeout)
             return () => {
-                arbitratorRegistryContract.removeAllListeners()
+                dynamicArbRegistryContract.removeAllListeners()
             }
         }
     }, [active, account])

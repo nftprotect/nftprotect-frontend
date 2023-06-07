@@ -77,7 +77,7 @@ const ShowRequestDialog = () => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
     const [ request, setRequest ] = useState<ArbitratorRequest>()
     const [ loadedRequestData, setLoadedRequestData ] = useState<LoadedRequestData>()
 
@@ -92,7 +92,7 @@ const ShowRequestDialog = () => {
             contracts: string,
             extraData: string[],
             operations: string
-        } = await arbitratorRegistryContract.getRequest(request?.id) 
+        } = await dynamicArbRegistryContract.getRequest(request?.id) 
         
         const countUint256 = (value: string) => {
             const data = value ? value.substring(2) : ""

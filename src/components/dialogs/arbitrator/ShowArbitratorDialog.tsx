@@ -76,7 +76,7 @@ const ShowArbitratorDialog = () => {
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
     const [ arbitrator, setArbitrator ] = useState<ArbitratorData>()
     const [ loadedArbitratorData, setLoadedArbitratorData ] = useState<any>()
     const { getDialog } = useCallableDialogContext()

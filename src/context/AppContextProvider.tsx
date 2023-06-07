@@ -5,15 +5,18 @@ import {
     userRegistryContractAddress, 
     supportedChains,
     dynamicArbRegistryContractAddress,
+    arbRegistryContractAddress,
     defaultChain 
 } from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
+import DynamicArbitratorRegistryABI from '../abi/DynamicArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../utils/config";
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
+import { useMemo } from "react";
 
 export interface AppContextInterface {
     active: boolean,
@@ -22,10 +25,11 @@ export interface AppContextInterface {
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
-    arbitratorRegistryContract: Contract,
+    arbRegistryContract: Contract,
+    dynamicArbRegistryContract: Contract,
     referrerAddress: string,
     didRegistered: boolean | undefined,
-    currentBlock: number,
+    currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
     fee: number | undefined,
     setChainId: Function
@@ -43,17 +47,18 @@ export function AppContextProvider({ children }:any) {
     const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     const chainId = providedLibrary?.network?.chainId || defaultChainId
-    const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library)
-    const userRegistryContract = new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library)
-    const arbitratorRegistryContract = new Contract(dynamicArbRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library)
+    const nftProtectContract = useMemo(() => new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library), [library])
+    const userRegistryContract = useMemo(() => new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library), [library])
+    const arbRegistryContract = useMemo(() => new Contract(arbRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
+    const dynamicArbRegistryContract = useMemo(() => new Contract(dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
     const referrerAddress = '0x0000000000000000000000000000000000000000'
-    const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
-    const defaultChain = defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined
+    const currentChain = useMemo(() => chainId ? supportedChains.find( it => it.id === chainId ) : undefined, [chainId])
+    const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
     const [ didRegistered, setDidRegistered ] = useState<boolean>()
     // Current fee for protecting
     const [ fee, setFee ] = useState<number>()
-    const [ currentBlock, setCurrentBlock] = useState<number>(0)
+    const [ currentBlock, setCurrentBlock] = useState<number>()
 
     const setDidState = () => {
         if (active && currentChain) {
@@ -79,6 +84,7 @@ export function AppContextProvider({ children }:any) {
 
     const subscribeBlockUpdates = () => {
         if (library) {
+            library.getBlockNumber().then(blockNumber => setCurrentBlock(blockNumber))
             library.on('block', (blockNumber: number) => {
                 setCurrentBlock(blockNumber)
             })
@@ -132,7 +138,8 @@ export function AppContextProvider({ children }:any) {
             currentChain,
             defaultChain,
             nftProtectContract,
-            arbitratorRegistryContract,
+            arbRegistryContract,
+            dynamicArbRegistryContract,
             referrerAddress,
             didRegistered,
             currentBlock,

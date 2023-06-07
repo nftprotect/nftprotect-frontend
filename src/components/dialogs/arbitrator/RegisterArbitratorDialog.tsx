@@ -65,7 +65,7 @@ const RegisterArbitratorDialog = () => {
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
 
     const DISPUTE_PRICE = '0.1'
 
@@ -103,7 +103,7 @@ const RegisterArbitratorDialog = () => {
         return (tx: any) => {
             console.log('ARBITRATOR REGISTRATION TX', tx)
             setNextStep(StepMapping.waitingForTransaction);
-            arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
+            dynamicArbRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
                     setDisputeId(disputeId)
@@ -184,7 +184,7 @@ const RegisterArbitratorDialog = () => {
         if (!isAddress(value)) {
             return t`Incorrect address`
         }
-        const checkAddress = await arbitratorRegistryContract.checkArbitrator(value)
+        const checkAddress = await dynamicArbRegistryContract.checkArbitrator(value)
         if (checkAddress) {
             return t`Address already registered`
         }
@@ -197,7 +197,7 @@ const RegisterArbitratorDialog = () => {
     const openDispute = () => {
         setNextStep(StepMapping.confirmTransaction)
         try {
-            arbitratorRegistryContract.addArbitrator(
+            dynamicArbRegistryContract.addArbitrator(
                 submissionData.name,
                 submissionData.arbitratorContractAddress,
                 submissionData.operations,

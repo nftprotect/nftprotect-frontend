@@ -71,7 +71,7 @@ const EditOperationsDialog = ({
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -107,7 +107,7 @@ const EditOperationsDialog = ({
             console.log('ARBITRATOR UPDATE OPERATIONS TX', tx)
             // setDisputeId
             setNextStep(StepMapping.waitingForTransaction);
-            arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
+            dynamicArbRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
                     setDisputeIdExternal && setDisputeIdExternal(disputeId)
@@ -162,7 +162,7 @@ const EditOperationsDialog = ({
         if (submissionData) {
             setNextStep(StepMapping.confirmTransaction)
             try {
-                arbitratorRegistryContract.changeOperations(
+                dynamicArbRegistryContract.changeOperations(
                     arbitrator.id,
                     submissionData.operations,
                     submissionData.extraDatas

@@ -36,12 +36,15 @@ export const supportedChains = [
 ]
 export const defaultChain = 5 // Goerli
 export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
+export const maxBlocksPerRequest = 3000
 
 export const libraryPollingInterval = 12000
 export const nftpContractAddress = '0xf837fB19Ffd6c87700fb98743F29acCa43454299'
 export const userRegistryContractAddress = '0xcAD5C3a950667EEa1E9E7eAb92dFdB56502792aD'
+export const arbRegistryContractAddress = '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04'
 export const dynamicArbRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
 export const couponsContractAddress = '0x5512F1beb7078329c6f437E03ff845243B8b6179'
+export const nftpDeployBlockNumber = 9073902
 
 export const dialogsTimeout = 5000
 
