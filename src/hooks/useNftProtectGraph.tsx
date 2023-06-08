@@ -1,8 +1,10 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftProtectGraphs } from "../utils/config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
+import { AppContext, useAppContext } from "../context/AppContextProvider";
+import { timestampToDate } from "../utils/helpers";
 
 export enum ReqType
 {
@@ -19,26 +21,37 @@ export enum ReqStatus
     Disputed
 }
 
-export const useNftProtectGraph = (chainId: number) => {
-    const currentContext = useContext(TheGraphContext);
-    if (!currentContext) {
+export interface RequestGraphData {
+    id: BigNumber,
+    type: string
+    status: ReqStatus,
+    tokenId: BigNumber,
+    oldOwnerAddress: string,
+    newOwnerAddress: string,
+    createDate: Date,
+    createBlockNumber: number,
+    updateDate: Date,
+    updateBlockNumber: number
+}
+
+const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
+
+export const useNftProtectGraph = () => {
+    const appContext = useContext(AppContext)
+    const graphContext = useContext(TheGraphContext)
+
+    if (!graphContext && !appContext) {
         throw new Error(
-            "useNftProtectGraph has to be used within <TheGraphContext.Provider>"
+            "useNftProtectGraph has to be used within <TheGraphContext.Provider> and <AppContextProvider.Provider>"
         );
     }
     const { performQuery } = useTheGraph()
-    const { uri: graphURI } = nftProtectGraphs.find( it => it.chainId === chainId ) || { uri: undefined }
-
-    const checkURI = () => {
-        if (!graphURI) {
-            throw new Error(
-                `The Graph URI not found for chainId: ${chainId}`
-            );
-        }
-    }
+    const { currentChain } = useAppContext()
+    const { uri: graphURI } = useMemo(() => { 
+        return nftProtectGraphs.find( it => it.chainId === currentChain.id ) || { uri: undefined }
+    }, [currentChain])
 
     const getSystem = async () => {
-        checkURI()
         if (graphURI) {
             const query = `
                 query getSystem() {
@@ -59,11 +72,12 @@ export const useNftProtectGraph = (chainId: number) => {
             `
             const result = await performQuery(graphURI, query)
             return result
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
         }
     }
 
-    const getRequest = async (requestId: BigNumber) => {
-        checkURI()
+    const getRequest = async (requestId: BigNumber): Promise<RequestGraphData> => {
         if (graphURI) {
             const query = `
                 query getRequest($requestId: Bytes!) {
@@ -71,13 +85,13 @@ export const useNftProtectGraph = (chainId: number) => {
                         id,
                         type,
                         status,
-                        token: {
+                        token {
                             id
                         },
-                        oldowner: {
+                        oldowner {
                             id
                         },
-                        newowner: {
+                        newowner {
                             id
                         },
                         timestamp,
@@ -87,13 +101,26 @@ export const useNftProtectGraph = (chainId: number) => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { requestId })
-            return result
+            const { data } = await performQuery(graphURI, query, { requestId: requestId.toString() })
+            const { request } = data
+            return {
+                id: BigNumber.from(request.id),
+                type: request.type,
+                status: ReqStatus[request.status as keyof typeof ReqStatus],
+                tokenId: BigNumber.from(request.token.id),
+                oldOwnerAddress: request.oldowner.id,
+                newOwnerAddress: request.newowner.id,
+                createDate: timestampToDate(parseInt(request.timestamp)),
+                createBlockNumber: parseInt(request.blocknumber),
+                updateDate: timestampToDate(parseInt(request.timestampChange)),
+                updateBlockNumber: parseInt(request.blocknumberChange),
+            }
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
         }
     }
 
     const getToken = async (tokenId: BigNumber) => {
-        checkURI()
         if (graphURI) {
             const query = `
                 query getToken($tokenId: Bytes!) {
@@ -117,11 +144,12 @@ export const useNftProtectGraph = (chainId: number) => {
             `
             const result = await performQuery(graphURI, query, { tokenId })
             return result
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
         }
     }
 
     const getUser = async (address: string) => {
-        checkURI()
         if (graphURI) {
             const query = `
                 query getUser($address: Bytes!) {
@@ -135,6 +163,8 @@ export const useNftProtectGraph = (chainId: number) => {
             `
             const result = await performQuery(graphURI, query, { address })
             return result
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
         }
     }
 
@@ -144,7 +174,6 @@ export const useNftProtectGraph = (chainId: number) => {
         newOwner?: string,
     }) => {
         const { oldOwner, newOwner } = params
-        checkURI()
         if (!oldOwner && !newOwner) {
             throw Error('oldOwner or newOwner must be specified')
         }
@@ -177,6 +206,8 @@ export const useNftProtectGraph = (chainId: number) => {
             `
             const result = await performQuery(graphURI, query, params)
             return result
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
         }
     }
 
