@@ -29,11 +29,11 @@ import { ExternalLinkIcon, ArrowDownIcon, ArrowUpIcon, MinusIcon, AddIcon } from
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
 import { BigNumber } from '@ethersproject/bignumber'
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
-import { formatAddress } from '../../../../utils/helpers';
+import { formatAddress, timestampToDate } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
 import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
@@ -59,8 +59,7 @@ export interface EvidenceUpload {
     submittedBy: string
 }
 
-interface StepContentInitialData extends KlerosCaseInitialData {
-    stepKey?: string,
+interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
     disputeData?: DisputeData,
     caseSubject?: String
@@ -79,11 +78,11 @@ interface PageData {
 
 interface DisputeData {
     disputeId: BigNumber,
-    dateCreated?: Date
+    createDate?: Date,
+    status?: any // Dispute status
 }
 
 const KlerosCaseContent = ({
-    stepKey,
     nft, 
     pageData, 
     claimantAddress, 
@@ -92,7 +91,7 @@ const KlerosCaseContent = ({
     caseSubject,
     evidences,
     disputeData
-}: StepContentInitialData) => {
+}: CaseContentInitialData) => {
 
     // Step content mapping
     // Label refers to name of the step and displayed on steps bar
@@ -127,6 +126,10 @@ const KlerosCaseContent = ({
     const [ acquireTx, setAcquireTx ] = useState<string>()
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+    // Current step key
+    const stepKey = useMemo(() => {
+        return disputeData?.status && steps[disputeData.status]?.key
+    }, [disputeData])
     // Steps for header
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
@@ -138,7 +141,7 @@ const KlerosCaseContent = ({
 
     const getBlockDate = async (blockNumber: string) => {
         const block = await library.getBlock(blockNumber)
-        return new Date(block.timestamp * 1000)
+        return timestampToDate(block.timestamp)
     }
 
     const formatDate = (date: Date) => date.toLocaleDateString("en-US")
@@ -335,7 +338,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={formatDate(disputeData?.dateCreated || new Date()) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 

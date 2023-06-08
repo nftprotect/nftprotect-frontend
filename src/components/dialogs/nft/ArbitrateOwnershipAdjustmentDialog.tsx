@@ -382,7 +382,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                                         evidences: [{
                                                             evidenceJson: evidenceData,
                                                             submittedBy: account,
-                                                            sumbitDate: new Date()
+                                                            submitDate: new Date()
                                                         }]
                                                     })
                                                     dialog.onOpen() 
