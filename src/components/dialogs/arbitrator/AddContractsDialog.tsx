@@ -72,7 +72,7 @@ const AddContractsDialog = ({
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const [ submissionData, setSubmissionData ] = useState<any>()
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
 
     const DISPUTE_PRICE = '0.1'
 
@@ -110,7 +110,7 @@ const AddContractsDialog = ({
         return (tx: any) => {
             console.log('ARBITRATOR ADD CONTRACTS TX', tx)
             setNextStep(StepMapping.waitingForTransaction);
-            arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
+            dynamicArbRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
                     setDisputeId(disputeId)
@@ -144,7 +144,7 @@ const AddContractsDialog = ({
     const openDispute = () => {
         setNextStep(StepMapping.confirmTransaction)
         try {
-            arbitratorRegistryContract.addContracts(
+            dynamicArbRegistryContract.addContracts(
                 arbitrator.id,
                 submissionData.contractAddresses,
                 submissionData.evidence.fileURI, 

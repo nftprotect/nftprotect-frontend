@@ -29,7 +29,7 @@ export interface ActionRequest {
     newowner: string,
     timeout: BigNumber,
     status: RequestStatus,
-    arbitrator: string,
+    arbitratorId: number,
     localDisputeId: BigNumber,
     externalDisputeId: BigNumber,
     metaevidence: number

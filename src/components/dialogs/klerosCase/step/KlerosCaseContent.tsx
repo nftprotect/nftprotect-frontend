@@ -25,15 +25,15 @@ import {
     IconButton,
 } from '@chakra-ui/react'
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
-import { ExternalLinkIcon, ArrowDownIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon, ArrowDownIcon, ArrowUpIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../../classes/NFT';
 import { BigNumber } from '@ethersproject/bignumber'
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
-import { formatAddress } from '../../../../utils/helpers';
+import { formatAddress, timestampToDate } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
 import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
@@ -50,12 +50,16 @@ export interface KlerosCaseInitialData {
     claimantAddress: string,
     defendantAddress: string,
     contractAddress?: string,
-    caseDescription: string,
-    evidence?: EvidenceJson
+    evidences?: EvidenceUpload[]
 }
 
-interface StepContentInitialData extends KlerosCaseInitialData {
-    stepKey?: string,
+export interface EvidenceUpload {
+    evidenceJson: EvidenceJson,
+    submitDate: Date,
+    submittedBy: string
+}
+
+interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
     disputeData?: DisputeData,
     caseSubject?: String
@@ -74,21 +78,20 @@ interface PageData {
 
 interface DisputeData {
     disputeId: BigNumber,
-    dateCreated?: Date
+    createDate?: Date,
+    status?: any // Dispute status
 }
 
 const KlerosCaseContent = ({
-    stepKey,
     nft, 
     pageData, 
     claimantAddress, 
     defendantAddress, 
     contractAddress,
-    caseDescription,
     caseSubject,
-    evidence,
+    evidences,
     disputeData
-}: StepContentInitialData) => {
+}: CaseContentInitialData) => {
 
     // Step content mapping
     // Label refers to name of the step and displayed on steps bar
@@ -123,17 +126,22 @@ const KlerosCaseContent = ({
     const [ acquireTx, setAcquireTx ] = useState<string>()
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+    // Current step key
+    const stepKey = useMemo(() => {
+        return disputeData?.status && steps[disputeData.status]?.key
+    }, [disputeData])
     // Steps for header
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
     });
     const { library, account } = useAppContext()
+    const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
 
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
     const getBlockDate = async (blockNumber: string) => {
         const block = await library.getBlock(blockNumber)
-        return new Date(block.timestamp * 1000)
+        return timestampToDate(block.timestamp)
     }
 
     const formatDate = (date: Date) => date.toLocaleDateString("en-US")
@@ -144,6 +152,8 @@ const KlerosCaseContent = ({
     const claimantTx2 = sentToProtocolTx
     // First transaction in form for defendant
     const defendantTx1 = claimantIsPNftOwner() ? acquireTx : mintTx
+    // Description of the first evidence is a case description.
+    const caseDescription = evidences && evidences[0] ? evidences[0].evidenceJson.description : ''
 
     // Finds pNFT minting TX
     const findPNftMintingTx = () => {
@@ -328,7 +338,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={formatDate(disputeData?.dateCreated || new Date()) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -620,7 +630,7 @@ const KlerosCaseContent = ({
                 </Flex>
             </Flex>
 
-            {evidence && evidence.files.length > 0 &&
+            { evidences && evidences.length > 0 &&
                 <Accordion defaultIndex={[0]} allowToggle mb={{base: "30px"}}>
                         <AccordionItem>
                             {({ isExpanded }) => (
@@ -638,7 +648,18 @@ const KlerosCaseContent = ({
                                                     <Trans>Sort by{": "} date</Trans>
                                                 </Text>
 
-                                                <IconButton aria-label='Sort' icon={<ArrowDownIcon />} w={{base: "20px"}} bg="none" p="0" m="0" _hover={{bg: "none"}}/>
+                                                <IconButton 
+                                                    aria-label='Sort' 
+                                                    icon={(sortDirection == 'asc') ? <ArrowUpIcon /> : <ArrowDownIcon />} 
+                                                    w={{base: "20px"}} 
+                                                    bg="none" 
+                                                    p="0" 
+                                                    m="0" 
+                                                    _hover={{bg: "none"}}
+                                                    onClick={() => {
+                                                        (sortDirection == 'asc') ? setSortDirection('desc') : setSortDirection('asc')
+                                                    }}
+                                                />
                                             </Flex>
 
                                             {/* Visible only on step 1 "Evidence period" */}
@@ -647,32 +668,40 @@ const KlerosCaseContent = ({
                                             </Button> }
                                         </Flex>
 
-                                        { evidence && evidence.files.map((file, idx) => {
+                                        { evidences.sort(( a, b ) => {
+                                            const result = (sortDirection === 'asc') ? (a.submitDate >= b.submitDate) : (b.submitDate < a.submitDate)
+                                            return result ? 1 : -1
+                                        }).map((evidence, idx) => {
+                                            const isInitial = (evidence === evidences[0])
+                                            const evidenceDescription = isInitial ? t`Initial evidence` : evidence.evidenceJson.description
                                             return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
                                                 <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
-                                                    {`#${idx+1} ${file.description}`}
+                                                    {`#${idx+1} ${evidenceDescription}`}
                                                 </Text>
                                                 <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                                     <Text textStyle="paragraph">
                                                         <Trans>Submitted by</Trans> {
-                                                            evidence.evidenceSide === 0 ? 
+                                                            evidence.evidenceJson.evidenceSide === 0 ? 
                                                                 formatAddress(claimantAddress, 4) : 
-                                                            evidence.evidenceSide === 1 ?
+                                                            evidence.evidenceJson.evidenceSide === 1 ?
                                                                 formatAddress(defendantAddress, 4) :
-                                                            ''
+                                                            formatAddress(evidence.submittedBy, 4)
                                                         }
                                                     </Text>
                                                     <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
                                                         <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
-                                                            Jan 09, 2020 05:00 GMT
+                                                            { formatDate(evidence.submitDate) }
                                                         </Text>
-                                                        
-                                                        <Text textStyle="paragraph" color="#2D7BD6">
-                                                            <Trans>File link</Trans>
-                                                            <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
-                                                                <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
-                                                            </Link>
-                                                        </Text>
+                                                        <Flex flexDirection="column" textAlign="right">
+                                                        { evidence.evidenceJson.files.map((file, idx) => {
+                                                            return <Text key={`file-${idx}`} textStyle="paragraph" color="#2D7BD6">
+                                                                { file.description }
+                                                                <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
+                                                                    <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                                                </Link>
+                                                            </Text>
+                                                        })}
+                                                        </Flex>
                                                     </Flex>
                                                 </Flex>
                                             </Flex>

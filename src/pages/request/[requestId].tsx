@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultChain } from '../../utils/config'
+import { defaultArbitrator, defaultChain } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftpContractAddress } from '../../utils/config'
 import NFTProtectABI from '../../abi/NFTProtectABI'
@@ -10,13 +10,16 @@ import { Contract } from '@ethersproject/contracts'
 import { useAlchemy } from '../../hooks/useAlchemy'
 import NFT from '../../classes/NFT'
 import { useAppContext } from '../../context/AppContextProvider'
-import KlerosCaseContent from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
+import KlerosCaseContent, { EvidenceUpload } from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { metaEvidenceTypes } from '../../utils/metaEvidence'
 import { NFTEvents } from '../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
-import { ReqType, ReqStatus } from '../../hooks/useNftProtectGraph'
+import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
 import { ActionRequest } from '../../classes/NFT'
+import { useArbitrableProxy } from '../../hooks/useArbitrableProxy'
+import { centralizeIpfsUrl } from '../../utils/ipfs'
+import { timestampToDate } from '../../utils/helpers'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -34,10 +37,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
 
 const RequestPage: NextPage = () => {
     const context = useAppContext()
-    const { account, library, currentChain } = context
+    const { account, library, currentChain, nftProtectContract } = context
+    const { listEvidences } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
+    const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
+    const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
@@ -50,6 +56,32 @@ const RequestPage: NextPage = () => {
         meType = (meType === 3) ? 4 : meType
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
+    const { getRequest } = useNftProtectGraph()
+
+    const getBlockDate = async (blockNumber: number) => {
+        const block = await library.getBlock(blockNumber)
+        return timestampToDate(block.timestamp)
+    }
+
+    // Loads all submitted evidence data
+    const loadEvidences = async () => {
+        if (requestData) {
+            const evidences = await listEvidences(requestData.arbitratorId, requestData.localDisputeId, 9083542)
+            const promises = evidences.map(async ({evidenceURI, blockNumber, submittedBy}) => {
+                const uri = centralizeIpfsUrl(evidenceURI)
+                const fetchResp = await fetch(uri)
+                const evidenceJson = await fetchResp.json()
+                const submitDate = await getBlockDate(blockNumber)
+                return {
+                    evidenceJson,
+                    submitDate,
+                    submittedBy
+                }
+            })
+            const result = await Promise.all(promises)
+            setEvidences(result)
+        }
+    }
 
     // Process request params
     useEffect(() => {
@@ -79,26 +111,41 @@ const RequestPage: NextPage = () => {
         }
     }, [query])
 
+    const loadNft = async (tokenId: BigNumber) => {
+        const alchemyNft = await getNftMetadata([
+            nftProtectContract.address,
+            tokenId
+        ])
+        return new NFT(alchemyNft, context)
+    }
+
     // Load NFT
     useEffect(() => {
         console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
-            const nftProtectContract = new Contract(nftpContractAddress, NFTProtectABI, library)
             let currentNFT: NFT
             const initialDataLoadedListener = () => {
                 setNft(currentNFT)
             }
-            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
-                setRequestData(result)
-                getNftMetadata && getNftMetadata([
-                    nftProtectContract.address,
-                    result.tokenId
-                ]).then((alchemyNft) => {
-                    currentNFT = new NFT(alchemyNft, context)
+            let loadNftStarted = false
+            // Fetch request data from The Graph
+            getRequest(requestId).then((result: RequestGraphData) => {
+                setRequestGraphData(result)
+                !loadNftStarted && loadNft(result.tokenId).then((result) => {
+                    currentNFT = result
                     currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                     currentNFT.loadInitialData()
-                    
                 })
+                loadNftStarted = true
+            })
+            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
+                setRequestData(result)
+                !loadNftStarted && loadNft(result.tokenId).then((result) => {
+                    currentNFT = result
+                    currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
+                    currentNFT.loadInitialData()
+                })
+                loadNftStarted = true
             })
             return () => {
                 currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
@@ -132,6 +179,11 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
+    // Load evidences
+    useEffect(() => {
+        loadEvidences()
+    }, [requestData])
+
     useEffect(() => {
         if (requestData) {
             console.log("REQUEST DATA", requestData)
@@ -144,6 +196,8 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
+    const allRequiredLoaded = requestData && nft && metaEvidenceType && claimantAddress && defendantAddress
+
     return (
         <Container 
             p={0}
@@ -153,16 +207,17 @@ const RequestPage: NextPage = () => {
             mx={'2em'}
         >
             { error && <h1>{error}</h1> }
-            { !error && !(requestData && nft && metaEvidenceType) && <h1>Loading...</h1> }
-            { !error && requestData && nft && metaEvidenceType && <KlerosCaseContent
-                stepKey={''}
+            { !error && !allRequiredLoaded && <h1>Loading...</h1> }
+            { !error && allRequiredLoaded && <KlerosCaseContent
                 metaEvidenceId={parseInt(metaEvidenceType.value)}
                 nft={nft}
-                claimantAddress={claimantAddress || t`Loading...`}
-                defendantAddress={defendantAddress || t`Loading...`}
-                caseDescription='Will be loaded from graph'
-                //evidence={}
-                disputeData={{disputeId: requestData.externalDisputeId}}
+                claimantAddress={claimantAddress}
+                defendantAddress={defendantAddress}
+                evidences={evidences}
+                disputeData={{
+                    disputeId: requestData.externalDisputeId, 
+                    createDate: requestGraphData?.createDate,
+                }}
                 pageData={ metaEvidenceType.page }
             />}
         </Container>

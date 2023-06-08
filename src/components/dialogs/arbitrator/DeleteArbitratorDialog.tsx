@@ -66,7 +66,7 @@ const DeleteArbitratorDialog = ({
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const { account, arbitratorRegistryContract, fee } = useAppContext()
+    const { account, dynamicArbRegistryContract, fee } = useAppContext()
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -101,7 +101,7 @@ const DeleteArbitratorDialog = ({
         return (tx: any) => {
             console.log('ARBITRATOR DELETION TX', tx)
             setNextStep(StepMapping.waitingForTransaction);
-            arbitratorRegistryContract.provider.once(tx.hash, (receipt) => {
+            dynamicArbRegistryContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
                     setNextStep(StepMapping.success)
@@ -117,7 +117,7 @@ const DeleteArbitratorDialog = ({
     const fireAction = () => {
         setNextStep(StepMapping.confirmTransaction)
         try {
-            arbitratorRegistryContract.deleteArbitrator(
+            dynamicArbRegistryContract.deleteArbitrator(
                 arbitrator.id
             )
                 .then( finalTransactionSent() )

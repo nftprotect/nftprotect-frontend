@@ -56,3 +56,5 @@ export const generateUUID = () => { // Public Domain/MIT
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+export const timestampToDate = (timestamp: number) => new Date(timestamp * 1000 )
