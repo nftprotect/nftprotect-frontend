@@ -121,7 +121,6 @@ const RequestPage: NextPage = () => {
 
     // Load NFT
     useEffect(() => {
-        console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
             let currentNFT: NFT
             const initialDataLoadedListener = () => {

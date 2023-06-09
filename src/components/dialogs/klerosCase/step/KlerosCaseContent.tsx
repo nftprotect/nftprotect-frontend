@@ -62,7 +62,6 @@ export interface EvidenceUpload {
 interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
     disputeData?: DisputeData,
-    caseSubject?: String
 }
 
 interface PageData {
@@ -73,7 +72,8 @@ interface PageData {
     claimantText2?: string,
     claimantTooltip: string,
     defendantText: string,
-    defendantTooltip: string
+    defendantTooltip: string,
+    caseSubject: string
 }
 
 interface DisputeData {
@@ -88,7 +88,6 @@ const KlerosCaseContent = ({
     claimantAddress, 
     defendantAddress, 
     contractAddress,
-    caseSubject,
     evidences,
     disputeData
 }: CaseContentInitialData) => {
@@ -397,7 +396,7 @@ const KlerosCaseContent = ({
                     <Text fontSize={{base: "18px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>
                         {" "}
-                        <Trans>{ caseSubject }</Trans>
+                        <Trans>{ pageData.caseSubject }</Trans>
                     </Text>
                     <Text textStyle="paragraph">
                     <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>

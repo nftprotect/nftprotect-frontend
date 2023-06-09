@@ -77,7 +77,6 @@ export const IPFSFileUpload = ({
                 setUploadedFiles(ipfsUpload)
                 setLoading(false)
                 // return upload data
-                console.log(ipfsUpload.getRelativeIPFSUrl())
                 returnUploadedFiles && returnUploadedFiles(ipfsUpload)
             }
         }

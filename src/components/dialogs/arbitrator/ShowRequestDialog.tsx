@@ -112,7 +112,6 @@ const ShowRequestDialog = () => {
                 defaultAbiCoder.decode([`uint256[${operationsCount}]`], operations)[0]:
                 []
         }
-        console.log('PARSED REQUEST DATA', parsedData)
         setLoadedRequestData(parsedData)
     }
 

@@ -164,11 +164,7 @@ export default class NFT implements NFTInterface {
     async loadTokenAmount() {
         if (this.amount !== undefined) return
         if (this.tokenType == NftTokenType.ERC1155) {
-            //try {
-                this.amount = await this.loadedContract.balanceOf(this.context.account, BigNumber.from(this.tokenId))
-            //} catch {
-                //console.log('DDDD', this, this.tokenId, BigNumber.from(this.tokenId))
-            //}
+            this.amount = await this.loadedContract.balanceOf(this.context.account, BigNumber.from(this.tokenId))
         } else {
             this.amount = 1
         }
@@ -221,7 +217,6 @@ export default class NFT implements NFTInterface {
         
             // Store the original NFT data and dispatch an event to notify listeners
             this.originalData = { ...nftData };
-            console.log('ORIGDATA', this.originalData, this.tokenId);
             this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
         });
     }
