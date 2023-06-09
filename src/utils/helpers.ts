@@ -58,3 +58,8 @@ export const generateUUID = () => { // Public Domain/MIT
 }
 
 export const timestampToDate = (timestamp: number) => new Date(timestamp * 1000 )
+export const addTimestampToDate = (date: Date, timestamp: number) => {
+    const currentTimestamp = date.getTime()
+    const newTimestamp = currentTimestamp + timestamp
+    return new Date(newTimestamp)
+}
