@@ -10,7 +10,6 @@ const useTimeCounter = (targetDate: Date) => {
         const currentDate = new Date()
         let diff = targetDate.getTime() - currentDate.getTime()
         diff = (diff < 0) ? 0 : diff
-        console.log('TD:', targetDate, currentDate, diff)
         setTimeLeft(diff)
         setTimeout(calculateTimeLeft, updateTimeout)
     }
