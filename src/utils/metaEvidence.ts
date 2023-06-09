@@ -25,7 +25,8 @@ export const metaEvidenceTypes = [
             claimantText: t`Claimant acquired the pNFT through this transaction:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`Defendant was the Original Owner of the NFT and insured it through the Protocol:`,
-            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`
+            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`,
+            caseSubject: t`Original NFT`
         }
     }, {
         label: t`Incorrect address`,
@@ -37,7 +38,8 @@ export const metaEvidenceTypes = [
             claimantText: t`Claimant was the Original Owner of the NFT and insured it through the Protocol:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`Defendant acquired the pNFT through this transaction:`,
-            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`
+            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`,
+            caseSubject: t`Protected NFT`
         }
     }, {
         label: t`Phishing attack`,
@@ -49,7 +51,8 @@ export const metaEvidenceTypes = [
             claimantText: t`Claimant was the Original Owner of the NFT and insured it through the Protocol:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`Defendant acquired the pNFT through this transaction:`,
-            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`
+            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`,
+            caseSubject: t`Protected NFT`
         }
     }, {
         label: t`Protocol breach`,
@@ -62,6 +65,8 @@ export const metaEvidenceTypes = [
             claimantText2: t`Claimant sent pNFT to partner protocol:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`The pNFT was transfered out of the protocol:`,
-            defendantTooltip: t`The Defendant is a smart contract.`        }
+            defendantTooltip: t`The Defendant is a smart contract.`,
+            caseSubject: t`Protected NFT`
+        }
     }
 ]

@@ -129,7 +129,6 @@ const RegisterArbitratorDialog = () => {
             arbitratorContractAddress: data.arbitratorContractAddress,
             contractAddresses: splitByLines(data.contractAddresses).map((item: string) => getAddress(item))
         }
-        console.log('RESULT', result)
         setSubmissionData(result)
         setNextStep(StepMapping.payArbitrationFee)
     }
@@ -157,7 +156,6 @@ const RegisterArbitratorDialog = () => {
             } else {
                 const extraDatasLength = splitByLines(values.extraDatas)?.length
                 const operationsLength = values.operations?.length
-                console.log(values.operations)
                 if (operationsLength > 0 && extraDatasLength !== operationsLength) {
                     error = t`Extra Datas must contain the same number of lines as Operations`
                 }

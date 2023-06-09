@@ -1,15 +1,36 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
 import { nftpDeployBlockNumber } from "../utils/config";
 import { maxBlocksPerRequest } from "../utils/config";
 import { BigNumber } from '@ethersproject/bignumber';
+import KlerosLiquidABI from "../abi/KlerosLiquidABI";
+import { timestampToDate } from "../utils/helpers";
 
 export interface EvidenceSubmission {
     evidenceURI: string,
     submittedBy: string,
     blockNumber: number
+}
+
+interface ContractsHolder {
+    arbitratorId: number,
+    arbitrableProxy?: Contract,
+    arbitrator?: Contract
+}
+
+export enum DisputePeriod {
+    evidence, // Evidence can be submitted. This is also when drawing has to take place.
+    commit, // Jurors commit a hashed vote. This is skipped for courts without hidden votes.
+    vote, // Jurors reveal/cast their vote depending on whether the court has hidden votes or not.
+    appeal, // The dispute can be appealed.
+    execution // Tokens are redistributed and the ruling is executed.
+}
+
+export interface DisputePeriodData {
+    period: DisputePeriod,
+    lastPeriodChange: Date
 }
 
 export const useArbitrableProxy = () => {
@@ -20,14 +41,58 @@ export const useArbitrableProxy = () => {
         );
     }
     const { currentChain, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
+    const contracts = useRef<ContractsHolder[]>([])
+
+    const loadArbitrableProxy = async (arbitratorId: number) => {
+        const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
+        const contract = new Contract(arbitrableProxyAddress, ArbitrableProxyABI, library)
+        return contract
+    }
+
+    const loadArbitrator = async (arbitrableProxy: Contract) => {
+        const arbitratorAddress = await arbitrableProxy.arbitrator()
+        const contract = new Contract(arbitratorAddress, KlerosLiquidABI, library)
+        return contract
+    }
+
+    const getArbitrableProxy = async (arbitratorId: number): Promise<Contract> => {
+        let holder = contracts.current.find( (item) => item.arbitratorId === arbitratorId )
+        if (!holder?.arbitrableProxy) {
+            const newHolder: ContractsHolder = holder || { arbitratorId }
+            newHolder.arbitrableProxy = await loadArbitrableProxy(arbitratorId)
+            contracts.current.push(newHolder)
+            holder = newHolder
+        }
+        if (holder?.arbitrableProxy) {
+            return holder.arbitrableProxy
+        } else {
+            throw Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`)
+        }
+        
+    }
+
+    const getArbitrator = async (arbitratorId: number) => {
+        const arbitrableProxy = await getArbitrableProxy(arbitratorId)
+        let holder = contracts.current.find( (item) => item.arbitratorId === arbitratorId )
+        if (!holder) {
+            throw Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`)
+        }
+        if (!holder.arbitrator) {
+            holder.arbitrator = await loadArbitrator(arbitrableProxy)
+        }
+        if (holder.arbitrator) {
+            return holder.arbitrator
+        } else {
+            throw Error(`Unable to load arbitrator for arbitratorId ${arbitratorId}`)
+        }
+    }
 
     const listEvidences = async ( 
         arbitratorId: number, 
-        disputeId: BigNumber, 
+        internalDisputeId: BigNumber, 
         blockNumber: number|undefined = undefined 
     ): Promise<EvidenceSubmission[]> => {
-        const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
-        const contract = new Contract(arbitrableProxyAddress, ArbitrableProxyABI, library)
+        const contract = await getArbitrableProxy(arbitratorId)
         const startBlock = blockNumber || nftpDeployBlockNumber
         const endBlock = currentBlock || await library.getBlockNumber()
         const ranges = []
@@ -40,7 +105,7 @@ export const useArbitrableProxy = () => {
             })
             i = j
         } while (i - 1 < endBlock)
-        const filter = contract.filters.Evidence(null, disputeId);
+        const filter = contract.filters.Evidence(null, internalDisputeId);
         const promises = ranges.map(({rangeStart, rangeEnd}) => {
             return contract.queryFilter(filter, rangeStart, rangeEnd)
         })
@@ -60,7 +125,20 @@ export const useArbitrableProxy = () => {
         return result
     }
 
+    const getPeriod = async ( 
+        arbitratorId: number, 
+        externalDisputeId: BigNumber, 
+    ): Promise<DisputePeriodData> => {
+        const contract = await getArbitrator(arbitratorId)
+        const { period, lastPeriodChange } = await contract.disputes(externalDisputeId)
+        return { 
+            period, 
+            lastPeriodChange: timestampToDate(lastPeriodChange)
+        }
+    }
+
     return {
-        listEvidences
+        listEvidences,
+        getPeriod
     }
 }

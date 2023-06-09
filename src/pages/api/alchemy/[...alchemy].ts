@@ -19,7 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         };
         // Sanitize input
         const method = body.method.replace(/[^A-Za-z0-9\.]/gi, '');
-        console.log('PARAMS:', body.params);
         const alchemy = new Alchemy(settings);
         const result = await eval(`alchemy.${method}(...body.params)`)
         res.status(200).json(result)

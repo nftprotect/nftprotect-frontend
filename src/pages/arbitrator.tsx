@@ -64,7 +64,6 @@ const ArbitratorPage: NextPage = () => {
     }
 
     const reloadDyArbitratorsWithTimeout = () => {
-        console.log('FIRED')
         setTimeout(reloadDyArbitrators, graphUpdateTimeout)
     }
 

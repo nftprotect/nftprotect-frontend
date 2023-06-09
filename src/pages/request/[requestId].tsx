@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultArbitrator, defaultChain } from '../../utils/config'
+import { defaultArbitrator, defaultChain, nftpDeployBlockNumber } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftpContractAddress } from '../../utils/config'
 import NFTProtectABI from '../../abi/NFTProtectABI'
@@ -17,7 +17,7 @@ import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
 import { ActionRequest } from '../../classes/NFT'
-import { useArbitrableProxy } from '../../hooks/useArbitrableProxy'
+import { useArbitrableProxy, DisputePeriod, DisputePeriodData } from '../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../utils/ipfs'
 import { timestampToDate } from '../../utils/helpers'
 
@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
 const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, library, currentChain, nftProtectContract } = context
-    const { listEvidences } = useArbitrableProxy()
+    const { listEvidences, getPeriod } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
@@ -57,6 +57,7 @@ const RequestPage: NextPage = () => {
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
     const { getRequest } = useNftProtectGraph()
+    const [ period, setPeriod ] = useState<DisputePeriodData>()
 
     const getBlockDate = async (blockNumber: number) => {
         const block = await library.getBlock(blockNumber)
@@ -66,7 +67,11 @@ const RequestPage: NextPage = () => {
     // Loads all submitted evidence data
     const loadEvidences = async () => {
         if (requestData) {
-            const evidences = await listEvidences(requestData.arbitratorId, requestData.localDisputeId, 9083542)
+            const evidences = await listEvidences(
+                requestData.arbitratorId, 
+                requestData.localDisputeId, 
+                requestGraphData?.createBlockNumber || nftpDeployBlockNumber
+            )
             const promises = evidences.map(async ({evidenceURI, blockNumber, submittedBy}) => {
                 const uri = centralizeIpfsUrl(evidenceURI)
                 const fetchResp = await fetch(uri)
@@ -80,6 +85,15 @@ const RequestPage: NextPage = () => {
             })
             const result = await Promise.all(promises)
             setEvidences(result)
+        }
+    }
+
+    // Load a dispute period from arbitrableProxy -> arbitrator
+    const loadPeriod = async () => {
+        if (requestData) {
+            const period = await getPeriod(requestData.arbitratorId, requestData.externalDisputeId)
+            console.log('PERIOD:', period)
+            setPeriod(period)
         }
     }
 
@@ -121,7 +135,6 @@ const RequestPage: NextPage = () => {
 
     // Load NFT
     useEffect(() => {
-        console.log(currentChain, requestId, library)
         if (currentChain && requestId && library) {
             let currentNFT: NFT
             const initialDataLoadedListener = () => {
@@ -179,9 +192,10 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    // Load evidences
+    // Load evidences and period
     useEffect(() => {
         loadEvidences()
+        loadPeriod()
     }, [requestData])
 
     useEffect(() => {
@@ -217,6 +231,7 @@ const RequestPage: NextPage = () => {
                 disputeData={{
                     disputeId: requestData.externalDisputeId, 
                     createDate: requestGraphData?.createDate,
+                    period
                 }}
                 pageData={ metaEvidenceType.page }
             />}

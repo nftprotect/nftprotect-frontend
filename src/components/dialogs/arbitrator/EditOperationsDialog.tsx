@@ -145,7 +145,6 @@ const EditOperationsDialog = ({
             } else {
                 const extraDatasLength = splitByLines(values.extraDatas)?.length
                 const operationsLength = arbitrator.operations?.length
-                console.log(values.operations)
                 if (operationsLength > 0 && extraDatasLength !== operationsLength) {
                     error = t`Extra Datas must contain the same number of lines as Operations`
                 }
