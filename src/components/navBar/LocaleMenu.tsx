@@ -34,38 +34,19 @@ export const LocaleMenu = () => {
         <Menu>
             <MenuButton 
                 as={Button}
+                variant="primaryDark"
+                fontWeight="400"
                 rightIcon={<ChevronDownIcon />}
-                py={[2, 4]}
-                px={[3, 6]}
-                mr={4}
-                fontSize={['xs', 'sm', 'md']}
-                bg="none"
-                border="1px solid #FFF"
-                borderRadius="13px"
-                _hover={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
-                _active={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
             >
                 { languages[locale] }
             </MenuButton>
-                <MenuList bgColor="#000">
+                <MenuList>
                     { Object.keys(languages).map((locale) => {
                         return (
                             <MenuItem
                                 key={locale}
                                 value={locale} 
                                 onClick={(e: any) => setLocale(e.target.value)}
-                                fontSize={['xs', 'sm', 'md']}
-                                bg="none"
-                                _hover={{
-                                    bgColor: "rgba(255, 255, 255, 0.15)"
-                                }}
-                                _active={{
-                                    bgColor: "rgba(255, 255, 255, 0.15)"
-                                }}
                             >
                                 { languages[locale] }
                             </MenuItem>

@@ -42,7 +42,7 @@ const DIDVerification = ({disclosure}: any) => {
 
             <Button 
                 onClick={goToExternalPage}
-                variant="primary-solid"
+                variant="primaryLight"
                 alignSelf="center"
                 w={['15em']}
             ><Trans>Proceed to DID</Trans>

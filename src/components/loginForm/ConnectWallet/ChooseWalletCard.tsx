@@ -25,7 +25,8 @@ const ChooseWalletCard = ({nextStep, onClose}: any) => {
                     mb={[4, 4, 0] }
                     pb={[2]}
                     alignSelf="center"
-                    borderBottom="2px dotted #C3D4FF"
+                    borderBottom="2px dotted"
+                    borderColor="brand.light"
                 >
                     <Trans>Available wallets</Trans>
                 </Heading>

@@ -226,7 +226,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
 
                 }}
@@ -250,11 +250,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                         {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
                                     </Text>
-                                    <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" fontWeight="700" color="accent.light" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" fontWeight="700" color="brand.light" textTransform="uppercase">
                                         Select reason for losing pNFT
                                     </Text>
 
-                                    <Text textStyle="paragraph" color="muted" textAlign="center" mb={{base: "20px"}}>
+                                    <Text textStyle="paragraph" color="text.muted" textAlign="center" mb={{base: "20px"}}>
                                         {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
                                     </Text>
 
@@ -264,7 +264,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             rightIcon={<ChevronDownIcon fontSize="14px" />}
                                             borderRadius="0"
                                             color="#FFF"
-                                            bgColor="accent.light"
+                                            bgColor="brand.light"
                                             textAlign="left"
                                             fontSize={{base: '12px', lg: '14px'}}
                                             lineHeight={{base: '16px', lg: '18px'}}
@@ -272,11 +272,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             textTransform="none"
                                             mb={{base: "20px"}}
                                             _hover={{
-                                                bgColor: "accent.light",
+                                                bgColor: "brand.light",
                                                 color: "#FFF"
                                             }}
                                             _active={{
-                                                bgColor: "accent.light",
+                                                bgColor: "brand.light",
                                                 color: "#FFF"
                                             }}
                                         >
@@ -352,15 +352,15 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <CardFooter flexDirection="column" alignItems="center">
                                     <Box w={{base: "60%", sm: "40%"}} mb={{base: "20px"}}>
                                         <Button
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             onClick={openCaseInKleros}
                                         ><Trans>Open dispute</Trans>
                                         </Button>
                                     </Box>
-                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="brand.light" borderRadius="16px">
                                         <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
-                                            <Text textStyle="paragraph" color="muted">
+                                            <Text textStyle="paragraph" color="text.muted">
                                                 <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
                                                 to resolve disputes fairly.</Trans>
                                             </Text>
@@ -412,7 +412,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                                 overflowY: "hidden"
                                                             },
                                                             "::-webkit-scrollbar-thumb": {
-                                                                bgColor: 'accent.light',
+                                                                bgColor: 'brand.light',
                                                             }
 
                                                         }}
@@ -512,7 +512,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <CardFooter>
                                     <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             onClick={() => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
@@ -537,7 +537,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Proceed to payment</Trans>
                                         </Button>
@@ -575,7 +575,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
                                             onClick={ openDispute }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Pay the dispute</Trans>
                                         </Button>

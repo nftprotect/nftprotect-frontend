@@ -75,7 +75,7 @@ const KlerosCaseDialog = () => {
                             overflowY: "hidden"
                         },
                         "::-webkit-scrollbar-thumb": {
-                            bgColor: 'accent.light',
+                            bgColor: 'brand.light',
                         }
 
                     }}
@@ -101,7 +101,7 @@ const KlerosCaseDialog = () => {
                             <Box w={{base: "14rem"}} mr={{base: "20px"}}>
                                 <Button
                                     onClick={ onClose }
-                                    variant="dark-outline"
+                                    variant="darkOutline"
                                 >
                                     <Trans>Cancel</Trans>
                                 </Button>
@@ -109,7 +109,7 @@ const KlerosCaseDialog = () => {
                             <Box w={{base: "14rem"}} ml={{base: "20px"}}>
                                 <Button
                                     onClick={ onClose }
-                                    variant="dark-outline"
+                                    variant="darkOutline"
                                 >
                                     <Trans>Proceed to payment</Trans>
                                 </Button>

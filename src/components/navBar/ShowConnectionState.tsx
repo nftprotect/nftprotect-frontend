@@ -50,19 +50,11 @@ const ShowConnectionState = () => {
             <MenuButton 
                 as={Button} 
                 rightIcon={<ChevronDownIcon />}
-                border="1px solid #FFF"
-                borderRadius="13px"
-                textTransform="uppercase"
-                fontSize={['xs', 'sm', 'md']}
+                variant="primaryDark"
+                textTransform="none"
+                fontWeight="400"
                 py={[2, 4]}
                 px={[3, 6]}
-                bg="none"
-                _hover={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
-                _active={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
             >
                 {active && typeof account === 'string' ? (
                     <p>{ formatAddress(account, 4) }</p>
@@ -122,7 +114,7 @@ const ShowConnectionState = () => {
                                         bgColor="gray.200"
                                         cursor="pointer"
                                         _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                            bg: "brand.light",
                                             color: "#FFF"
                                         }}
                                     >   
@@ -141,7 +133,7 @@ const ShowConnectionState = () => {
                                         bgColor="gray.200"
                                         cursor="pointer"
                                         _hover={{
-                                            bg: "linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%)",
+                                            bg: "brand.light",
                                             color: "#FFF"
                                         }}
                                     >

@@ -291,7 +291,7 @@ const KlerosCaseContent = ({
             </Text>
 
             <Flex mt={{base: "5px"}} mb={{base: "30px"}} fontSize="18px" lineHeight="22px">
-                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline" textTransform="capitalize">
+                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
                             <Trans>Dispute policy</Trans>
@@ -385,7 +385,7 @@ const KlerosCaseContent = ({
                     {/* Visible only on step 3 "Apealing period" */}
                     { stepKey === 'Apealing period' &&
                         <Flex w={{base: "200px"}}>
-                            <Button variant="primary-solid">File an appeal</Button>
+                            <Button variant="primaryLight">File an appeal</Button>
                         </Flex>
                     }
                 </Flex>
@@ -430,7 +430,7 @@ const KlerosCaseContent = ({
             <Flex w="100%" mb={{base: "36px"}}>
                 <Flex flexDirection="column" borderRight="2px solid #ADADAD" w="50%" pr={{base: "10px"}}>
                     <Flex alignItems="center" mb={{base: "10px"}}>
-                        <Text fontSize="18px" fontWeight="700" textTransform="capitalize">
+                        <Text fontSize="18px" fontWeight="700">
                             <Trans>The claimant</Trans>
                         </Text>
                         <Popover placement="right">
@@ -530,7 +530,7 @@ const KlerosCaseContent = ({
 
                 <Flex flexDirection="column" w="50%" pl={{base: "10px"}} >
                     <Flex  alignItems="center" mb={{base: "10px"}}>
-                        <Text fontSize="18px" fontWeight="700" textTransform="capitalize">
+                        <Text fontSize="18px" fontWeight="700">
                             <Trans>The Defendant</Trans>
                         </Text>
                         <Popover placement="right">
@@ -663,7 +663,7 @@ const KlerosCaseContent = ({
                                             </Flex>
 
                                             {/* Visible only on step 1 "Evidence period" */}
-                                            { (stepKey === 'Evidence period') && <Button variant="primary-solid" w={{base: "200px"}}>
+                                            { (stepKey === 'Evidence period') && <Button variant="primaryLight" w={{base: "200px"}}>
                                                 <Trans>Submit new evidence</Trans>
                                             </Button> }
                                         </Flex>

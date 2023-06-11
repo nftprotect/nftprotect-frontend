@@ -150,7 +150,7 @@ const ShowRequestDialog = () => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >

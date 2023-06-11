@@ -153,7 +153,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Box w={{base: "60%", sm: "40%"}}>
                                         <Button 
                                             onClick={ startButtonOnClick }
-                                            variant='dark-outline'
+                                            variant='darkOutline'
                                             my={2}
                                         >
                                             <Trans>Yes</Trans>
@@ -162,7 +162,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Box w={{base: "60%", sm: "40%"}}>
                                         <Button
                                             onClick={ onClose }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             my={2}
                                         >
                                             <Trans>No</Trans>
@@ -232,7 +232,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <CardFooter>
                                     <Box w={{base: "60%"}}>
                                         <Button
-                                            variant={"dark-outline"}
+                                            variant={"darkOutline"}
                                             onClick={ () => {
                                                 const dialog = getDialog('ProtectNftDialog')
                                                 dialog.setNft(nft)

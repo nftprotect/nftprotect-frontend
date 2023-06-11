@@ -68,7 +68,7 @@ const SuedForReturnTheOriginalNFTDialog = () => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
 
                 }}
@@ -125,7 +125,7 @@ const SuedForReturnTheOriginalNFTDialog = () => {
                                     <Info fontSize='32px' />
                                 </Box>
                                 <Flex flexDirection="column">
-                                    <Text textStyle="paragraph" color="muted">
+                                    <Text textStyle="paragraph" color="text.muted">
                                         <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
                                         to resolve disputes fairly.</Trans>
                                     </Text>

@@ -216,7 +216,7 @@ const EditOperationsDialog = ({
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -294,7 +294,7 @@ const EditOperationsDialog = ({
                                                 <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
                                                     <Button
                                                         type="submit"
-                                                        variant="dark-outline"
+                                                        variant="darkOutline"
                                                         textTransform="uppercase"
                                                         isDisabled={ !props.isValid }
                                                     >
@@ -304,7 +304,7 @@ const EditOperationsDialog = ({
                                                 <Box w={{base: "60%", sm: "50%"}}>
                                                     <Button 
                                                         onClick={ onClose }
-                                                        variant="dark-outline"
+                                                        variant="darkOutline"
                                                     >
                                                         Close
                                                     </Button>

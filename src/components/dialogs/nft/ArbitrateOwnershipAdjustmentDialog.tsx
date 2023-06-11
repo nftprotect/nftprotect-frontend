@@ -203,7 +203,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -289,7 +289,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         {/* NFT owner rejected transfer or unresponsive*/}
                                         { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
                                             <Button
-                                                variant="dark-outline"
+                                                variant="darkOutline"
                                                 onClick={ () => setNextStep(StepMapping.klerosForm) }
                                             ><Trans>Open dispute</Trans>
                                             </Button>
@@ -298,7 +298,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         {/* NFT owner accepted transfer */}
                                         { nft?.pendingRequest?.status == RequestStatus.Accepted &&
                                             <Button
-                                                variant={"dark-outline"}
+                                                variant={"darkOutline"}
                                                 onClick={ () => {
                                                     const dialog = getDialog('ProtectNftDialog')
                                                     dialog.setNft(nft)
@@ -311,7 +311,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     </Box>
                                     <Box w={{base: "60%", sm: "50%"}}>
                                         <Button
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             onClick={onClose}
                                         ><Trans>Close</Trans>
                                         </Button>
@@ -374,7 +374,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <CardFooter>
                                     <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             onClick={() => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
@@ -398,7 +398,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Proceed to payment</Trans>
                                         </Button>
@@ -436,7 +436,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
                                             onClick={ openDispute }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Pay the dispute</Trans>
                                         </Button>

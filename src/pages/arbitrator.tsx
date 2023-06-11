@@ -119,7 +119,7 @@ const ArbitratorPage: NextPage = () => {
                         </Box>
                         <Box w={{base: "100%", sm: "30%"}}>
                             <Button 
-                                variant={ "primary-solid" }
+                                variant={ "primaryLight" }
                                 width="auto"
                                 float="right"
                                 onClick={ () => { getDialog('RegisterArbitratorDialog').onOpen() }}
@@ -144,7 +144,7 @@ const ArbitratorPage: NextPage = () => {
                                 <Trans>Please connect your wallet to register <br></br>a new arbitrator</Trans>
                             </Text>
                             <Box w={{base: "14rem", sm: "16rem"}} >
-                                <LoginForm buttonVariant={'primary-solid'} />
+                                <LoginForm buttonVariant={'primaryLight'} />
                             </Box>
                         </>
                     }
