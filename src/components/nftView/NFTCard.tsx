@@ -121,7 +121,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 buttons = 
                     <Box mb={[2]}>
                         <Button
-                            variant={"dark-outline"}
+                            variant={"primaryLight"}
                             onClick={ () => {
                                 const dialog = getDialog('UnProtectNftDialog')
                                 dialog.setNft(nft)
@@ -138,7 +138,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     buttons = 
                         <Box mb={[2]}>
                             <Button
-                                variant={"primary-solid"}
+                                variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('RequestOriginalNftDialog')
                                     dialog.setNft(nft)
@@ -154,7 +154,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                         buttons = 
                             <Box mb={[2]}>
                                 <Button
-                                    variant={"primary-solid"}
+                                    variant={"primaryLight"}
                                     onClick={ () => {
                                         const dialog = getDialog('ArbitrateOwnershipAdjustmentDialog')
                                         dialog.setNft(nft)
@@ -214,7 +214,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     buttons = (<>
                         <Box mb={[2]}>
                             <Button
-                                variant={"primary-solid"}
+                                variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('LostPNftDialog')
                                     dialog.setNft(nft)
@@ -226,7 +226,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                         </Box>
                         <Box mb={[2]}>
                             <Button
-                                variant={"primary-solid"}
+                                variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('TransferOriginalNftDialog')
                                     dialog.setNft(nft)
@@ -242,7 +242,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     buttons = (<>
                         <Box mb={[2]}>
                             <Button
-                                variant={"primary-solid"}
+                                variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('OriginalNftRequestedDialog')
                                     dialog.setNft(nft)
@@ -258,7 +258,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     buttons = (<>
                         <Box mb={[2]}>
                             <Button
-                                variant={"primary-solid"}
+                                variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('LostPNftDialog')
                                     dialog.setNft(nft)
@@ -301,7 +301,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
             <>
             <Box mb={[2]}>
                 <Button
-                    variant={"primary-solid"}
+                    variant={"primaryLight"}
                     onClick={ () => {
                         const dialog = getDialog('ProtectNftDialog')
                         dialog.setNft(nft)
@@ -325,7 +325,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             })
                             dialog.onOpen() 
                         } }
-                        variant={ "primary-solid" }
+                        variant={ "primaryLight" }
                         w="100%"
                     >
                         <Trans>Open Kleros Case</Trans>
@@ -339,13 +339,12 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     return (
         <Card 
             mb={[2, 4]}
-            border="2px solid #000000"
-            borderRadius="1rem"
+            borderRadius="8px"
+            boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)"
         >
             <CardBody
                 px={{base: "0.5rem"}}
                 py={{base: "0.625rem"}}
-                borderRadius="1rem"
             >
                 <Flex
                     flexDirection="column"
@@ -366,17 +365,15 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             <Image
                                 src={ nft.thumbnail }
                                 position="absolute"
-                                borderRadius="1rem"
+                                borderRadius="4px"
                                 h="100%"
                                 w="100%"
                             />
                         </Flex>
 
-                        <Text 
+                        <Text
+                            textStyle="paragraph"
                             fontWeight="700"
-                            fontSize={{base: "0.875rem"}}
-                            lineHeight={{base: "1.125rem"}}
-                            textTransform="uppercase"
                             mb={{base: "0.625rem"}}
                         >
                             { nft.title }
@@ -384,8 +381,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
 
                         <Text
                             fontWeight="400"
-                            fontSize={{base: "0.625rem"}}
-                            lineHeight={{base: "0.75rem"}}
+                            textStyle="tips"
                             mb={{base: "1.25rem"}}
                         >
                             { nft.contract.name }

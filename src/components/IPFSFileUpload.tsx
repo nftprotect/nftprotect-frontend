@@ -99,9 +99,9 @@ export const IPFSFileUpload = ({
                 multiple={multiple}
                 fileOrFiles={null}
             >
-                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="accent.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer" mb={{base: "10px"}}>
+                <Flex bgColor="#F5F1FF" border="1px dashed" borderColor="brand.light" borderRadius="3px" alignItems="center" justifyContent="center" cursor="pointer" mb={{base: "10px"}}>
                     { loading && <Spinner variant="primary" speed='0.65s' my={{base: "10px"}} w="1.5em" h="1.5em" /> }
-                    { !loading && <DownloadIcon my={{base: "10px"}} fontSize="24px" color="accent.light" />}
+                    { !loading && <DownloadIcon my={{base: "10px"}} fontSize="24px" color="brand.light" />}
                     
                 </Flex>
                 { uploadedFiles && uploadedFiles.listFileNames().map((item) => {

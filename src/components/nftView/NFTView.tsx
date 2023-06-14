@@ -178,27 +178,31 @@ const NFTView = () => {
 
     return (
         <>
-            <Accordion border="none" defaultIndex={[0, 1, 2]}>
+            <Accordion defaultIndex={[0, 1, 2]}>
                 { myOwnNfts && (myOwnNfts.length > 0) &&
-                    <AccordionItem 
-                        bgGradient="linear(180deg, dark 70%, #FFF 70%)"
+                    <AccordionItem
                         px={['1rem', '3rem']}
+                        borderTop="none"
                     >
-                        <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                            <AccordionButton px="0" py={[4, 6]}>
-                                <Flex flexDirection="column" alignItems="flex-start">
-                                    <Text textStyle="h2">
-                                        <Trans>All your NFT</Trans> 
-                                    </Text>
-                                    <Text textStyle="h3">
-                                        <Trans>{"It's all not protected yet"}</Trans>
-                                    </Text>
-                                </Flex>
-                            </AccordionButton>
-                        </Flex>
+                        <AccordionButton 
+                            px="0" 
+                            py={[4, 6]}
+                            _hover={{
+                                bg: 'none',
+                                cursor: 'initial'
+                            }}
+                        >
+                            <Flex flexDirection="column" alignItems="flex-start">
+                                <Text textStyle="h2">
+                                    <Trans>All your NFTs</Trans> 
+                                </Text>
+                                <Text textStyle="h3">
+                                    <Trans>{"It's all not protected yet"}</Trans>
+                                </Text>
+                            </Flex>
+                        </AccordionButton>
 
-                        <AccordionPanel px="0" pb={4}>
-                            
+                        <AccordionPanel px="0" pb={4} borderBottom="2px solid" borderColor="brand.light">
                             <Grid
                                 templateColumns={{
                                     base: "repeat(auto-fill, 8rem)",
@@ -219,10 +223,15 @@ const NFTView = () => {
 
                     <AccordionItem 
                         px={['1rem', '3rem']} 
-                        bgGradient="linear(180deg, dark 70%, #FFF 70%)"
+                        borderTop="none"
                     >
-                        <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                            <AccordionButton px="0" py={[4, 6]}>
+                        <Flex alignItems="center" justifyContent="space-between">
+                            <AccordionButton px="0" py={[4, 6]} 
+                                _hover={{
+                                    bg: 'none',
+                                    cursor: 'initial'
+                                }}
+                            >
                                 <Flex flexDirection="column" alignItems="flex-start">
                                     <Text textStyle="h2">
                                         <Trans>Transfered pNFT</Trans> 
@@ -234,7 +243,7 @@ const NFTView = () => {
                             </AccordionButton>
                         </Flex>
                             
-                        <AccordionPanel px="0" pb={4}>
+                        <AccordionPanel px="0" pb={4} borderBottom="2px solid" borderColor="brand.light">
                             <Grid
                                 templateColumns={{
                                     base: "repeat(auto-fill, 8rem)",
@@ -251,16 +260,14 @@ const NFTView = () => {
                 }
                 
                 { ownedPNfts && (ownedPNfts.length > 0) &&
-                    <AccordionItem 
-                        bgImage="url('./images/shieldBackground.png'), linear-gradient(180deg, #0D0E14 70%, #FFF 70%)"
-                        bgRepeat="no-repeat"
-                        bgPosition="right 110px top 76px, top left"
-                        bgSize="auto calc(100% - 76px), cover"
-                        px={['1rem', '3rem']}
-                        borderBottom="none"
-                    >
-                        <Flex color="#FFF" alignItems="center" justifyContent="space-between">
-                            <AccordionButton px="0" py={[4, 6]}>
+                    <AccordionItem  px={['1rem', '3rem']} borderTop="none">
+                        <Flex alignItems="center" justifyContent="space-between">
+                            <AccordionButton px="0" py={[4, 6]}
+                                _hover={{
+                                    bg: 'none',
+                                    cursor: 'initial'
+                                }}
+                            >
                                 <Flex flexDirection="column" alignItems="flex-start">
                                     <Text textStyle="h2">
                                         <Trans>All your protected assets</Trans> 
@@ -284,7 +291,6 @@ const NFTView = () => {
                             >
                                 { ownedPNfts.map(nft => renderNFT(nft)) }
                             </Grid>
-                            <Text color={'#FFF'}><Trans>You have no protected NFTs yet</Trans></Text> 
                         </AccordionPanel>
                     </AccordionItem>
                 }

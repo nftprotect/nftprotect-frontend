@@ -162,7 +162,7 @@ const NotificationAlert = ({
                 
             >
                 { notification.callback && <Button 
-                    variant="dark-outline"
+                    variant="darkOutline"
                     fontSize={{base: "0.875rem"}}
                     mr={{base: "0.875rem"}}
                     textTransform="uppercase"

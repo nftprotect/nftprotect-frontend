@@ -39,7 +39,7 @@ const ApproveConnection = ({disclosure}: any) => {
                 w={{base: '100%', md: '50%'}}
                 px={[4, 8]}
                 py={[4, 8]}
-                bgColor="#5F38C8"
+                bgColor="brand.light"
                 color="#FFF"
                 boxSizing="border-box"
             >

@@ -23,7 +23,7 @@ const NavBar = () => {
             flexWrap='wrap'
             w="100%"
             px={[3, 6]}
-            py="0.375rem"
+            py={{base: "10px"}}
         >
             <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
                 <Image
@@ -43,20 +43,20 @@ const NavBar = () => {
             
             <Flex flexWrap="wrap">
                 { (process.env.NODE_ENV !== 'production') && 
-                    <Box mr={[2, 4]}>
+                    <Box ml={{base: "1.25rem"}}>
                         <LocaleMenu/> 
                     </Box>
                 }
                 {/* <Box mr={[2, 4]}>
                     <MainMenu />
                 </Box> */}
-                <Box mr={[2, 4]}>
-                    <LoginForm buttonVariant={'light-outline'} />
-                </Box>
-                <Box mr={[2, 4]}>
+                { !active && <Box ml={{base: "1.25rem"}}>
+                    <LoginForm buttonVariant={'primaryDark'} />
+                </Box> }
+                <Box ml={{base: "1.25rem"}}>
                     { active && <NetworkMenu /> }
                 </Box>
-                <Box>
+                <Box ml={{base: "1.25rem"}}>
                     { active && <ShowConnectionState /> }
                 </Box>
             </Flex>

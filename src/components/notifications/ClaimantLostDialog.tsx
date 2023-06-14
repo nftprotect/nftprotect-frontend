@@ -67,7 +67,7 @@ const ClaimantLostDialog = () => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
 
                 }}

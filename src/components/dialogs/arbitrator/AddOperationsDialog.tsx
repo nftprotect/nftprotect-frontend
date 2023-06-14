@@ -234,7 +234,7 @@ const AddOperationsDialog = ({
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -326,7 +326,7 @@ const AddOperationsDialog = ({
                                                 <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
                                                     <Button
                                                         type="submit"
-                                                        variant="dark-outline"
+                                                        variant="darkOutline"
                                                         textTransform="uppercase"
                                                         isDisabled={ !props.isValid || !evidenceUpload }
                                                     >
@@ -336,7 +336,7 @@ const AddOperationsDialog = ({
                                                 <Box w={{base: "60%", sm: "50%"}}>
                                                     <Button 
                                                         onClick={ onClose }
-                                                        variant="dark-outline"
+                                                        variant="darkOutline"
                                                     >
                                                         Close
                                                     </Button>
@@ -377,7 +377,7 @@ const AddOperationsDialog = ({
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
                                             onClick={ openDispute }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Pay the dispute</Trans>
                                         </Button>

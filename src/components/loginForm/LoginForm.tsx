@@ -32,7 +32,7 @@ const LoginForm = ( {buttonVariant}: any) => {
             </Button> 
         }
         
-        <Modal 
+        <Modal
             isOpen={isOpen} 
             onClose={onClose}
         >
@@ -43,8 +43,6 @@ const LoginForm = ( {buttonVariant}: any) => {
             <ModalContent
                 w={{base: "90vw", sm: "70vw", xl: "50vw"}}
                 maxW="700px"
-                border="2px solid #000"
-                borderRadius="30px"
                 overflow="hidden"
             >
                 <ModalCloseButton />

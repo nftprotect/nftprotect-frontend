@@ -54,7 +54,7 @@ const ClaimantWinDialog = () => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
 
                 }}
@@ -86,7 +86,7 @@ const ClaimantWinDialog = () => {
                         <CardFooter flexDirection="column" alignItems="center">
                             <Box w={{base: "60%", sm: "40%"}} mb={{base: "20px"}}>
                                 <Button
-                                    variant={"dark-outline"}
+                                    variant={"darkOutline"}
                                     onClick={ () => {
                                         const dialog = getDialog('ProtectNftDialog')
                                         dialog.setNft(nft)

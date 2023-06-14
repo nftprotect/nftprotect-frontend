@@ -19,7 +19,7 @@ const KlerosCaseLabel = ({labelKey}: stepLabelData) => {
 
     return(
         <Flex flexDirection="row" flexWrap="nowrap">
-            <Text fontSize="14px" lineHeight="18px" fontWeight="600" textTransform="capitalize">{labelKey}</Text>
+            <Text fontSize="14px" lineHeight="18px" fontWeight="600">{labelKey}</Text>
             <Popover placement="bottom">
                 <PopoverTrigger>
                     <Box cursor="pointer" color="#2D7BD6" ml={[2]}>
