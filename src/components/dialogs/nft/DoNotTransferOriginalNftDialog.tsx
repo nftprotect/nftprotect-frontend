@@ -154,7 +154,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
 
                 }}
@@ -252,7 +252,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                         >
                                             <Box w={{base: "100%", sm: "45%"}}>
                                                 <Button
-                                                    variant={"dark-outline"}
+                                                    variant={"darkOutline"}
                                                     onClick={ () => {
                                                         const dialog = getDialog('TransferOriginalNftDialog')
                                                         onClose()
@@ -265,7 +265,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                             </Box>
                                             <Box w={{base: "100%", sm: "45%"}}>
                                                 <Button
-                                                    variant={"dark-outline"}
+                                                    variant={"darkOutline"}
                                                     onClick={ () => {
                                                         const dialog = getDialog('LostPNftDialog')
                                                         onClose()

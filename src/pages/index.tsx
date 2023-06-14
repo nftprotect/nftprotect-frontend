@@ -102,87 +102,79 @@ const Home: NextPage = () => {
                 position="sticky"
                 top="0"
                 zIndex="1"
-                bgColor="#000"
+                bgColor="brand.light"
                 color="#FFF"
                 w="100%"
-                px={[3, 6]}
-                py="0.375rem"
+                display="flex"
             >
                 <NavBar />
             </GridItem>
 
             <GridItem area={'main'}>
                 <chakra.main>
-                <Box
-                    position="relative"
-                    top="0" 
-                    left="0"
-                    h={active ? "auto" : "100%"}
-                    bg={active ? "url('/images/phone.png') top right no-repeat" : "url('/images/banner.png') top left / cover no-repeat"}
-                    pb={{base: "0", sm: "0", md: "2rem", lg: "4rem", xl: "4rem"}}
-                    maxH="1200px"
-                >
-                    <Flex 
-                        flexDirection="column" 
-                        justifyContent="center"
-                        pt={{base:"2.5rem", md:"5.25rem", xl: "8.25rem" }}
-                        px={['1rem', '3rem']}
-                        pb={{base: "2rem"}}
-                    >
-                        {active &&
-                            <Box w={{base: "100%", sm: "50%"}}>
-                                <Heading as="h1" fontStyle="h1">
-                                    <Trans>Protect your digital <br />assets from bad<br /> actors</Trans>
-                                </Heading>
-                                <Text 
-                                    pt="1.25rem"
-                                    pb="2rem"
-                                    textStyle="h3"
-                                >
-                                    <Trans>Decentralized self-custody protocol for safeguarding digital assets from theft and private key compromise</Trans>
-                                </Text>
-                            </Box>
-                        }
-
-                        { !active &&
-                            <>
-                                <Text as="h1" textStyle="h1">
+                    {!active &&
+                        <Flex 
+                            w="100%" 
+                            h={{base: "calc(100vh - 120px)"}} 
+                            justifyContent="center" 
+                            alignItems="center" 
+                            bgImage="url('/images/startPageBanner.png')"
+                            bgRepeat="no-repeat"
+                            bgPosition="top center"
+                            // bgSize="auto 100%"
+                            bgSize="cover"
+                        >
+                            <Flex flexDir="column" alignItems="center">
+                                <Image
+                                    src='/images/logoBlue.svg'
+                                    alt='Logo'
+                                    h={{base: '75px'}}
+                                    mb={{base: "40px"}}
+                                />
+                                <Text fontFamily="Roboto" fontSize={{base: "36px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center" textTransform="uppercase">
                                     <Trans>Connect your wallet<br></br>& get protected</Trans>
                                 </Text>
                                     
-                                <Text
-                                    textStyle="h3"
-                                    pt="1.25rem"
-                                    pb="2rem"
-                                >
-                                    <Trans>Please connect your wallet to see your digital <br></br>assets and protect them</Trans>
+                                <Text textStyle="paragraph" fontWeight={{base: "500"}} letterSpacing={{base: "0.04em"}} textAlign="center" pt="1.25rem" pb="2rem" textTransform="uppercase">
+                                    <Trans>Please connect your wallet to see your digital assets and protect them</Trans>
                                 </Text>
                                 <Box w={{base: "14rem", sm: "16rem"}} >
-                                    <LoginForm buttonVariant={'primary-solid'} />
+                                    <LoginForm buttonVariant={'primaryLight'} />
                                 </Box>
-                            </>
-                        }
-                        {/* {active && !didRegistered && <DIDVerificationRequiredCard /> } */}
-                    </Flex>
-                    {!active && 
-                        <Box
-                            position="absolute"
-                            display={{base: "none", md: "block"}}
-                            right={{base: "1rem",lg: "1rem"}}
-                            top={{base: "10rem", sm: "5.25rem", md: "4rem"}}
-                            w={{base: "100%",  md: "60%"}}
-                            zIndex="0"
-                        >
-                            <Image src="/images/phone.png" alt="Phone"></Image>
-                        </Box>
+                            </Flex>
+                        </Flex>
                     }
-                </Box>
-                {active &&
-                    <>
-                        {innerPart}
-                        { active && <NFTView />}
-                    </>
-                }
+
+                    {active && 
+                        <>
+                            <Flex
+                                w="100%"
+                                h={{base: "360px"}}
+                                my={{base: "40px"}}
+                                bgImage="url('/images/mainPageBanner.png')"
+                                bgRepeat="no-repeat"
+                                bgSize="100% auto"
+                                // bgSize="cover"
+                            >
+                                <Flex flexDir="column" color="#FFF" pl={{base: "45px"}} pt={{base: "50px"}}>
+                                    <Text fontSize={{base: '64px'}} lineHeight={{base: "68px"}} fontWeight={{base: "600"}}>
+                                        <Trans>Protect your digital <br />assets from bad actors</Trans>
+                                    </Text>
+                                    <Text 
+                                        pt="1.25rem"
+                                        pb="2rem"
+                                        textStyle="h3"
+                                        fontWeight="500"
+                                    >
+                                        <Trans>Decentralized self-custody protocol <br/>for safeguarding digital assets <br/>from theft and private key compromise</Trans>
+                                    </Text>
+                                </Flex>
+                            </Flex>
+
+                            {innerPart}
+                            <NFTView />
+                        </>
+                    }
                 </chakra.main>
             </GridItem>
 

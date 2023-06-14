@@ -240,7 +240,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Box w={{base: "60%", sm: "50%"}}>
                                         <Button 
                                             onClick={ startButtonOnClick }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Protect NFT</Trans>
                                         </Button>

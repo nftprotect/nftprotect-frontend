@@ -82,7 +82,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -126,7 +126,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                         <CardFooter flexDirection="column" alignItems="center" mb={{base: "20px"}}>
                             <Box w={{base: "60%", sm: "50%"}}>
                                 <Button
-                                    variant={"dark-outline"}
+                                    variant={"darkOutline"}
                                     onClick={ () => {
                                         const dialog = getDialog('TransferOriginalNftDialog')
                                         onClose()
@@ -173,7 +173,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                         <CardFooter flexDirection="column" alignItems="center">
                             <Box w={{base: "60%"}} mb={{base: "20px"}} >
                                 <Button
-                                    variant={"dark-outline"}
+                                    variant={"darkOutline"}
                                     onClick={ () => {
                                         const dialog = getDialog('DoNotTransferOriginalNftDialog')
                                         onClose()
@@ -190,12 +190,12 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                     <Divider orientation='horizontal' borderTop="1px solid #000" />
 
                     <Card variant="stepContent" borderRadius="0">
-                        <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="accent.light" borderRadius="16px">
+                        <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="brand.light" borderRadius="16px">
                             <Box color="#2D7BD6" mr={[2]} >
                                 <Info fontSize='32px' />
                             </Box>
                             <Flex flexDirection="column">
-                                <Text textStyle="paragraph" color="muted">
+                                <Text textStyle="paragraph" color="text.muted">
                                     <Trans>Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court.</Trans>
                                 </Text>
                             </Flex>

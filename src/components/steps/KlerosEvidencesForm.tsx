@@ -163,7 +163,7 @@ const KlerosEvidencesForm = ({
                                                 >
                                                     <Image src="/images/statusIcons/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
                                                     <Flex flexDirection="column">
-                                                        <Text textStyle="paragraph" color="muted">
+                                                        <Text textStyle="paragraph" color="text.muted">
                                                             <Link
                                                                 href={ ipfsUpload.getCentralizedUrl(fileName) }
                                                             >
@@ -183,7 +183,7 @@ const KlerosEvidencesForm = ({
                             <Box w={{base: "60%", sm: "40%"}} mb={{base: "10px"}}>
                                 <Button 
                                     onClick={goBack as any}
-                                    variant="dark-outline"
+                                    variant="darkOutline"
                                 >
                                     <Trans>Back</Trans>
                                 </Button>
@@ -192,7 +192,7 @@ const KlerosEvidencesForm = ({
                                 
                                 <Button
                                     type="submit"
-                                    variant="dark-outline"
+                                    variant="darkOutline"
                                     textTransform="uppercase"
                                     isDisabled={ !props.isValid }
                                 >

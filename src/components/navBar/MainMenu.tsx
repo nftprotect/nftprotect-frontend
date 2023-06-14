@@ -18,19 +18,10 @@ const MainMenu = () => {
                 as={IconButton}
                 aria-label='Options'
                 icon={<HamburgerIcon />}
-                variant='outline'
-                bg="none"
-                border="1px solid #FFF"
-                borderRadius="13px"
+                variant="primaryDark"
+                fontWeight="400"
                 py={[2, 4]}
                 px={[3, 6]}
-                mr={4}
-                _hover={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
-                _active={{
-                    bgColor: "rgba(255, 255, 255, 0.15)"
-                }}
             />
             <MenuList
                 fontSize={['xs', 'sm', 'md']}

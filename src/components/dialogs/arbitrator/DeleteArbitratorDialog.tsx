@@ -164,7 +164,7 @@ const DeleteArbitratorDialog = ({
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -193,7 +193,7 @@ const DeleteArbitratorDialog = ({
                                     <Box w={{base: "60%", sm: "50%"}} mb={{base: "10px"}}>
                                         <Button 
                                             onClick={ fireAction }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Delete arbitrator</Trans>
                                         </Button>

@@ -40,7 +40,7 @@ const CancelledStepContent = () => {
                     <Box w={{base: "100%", xs: "50%"}}>
                         <Button 
                             onClick={ onClose}
-                            variant="light-outline"
+                            variant="darkOutline"
                         >
                             <Trans>Close</Trans>
                         </Button>

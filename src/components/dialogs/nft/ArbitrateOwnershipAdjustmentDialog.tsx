@@ -203,7 +203,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                         overflowY: "hidden"
                     },
                     "::-webkit-scrollbar-thumb": {
-                        bgColor: 'accent.light',
+                        bgColor: 'brand.light',
                     }
                 }}
             >
@@ -289,7 +289,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         {/* NFT owner rejected transfer or unresponsive*/}
                                         { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
                                             <Button
-                                                variant="dark-outline"
+                                                variant="darkOutline"
                                                 onClick={ () => setNextStep(StepMapping.klerosForm) }
                                             ><Trans>Open dispute</Trans>
                                             </Button>
@@ -298,7 +298,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         {/* NFT owner accepted transfer */}
                                         { nft?.pendingRequest?.status == RequestStatus.Accepted &&
                                             <Button
-                                                variant={"dark-outline"}
+                                                variant={"darkOutline"}
                                                 onClick={ () => {
                                                     const dialog = getDialog('ProtectNftDialog')
                                                     dialog.setNft(nft)
@@ -311,7 +311,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     </Box>
                                     <Box w={{base: "60%", sm: "50%"}}>
                                         <Button
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                             onClick={onClose}
                                         ><Trans>Close</Trans>
                                         </Button>
@@ -366,41 +366,40 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <CardBody mb={{base: "20px"}}>
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            We{'\u0027'}ve built your dispute package with strong evidence. Check it via the 
-                                            <Link 
-                                                href='#' 
-                                                textDecoration="underline" 
-                                                cursor="pointer"
-                                                onClick={() => {
-                                                    const dialog = getDialog('KlerosCaseDialog')
-                                                    dialog.setCaseData({
-                                                        nft,
-                                                        metaEvidenceId,
-                                                        claimantAddress: account,
-                                                        defendantAddress: nft?.originalData?.ownerAddress,
-                                                        evidences: [{
-                                                            evidenceJson: evidenceData,
-                                                            submittedBy: account,
-                                                            submitDate: new Date()
-                                                        }]
-                                                    })
-                                                    dialog.onOpen() 
-                                                }}
-                                            >
-                                                <Trans>link</Trans>
-                                            </Link>
-                                            <chakra.span>{" "}before opening it in Kleros</chakra.span>
+                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence
                                         </Trans>
                                     </Text>
                                 </CardBody>
 
                                 <CardFooter>
-                                    <Box w={{base: "60%", xs: "50%"}}>
+                                    <Box w={{base: "60%", sm: "45%"}}>
+                                        <Button
+                                            variant="darkOutline"
+                                            onClick={() => {
+                                                const dialog = getDialog('KlerosCaseDialog')
+                                                dialog.setCaseData({
+                                                    nft,
+                                                    metaEvidenceId,
+                                                    claimantAddress: account,
+                                                    defendantAddress: nft?.originalData?.ownerAddress,
+                                                    evidences: [{
+                                                        evidenceJson: evidenceData,
+                                                        submittedBy: account,
+                                                        submitDate: new Date()
+                                                    }]
+                                                })
+                                                dialog.onOpen() 
+                                            }}
+                                        >
+                                            <Trans>Review the case</Trans>
+                                        </Button>
+                                    </Box>
+                                    <Box w={{base: "60%", sm: "45%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
-                                            <Trans>Open dispute</Trans>
+                                            <Trans>Proceed to payment</Trans>
                                         </Button>
                                     </Box>
                                 </CardFooter>
@@ -436,7 +435,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     <Box w={{base: "60%", xs: "50%"}}>
                                         <Button
                                             onClick={ openDispute }
-                                            variant="dark-outline"
+                                            variant="darkOutline"
                                         >
                                             <Trans>Pay the dispute</Trans>
                                         </Button>
