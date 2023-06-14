@@ -34,6 +34,19 @@ export interface RequestGraphData {
     updateBlockNumber: number
 }
 
+export interface TokenGraphData {
+    id: BigNumber,
+    //tokenId: BigNumber,
+    securityLevel: number,
+    ownerAddress: string,
+    originalOwnerAddress: string,
+    assetType: number,
+    contractAddress: string,
+    amount: BigNumber,
+    mintDate: Date,
+    mintBlockNumber: number
+}
+
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
 
 export const useNftProtectGraph = () => {
@@ -211,12 +224,110 @@ export const useNftProtectGraph = () => {
         }
     }
 
+    // Returns list of pNFTs that are not owned by original owner
+    const listTokensTransfered = async (originalOwner: string): Promise<TokenGraphData[]> => {
+        if (graphURI) {
+            const query = `
+                query listTokensTransfered($originalOwner: Bytes!) {
+                    tokens(where: { 
+                        ownerOriginal_: { 
+                            id: $originalOwner 
+                        },
+                        ownerProtected_: { 
+                            id_not: $originalOwner 
+                        } 
+                    }) {
+                        id
+                        securityLevel
+                        ownerProtected {
+                          id
+                        }
+                        ownerOriginal {
+                          id
+                        }
+                        assetType
+                        contract
+                        tokenId
+                        amount
+                        timestamp
+                        blocknumber
+                    }
+                }
+            `
+            const { data } = await performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
+            return data ? data.tokens.map((it: any) => { return {
+                id: BigNumber.from(it.id),
+                //tokenId: BigNumber.from(it.tokeinId),
+                securityLevel: parseInt(it.securityLevel),
+                ownerAddress: it.ownerProtected.id,
+                originalOwnerAddress: it.ownerOriginal.id,
+                assetType: parseInt(it.assetType),
+                contractAddress: it.contract,
+                amount: BigNumber.from(it.amount),
+                mintDate: timestampToDate(parseInt(it.timestamp)),
+                mintBlockNumber: parseInt(it.blocknumber)
+            }}) : []
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
+        }
+    }
+
+    // Returns list of pNFTs with originals not owned by pNFT owner
+    const listTokensReceived = async (owner: string): Promise<TokenGraphData[]> => {
+        if (graphURI) {
+            const query = `
+                query listTokensReceived($owner: Bytes!) {
+                    tokens(where: { 
+                        ownerOriginal_: { 
+                            id_not: $owner 
+                        }, 
+                        ownerProtected_: { 
+                            id: $owner 
+                        } 
+                    }) {
+                        id
+                        securityLevel
+                        ownerProtected {
+                          id
+                        }
+                        ownerOriginal {
+                          id
+                        }
+                        assetType
+                        contract
+                        tokenId
+                        amount
+                        timestamp
+                        blocknumber
+                    }
+                }
+            `
+            const { data } = await performQuery(graphURI, query, { owner: owner.toLowerCase() })
+            return data ? data.tokens.map((it: any) => { return {
+                id: BigNumber.from(it.id),
+                //tokenId: BigNumber.from(it.tokeinId),
+                securityLevel: parseInt(it.securityLevel),
+                ownerAddress: it.ownerProtected.id,
+                originalOwnerAddress: it.ownerOriginal.id,
+                assetType: parseInt(it.assetType),
+                contractAddress: it.contract,
+                amount: BigNumber.from(it.amount),
+                mintDate: timestampToDate(parseInt(it.timestamp)),
+                mintBlockNumber: parseInt(it.blocknumber)
+            }}) : []
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
+        }
+    }
+
     return {
         getSystem,
         getRequest,
         getToken,
         getUser,
-        listRequests
+        listRequests,
+        listTokensTransfered,
+        listTokensReceived
     }
         
 }

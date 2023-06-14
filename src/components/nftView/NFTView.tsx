@@ -30,6 +30,7 @@ import OriginalNftRequestedDialog from '../dialogs/nft/OriginalNftRequestedDialo
 import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog';
 import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
 import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
+import { useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
@@ -75,6 +76,8 @@ const NFTView = () => {
     const [ownedPNfts, setOwnedPNfts] = useState<NFT[]>()
     // Stores pNFTs given to another accounts
     const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
+
+    const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
 
     // Loads all the NFTs and pNFTs owned by user
     const fetchOwnedNfts = () => {
@@ -127,6 +130,14 @@ const NFTView = () => {
         fetchMintedNfts()
     }
 
+    const loadNotifications = async () => {
+        if (account) {
+            const received = await listTokensReceived(account)
+            const transfered = await listTokensTransfered(account)
+            console.log('GRAPH TOKENS', received, transfered)
+        }
+    }
+
     // Reload NFTs when chain or account changed
     useEffect(fetchAllNfts, [currentChain, account])
 
@@ -163,6 +174,7 @@ const NFTView = () => {
     },[myOwnNfts, ownedPNfts, givenPNfts])
 
     useEffect(subscribeNftTransfers, [account, active])
+    useEffect(() => { loadNotifications() }, [account, active])
 
     return (
         <>
