@@ -148,15 +148,16 @@ const Home: NextPage = () => {
                     {active && 
                         <>
                             <Flex
-                                w="100%"
                                 h={{base: "360px"}}
                                 my={{base: "40px"}}
-                                bgImage="url('/images/mainPageBanner.png')"
-                                bgRepeat="no-repeat"
-                                bgSize="100% auto"
-                                // bgSize="cover"
+                                mx={{base: '48px'}}
+                                bgColor="brand.light"
+                                pl={{base: "45px"}}
+                                pt={{base: "50px"}}
+                                borderRadius={{base: "8px"}}
                             >
-                                <Flex flexDir="column" color="#FFF" pl={{base: "45px"}} pt={{base: "50px"}}>
+                                <Flex flexDir="column" color="#FFF" w={{base: "60%"}} 
+                                >
                                     <Text fontSize={{base: '64px'}} lineHeight={{base: "68px"}} fontWeight={{base: "600"}}>
                                         <Trans>Protect your digital <br />assets from bad actors</Trans>
                                     </Text>
@@ -168,6 +169,14 @@ const Home: NextPage = () => {
                                     >
                                         <Trans>Decentralized self-custody protocol <br/>for safeguarding digital assets <br/>from theft and private key compromise</Trans>
                                     </Text>
+                                </Flex>
+
+                                <Flex
+                                    ml={{base: "20px"}}
+                                    w={{base: "40%"}}
+                                    bgImage="url('/images//mainBannerBackground.png')" 
+                                    bgRepeat="no-repeat"
+                                >
                                 </Flex>
                             </Flex>
 
