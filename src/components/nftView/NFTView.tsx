@@ -261,7 +261,7 @@ const NFTView = () => {
                                         <Trans>All your protected assets</Trans> 
                                     </Text>
                                     <Text textStyle="h3">
-                                        <Trans>This section displays all the pNFTs that you own</Trans>
+                                        <Trans>This section displays all the NFTs and their associated pNFTs that you own</Trans>
                                     </Text>
                                 </Flex>
                             </AccordionButton>

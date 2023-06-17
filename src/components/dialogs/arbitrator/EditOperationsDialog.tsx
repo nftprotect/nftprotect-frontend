@@ -242,7 +242,7 @@ const EditOperationsDialog = ({
                                                 <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                                     <Trans>{"Edit arbitrator's operations"}</Trans>
                                                 </Text>
-                                                <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                                <Text textStyle="paragraph" textAlign="center" fontWeight="700">
                                                     <Trans>Please specify new extraDatas for operations</Trans>
                                                 </Text>
                                             </CardHeader>
@@ -294,7 +294,6 @@ const EditOperationsDialog = ({
                                                     <Button
                                                         type="submit"
                                                         variant="darkOutline"
-                                                        textTransform="uppercase"
                                                         isDisabled={ !props.isValid }
                                                     >
                                                         <Trans>Submit</Trans>
@@ -326,7 +325,7 @@ const EditOperationsDialog = ({
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -343,7 +342,7 @@ const EditOperationsDialog = ({
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>
@@ -364,10 +363,10 @@ const EditOperationsDialog = ({
                                         <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center">
                                         <Trans>Operations updated successfully!</Trans>
                                     </Text>
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
                                         <Trans>New extraData is set</Trans>
                                     </Text>
                                 </CardBody>

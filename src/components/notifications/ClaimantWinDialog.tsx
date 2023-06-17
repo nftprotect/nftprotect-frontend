@@ -78,7 +78,7 @@ const ClaimantWinDialog = () => {
                                 <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
                                     <Trans>The pNFT was burned.</Trans>
                                 </Text>
-                                <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
                                     <Trans>We recommend protecting<br/>your nft at once</Trans>
                                 </Text>
                             </Flex>

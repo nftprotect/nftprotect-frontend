@@ -131,11 +131,11 @@ const Home: NextPage = () => {
                                     h={{base: '75px'}}
                                     mb={{base: "40px"}}
                                 />
-                                <Text fontFamily="Roboto" fontSize={{base: "36px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center" textTransform="uppercase">
+                                <Text fontFamily="Roboto" fontSize={{base: "36px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center">
                                     <Trans>Connect your wallet<br></br>& get protected</Trans>
                                 </Text>
                                     
-                                <Text textStyle="paragraph" fontWeight={{base: "500"}} letterSpacing={{base: "0.04em"}} textAlign="center" pt="1.25rem" pb="2rem" textTransform="uppercase">
+                                <Text textStyle="paragraph" fontWeight={{base: "500"}} letterSpacing={{base: "0.04em"}} textAlign="center" pt="1.25rem" pb="2rem">
                                     <Trans>Please connect your wallet to see your digital assets and protect them</Trans>
                                 </Text>
                                 <Box w={{base: "14rem", sm: "16rem"}} >

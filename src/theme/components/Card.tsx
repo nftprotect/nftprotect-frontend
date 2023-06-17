@@ -33,7 +33,6 @@ const variants = {
         },
         header: {
             dispaly: "flex",
-            textTransform: "uppercase",
             textAlign: "center",
             fontWeight:"700",
             p: "0",

@@ -1,7 +1,6 @@
 import { defineStyle, defineStyleConfig } from '@chakra-ui/react'
 
 const baseStyle = defineStyle({
-    textTransform: 'uppercase',
     borderRadius: '8px',
     w: "100%",
     boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)"

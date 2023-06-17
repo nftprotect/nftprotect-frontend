@@ -184,7 +184,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -203,7 +203,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>{"Wait for transaction to confirm…"}</Trans>
                                     </Text>
                                 </CardBody>
@@ -224,7 +224,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
                                         <Trans>You can protect your NFT again.</Trans>
                                     </Text>
 

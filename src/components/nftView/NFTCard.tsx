@@ -176,7 +176,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         py="8px"
                                     >
                                         <Spinner borderWidth='2px' h={{base: "20px"}} w={{base: "20px"}} speed='0.65s' mr={{base: "10px"}}></Spinner>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Trans>{"Pending..."}</Trans>
                                         </Text>
                                     </Flex>
@@ -191,7 +191,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         px="16px"
                                         py="8px"
                                     >
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Link
                                                 isExternal 
                                                 rel="noreferrer"
@@ -279,7 +279,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                     px="16px"
                                     py="8px"
                                 >
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Link
                                             isExternal 
                                             rel="noreferrer"

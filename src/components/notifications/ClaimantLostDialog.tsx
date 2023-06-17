@@ -117,7 +117,7 @@ const ClaimantLostDialog = () => {
 
                                 <Text>
                                     <Trans>Check out the details<br/> </Trans>
-                                    <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6" textTransform="uppercase">
+                                    <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
                                         <Trans>dispute N1234</Trans>
                                     </Link>
                                 </Text>
