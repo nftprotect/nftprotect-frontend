@@ -8,4 +8,7 @@ export const colors = {
         base: '#202020',
         muted: '#9F9F9F',
     },
+    gray: {
+        light:'#f5f5f7',
+    }
 }

@@ -181,10 +181,10 @@ const DeleteArbitratorDialog = ({
                                 </CardHeader>
 
                                 <CardBody my={{base: "20px"}}>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Are you sure to delete arbitrator?</Trans>
                                     </Text>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         { arbitrator.name }
                                     </Text>
                                 </CardBody>
@@ -213,7 +213,7 @@ const DeleteArbitratorDialog = ({
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -230,7 +230,7 @@ const DeleteArbitratorDialog = ({
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>
@@ -251,10 +251,10 @@ const DeleteArbitratorDialog = ({
                                         <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center">
                                         <Trans>Arbitrator deleted successfully!</Trans>
                                     </Text>
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
                                         <Trans>{"New cases won't be opened with this arbitrator"}</Trans>
                                     </Text>
                                 </CardBody>

@@ -8,6 +8,7 @@ export const styles = {
                 bgColor: 'brand.light',
             },
             color: 'text.base',
+            bgColor: 'gray.light',
         },
     }
 }

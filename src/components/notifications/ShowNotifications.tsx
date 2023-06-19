@@ -165,7 +165,6 @@ const NotificationAlert = ({
                     variant="darkOutline"
                     fontSize={{base: "0.875rem"}}
                     mr={{base: "0.875rem"}}
-                    textTransform="uppercase"
                     py={{base: "0.625rem"}}
                     px={{base:"2.25rem"}}
                     w={{base: "80%", md: "auto"}}

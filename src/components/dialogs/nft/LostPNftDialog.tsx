@@ -250,7 +250,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                         {"Targeted by an intruder or made a mistake and lost access to your pNFT, don\u0027t worry. We can work together to recover your asset and restore it to your wallet."}
                                     </Text>
-                                    <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" fontWeight="700" color="brand.light" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" fontWeight="700" color="brand.light">
                                         Select reason for losing pNFT
                                     </Text>
 
@@ -594,7 +594,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -605,13 +605,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
-                                    <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
+                                    <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
                                         <Trans>Open dispute<br /> in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>

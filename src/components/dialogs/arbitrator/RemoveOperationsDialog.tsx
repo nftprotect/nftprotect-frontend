@@ -210,7 +210,7 @@ const RemoveOperationsDialog = ({
                                                 <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                                     <Trans>{"Remove arbitrator's operations"}</Trans>
                                                 </Text>
-                                                <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                                <Text textStyle="paragraph" textAlign="center" fontWeight="700">
                                                     <Trans>Please check operations you want to remove</Trans>
                                                 </Text>
                                             </CardHeader>
@@ -245,7 +245,6 @@ const RemoveOperationsDialog = ({
                                                     <Button
                                                         type="submit"
                                                         variant="darkOutline"
-                                                        textTransform="uppercase"
                                                         isDisabled={ !props.isValid }
                                                     >
                                                         <Trans>Remove operations</Trans>
@@ -277,7 +276,7 @@ const RemoveOperationsDialog = ({
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -294,7 +293,7 @@ const RemoveOperationsDialog = ({
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>
@@ -315,7 +314,7 @@ const RemoveOperationsDialog = ({
                                         <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center">
                                         <Trans>Operations removed successfully!</Trans>
                                     </Text>
                                 </CardBody>

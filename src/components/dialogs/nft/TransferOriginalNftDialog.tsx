@@ -168,7 +168,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         <Flex my={{base: "20px"}}>
                                             <Spinner variant="primary" speed='0.65s'></Spinner>
                                         </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Trans>Confirm the transaction in the wallet</Trans>
                                         </Text>
                                     </CardBody>
@@ -189,7 +189,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         <Flex my={{base: "20px"}}>
                                             <Spinner variant="primary" speed='0.65s'></Spinner>
                                         </Flex>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                     </CardBody>
