@@ -121,7 +121,7 @@ const KlerosEvidencesForm = ({
                                 <Trans>Open dispute <br /> in Kleros</Trans>
                             </Text>
                             {
-                                title && <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                title && <Text textStyle="paragraph" textAlign="center" fontWeight="700">
                                     { title }
                                 </Text>
                             }
@@ -193,7 +193,6 @@ const KlerosEvidencesForm = ({
                                 <Button
                                     type="submit"
                                     variant="darkOutline"
-                                    textTransform="uppercase"
                                     isDisabled={ !props.isValid }
                                 >
                                     <Trans>Open dispute</Trans>

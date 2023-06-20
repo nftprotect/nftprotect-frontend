@@ -455,7 +455,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -466,13 +466,13 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
-                                    <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
+                                    <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
                                         <Trans>Open dispute<br /> in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>

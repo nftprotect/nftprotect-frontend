@@ -1,10 +1,9 @@
 import { defineStyle, defineStyleConfig } from '@chakra-ui/react'
 
 const baseStyle = defineStyle({
-    textTransform: 'uppercase',
     borderRadius: '8px',
     w: "100%",
-    boxShadow: "boxShadow.active"
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)"
 })
 
 // Defining a custom variants
@@ -28,7 +27,7 @@ const primaryLight = defineStyle({
     border: "none",
     bgColor: "brand.light",
     color: "#FFF",
-    boxShadow: "boxShadow.notActive",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
     _hover: {
         bgColor: "brand.dark",
     },
@@ -44,7 +43,7 @@ const primaryDark = defineStyle({
     border: "none",
     bgColor: "brand.dark",
     color: "#FFF",
-    boxShadow: "boxShadow.notActive",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
     _hover: {
         bgColor: "brand.light",
     },

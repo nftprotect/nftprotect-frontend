@@ -269,7 +269,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         
                                     </Text>
 
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>Please, allow access and <br />transfer of your NFT</Trans>
                                     </Text>
                                 </CardBody>
@@ -298,7 +298,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         
                                     </Text>
 
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>Please, allow access and <br />transfer of your NFTs</Trans>
                                     </Text>
                                 </CardBody>
@@ -317,7 +317,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>{"Wait for transaction to confirm..."}</Trans>
                                     </Text>
                                 </CardBody>
@@ -336,7 +336,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -356,7 +356,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>{"Wait for transaction to confirm..."}</Trans>
                                     </Text>
                                 </CardBody>
@@ -375,7 +375,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     <Flex my={{base: "20px"}}>
                                         <Spinner variant="primary" speed='0.65s'></Spinner>
                                     </Flex>
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Trans>{"Wait for transaction to confirm…"}</Trans>
                                     </Text>
                                 </CardBody>
@@ -396,10 +396,10 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" mb={{base: "20px"}} letterSpacing="0.04em" textAlign="center">
                                         <Trans>Your asset is now protected!</Trans>
                                     </Text>
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
                                         <Trans>Enjoy your new life in protected world!</Trans>
                                     </Text>
                                 </CardBody>

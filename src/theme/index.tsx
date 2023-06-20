@@ -19,11 +19,6 @@ const nftProtectTheme = extendTheme({
     styles,
     colors,
     typography,
-    boxShadow: {
-        active: "0px 2px 16px rgba(0, 0, 0, 0.25)",
-        notActive: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    },
-
     textStyles: {
         h1: {
             fontSize: {base: '52px', lg: '62px'},

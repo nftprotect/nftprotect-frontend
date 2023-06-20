@@ -281,7 +281,7 @@ const RegisterArbitratorDialog = () => {
                                                 <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                                     <Trans>Register as arbitrator</Trans>
                                                 </Text>
-                                                <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                                                <Text textStyle="paragraph" textAlign="center" fontWeight="700">
                                                     <Trans>Please fill the form to register</Trans>
                                                 </Text>
                                             </CardHeader>
@@ -391,7 +391,6 @@ const RegisterArbitratorDialog = () => {
                                                     <Button
                                                         type="submit"
                                                         variant="darkOutline"
-                                                        textTransform="uppercase"
                                                         isDisabled={ !props.isValid || !evidenceUpload }
                                                     >
                                                         <Trans>Register</Trans>
@@ -423,7 +422,7 @@ const RegisterArbitratorDialog = () => {
                                             <Trans>The fee for dispute resolution is</Trans>
                                         </Text>
 
-                                        <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
+                                        <Text fontSize={{base: "36px"}} textAlign="center">
                                             {"Ξ"}{ DISPUTE_PRICE } 
                                         </Text>
                                     </CardBody>
@@ -453,7 +452,7 @@ const RegisterArbitratorDialog = () => {
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -470,7 +469,7 @@ const RegisterArbitratorDialog = () => {
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>

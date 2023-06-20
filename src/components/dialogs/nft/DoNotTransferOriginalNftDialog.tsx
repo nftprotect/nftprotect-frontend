@@ -173,7 +173,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -190,7 +190,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>

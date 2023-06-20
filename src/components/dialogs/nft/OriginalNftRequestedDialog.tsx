@@ -163,7 +163,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
                                 </chakra.span>
                             </Text>
-                            <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" textTransform="uppercase" color="danger">
+                            <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" color="danger">
                                 <Trans>your asset may have been stolen!</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "20px"}}>

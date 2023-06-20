@@ -114,7 +114,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
             if (!nft.isOnAnotherAddress() && nft.isOriginalOwnedByAccount()) {
                 // Original NFT and pNFT are both belong to user
                 buttons = 
-                    <Box mb={[2]}>
+                    <Box mt={[2]}>
                         <Button
                             variant={"primaryLight"}
                             onClick={ () => {
@@ -131,7 +131,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 if (!pendingRequest) {
                     // If no request pending then we can sent it, so showing the button
                     buttons = 
-                        <Box mb={[2]}>
+                        <Box mt={[2]}>
                             <Button
                                 variant={"primaryLight"}
                                 onClick={ () => {
@@ -147,7 +147,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     // If request is timed out or rejected we can create a court
                     if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
                         buttons = 
-                            <Box mb={[2]}>
+                            <Box mt={[2]}>
                                 <Button
                                     variant={"primaryLight"}
                                     onClick={ () => {
@@ -162,7 +162,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     // Otherwise we can only wait
                     } else if (pendingRequest.status === RequestStatus.Initial) {
                         buttons =   <Flex 
-                                        mb={[2]} 
+                                        mt={[2]} 
                                         alignItems="center" 
                                         justifyContent="center" 
                                         fontWeight="600" 
@@ -171,14 +171,14 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         py="8px"
                                     >
                                         <Spinner borderWidth='2px' h={{base: "20px"}} w={{base: "20px"}} speed='0.65s' mr={{base: "10px"}}></Spinner>
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Trans>{"Pending..."}</Trans>
                                         </Text>
                                     </Flex>
                         
                     } else if (pendingRequest.status === RequestStatus.Disputed) {
                         buttons =   <Flex 
-                                        mb={[2]} 
+                                        mt={[2]} 
                                         alignItems="center" 
                                         justifyContent="center" 
                                         fontWeight="600" 
@@ -186,7 +186,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         px="16px"
                                         py="8px"
                                     >
-                                        <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                        <Text textStyle="paragraph" textAlign="center">
                                             <Link
                                                 isExternal 
                                                 rel="noreferrer"
@@ -207,7 +207,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 if (!pendingRequest) {
                     // If there's no pending request then we can Release NFT or Dispute NFT
                     buttons = (<>
-                        <Box mb={[2]}>
+                        <Box mt={[2]}>
                             <Button
                                 variant={"primaryLight"}
                                 onClick={ () => {
@@ -219,7 +219,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 <Trans>Lost pNFT</Trans>
                             </Button>
                         </Box>
-                        <Box mb={[2]}>
+                        <Box mt={[2]}>
                             <Button
                                 variant={"primaryLight"}
                                 onClick={ () => {
@@ -235,7 +235,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 } else if (pendingRequest.status === RequestStatus.Initial) {
                     // If there's an initial request then we can only answer this request
                     buttons = (<>
-                        <Box mb={[2]}>
+                        <Box mt={[2]}>
                             <Button
                                 variant={"primaryLight"}
                                 onClick={ () => {
@@ -251,7 +251,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 } else if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
                     // If there's an rejected request then we can only dispute this request
                     buttons = (<>
-                        <Box mb={[2]}>
+                        <Box mt={[2]}>
                             <Button
                                 variant={"primaryLight"}
                                 onClick={ () => {
@@ -266,7 +266,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     </>)
                 } else if (pendingRequest.status === RequestStatus.Disputed) {
                     buttons =   <Flex 
-                                    mb={[2]} 
+                                    mt={[2]} 
                                     alignItems="center" 
                                     justifyContent="center" 
                                     fontWeight="600" 
@@ -274,7 +274,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                     px="16px"
                                     py="8px"
                                 >
-                                    <Text textStyle="paragraph" textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" textAlign="center">
                                         <Link
                                             isExternal 
                                             rel="noreferrer"
@@ -294,7 +294,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     } else {
         buttons = (
             <>
-            <Box mb={[2]}>
+            <Box mt={[2]}>
                 <Button
                     variant={"primaryLight"}
                     onClick={ () => {
@@ -307,7 +307,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 </Button>
             </Box>
             {
-                (process.env.NODE_ENV !== 'production') && <Box mb={[2]}>
+                (process.env.NODE_ENV !== 'production') && <Box mt={[2]}>
                     <Button
                         onClick={ () => { 
                             const dialog = getDialog('KlerosCaseDialog')
@@ -339,12 +339,13 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
         >
             <CardBody
                 px={{base: "0.5rem"}}
-                py={{base: "0.625rem"}}
+                py={{base: "0.5rem"}}
             >
                 <Flex
                     flexDirection="column"
                     justifyContent="space-between"
                     h="100%"
+                    borderRadius="8px"
                 >
                     <Flex
                         flexDirection="column"

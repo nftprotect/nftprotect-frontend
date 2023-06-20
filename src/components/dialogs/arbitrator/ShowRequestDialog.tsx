@@ -160,7 +160,7 @@ const ShowRequestDialog = () => {
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
                                 <Trans>Request for arbitrator {request?.name}</Trans>
                             </Text>
-                            <Text textStyle="paragraph" textAlign="center" textTransform="uppercase" fontWeight="700">
+                            <Text textStyle="paragraph" textAlign="center" fontWeight="700">
                                 <Trans>{"Here's a complete description"}</Trans>
                             </Text>
                         </CardHeader>

@@ -358,7 +358,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             {"#"}
                         </InputLeftElement>
-                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -370,7 +370,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -382,7 +382,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement  py={{base: "14px"}} pointerEvents='none'>
                             <User fontSize="18px" />
                         </InputLeftElement>
-                        <Input value="3" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value="3" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -394,7 +394,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Image src="/images/lawBalance.svg" alt="Law balance icon" w="16px" h="16px" />
                         </InputLeftElement>
-                        <Input value="Non technical" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value="Non technical" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
             </Flex>
@@ -657,7 +657,7 @@ const KlerosCaseContent = ({
                     <Trans>This is how he described the situation:</Trans>
                 </Text>
 
-                <Flex w="100%" border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)" fontSize={{base: "14px"}} py={{base: "8px"}} px="1rem" wordBreak="break-word" >
+                <Flex w="100%" border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" fontSize={{base: "14px"}} py={{base: "8px"}} px="1rem" wordBreak="break-word" >
                     <Text>{ caseDescription }</Text>
                 </Flex>
             </Flex>
@@ -706,7 +706,7 @@ const KlerosCaseContent = ({
                                         }).map((evidence, idx) => {
                                             const isInitial = (evidence === evidences[0])
                                             const evidenceDescription = isInitial ? t`Initial evidence` : evidence.evidenceJson.description
-                                            return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 3px rgba(0, 0, 0, 0.06)"  >
+                                            return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)"  >
                                                 <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
                                                     {`#${idx+1} ${evidenceDescription}`}
                                                 </Text>

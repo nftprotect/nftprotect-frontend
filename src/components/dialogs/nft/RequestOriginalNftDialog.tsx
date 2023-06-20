@@ -154,7 +154,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}} >
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" mt={{base: "20px"}} mb={{base: "8px"}} textAlign="center" textTransform="uppercase">
+                                    <Text textStyle="paragraph" letterSpacing="0.04em" mt={{base: "20px"}} mb={{base: "8px"}} textAlign="center">
                                         <span>
                                             <Trans>To obtain the original NFT, send a request to the owner</Trans>
                                         </span>
@@ -216,7 +216,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                    <Text textStyle="paragraph" textTransform="uppercase">
+                                    <Text textStyle="paragraph">
                                         <Trans>Confirm the transaction in the wallet</Trans>
                                     </Text>
                                 </CardBody>
@@ -227,13 +227,13 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
-                                    <Text as="h3" textStyle="h3" textTransform="uppercase" textAlign="center" fontWeight="700">
+                                    <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
                                         <Trans>Request <br/> the original NFT{"?"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
                                     <Spinner variant="primary" speed='0.65s' my={{base: "20px"}}></Spinner>
-                                        <Text textStyle="paragraph" textTransform="uppercase">
+                                        <Text textStyle="paragraph">
                                             <Trans>{"Wait for transaction to confirm…"}</Trans>
                                         </Text>
                                 </CardBody>
