@@ -21,16 +21,19 @@ export enum ReqStatus
     Disputed
 }
 
-export interface RequestGraphData {
+export interface RequestGraphMinimalData {
     id: BigNumber,
-    type: string
     status: ReqStatus,
+    type: ReqType,
+    updateDate: Date
+}
+
+export interface RequestGraphData extends RequestGraphMinimalData {
     tokenId: BigNumber,
     oldOwnerAddress: string,
     newOwnerAddress: string,
     createDate: Date,
     createBlockNumber: number,
-    updateDate: Date,
     updateBlockNumber: number
 }
 
@@ -44,7 +47,8 @@ export interface TokenGraphData {
     contractAddress: string,
     amount: BigNumber,
     mintDate: Date,
-    mintBlockNumber: number
+    mintBlockNumber: number,
+    latestRequest: RequestGraphMinimalData
 }
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
@@ -118,7 +122,7 @@ export const useNftProtectGraph = () => {
             const { request } = data
             return {
                 id: BigNumber.from(request.id),
-                type: request.type,
+                type: ReqType[request.type as keyof typeof ReqType],
                 status: ReqStatus[request.status as keyof typeof ReqStatus],
                 tokenId: BigNumber.from(request.token.id),
                 oldOwnerAddress: request.oldowner.id,
@@ -251,6 +255,12 @@ export const useNftProtectGraph = () => {
                         amount
                         timestamp
                         blocknumber
+                        latestRequest {
+                            id
+                            status
+                            type
+                            timestampChange
+                        }
                     }
                 }
             `
@@ -265,7 +275,13 @@ export const useNftProtectGraph = () => {
                 contractAddress: it.contract,
                 amount: BigNumber.from(it.amount),
                 mintDate: timestampToDate(parseInt(it.timestamp)),
-                mintBlockNumber: parseInt(it.blocknumber)
+                mintBlockNumber: parseInt(it.blocknumber),
+                latestRequest: {
+                    id: BigNumber.from(it.latestRequest.id),
+                    status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
+                    type: ReqType[it.latestRequest.type as keyof typeof ReqType],
+                    updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
+                }
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))
@@ -299,6 +315,12 @@ export const useNftProtectGraph = () => {
                         amount
                         timestamp
                         blocknumber
+                        latestRequest {
+                            id
+                            status
+                            type
+                            timestampChange
+                        }
                     }
                 }
             `
@@ -313,7 +335,13 @@ export const useNftProtectGraph = () => {
                 contractAddress: it.contract,
                 amount: BigNumber.from(it.amount),
                 mintDate: timestampToDate(parseInt(it.timestamp)),
-                mintBlockNumber: parseInt(it.blocknumber)
+                mintBlockNumber: parseInt(it.blocknumber),
+                latestRequest: {
+                    id: BigNumber.from(it.latestRequest.id),
+                    status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
+                    type: ReqType[it.latestRequest.type as keyof typeof ReqType],
+                    updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
+                }
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))

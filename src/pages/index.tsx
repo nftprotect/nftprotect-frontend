@@ -23,6 +23,7 @@ import { GetStaticProps } from 'next'
 import { useIPFSContext } from '../context/IPFSContextProvider'
 import { useEffect } from 'react'
 import { loadTranslation } from '../utils/lingui'
+import NotificationsLoader from '../components/notifications/NotificationsLoader'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -40,40 +41,13 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Home: NextPage = () => {
 
     const { active, baseTokenPrice, currentChain } = useAppContext()
-    const {
-        addNotifications, 
-        notificationsCount
-    } = useNotifications()
+    const { notificationsCount } = useNotifications()
     const { setBaseUrl } = useIPFSContext()
 
     useEffect(() => {
         setBaseUrl(window.location.origin)
         currentChain && console.log(`Current ${currentChain.symbol} price is ${baseTokenPrice}`)
     }, [baseTokenPrice])
-
-    // useEffect(() => {
-    //     addNotifications([
-    //         {
-    //             id:'cccc', 
-    //             children:
-    //                 <div>
-    //                     <Heading 
-    //                         fontSize={{base: "0.875rem"}}
-    //                         mb={{base: "0.625rem"}}
-    //                     >
-    //                         <Trans>{"You're being sued. Case #1231 Who should own the original NFT"}</Trans>
-    //                     </Heading>
-    //                     <Text
-    //                         fontSize={{base: "0.625rem"}}
-    //                     > 
-    //                         <Trans>In 48 hours it will move to the Voting stage. We advise you to upload your proofs</Trans>
-    //                     </Text>
-    //                 </div>, 
-    //             severity: 0,
-    //             dateCreated: new Date()
-    //         }
-    //     ])
-    // }, [])
 
     let innerPart = <div/>
     if ( active ) {
@@ -173,6 +147,8 @@ const Home: NextPage = () => {
 
                             {innerPart}
                             <NFTView />
+                            {/* Load all notifications */}
+                            <NotificationsLoader/>
                         </>
                     }
                 </chakra.main>
