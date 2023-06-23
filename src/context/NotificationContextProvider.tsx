@@ -3,10 +3,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 export interface NotificationContextInterface {
     getNotification: Function,
     getNotificationIndex: Function,
-    addNotifications: Function,
+    addNotification: Function,
     deleteNotifications: Function,
     listNotifications: Function,
-    notificationsCount: number
+    notificationsCount: number,
+    updateCounter: number
 }
 
 export type Notification = {
@@ -30,7 +31,9 @@ export const NotificationContext = createContext<NotificationContextInterface|nu
 
 export function NotificationContextProvider({ children }:any) {
 
-    const [ notifications, setNotifications ] = useState<Array<Notification>>([])
+    const [ notifications, setNotifications ] = useState<Notification[]>([])
+    const [ updateCounter, setUpdateCounter ] = useState<number>(0)
+    const notificationsCount = notifications.length
 
     const getNotification = (id: string) => {
         return notifications.find(it => it.id === id)
@@ -40,7 +43,7 @@ export function NotificationContextProvider({ children }:any) {
         return notifications.findIndex(it => it.id === id)
     }
 
-    const addNotifications = (newNotifications: {
+    const addNotification = (newNotification: {
         id: string, 
         children: React.ReactElement,
         severity: SeverityLevel|undefined,
@@ -48,27 +51,25 @@ export function NotificationContextProvider({ children }:any) {
         closeable: boolean|undefined,
         callback: Function|undefined,
         image: {url: string, text: string}|undefined
-    }[]) => {
-        const updatingData: Notification[] = []
-        newNotifications.forEach((notification) => {
-            const existing = getNotification(notification.id)
-            if (existing) {
-                throw new Error(`Notification with ID ${notification.id} already exists`)
-            }
-            updatingData.push({
-                id: notification.id,
-                children: notification.children,
-                severity: (notification.severity === undefined) ? SeverityLevel.Info : notification.severity,
-                dateCreated: notification.dateCreated || new Date(),
-                closeable: (notification.closeable === undefined) ? true : notification.closeable,
-                callback: notification.callback,
-                image: notification.image
-            })
-        })
-        setNotifications({
-            ...notifications,
-            ...updatingData
-        })
+    }) => {
+        const existingIdx = notifications.findIndex(it => it.id === newNotification.id)
+        const updatedNotifications = [...notifications]
+        const newData = {
+            id: newNotification.id,
+            children: newNotification.children,
+            severity: (newNotification.severity === undefined) ? SeverityLevel.Info : newNotification.severity,
+            dateCreated: newNotification.dateCreated || new Date(),
+            closeable: (newNotification.closeable === undefined) ? true : newNotification.closeable,
+            callback: newNotification.callback,
+            image: newNotification.image
+        }
+        if (existingIdx > -1) {
+            updatedNotifications[existingIdx] = newData
+        } else {
+            updatedNotifications.push(newData)
+        }
+        setNotifications(updatedNotifications)
+        setUpdateCounter(updateCounter+1)
     }
 
     const deleteNotifications = (toDelete: any[]) => {
@@ -90,6 +91,7 @@ export function NotificationContextProvider({ children }:any) {
             })
             if (notifications.length > newState.length) {
                 setNotifications(newState)
+                setUpdateCounter(updateCounter+1)
             }
         }
     }
@@ -112,10 +114,11 @@ export function NotificationContextProvider({ children }:any) {
         <NotificationContext.Provider value={{
             getNotification,
             getNotificationIndex,
-            addNotifications,
+            addNotification,
             deleteNotifications,
             listNotifications,
-            notificationsCount: notifications.length
+            notificationsCount,
+            updateCounter
         }}>
             {children}
         </NotificationContext.Provider>
