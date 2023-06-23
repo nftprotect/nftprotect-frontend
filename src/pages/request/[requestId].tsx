@@ -52,8 +52,6 @@ const RequestPage: NextPage = () => {
     const [ error, setError ] = useState<string>()
     const metaEvidenceType = useMemo(() => {
         let meType = requestData?.metaevidence
-        // temporarily workaround contract mistake
-        meType = (meType === 3) ? 4 : meType
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
     const { getRequest } = useNftProtectGraph()

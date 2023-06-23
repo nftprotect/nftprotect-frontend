@@ -127,6 +127,8 @@ const NFTView = () => {
         fetchMintedNfts()
     }
 
+
+
     // Reload NFTs when chain or account changed
     useEffect(fetchAllNfts, [currentChain, account])
 

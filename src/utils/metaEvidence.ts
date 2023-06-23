@@ -9,15 +9,12 @@ export const metaEvidenceTypes = [
     //     label: 'adjustOwnership',
     //     value: '1'
     // }, {
-    //     label: 'askOwnershipAdjustment',
-    //     value: '2'
-    // }, {
     //     label: 'answerOwnershipAdjustment',
-    //     value: '3'
+    //     value: '2'
     // }, 
     {
         label: t`Bona fide transfer`,
-        value: '4',
+        value: '3',
         page: {
             title: t`Ownership adjustment in case of bona fide transfer`,
             summary: t`The Claimant claims that he purchased the pNFT bona fide but the owner of the original NFT refused to transfer him the original.`,
@@ -30,7 +27,7 @@ export const metaEvidenceTypes = [
         }
     }, {
         label: t`Incorrect address`,
-        value: '5',
+        value: '4',
         page: {
             title: t`Ownership restoration in case of loss of pNFT due to a sending to an incorrect address`,
             summary: t`The Claimant claims that he lost his pNFT due to a sending to an incorrect address.`,
@@ -43,7 +40,7 @@ export const metaEvidenceTypes = [
         }
     }, {
         label: t`Phishing attack`,
-        value: '6',
+        value: '5',
         page: {
             title: t`Ownership restoration in case of loss of pNFT in phishing attack`,
             summary: t`The Claimant claims that he lost his pNFT due to a phishing attack.`,
@@ -56,7 +53,7 @@ export const metaEvidenceTypes = [
         }
     }, {
         label: t`Protocol breach`,
-        value: '7',
+        value: '6',
         page: {
             title: t`Ownership restoration in case of loss of pNFT in a protocol breach`,
             summary: t`The Claimant claims that he lost his pNFT due to a protocol breach.`,
