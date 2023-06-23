@@ -10,7 +10,7 @@ const NotificationsLoader = () => {
 
     const { account, active } = useAppContext()
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
-    const { addNotifications } = useNotifications()
+    const { addNotification } = useNotifications()
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
@@ -20,7 +20,6 @@ const NotificationsLoader = () => {
     }
 
     const loadNotifications = async () => {
-        console.log('GRAPH LOAD')
         if (account) {
             // All pNFTs received by account
             const receivedNfts = await listTokensReceived(account)
@@ -33,7 +32,7 @@ const NotificationsLoader = () => {
                 if (request) {
                     // NFT has a pending request
                     if (request.status === ReqStatus.Accepted) {
-                        addNotifications([
+                        addNotification(
                             {
                                 id: notificationId, 
                                 children:
@@ -53,17 +52,18 @@ const NotificationsLoader = () => {
                                 severity: 0,
                                 dateCreated: request.updateDate
                             }
-                        ])
-                    } else if (nft.latestRequest.status === ReqStatus.Disputed) {
+                        )
+                    } else if (request.status === ReqStatus.Disputed) {
 
-                    } else if (nft.latestRequest.status === ReqStatus.Initial) {
+                    } else if (request.status === ReqStatus.Initial) {
 
-                    } else if (nft.latestRequest.status === ReqStatus.Rejected) {
+                    } else if (request.status === ReqStatus.Rejected) {
 
                     }
                 } else {
                     // NFT has no pending request
-                    addNotifications([
+                    console.log('GRAPH ADD NOT')
+                    addNotification(
                         {
                             id: notificationId, 
                             children:
@@ -83,7 +83,7 @@ const NotificationsLoader = () => {
                             severity: 0,
                             dateCreated: new Date() // TODO: search for transaction
                         }
-                    ])
+                    )
                 }
 
             })
@@ -97,7 +97,7 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Disputed) {
 
                     } else if (request.status === ReqStatus.Initial) {
-                        addNotifications([
+                        addNotification(
                             {
                                 id: notificationId, 
                                 children:
@@ -117,8 +117,8 @@ const NotificationsLoader = () => {
                                 severity: 0,
                                 dateCreated: request.updateDate
                             }
-                        ])
-                    } else if (nft.latestRequest.status === ReqStatus.Rejected) {
+                        )
+                    } else if (request.status === ReqStatus.Rejected) {
 
                     }
                 } else {
