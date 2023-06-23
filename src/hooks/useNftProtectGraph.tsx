@@ -94,7 +94,7 @@ export const useNftProtectGraph = () => {
         }
     }
 
-    const getRequest = async (requestId: BigNumber): Promise<RequestGraphData> => {
+    const getRequest = async (requestId: BigNumber): Promise<RequestGraphData|null> => {
         if (graphURI) {
             const query = `
                 query getRequest($requestId: Bytes!) {
@@ -120,7 +120,7 @@ export const useNftProtectGraph = () => {
             `
             const { data } = await performQuery(graphURI, query, { requestId: requestId.toString() })
             const { request } = data
-            return {
+            return request ? {
                 id: BigNumber.from(request.id),
                 type: ReqType[request.type as keyof typeof ReqType],
                 status: ReqStatus[request.status as keyof typeof ReqStatus],
@@ -131,7 +131,7 @@ export const useNftProtectGraph = () => {
                 createBlockNumber: parseInt(request.blocknumber),
                 updateDate: timestampToDate(parseInt(request.timestampChange)),
                 updateBlockNumber: parseInt(request.blocknumberChange),
-            }
+            } : null
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
