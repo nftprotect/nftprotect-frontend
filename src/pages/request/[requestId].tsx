@@ -52,8 +52,6 @@ const RequestPage: NextPage = () => {
     const [ error, setError ] = useState<string>()
     const metaEvidenceType = useMemo(() => {
         let meType = requestData?.metaevidence
-        // temporarily workaround contract mistake
-        meType = (meType === 3) ? 4 : meType
         return metaEvidenceTypes.find( item => item.value === meType?.toString() )
     }, [requestData])
     const { getRequest } = useNftProtectGraph()
@@ -142,13 +140,17 @@ const RequestPage: NextPage = () => {
             }
             let loadNftStarted = false
             // Fetch request data from The Graph
-            getRequest(requestId).then((result: RequestGraphData) => {
-                setRequestGraphData(result)
-                !loadNftStarted && loadNft(result.tokenId).then((result) => {
-                    currentNFT = result
-                    currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
-                    currentNFT.loadInitialData()
-                })
+            getRequest(requestId).then((result: RequestGraphData|null) => {
+                if (result === null) {
+                    setError(t`Incorrect requestId`)
+                } else {
+                    setRequestGraphData(result)
+                    !loadNftStarted && loadNft(result.tokenId).then((result) => {
+                        currentNFT = result
+                        currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
+                        currentNFT.loadInitialData()
+                    })
+                }
                 loadNftStarted = true
             })
             nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {

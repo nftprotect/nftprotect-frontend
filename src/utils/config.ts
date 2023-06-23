@@ -39,11 +39,11 @@ export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 export const maxBlocksPerRequest = 3000
 
 export const libraryPollingInterval = 12000
-export const nftpContractAddress = '0xf837fB19Ffd6c87700fb98743F29acCa43454299'
-export const userRegistryContractAddress = '0xcAD5C3a950667EEa1E9E7eAb92dFdB56502792aD'
+export const nftpContractAddress = '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F'
+export const userRegistryContractAddress = '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC'
 export const arbRegistryContractAddress = '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04'
 export const dynamicArbRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
-export const couponsContractAddress = '0x5512F1beb7078329c6f437E03ff845243B8b6179'
+export const couponsContractAddress = '0x3D9D532351C473C476b1077D1770f373B5f1AAc4'
 export const nftpDeployBlockNumber = 9073902
 
 export const dialogsTimeout = 5000

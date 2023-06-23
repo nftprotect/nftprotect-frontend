@@ -38,12 +38,10 @@ const severityMapping: {
 const ShowNotifications = () => {
     const {
         listNotifications,
-        notificationsCount
+        notificationsCount,
+        updateCounter
     } = useNotifications()
 
-    useEffect(() => {
-        console.log(listNotifications())
-    }, [notificationsCount])
 
     return (
         <Box 
