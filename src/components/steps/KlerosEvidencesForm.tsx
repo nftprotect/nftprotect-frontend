@@ -180,7 +180,7 @@ const KlerosEvidencesForm = ({
                         </CardBody>
 
                         <CardFooter alignItems="center">
-                            <Box w={{base: "60%", sm: "40%"}} mb={{base: "10px"}}>
+                            <Box w={{base: "60%", sm: "40%"}}>
                                 <Button 
                                     onClick={goBack as any}
                                     variant="darkOutline"

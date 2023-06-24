@@ -317,16 +317,16 @@ const KlerosCaseContent = ({
     }, [stepKey])
 
     const mainContent = <>
-        <Flex flexDirection="column" flexWrap="nowrap" mt={{base: "30px"}}>
-            <Text fontSize="30px" lineHeight="38px" fontWeight="600" color="#333333">
+        <Flex flexDirection="column" flexWrap="nowrap" my={{base: "34px"}}>
+            <Text fontSize="30px" lineHeight="38px" fontWeight="600" color="text.base">
                 { pageData.title }
             </Text>
 
-            <Flex mt={{base: "5px"}} mb={{base: "30px"}} fontSize="18px" lineHeight="22px">
-                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline">
+            <Flex mt={{base: "8px"}} mb={{base: "30px"}} fontSize="18px" lineHeight="22px">
+                <Link href={pageData.policyURL} isExternal rel="noreferrer" color="#2D7BD6" textDecoration="underline" mr={{base: "28px"}}>
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
-                            <Trans>Dispute policy</Trans>
+                            <Trans>Dispute Policy</Trans>
                         </Text>
                         <ExternalLink fontSize="18px" href={pageData.policyURL}/>
                     </Flex>
@@ -336,17 +336,16 @@ const KlerosCaseContent = ({
                     isExternal 
                     rel="noreferrer" 
                     color="#2D7BD6" 
-                    fontSize="18px" 
-                    lineHeight="22px"
                     textDecoration="underline"
                 >
                     <Flex mr={{base: "30px"}} alignItems="center">
                         <Text mr={{base: '8px'}}>
-                            <Trans>{"Open court's page in Kleros"}</Trans>
+                            <Trans>{"Open the court's page in Kleros"}</Trans>
                         </Text>
                         <ExternalLink fontSize="22px" />
                     </Flex>
-                </Link> }
+                </Link> 
+                }
             </Flex>
 
             <Flex mb={{base: "30px"}}>
@@ -358,7 +357,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             {"#"}
                         </InputLeftElement>
-                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="4px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -373,6 +372,7 @@ const KlerosCaseContent = ({
                         <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
+                
 
                 <FormControl w={{base: "126px"}} mr={{base: "30px"}}>
                     <FormLabel fontSize="14px" lineHeight="18px">
@@ -424,15 +424,18 @@ const KlerosCaseContent = ({
             }
 
             <Flex bgColor="#F8F8F8" p={{base: "18px"}} alignItems="flex-start" mb={{base: "30px"}}>
-                { nft && <NFTImage nft={nft} /> }
+                <Box my={{base: "-20px"}}>
+                    { nft && <NFTImage nft={nft} /> }
+                </Box>
+                
                 <Flex flexDirection="column" ml={{base: "18px"}} >
-                    <Text fontSize={{base: "18px"}}>
+                    <Text fontSize={{base: "22px"}} mb={{base: "14px"}}>
                         <chakra.span fontWeight="600"><Trans>The Subject of the Dispute{":"}</Trans></chakra.span>
                         {" "}
                         <Trans>{ pageData.caseSubject }</Trans>
                     </Text>
                     <Text textStyle="paragraph">
-                    <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>
+                        <chakra.span fontWeight="600"><Trans>Сollection{":"}</Trans></chakra.span>
                         {" "}
                         { nft?.contract?.name}
                     </Text>
@@ -461,7 +464,7 @@ const KlerosCaseContent = ({
 
             <Flex w="100%" mb={{base: "36px"}}>
                 <Flex flexDirection="column" borderRight="2px solid #ADADAD" w="50%" pr={{base: "10px"}}>
-                    <Flex alignItems="center" mb={{base: "10px"}}>
+                    <Flex alignItems="center" mb={{base: "4px"}}>
                         <Text fontSize="18px" fontWeight="700">
                             <Trans>The claimant</Trans>
                         </Text>
@@ -480,22 +483,21 @@ const KlerosCaseContent = ({
                         </Popover>
                     </Flex>
 
-                    <Text fontWeight="600" textStyle="paragraph">
+                    <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         <Trans>Wallet{":"}</Trans>
                         {' '}
-                        <Link 
+                        { claimantAddress && <Link 
                             href={ generateAddressURL(claimantAddress, library.network.chainId) }
                             isExternal 
                             rel="noreferrer" 
-                            color="#2D7BD6" 
-                            textDecoration="underline"
+                            
                             ml={{base: "5px"}}
                         >
-                            <chakra.span wordBreak="break-all">
+                            <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
                                 { formatAddress(claimantAddress, 8) }
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
-                        </Link>
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                        </Link>}
                     </Text>
 
                     {/* Hided for now */}
@@ -506,7 +508,7 @@ const KlerosCaseContent = ({
                         </chakra.span>
                     </Text> */}
 
-                    <Text fontWeight="600" textStyle="paragraph">
+                    <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         <Trans>Original{":"}</Trans>
                         {" "}
                         { nft.originalData && <Link 
@@ -519,14 +521,14 @@ const KlerosCaseContent = ({
                             <chakra.span wordBreak="break-all">
                                 { formatAddress(nft.originalData?.contractAddress, 4) } (id: {nft.originalData?.tokenId})
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link> }
                     </Text>
 
-                    <Text fontWeight="600" textStyle="paragraph">
+                    <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.claimantText }
                         {" "}
-                        <Link 
+                        { claimantTx1 && <Link 
                             href={claimantTx1 ? generateTxURL(claimantTx1, library.network.chainId) : '#'} 
                             isExternal 
                             rel="noreferrer" 
@@ -536,15 +538,15 @@ const KlerosCaseContent = ({
                             <chakra.span wordBreak="break-all">
                                { claimantTx1 ? formatAddress(claimantTx1, 10) : '' }
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
-                        </Link>
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                        </Link>}
                     </Text>
 
                     { pageData.claimantText2 && 
-                        <Text fontWeight="600" textStyle="paragraph">
+                        <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                             { pageData.claimantText2 }
                             {" "}
-                            <Link 
+                            { claimantTx2 && <Link 
                                 href={claimantTx2 ? generateTxURL(claimantTx2, library.network.chainId) : '#'} 
                                 isExternal 
                                 rel="noreferrer" 
@@ -554,14 +556,14 @@ const KlerosCaseContent = ({
                                 <chakra.span wordBreak="break-all">
                                 { claimantTx2 ? formatAddress(claimantTx2, 10) : '' }
                                 </chakra.span>
-                                <ExternalLinkIcon mx='5px' />
-                            </Link>
+                                <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                            </Link>}
                         </Text> 
                     }
                 </Flex>
 
                 <Flex flexDirection="column" w="50%" pl={{base: "10px"}} >
-                    <Flex  alignItems="center" mb={{base: "10px"}}>
+                    <Flex  alignItems="center" mb={{base: "4px"}}>
                         <Text fontSize="18px" fontWeight="700">
                             <Trans>The Defendant</Trans>
                         </Text>
@@ -580,7 +582,7 @@ const KlerosCaseContent = ({
                         </Popover>
                     </Flex>
 
-                    <Text fontWeight="600" fontSize={{base: "14px"}}>
+                    <Text fontWeight="600" fontSize={{base: "14px"}} mb={{base: "6px"}}>
                         {
                             contractAddress ? 
                                 <Trans>{"Smart contract:"}</Trans> :
@@ -598,21 +600,21 @@ const KlerosCaseContent = ({
                             <chakra.span wordBreak="break-all">
                                 { formatAddress(contractAddress || defendantAddress, 8) }
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
                     </Text>
 
                     {/* Visible only if defendant is not a smart contract */}
-                    { !contractAddress && 
-                        <Text textStyle="paragraph" fontWeight="600">
+                    {/* { !contractAddress && 
+                        <Text textStyle="paragraph" fontWeight="600" mb={{base: "6px"}}>
                             <Trans>DID{":"}</Trans>
                             <chakra.span bgColor="rgba(246, 12, 54, 0.12)" borderRadius="3px" fontSize={{base: "12px"}} lineHeight={{base: "15px"}} fontWeight="500" ml={{base: "5px"}} px={{base: "6px"}} py={{base: "2px"}}>
                                 <Trans>None</Trans>
                             </chakra.span>
                         </Text>
-                    }
+                    } */}
 
-                    <Text fontWeight="600" textStyle="paragraph">
+                    <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link
@@ -625,11 +627,11 @@ const KlerosCaseContent = ({
                             <chakra.span wordBreak="break-all">
                                 { formatAddress(nft.contract.address, 4) } (id: { nft.tokenId })
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
                     </Text>
 
-                    <Text fontWeight="600" textStyle="paragraph">
+                    <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.defendantText }
                         {" "}
                         <Link 
@@ -642,116 +644,105 @@ const KlerosCaseContent = ({
                             <chakra.span wordBreak="break-all">
                                { defendantTx1 ? formatAddress(defendantTx1, 10) : '' }
                             </chakra.span>
-                            <ExternalLinkIcon mx='5px' />
+                            <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
                     </Text>
                 </Flex>
             </Flex>
 
             <Flex flexDirection="column" mb={{base: "35px"}}>
-                <Text fontWeight="700" fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                <Text fontWeight="700" fontSize={{base: "18px"}} lineHeight={{base: "22px"}} mb={{base: "6px"}}>
                     { pageData.summary }
                 </Text>
 
                 <Text fontWeight="400" textStyle="paragraph" mb={{base: "15px"}}>
-                    <Trans>This is how he described the situation:</Trans>
+                    <Trans>They explain the situation as follows:</Trans>
                 </Text>
 
-                <Flex w="100%" border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" fontSize={{base: "14px"}} py={{base: "8px"}} px="1rem" wordBreak="break-word" >
+                <Flex w="100%" fontSize={{base: "14px"}}>
                     <Text>{ caseDescription }</Text>
                 </Flex>
             </Flex>
 
             { evidences && evidences.length > 0 &&
-                <Accordion defaultIndex={[0]} allowToggle mb={{base: "30px"}}>
-                        <AccordionItem>
-                            {({ isExpanded }) => (
-                                <>
-                                    <AccordionButton pl={{base: "30px"}} color="#FFF" bgColor="#2D7BD6" fontWeight="600" fontSize={{base: "16px"}} lineHeight={{base: "22px"}} _hover={{bgColor: "#2D7BD6"}}>
-                                        <Box as="span" flex='1' textAlign='left'>
-                                            <Trans>Evidence</Trans>
-                                        </Box>
-                                        {isExpanded ? ( <MinusIcon fontSize='16px' /> ) : ( <AddIcon fontSize='16px' /> )}
-                                    </AccordionButton>
-                                    <AccordionPanel px={{base: "32px"}} py={{base: "32px"}} border="1px solid #ADADAD">
-                                        <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
-                                            <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
-                                                <Text>
-                                                    <Trans>Sort by{": "} date</Trans>
-                                                </Text>
+                <>
+                    {/* <Flex alignItems="center" justifyContent="space-between" mb={{base: "35px"}}>
+                        <Flex alignItems="center" flexDirection="row" color="#ADADAD" textStyle="paragraph">
+                            <Text>
+                                <Trans>Sort by{": "} date</Trans>
+                            </Text>
 
-                                                <IconButton 
-                                                    aria-label='Sort' 
-                                                    icon={(sortDirection == 'asc') ? <ArrowUpIcon /> : <ArrowDownIcon />} 
-                                                    w={{base: "20px"}} 
-                                                    bg="none" 
-                                                    p="0" 
-                                                    m="0" 
-                                                    _hover={{bg: "none"}}
-                                                    onClick={() => {
-                                                        (sortDirection == 'asc') ? setSortDirection('desc') : setSortDirection('asc')
-                                                    }}
-                                                />
-                                            </Flex>
+                            <IconButton 
+                                aria-label='Sort' 
+                                icon={(sortDirection == 'asc') ? <ArrowUpIcon /> : <ArrowDownIcon />} 
+                                w={{base: "20px"}} 
+                                bg="none"
+                                boxShadow="none"
+                                p="0" 
+                                m="0" 
+                                _hover={{bg: "none"}}
+                                onClick={() => {
+                                    (sortDirection == 'asc') ? setSortDirection('desc') : setSortDirection('asc')
+                                }}
+                            />
+                        </Flex>
+                    </Flex> */}
 
-                                            {/* Visible only on step 1 "Evidence period" */}
-                                            { (stepKey === 'Evidence period') && <Button variant="primaryLight" w={{base: "200px"}}>
-                                                <Trans>Submit new evidence</Trans>
-                                            </Button> }
-                                        </Flex>
-
-                                        { evidences.sort(( a, b ) => {
-                                            const result = (sortDirection === 'asc') ? (a.submitDate >= b.submitDate) : (b.submitDate < a.submitDate)
-                                            return result ? 1 : -1
-                                        }).map((evidence, idx) => {
-                                            const isInitial = (evidence === evidences[0])
-                                            const evidenceDescription = isInitial ? t`Initial evidence` : evidence.evidenceJson.description
-                                            return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)"  >
-                                                <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
-                                                    {`#${idx+1} ${evidenceDescription}`}
-                                                </Text>
-                                                <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
-                                                    <Text textStyle="paragraph">
-                                                        <Trans>Submitted by</Trans> {
-                                                            evidence.evidenceJson.evidenceSide === 0 ? 
-                                                                formatAddress(claimantAddress, 4) : 
-                                                            evidence.evidenceJson.evidenceSide === 1 ?
-                                                                formatAddress(defendantAddress, 4) :
-                                                            formatAddress(evidence.submittedBy, 4)
-                                                        }
-                                                    </Text>
-                                                    <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
-                                                        <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
-                                                            { formatDate(evidence.submitDate) }
-                                                        </Text>
-                                                        <Flex flexDirection="column" textAlign="right">
-                                                        { evidence.evidenceJson.files.map((file, idx) => {
-                                                            return <Text key={`file-${idx}`} textStyle="paragraph" color="#2D7BD6">
-                                                                { file.description }
-                                                                <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
-                                                                    <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
-                                                                </Link>
-                                                            </Text>
-                                                        })}
-                                                        </Flex>
-                                                    </Flex>
-                                                </Flex>
-                                            </Flex>
-                                        })}
-                                    </AccordionPanel>
-                                </>
-                            )}
-                        </AccordionItem>
-               </Accordion>
+                    { evidences.sort(( a, b ) => {
+                        const result = (sortDirection === 'asc') ? (a.submitDate >= b.submitDate) : (b.submitDate < a.submitDate)
+                        return result ? 1 : -1
+                    }).map((evidence, idx) => {
+                        const isInitial = (evidence === evidences[0])
+                        const evidenceDescription = isInitial ? t`Initial evidence` : evidence.evidenceJson.description
+                        return <Flex key={`panel-${idx}`} flexDirection="column" border="1px solid #E5E5E5" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)"  >
+                            <Text fontWeight="600" textStyle="paragraph" px={{base: "24px"}} pt={{base: "24px"}} pb={{base: "14px"}}>
+                                {`#${idx+1} ${evidenceDescription}`}
+                            </Text>
+                            <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
+                                <Text textStyle="paragraph">
+                                    <Trans>Submitted by</Trans> {
+                                        evidence.evidenceJson.evidenceSide === 0 ? 
+                                            formatAddress(claimantAddress, 4) : 
+                                        evidence.evidenceJson.evidenceSide === 1 ?
+                                            formatAddress(defendantAddress, 4) :
+                                        formatAddress(evidence.submittedBy, 4)
+                                    }
+                                </Text>
+                                <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
+                                    <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>
+                                        { formatDate(evidence.submitDate) }
+                                    </Text>
+                                    <Flex flexDirection="column" textAlign="right">
+                                    { evidence.evidenceJson.files.map((file, idx) => {
+                                        return <Text key={`file-${idx}`} textStyle="paragraph" color="#2D7BD6">
+                                            { file.description }
+                                            <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
+                                                <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                            </Link>
+                                        </Text>
+                                    })}
+                                    </Flex>
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                    })}
+                </>
+            }
+            {/* Visible only on step 1 "Evidence period" */}
+            { (stepKey === 'Evidence period') && <Flex mt={{base: "80px"}} alignItems="center" justifyContent="center">
+                    <Button variant="primaryLight" w={{base: "200px"}} px={{base: "32px"}} py={{base: "12px"}}>
+                        <Trans>Submit new evidence</Trans>
+                    </Button>
+                </Flex>
             }
         </Flex>
     </>
 
     return (<>
         { stepKey && <Steps
-            borderBottom="2px solid #ADADAD"
+            borderBottom="1px solid #ADADAD"
             variant={"circles"} 
-            colorScheme="#1316DD"
+            colorScheme="brand.light"
             activeStep={activeStep}
             // onClickStep={(i) => {
             //     setStep(i);
@@ -761,7 +752,7 @@ const KlerosCaseContent = ({
                 "& .cui-steps__step-icon-container": {
                     w: "26px",
                     h: "26px",
-                    // bg: "#1316DD", 
+                    bg: "brand.light", 
                     // {activeStep === 0}
                 },
                 ".cui-steps__step-icon-container span": {

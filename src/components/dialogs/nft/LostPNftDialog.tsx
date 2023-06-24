@@ -258,7 +258,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         {"If you're unsure of the reason for losing your asset, please select 'Phishing' as the most likely cause"}
                                     </Text>
 
-                                    <Menu matchWidth>
+                                    <Menu matchWidth placement="bottom">
                                         <MenuButton
                                             as={Button} 
                                             rightIcon={<ChevronDownIcon fontSize="14px" />}
@@ -282,7 +282,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         >
                                             <Trans>Reason</Trans>
                                         </MenuButton>
-                                        <MenuList border="1px solid black" borderRadius="3px" textStyle="paragraph">
+                                        <MenuList border="1px solid black" borderRadius="4px" textStyle="paragraph" color="#FFF">
                                             <MenuItem data-reason="phishing attack" onClick={ handleLostReasonSelection }>
                                                 <Trans>Phishing attack</Trans>
                                             </MenuItem>
@@ -396,13 +396,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                     <Text>
                                                         {"Evidence of attempts to solve the problem on your own.\u0020"}
                                                         <PopoverTrigger>
-                                                            <chakra.span color="#9D9D9D" textDecoration="underline" cursor="pointer">
+                                                            <chakra.span color="text.muted" textDecoration="underline" cursor="pointer">
                                                                 <Trans>Detailed</Trans>
                                                             </chakra.span>
                                                         </PopoverTrigger>
                                                     </Text>
                                                     
-                                                    <PopoverContent bg="#F5F1FF" w="400px" border="2px solid #000" borderRadius="30px" maxH="280px" overflowY="auto" ml={{base: "20px"}}
+                                                    <PopoverContent bg="#F5F1FF" w="400px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" borderRadius="8px" maxH="280px" overflowY="auto" ml={{base: "20px"}}
                                                         sx={{
                                                             "::-webkit-scrollbar": {
                                                                 w: "5px",
