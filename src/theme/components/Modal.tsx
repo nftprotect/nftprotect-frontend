@@ -22,7 +22,7 @@ const stepModal = definePartsStyle({
     dialog: {
         my: "0",
         bg: "#FFF",
-        border: "2px solid #000",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
         backdropFilter: "blur(7.5px)",
         overflowY: 'auto',

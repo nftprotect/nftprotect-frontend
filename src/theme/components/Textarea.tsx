@@ -13,7 +13,15 @@ const primary = defineStyle({
         border: "2px solid",
         borderColor: "brand.light",
         boxShadow: "0px 2px 16px rgba(0, 0, 0, 0.1)"
-    }
+    },
+    "::-webkit-scrollbar": {
+        w: "5px",
+    },
+    "::-webkit-scrollbar-thumb": {
+        bgColor: 'brand.light',
+    },
+    color: 'text.base',
+    bgColor: 'gray.light',
 })
 
 export const textareaTheme = defineStyleConfig({

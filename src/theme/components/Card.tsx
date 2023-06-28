@@ -28,6 +28,7 @@ const variants = {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
+            bg: "gray.light",
             py: {base: "33px"},
             px: {base: "26px"}
         },

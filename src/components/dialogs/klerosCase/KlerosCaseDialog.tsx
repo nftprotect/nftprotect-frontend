@@ -1,35 +1,14 @@
 import { useState, useEffect } from 'react';
 import {
     chakra,
-    Button,
-    Box,
     Flex,
-    Image,
-    Text,
+    Grid,
+    GridItem,
     Modal,
     ModalOverlay,
     ModalBody,
     ModalContent,
     ModalCloseButton,
-    Textarea,
-    ListItem,
-    OrderedList,
-    Link,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverCloseButton,
-    PopoverArrow,
-    PopoverBody,
-    Spinner,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
     useDisclosure
 } from '@chakra-ui/react'
 // import { StepsTheme as Steps } from 'chakra-ui-steps';
@@ -39,6 +18,8 @@ import { metaEvidenceTypes } from '../../../utils/metaEvidence';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { Trans, t } from '@lingui/macro';
+import Footer from '../../footer/Footer'
+import NavBar from '../../navBar/NavBar'
 
 const KlerosCaseDialog = () => {
 
@@ -65,6 +46,7 @@ const KlerosCaseDialog = () => {
             >
                 <ModalOverlay />
                 <ModalContent
+                    // as="Grid"
                     borderRadius="0"
                     sx={{
                         "::-webkit-scrollbar": {
@@ -77,46 +59,35 @@ const KlerosCaseDialog = () => {
                         "::-webkit-scrollbar-thumb": {
                             bgColor: 'brand.light',
                         }
-
                     }}
                 >
-                    <ModalCloseButton onClick={onClose} />
-                    <ModalBody mx={{base: "220px"}}>
-                        <Flex flexDir="column" width="100%">
-                            { nft && caseData && <KlerosCaseContent
-                                pageData={pageData}
-                                {...caseData}
-                            /> }
-                        </Flex>
+                    <GridItem
+                        position="sticky"
+                        top="0"
+                        zIndex="1"
+                        bgColor="brand.light"
+                        color="#FFF"
+                        w="100%"
+                        display="flex"
+                    >
+                        <NavBar />
+                        <ModalCloseButton onClick={onClose} />
+                    </GridItem>
 
-                        <Flex 
-                            flexDirection="row"
-                            flexWrap={{base: "wrap", sm: "nowrap"}}
-                            alignSelf="flex-start"
-                            justifyContent="center"
-                            w="100%"
-                            p="0"
-                            mb={{base: "30px"}}
-                        >
-                            <Box w={{base: "14rem"}} mr={{base: "20px"}}>
-                                <Button
-                                    onClick={ onClose }
-                                    variant="darkOutline"
-                                >
-                                    <Trans>Cancel</Trans>
-                                </Button>
-                            </Box>
-                            <Box w={{base: "14rem"}} ml={{base: "20px"}}>
-                                <Button
-                                    onClick={ onClose }
-                                    variant="darkOutline"
-                                >
-                                    <Trans>Proceed to payment</Trans>
-                                </Button>
-                            </Box>
-                        </Flex>
-                        
-                    </ModalBody>
+                    <GridItem area={'main'}>
+                        <ModalBody mx={{base: "220px"}}>
+                            <Flex flexDir="column" width="100%">
+                                { nft && caseData && <KlerosCaseContent
+                                    pageData={pageData}
+                                    {...caseData}
+                                /> }
+                            </Flex>
+                        </ModalBody>
+                    </GridItem>
+
+                    <GridItem area={'footer'}>
+                        <Footer />
+                    </GridItem>
                 </ModalContent>
             </Modal>
         </>
