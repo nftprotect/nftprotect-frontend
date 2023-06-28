@@ -302,7 +302,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                         <SwitchableOutside nextStepNumber={nextStep}>
                             <Card variant="stepContent">
                                 <CardHeader>
-                                    <Text as="h3" textStyle="h3">
+                                    <Text as="h3" textStyle="h3" textTransform="capitalize">
                                         { lostReason }
                                     </Text>
                                 </CardHeader>
