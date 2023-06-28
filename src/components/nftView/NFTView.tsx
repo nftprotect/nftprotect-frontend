@@ -168,123 +168,83 @@ const NFTView = () => {
 
     return (
         <>
-            <Accordion defaultIndex={[0, 1, 2]}>
-                { myOwnNfts && (myOwnNfts.length > 0) &&
-                    <AccordionItem
-                        px={['1rem', '3rem']}
-                        borderTop="none"
-                    >
-                        <AccordionButton 
-                            px="0" 
-                            py={[4, 6]}
-                            _hover={{
-                                bg: 'none',
-                                cursor: 'initial'
-                            }}
-                        >
-                            <Flex flexDirection="column" alignItems="flex-start">
-                                <Text textStyle="h2">
-                                    <Trans>All your NFTs</Trans> 
-                                </Text>
-                                <Text textStyle="h3">
-                                    <Trans>{"It's all not protected yet"}</Trans>
-                                </Text>
-                            </Flex>
-                        </AccordionButton>
+            { myOwnNfts && (myOwnNfts.length > 0) &&
+                <Flex px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>
+                    <Flex flexDirection="column" alignItems="flex-start" mb={{base: "20px"}}>
+                        <Text textStyle="h2">
+                            <Trans>All your NFTs</Trans> 
+                        </Text>
+                        <Text textStyle="h3">
+                            <Trans>{"It's all not protected yet"}</Trans>
+                        </Text>
+                    </Flex>
 
-                        <AccordionPanel px="0" pb={4} borderBottom="2px solid" borderColor="brand.light">
-                            <Grid
-                                templateColumns={{
-                                    base: "repeat(auto-fill, 8rem)",
-                                    sm: "repeat(auto-fill, 10rem)",
-                                    md: "repeat(auto-fill, 12rem)",
-                                }}
-                                gap={[6]}
-                                my={[4, 8]}
-                            >
-                                { myOwnNfts.map(nft => renderNFT(nft)) }
-                            </Grid>
-                            
-                        </AccordionPanel>
-                    </AccordionItem>
-                }
-                
-                { givenPNfts && (givenPNfts.length > 0) &&
-
-                    <AccordionItem 
-                        px={['1rem', '3rem']} 
-                        borderTop="none"
+                    <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, 8rem)",
+                            sm: "repeat(auto-fill, 10rem)",
+                            md: "repeat(auto-fill, 12rem)",
+                        }}
+                        gap={[6]}
+                        borderBottom="2px solid" borderColor="brand.light"
+                        pb={{base: "20px"}}
                     >
-                        <Flex alignItems="center" justifyContent="space-between">
-                            <AccordionButton px="0" py={[4, 6]} 
-                                _hover={{
-                                    bg: 'none',
-                                    cursor: 'initial'
-                                }}
-                            >
-                                <Flex flexDirection="column" alignItems="flex-start">
-                                    <Text textStyle="h2">
-                                        <Trans>Transfered pNFT</Trans> 
-                                    </Text>
-                                    <Text textStyle="h3">
-                                        <Trans>This section displays your pNFTs that were moved to another adresses</Trans>
-                                    </Text>
-                                </Flex>
-                            </AccordionButton>
-                        </Flex>
-                            
-                        <AccordionPanel px="0" pb={4} borderBottom="2px solid" borderColor="brand.light">
-                            <Grid
-                                templateColumns={{
-                                    base: "repeat(auto-fill, 8rem)",
-                                    sm: "repeat(auto-fill, 10rem)",
-                                    md: "repeat(auto-fill, 12rem)",
-                                }}
-                                gap={[6]}
-                                my={[4, 8]}
-                            >
-                                { givenPNfts.map(nft => renderNFT(nft)) }
-                            </Grid>
-                        </AccordionPanel>
-                    </AccordionItem>
-                }
-                
-                { ownedPNfts && (ownedPNfts.length > 0) &&
-                    <AccordionItem  px={['1rem', '3rem']} borderTop="none">
-                        <Flex alignItems="center" justifyContent="space-between">
-                            <AccordionButton px="0" py={[4, 6]}
-                                _hover={{
-                                    bg: 'none',
-                                    cursor: 'initial'
-                                }}
-                            >
-                                <Flex flexDirection="column" alignItems="flex-start">
-                                    <Text textStyle="h2">
-                                        <Trans>All your protected assets</Trans> 
-                                    </Text>
-                                    <Text textStyle="h3">
-                                        <Trans>This section displays all the NFTs and their associated pNFTs that you own</Trans>
-                                    </Text>
-                                </Flex>
-                            </AccordionButton>
-                        </Flex>
-                            
-                        <AccordionPanel px="0" pb={4}>
-                            <Grid
-                                templateColumns={{
-                                    base: "repeat(auto-fill, 8rem)",
-                                    sm: "repeat(auto-fill, 10rem)",
-                                    md: "repeat(auto-fill, 12rem)",
-                                }}
-                                gap={[6]}
-                                my={[4, 8]}
-                            >
-                                { ownedPNfts.map(nft => renderNFT(nft)) }
-                            </Grid>
-                        </AccordionPanel>
-                    </AccordionItem>
-                }
-            </Accordion>
+                        { myOwnNfts.map(nft => renderNFT(nft)) }
+                    </Grid>
+                </Flex>
+            }
+
+            { givenPNfts && (givenPNfts.length > 0) &&
+                <Flex  px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>
+                    <Flex flexDirection="column" alignItems="flex-start" mb={{base: "20px"}}>
+                        <Text textStyle="h2">
+                            <Trans>Transfered pNFT</Trans> 
+                        </Text>
+                        <Text textStyle="h3">
+                            <Trans>This section displays your pNFTs that were moved to another adresses</Trans>
+                        </Text>
+                    </Flex>
+                        
+                    <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, 8rem)",
+                            sm: "repeat(auto-fill, 10rem)",
+                            md: "repeat(auto-fill, 12rem)",
+                        }}
+                        gap={[6]}
+                        borderBottom="2px solid" borderColor="brand.light"
+                        pb={{base: "20px"}}
+                    >
+                        { givenPNfts.map(nft => renderNFT(nft)) }
+                    </Grid>
+                </Flex>
+            }
+
+            { ownedPNfts && (ownedPNfts.length > 0) &&
+                <Flex  px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>
+                    <Flex flexDirection="column" alignItems="flex-start" mb={{base: "20px"}}>
+                        <Text textStyle="h2">
+                            <Trans>All your protected assets</Trans> 
+                        </Text>
+                        <Text textStyle="h3">
+                            <Trans>This section displays all the NFTs and their associated pNFTs that you own</Trans>
+                        </Text>
+                    </Flex>
+                        
+                    <Grid
+                        templateColumns={{
+                            base: "repeat(auto-fill, 8rem)",
+                            sm: "repeat(auto-fill, 10rem)",
+                            md: "repeat(auto-fill, 12rem)",
+                        }}
+                        gap={[6]}
+                        pb={{base: "20px"}}
+                    >
+                        { ownedPNfts.map(nft => renderNFT(nft)) }
+                    </Grid>
+                    </Flex>
+            }
+
             {/** Dialogs registration following */}
             <KlerosCaseDialog/>
             <ProtectNftDialog nftReFetch={ fetchAllNfts } />
