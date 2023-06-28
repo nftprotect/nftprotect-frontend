@@ -5,7 +5,6 @@ import { styles } from './styles'
 
 // Foundational style overrides
 import { colors } from './foundations/colors'
-import { typography } from './foundations/typography'
 
 import { StepsTheme as Steps } from 'chakra-ui-steps';
 import { menuTheme } from './components/Menu';
@@ -18,7 +17,10 @@ import { textareaTheme } from './components/Textarea';
 const nftProtectTheme = extendTheme({
     styles,
     colors,
-    typography,
+    fonts: {
+        heading: `'Lexend', sans-serif`,
+        body: `'Lexend', sans-serif`,
+    },
     textStyles: {
         h1: {
             fontSize: {base: '52px', lg: '62px'},
