@@ -1,9 +1,4 @@
 import {
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionIcon,
-    AccordionPanel,
     Grid,
     Heading,
     Text,
