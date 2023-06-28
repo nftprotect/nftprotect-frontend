@@ -190,7 +190,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                             <Link
                                                 isExternal 
                                                 rel="noreferrer"
-                                                href={'createDisputeLink(pendingRequest.externalDisputeId)'}
+                                                href={createDisputeLink(pendingRequest.externalDisputeId)}
                                                 whiteSpace="nowrap"
                                                 display="flex"
                                                 alignItems="center"
@@ -278,7 +278,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         <Link
                                             isExternal 
                                             rel="noreferrer"
-                                            href={'createDisputeLink(pendingRequest.externalDisputeId)'}
+                                            href={createDisputeLink(pendingRequest.externalDisputeId)}
                                             whiteSpace="nowrap"
                                             display="flex"
                                             alignItems="center"
