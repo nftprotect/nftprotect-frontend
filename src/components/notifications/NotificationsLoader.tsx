@@ -10,24 +10,27 @@ import { useAlchemy } from "../../hooks/useAlchemy"
 import { BigNumber } from '@ethersproject/bignumber'
 import NFT, { ActionRequest } from "../../classes/NFT"
 import { createDisputeLink } from "../../utils/kleros"
+import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
+import { defaultArbitrator } from "../../utils/config"
+import { SeverityLevel } from "../../context/NotificationContextProvider"
 
 const CommonNotificationBody = ({
     header,
     message
 }:{
-    header: JSX.Element,
-    message: JSX.Element
+    header?: JSX.Element,
+    message?: JSX.Element
 }) => <div>
         <Heading 
             fontSize={{base: "0.875rem"}}
             mb={{base: "0.625rem"}}
         >
-            ${header}
+            ${header && header}
         </Heading>
         <Text
             fontSize={{base: "0.625rem"}}
         > 
-            ${message}
+            ${message && message}
         </Text>
     </div>
 
@@ -35,9 +38,9 @@ const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
+    const { getDispute } = useArbitratorGraph(currentChain.chainId, defaultArbitrator)
     const { addNotification } = useNotifications()
     //const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
-
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
@@ -73,27 +76,10 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>
-                                                    The Arbitrator’s ruling on the dispute 
-                                                    <Link
-                                                        isExternal 
-                                                        rel="noreferrer"
-                                                        href={createDisputeLink(loadedRequest.externalDisputeId)}
-                                                        whiteSpace="nowrap"
-                                                        display="flex"
-                                                        alignItems="center"
-                                                    >
-                                                        #{loadedRequest.externalDisputeId.toString()}
-                                                        <ExternalLinkIcon fontSize='16px' ml="5px" />
-                                                    </Link>
-                                                    is now in effect.
-                                                </Trans>
-                                            }
-                                            message={
-                                                <Trans>{`The original NFT is now yours. We recommend protecting it using NFT Protect.`}</Trans>
+                                                <Trans>{`The Arbitrator’s ruling on the dispute #${loadedRequest.externalDisputeId.toString()} is now in effect.`}</Trans>
                                             }
                                         />, 
-                                    severity: 0,
+                                    severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -103,133 +89,120 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>
-                                                    <Link
-                                                        isExternal 
-                                                        rel="noreferrer"
-                                                        href={createDisputeLink(loadedRequest.externalDisputeId)}
-                                                        whiteSpace="nowrap"
-                                                        display="flex"
-                                                        alignItems="center"
-                                                    >
-                                                        Dispute #{loadedRequest.externalDisputeId.toString()}
-                                                        <ExternalLinkIcon fontSize='16px' ml="5px" />
-                                                    </Link>
-                                                    decision is now in force.
-                                                </Trans>
+                                                <Trans>Dispute #{loadedRequest.externalDisputeId.toString()} decision is now in force.</Trans>
                                             }
                                             message={
-                                                <Trans>{`Your pNFT has been burned.`}</Trans>
+                                                <Trans>Your pNFT has been burned.</Trans>
                                             }
                                         />, 
-                                    severity: 0,
+                                    severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
                             }
                         } else {
-                            // 22. Original NFT received by request without dispute
-                            addNotification({
-                                id: notificationId, 
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has transferred the original NFT to you.</Trans>
-                                        }
-                                        message={
-                                            <Trans>We recommend protecting it using NFT Protect.</Trans>
-                                        }
-                                    />,
-                                severity: 0,
-                                dateCreated: request.updateDate
-                            })
+                            if (request.type === ReqType.OwnershipAdjustment) {
+                                // 2. Original NFT received by request without dispute
+                                addNotification({
+                                    id: notificationId, 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has transferred the original NFT to you.</Trans>
+                                            }
+                                            message={
+                                                <Trans>We recommend protecting it using NFT Protect.</Trans>
+                                            }
+                                        />,
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            }
                         }
                     } else if (request.status === ReqStatus.Disputed) {
+                        // If request is disputed we have to load data from arbitrator graph
+                        const dispute = await getDispute(loadedRequest.externalDisputeId)
+                        if (dispute.period === Period.Evidence) {
 
+                        } else if (dispute.period === Period.Commit) {
+
+                        } else if (dispute.period === Period.Vote) {
+
+                        } else if (dispute.period === Period.Appeal) {
+
+                        } else if (dispute.period === Period.Execution) {
+
+                        }
                     } else if (request.status === ReqStatus.Initial) {
-                        // If request timeout expired
-                        if (loadedRequest.timeout) {
-                            const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
-                            if (timeoutDate <= new Date()) {
-                                // 4. Original NFT request timeout
+                        if (request.type === ReqType.OwnershipAdjustment) {
+                            // If request timeout expired
+                            if (loadedRequest.timeout) {
+                                const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
+                                if (timeoutDate <= new Date()) {
+                                    // 4. Original NFT request timeout
+                                    addNotification({
+                                        id: notificationId, 
+                                        children:
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has not responded.</Trans>
+                                                }
+                                                message={
+                                                    <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
+                                                }
+                                            />,
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timeoutDate
+                                    })
+                                } else {
+                                    // 1. Request sent to the original NFT owner
+                                    addNotification({
+                                        id: notificationId, 
+                                        children:
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Request sent to the original NFT owner.</Trans>
+                                                }
+                                            />,
+                                        severity: SeverityLevel.Info,
+                                        dateCreated: request.updateDate
+                                    })
+                                }
+                            }
+                        }
+                    } else if (request.status === ReqStatus.Rejected) {
+                        if (loadedRequest.externalDisputeId) {
+                            if (request.type === ReqType.OwnershipAdjustment) {
+                                // 20. Original NFT rejected by request with dispute
+                                addNotification({
+                                    id: notificationId, 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>{`The Arbitrator’s ruling on the dispute #${loadedRequest.externalDisputeId.toString()} is now in effect.`}</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            }
+                        } else {
+                            if (request.type === ReqType.OwnershipAdjustment) {
+                                // 3. Original NFT request rejected without dispute
                                 addNotification({
                                     id: notificationId, 
                                     children:
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has not responded.</Trans>
+                                                <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has refused to transfer the original NFT to you.</Trans>
                                             }
                                             message={
                                                 <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
                                             }
                                         />,
-                                    severity: 0,
-                                    dateCreated: timeoutDate
-                                })
-                            } else {
-                                // 1. Request sent to the original NFT owner
-                                addNotification({
-                                    id: notificationId, 
-                                    children:
-                                        <CommonNotificationBody
-                                            header={
-                                                <Trans>Request sent to the original NFT owner.</Trans>
-                                            }
-                                            message={
-                                                <></>
-                                            }
-                                        />,
-                                    severity: 0,
+                                    severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
                             }
-                        }
-                    } else if (request.status === ReqStatus.Rejected) {
-                        if (loadedRequest.externalDisputeId) {
-                            // 20. Original NFT rejected by request with dispute
-                            addNotification({
-                                id: notificationId, 
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>
-                                                The Arbitrator’s ruling on the dispute 
-                                                <Link
-                                                    isExternal 
-                                                    rel="noreferrer"
-                                                    href={createDisputeLink(loadedRequest.externalDisputeId)}
-                                                    whiteSpace="nowrap"
-                                                    display="flex"
-                                                    alignItems="center"
-                                                >
-                                                    #{loadedRequest.externalDisputeId.toString()}
-                                                    <ExternalLinkIcon fontSize='16px' ml="5px" />
-                                                </Link>
-                                                is now in effect.
-                                            </Trans>
-                                        }
-                                        message={
-                                            <Trans>{`Your pNFT is now burned. You can't pretend to original NFT.`}</Trans>
-                                        }
-                                    />, 
-                                severity: 0,
-                                dateCreated: request.updateDate
-                            })
-                        } else {
-                            // 3. Original NFT request rejected without dispute
-                            addNotification({
-                                id: notificationId, 
-                                children:
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has refused to transfer the original NFT to you.</Trans>
-                                        }
-                                        message={
-                                            <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
-                                        }
-                                    />,
-                                severity: 0,
-                                dateCreated: request.updateDate
-                            })
                         }
                     }
                 } else {
@@ -246,7 +219,7 @@ const NotificationsLoader = () => {
                                     <Trans>Would you like to request the original NFT?</Trans>
                                 }
                             />,
-                        severity: 0,
+                        severity: SeverityLevel.Major,
                         dateCreated: new Date() // TODO: search for transaction
                     })
                 }
@@ -267,32 +240,31 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>
-                                                    <Link
-                                                        isExternal 
-                                                        rel="noreferrer"
-                                                        href={createDisputeLink(loadedRequest.externalDisputeId)}
-                                                        whiteSpace="nowrap"
-                                                        display="flex"
-                                                        alignItems="center"
-                                                    >
-                                                        Dispute #{loadedRequest.externalDisputeId.toString()}
-                                                        <ExternalLinkIcon fontSize='16px' ml="5px" />
-                                                    </Link>
-                                                    decision is now in force.
-                                                </Trans>
+                                                <Trans>Dispute #{loadedRequest.externalDisputeId.toString()} decision is now in force.</Trans>
                                             }
                                             message={
                                                 <Trans>{`The original NFT has been transferred to the new owner ${formatAddress(loadedRequest.newowner, 4)}.`}</Trans>
                                             }
                                         />, 
-                                    severity: 0,
+                                    severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
                             }
                         }
                     } else if (request.status === ReqStatus.Disputed) {
+                        // If request is disputed we have to load data from arbitrator graph
+                        const dispute = await getDispute(loadedRequest.externalDisputeId)
+                        if (dispute.period === Period.Evidence) {
 
+                        } else if (dispute.period === Period.Commit) {
+
+                        } else if (dispute.period === Period.Vote) {
+
+                        } else if (dispute.period === Period.Appeal) {
+
+                        } else if (dispute.period === Period.Execution) {
+
+                        }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
                         addNotification({
@@ -306,7 +278,7 @@ const NotificationsLoader = () => {
                                         <Trans>Do you want to transfer the original NFT to them?</Trans>
                                     }
                                 />,
-                            severity: 0,
+                            severity: SeverityLevel.Major,
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
