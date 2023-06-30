@@ -72,7 +72,7 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 19. Original NFT received by request with dispute
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.19', 
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -85,7 +85,7 @@ const NotificationsLoader = () => {
                             } else if (request.type === ReqType.Burn) {
                                 // 30.2 pNFT burn accepted with dispute (original owner)
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.30.2', 
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -103,7 +103,7 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 2. Original NFT received by request without dispute
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.2', 
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -140,7 +140,7 @@ const NotificationsLoader = () => {
                                 if (timeoutDate <= new Date()) {
                                     // 4. Original NFT request timeout
                                     addNotification({
-                                        id: notificationId, 
+                                        id: notificationId+'.4', 
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -156,7 +156,7 @@ const NotificationsLoader = () => {
                                 } else {
                                     // 1. Request sent to the original NFT owner
                                     addNotification({
-                                        id: notificationId, 
+                                        id: notificationId+'.1', 
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -174,7 +174,7 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 20. Original NFT rejected by request with dispute
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.20', 
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -189,7 +189,7 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.3', 
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -209,7 +209,7 @@ const NotificationsLoader = () => {
                     // NFT has no pending request
                     // 0. pNFT received
                     addNotification({
-                        id: notificationId, 
+                        id: notificationId+'.0', 
                         children:
                             <CommonNotificationBody
                                 header={
@@ -236,14 +236,14 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 30.1 Original NFT request accepted with dispute (original owner)
                                 addNotification({
-                                    id: notificationId, 
+                                    id: notificationId+'.30.1', 
                                     children: 
                                         <CommonNotificationBody
                                             header={
                                                 <Trans>Dispute #{loadedRequest.externalDisputeId.toString()} decision is now in force.</Trans>
                                             }
                                             message={
-                                                <Trans>{`The original NFT has been transferred to the new owner ${formatAddress(loadedRequest.newowner, 4)}.`}</Trans>
+                                                <Trans>{`The original NFT has been transferred to the new owner ${formatAddress(nft.ownerAddress, 4)}.`}</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -255,6 +255,48 @@ const NotificationsLoader = () => {
                         // If request is disputed we have to load data from arbitrator graph
                         const dispute = await getDispute(loadedRequest.externalDisputeId)
                         if (dispute.period === Period.Evidence) {
+                            // 24 Evidence period started
+                            addNotification({
+                                id: notificationId+'.24', 
+                                children: 
+                                    <CommonNotificationBody
+                                        header={
+                                            <Trans>The Evidence Period for the dispute #2342 has been started.</Trans>
+                                        }
+                                        message={
+                                            <Trans>You can now submit your evidence.</Trans>
+                                        }
+                                    />, 
+                                severity: SeverityLevel.Major,
+                                dateCreated: request.updateDate
+                            })
+                            if (request.type === ReqType.OwnershipAdjustment) {
+                                // 23.2 Original NFT disputed
+                                addNotification({
+                                    id: notificationId+'.23.2', 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            } else if (request.type === ReqType.Burn) {
+                                // 23.1 pNFT burn disputed
+                                addNotification({
+                                    id: notificationId+'.23.1', 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            }
 
                         } else if (dispute.period === Period.Commit) {
 
@@ -268,7 +310,7 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
                         addNotification({
-                            id: notificationId, 
+                            id: notificationId+'.21', 
                             children:
                                 <CommonNotificationBody
                                     header={
