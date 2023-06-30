@@ -261,7 +261,7 @@ const NotificationsLoader = () => {
                                 children: 
                                     <CommonNotificationBody
                                         header={
-                                            <Trans>The Evidence Period for the dispute #2342 has been started.</Trans>
+                                            <Trans>The Evidence Period for the dispute #{loadedRequest.externalDisputeId.toString()} has been started.</Trans>
                                         }
                                         message={
                                             <Trans>You can now submit your evidence.</Trans>
@@ -270,42 +270,62 @@ const NotificationsLoader = () => {
                                 severity: SeverityLevel.Major,
                                 dateCreated: request.updateDate
                             })
-                            if (request.type === ReqType.OwnershipAdjustment) {
-                                // 23.2 Original NFT disputed
-                                addNotification({
-                                    id: notificationId+'.23.2', 
-                                    children: 
-                                        <CommonNotificationBody
-                                            header={
-                                                <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
-                                            }
-                                        />, 
-                                    severity: SeverityLevel.Major,
-                                    dateCreated: request.updateDate
-                                })
-                            } else if (request.type === ReqType.Burn) {
-                                // 23.1 pNFT burn disputed
-                                addNotification({
-                                    id: notificationId+'.23.1', 
-                                    children: 
-                                        <CommonNotificationBody
-                                            header={
-                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
-                                            }
-                                        />, 
-                                    severity: SeverityLevel.Major,
-                                    dateCreated: request.updateDate
-                                })
+                            if (!dispute.appealed) { // First time
+                                if (request.type === ReqType.OwnershipAdjustment) {
+                                    // 23.2 Original NFT disputed
+                                    addNotification({
+                                        id: notificationId+'.23.2', 
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: request.updateDate
+                                    })
+                                } else if (request.type === ReqType.Burn) {
+                                    // 23.1 pNFT burn disputed
+                                    addNotification({
+                                        id: notificationId+'.23.1', 
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: request.updateDate
+                                    })
+                                }
+                            } else { // it's an appeal
+
                             }
-
-                        } else if (dispute.period === Period.Commit) {
-
-                        } else if (dispute.period === Period.Vote) {
-
-                        } else if (dispute.period === Period.Appeal) {
+                        } else if (dispute.period === Period.Commit || dispute.period === Period.Vote) {
+                            // 26 Voting period started
+                            addNotification({
+                                id: notificationId+'.26', 
+                                children: 
+                                    <CommonNotificationBody
+                                        header={
+                                            <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                        }
+                                    />, 
+                                severity: SeverityLevel.Info,
+                                dateCreated: timestampToDate(dispute.startTime)
+                            })
+                        } else if (dispute.period === Period.Appeal) { // User can make an appeal
 
                         } else if (dispute.period === Period.Execution) {
+                            if (dispute.ruled) { // Rule performed
+                                if (dispute.ruling === 0) { // Refused to arbitrate
 
+                                } else if (dispute.ruling === 2) { // Accepted
+                                    
+                                } else { // Rejected
+
+                                }
+                            }
                         }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
