@@ -2,12 +2,9 @@ import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import React, { useEffect, useState } from 'react';
 import {
-    chakra,
-    Button,
     Box,
     Image,
     Flex,
-    Heading,
     Text,
     Modal,
     ModalOverlay,
@@ -15,16 +12,9 @@ import {
     ModalContent,
     ModalCloseButton,
     Spinner,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow ,
-    PopoverCloseButton,
-    PopoverBody,
     Card,
     CardBody,
     CardHeader,
-    CardFooter,
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';

@@ -97,31 +97,28 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                         <CardBody>
 
                             { nft && <NFTImage nft={nft} /> }
-
-                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                <Trans>If you transferred the pNFT to user</Trans>
-                                {" "}
-                                <Popover placement='top'>
+                            <Popover placement='top'>
+                                <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                    <Trans>If you transferred the pNFT to user</Trans>
+                                    <chakra.span id='pNftOwnerAddressHolder'>
+                                        { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                    </chakra.span>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
                                     </PopoverTrigger>
-                                    <PopoverContent w="150px">
-                                        <PopoverArrow />
-                                        <PopoverCloseButton />
-                                        <PopoverBody >
-                                            <Trans>Copied{"!"}</Trans>
-                                        </PopoverBody>
-                                    </PopoverContent>
-                                </Popover>
-                                
-                                <chakra.span id='pNftOwnerAddressHolder'>
-                                    { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
-                                </chakra.span>
-                                {" "}
-                                <chakra.span>
-                                    <Trans>confirm the transmission of the original NFT</Trans>
-                                </chakra.span>
-                            </Text>
+                                    {" "}
+                                    <chakra.span>
+                                        <Trans>confirm the transmission of the original NFT</Trans>
+                                    </chakra.span>
+                                </Text>
+                                <PopoverContent w="150px">
+                                    <PopoverArrow />
+                                    <PopoverCloseButton />
+                                    <PopoverBody >
+                                        <Trans>Copied{"!"}</Trans>
+                                    </PopoverBody>
+                                </PopoverContent>
+                            </Popover>
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center" mb={{base: "20px"}}>
                             <Box w={{base: "60%", sm: "50%"}}>
@@ -143,26 +140,24 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
 
                     <Card variant="stepContent" borderRadius="0" bgColor="rgba(255, 96, 96, 0.2)" py={{base: "10px"}}>
                         <CardBody mt={{base: "10px"}}>
-                            <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "10px"}}>
-                                <Trans>If you did not transfer the pNFT to</Trans>
-                                {" "}
-                                <Popover placement='top'>
+                            <Popover placement='top'>
+                                <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "10px"}}>
+                                    <Trans>If you did not transfer the pNFT to</Trans>
+                                    <chakra.span id='pNftOwnerAddressHolder'>
+                                        { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                    </chakra.span>
                                     <PopoverTrigger>
-                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                        <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
                                     </PopoverTrigger>
-                                    <PopoverContent w="150px">
-                                        <PopoverArrow />
-                                        <PopoverCloseButton />
-                                        <PopoverBody >
-                                            <Trans>Copied{"!"}</Trans>
-                                        </PopoverBody>
-                                    </PopoverContent>
-                                </Popover>
-                                
-                                <chakra.span id='pNftOwnerAddressHolder'>
-                                    { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
-                                </chakra.span>
-                            </Text>
+                                </Text>
+                                <PopoverContent w="150px">
+                                    <PopoverArrow />
+                                    <PopoverCloseButton />
+                                    <PopoverBody >
+                                        <Trans>Copied{"!"}</Trans>
+                                    </PopoverBody>
+                                </PopoverContent>
+                            </Popover>
                             <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" color="danger">
                                 <Trans>your asset may have been stolen!</Trans>
                             </Text>

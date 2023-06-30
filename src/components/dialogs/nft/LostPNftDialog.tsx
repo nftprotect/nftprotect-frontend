@@ -311,31 +311,30 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     { nft && <NFTImage nft={nft} /> }
 
                                     <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
-                                            <Trans>
-                                                {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
-                                            </Trans>
-                                            {" "}
-                                            <Popover placement='top'>
+                                        <Popover placement='top'>
+                                            <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
+                                                <Trans>
+                                                    {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
+                                                </Trans>
+                                                <chakra.span id='pNftOwnerAddressHolder'>
+                                                    { ' ' + formatAddress(nft?.ownerAddress || '', 4)}
+                                                </chakra.span>
                                                 <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyNftOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                    <CopyIcon onClick={ copyNftOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />
                                                 </PopoverTrigger>
-                                                <PopoverContent w="150px">
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody >
-                                                        <Trans>Copied{"!"}</Trans>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Popover>
-                                            
-                                            <span id='pNftOwnerAddressHolder'>
-                                                { " (" + formatAddress(nft?.ownerAddress || '', 4) + ") " }
-                                            </span>
-                                            <Trans>
-                                                {"before resorting to legal action."}
-                                            </Trans>
-                                        </Text>
+                                                {' '}
+                                                <Trans>
+                                                    {"before resorting to legal action."}
+                                                </Trans>
+                                            </Text>
+                                            <PopoverContent w="150px">
+                                                <PopoverArrow />
+                                                <PopoverCloseButton />
+                                                <PopoverBody >
+                                                    <Trans>Copied{"!"}</Trans>
+                                                </PopoverBody>
+                                            </PopoverContent>
+                                        </Popover>
 
                                         <Text mb={{base: "8px"}}>
                                             <Trans>
