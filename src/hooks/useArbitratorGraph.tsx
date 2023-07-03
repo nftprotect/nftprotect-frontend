@@ -4,12 +4,12 @@ import { arbitratorGraphs } from "../utils/config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
 
-enum Period {
-    evidence,
-    commit,
-    vote, 
-    appeal,
-    execution
+export enum Period {
+    Evidence,
+    Commit,
+    Vote, 
+    Appeal,
+    Execution
 }
 
 export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
