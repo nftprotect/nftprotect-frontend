@@ -122,7 +122,7 @@ const Home: NextPage = () => {
                     {active && 
                         <>
                             <Flex
-                                h={{base: "360px"}}
+                                minH={{base: "360px"}}
                                 my={{base: "40px"}}
                                 mx={{base: '48px'}}
                                 bgColor="brand.light"

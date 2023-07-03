@@ -2,6 +2,7 @@ import { dialogsTimeout } from '../../../utils/config'
 import { Contract } from "@ethersproject/contracts";
 import React, { useEffect, useState } from 'react';
 import {
+    chakra,
     Button,
     Box,
     Image,
@@ -155,28 +156,26 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}} >
                                     <Text textStyle="paragraph" letterSpacing="0.04em" mt={{base: "20px"}} mb={{base: "8px"}} textAlign="center">
-                                        <span>
-                                            <Trans>To obtain the original NFT, send a request to the owner</Trans>
-                                        </span>
+                                        <Trans>To obtain the original NFT, send a request to the owner</Trans>
+                                        {" "}
                                     </Text>
-                                    <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
-                                        <Popover placement='top'>
-                                                <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
-                                                </PopoverTrigger>
-                                                <PopoverContent w="150px">
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody >
-                                                        <Trans>Copied{"!"}</Trans>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Popover>
-                                        
-                                        <span id='originalOwnerAddressHolder'>
-                                            { originalOwner && formatAddress(originalOwner, 4) }
-                                        </span>
-                                    </Text>
+                                    <Popover placement='top'>
+                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center">
+                                            <chakra.span id='originalOwnerAddressHolder'>
+                                                {originalOwner && formatAddress(originalOwner, 4) }
+                                            </chakra.span>
+                                            <PopoverTrigger>
+                                                <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />
+                                            </PopoverTrigger>
+                                        </Text>
+                                        <PopoverContent w="150px">
+                                            <PopoverArrow />
+                                            <PopoverCloseButton />
+                                            <PopoverBody >
+                                                <Trans>Copied{"!"}</Trans>
+                                            </PopoverBody>
+                                        </PopoverContent>
+                                    </Popover>
 
                                     { nft && <NFTImage nft={nft} /> }
 

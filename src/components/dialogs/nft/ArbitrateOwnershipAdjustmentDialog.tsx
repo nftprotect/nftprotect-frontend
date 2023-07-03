@@ -238,27 +238,27 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <CardBody mb={{base: "20px"}}>
                                     {/* NFT owner confirmed transfer */}
                                     { nft?.pendingRequest?.status == RequestStatus.Accepted &&
-                                        <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
-                                            <Popover placement='top'>
+                                        <Popover placement='top'>
+                                            <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
+                                                <chakra.span id='originalOwnerAddressHolder'>
+                                                    { " " + formatAddress(nft.originalData?.ownerAddress || '', 4) }
+                                                </chakra.span>
                                                 <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
+                                                    <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />
                                                 </PopoverTrigger>
-                                                <PopoverContent w="150px">
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody >
-                                                        <Trans>Copied{"!"}</Trans>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Popover>
-                                            
-                                            <span id='originalOwnerAddressHolder'>
-                                                { " (" + formatAddress(nft.originalData?.ownerAddress || '', 4) + ") " }
-                                            </span>
-                                            <Trans>
-                                                {"has transferred the original NFT to you"}
-                                            </Trans>
-                                        </Text>
+                                                { " " }
+                                                <Trans>
+                                                    {"has transferred the original NFT to you"}
+                                                </Trans>
+                                            </Text>
+                                            <PopoverContent w="150px">
+                                                <PopoverArrow />
+                                                <PopoverCloseButton />
+                                                <PopoverBody >
+                                                    <Trans>Copied{"!"}</Trans>
+                                                </PopoverBody>
+                                            </PopoverContent>
+                                        </Popover>
                                     }
 
                                     { nft && <NFTImage nft={nft} /> }
