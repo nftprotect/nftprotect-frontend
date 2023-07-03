@@ -209,27 +209,24 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
                                     <CardBody mb={{base: "20px"}}>
                                         { nft && <NFTImage nft={nft} /> }
-
-                                        <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            <Trans>The pNFT is at user</Trans>
-                                            {" "}
-                                            <Popover placement='top'>
+                                        <Popover placement='top'>
+                                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
+                                                <Trans>The pNFT is at user</Trans>
+                                                <chakra.span id='pNftOwnerAddressHolder'>
+                                                    { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                                </chakra.span>
                                                 <PopoverTrigger>
-                                                    <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                                    <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />
                                                 </PopoverTrigger>
-                                                <PopoverContent w="150px">
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody >
-                                                        <Trans>Copied{"!"}</Trans>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Popover>
-                                            
-                                            <chakra.span id='pNftOwnerAddressHolder'>
-                                                { " " + formatAddress(nft?.ownerAddress || '', 4) + " " }
-                                            </chakra.span>
-                                        </Text>
+                                            </Text>
+                                            <PopoverContent w="150px">
+                                                <PopoverArrow />
+                                                <PopoverCloseButton />
+                                                <PopoverBody >
+                                                    <Trans>Copied{"!"}</Trans>
+                                                </PopoverBody>
+                                            </PopoverContent>
+                                        </Popover>
                                         <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="danger" borderRadius="16px" bgColor="rgba(255, 96, 96, 0.2)">
                                             <Box color="danger" mr={[2]} >
                                                 <Info fontSize='32px' />

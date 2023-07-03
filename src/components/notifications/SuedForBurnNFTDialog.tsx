@@ -90,12 +90,13 @@ const SuedForBurnNFTDialog = () => {
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
                                         <Trans>The owner of the original NFT</Trans>
                                         {" "}
-                                        <PopoverTrigger>
-                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
-                                        </PopoverTrigger>
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { originalOwner && (" " + formatAddress(originalOwner, 4) + " ") }
+                                            { originalOwner && (" " + formatAddress(originalOwner, 4)) }
                                         </chakra.span>
+                                        <PopoverTrigger>
+                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
+                                        </PopoverTrigger>
+                                        
                                         <Trans>has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT.</Trans>
                                     </Text>
                                     <PopoverContent w="150px">

@@ -307,25 +307,19 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                 </Button>
             </Box>
             {
-                (process.env.NODE_ENV !== 'production') && <Box mt={[2]}>
-                    <Button
-                        onClick={ () => { 
-                            const dialog = getDialog('KlerosCaseDialog')
-                            dialog.setCaseData({
-                                nft: nft,
-                                metaEvidenceId: 4,
-                                claimantAddress: '0xVictim', 
-                                defendantAddress: '0xScammer', 
-                                evidences: []
-                            })
-                            dialog.onOpen() 
-                        } }
-                        variant={ "primaryLight" }
-                        w="100%"
-                    >
-                        <Trans>Open Kleros Case</Trans>
-                    </Button>
-                </Box>
+                (process.env.NODE_ENV !== 'production') &&
+                    <Box mt={[2]}>
+                        <Button
+                            variant={"primaryLight"}
+                            onClick={ () => {
+                                const dialog = getDialog('LostPNftDialog')
+                                dialog.setNft(nft)
+                                dialog.onOpen()
+                            } }
+                        >
+                            <Trans>Lost pNFT</Trans>
+                        </Button>
+                    </Box>
             }
             </>
         )
