@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useAppContext } from "../../context/AppContextProvider"
 import { ReqStatus, ReqType, TokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
@@ -13,6 +13,10 @@ import { createDisputeLink } from "../../utils/kleros"
 import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
 import { defaultArbitrator } from "../../utils/config"
 import { SeverityLevel } from "../../context/NotificationContextProvider"
+import { 
+    Nft as AlchemyNFT, 
+} from "alchemy-sdk";
+import NFTImage from "../nftView/NFTImage"
 
 const CommonNotificationBody = ({
     header,
@@ -25,12 +29,12 @@ const CommonNotificationBody = ({
             fontSize={{base: "0.875rem"}}
             mb={{base: "0.625rem"}}
         >
-            ${header && header}
+            {header && header}
         </Heading>
         <Text
             fontSize={{base: "0.625rem"}}
         > 
-            ${message && message}
+            {message && message}
         </Text>
     </div>
 
@@ -40,7 +44,8 @@ const NotificationsLoader = () => {
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
     const { getDispute } = useArbitratorGraph(currentChain.chainId, defaultArbitrator)
     const { addNotification } = useNotifications()
-    //const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
+    const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
+    const originalsCache = useRef<NFT[]>([])
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
@@ -52,6 +57,19 @@ const NotificationsLoader = () => {
     const loadRequest = async (requestId: BigNumber): Promise<ActionRequest> => {
         const request = await nftProtectContract.requests(requestId)
         return {id: requestId, ...request}
+    }
+
+    const loadOriginalNFT = async (nft: TokenGraphData): Promise<NFT> => {
+        const result = await getNftMetadata([nft.contractAddress, nft.tokenId])
+        return new NFT(result, context)
+    }
+
+    const getOriginalNft = async (nft: TokenGraphData): Promise<NFT> => {
+        let result = originalsCache.current.find( it => (it.tokenId === nftProtectContract.tokenId) && (it.contract.address === nftProtectContract.contractAddress))
+        if (!result) {
+            result = await loadOriginalNFT(nft)
+        }
+        return result
     }
 
     const loadNotifications = async () => {
@@ -72,7 +90,8 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 19. Original NFT received by request with dispute
                                 addNotification({
-                                    id: notificationId+'.19', 
+                                    id: notificationId+'.19',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -85,7 +104,8 @@ const NotificationsLoader = () => {
                             } else if (request.type === ReqType.Burn) {
                                 // 30.2 pNFT burn accepted with dispute (original owner)
                                 addNotification({
-                                    id: notificationId+'.30.2', 
+                                    id: notificationId+'.30.2',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -103,7 +123,8 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 2. Original NFT received by request without dispute
                                 addNotification({
-                                    id: notificationId+'.2', 
+                                    id: notificationId+'.2',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -140,7 +161,8 @@ const NotificationsLoader = () => {
                                 if (timeoutDate <= new Date()) {
                                     // 4. Original NFT request timeout
                                     addNotification({
-                                        id: notificationId+'.4', 
+                                        id: notificationId+'.4',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -156,7 +178,8 @@ const NotificationsLoader = () => {
                                 } else {
                                     // 1. Request sent to the original NFT owner
                                     addNotification({
-                                        id: notificationId+'.1', 
+                                        id: notificationId+'.1',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -174,7 +197,8 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 20. Original NFT rejected by request with dispute
                                 addNotification({
-                                    id: notificationId+'.20', 
+                                    id: notificationId+'.20',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -189,7 +213,8 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
                                 addNotification({
-                                    id: notificationId+'.3', 
+                                    id: notificationId+'.3',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -209,7 +234,8 @@ const NotificationsLoader = () => {
                     // NFT has no pending request
                     // 0. pNFT received
                     addNotification({
-                        id: notificationId+'.0', 
+                        id: notificationId+'.0',
+                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
                         children:
                             <CommonNotificationBody
                                 header={
@@ -236,7 +262,8 @@ const NotificationsLoader = () => {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 30.1 Original NFT request accepted with dispute (original owner)
                                 addNotification({
-                                    id: notificationId+'.30.1', 
+                                    id: notificationId+'.30.1',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -257,7 +284,8 @@ const NotificationsLoader = () => {
                         if (dispute.period === Period.Evidence) {
                             // 24 Evidence period started
                             addNotification({
-                                id: notificationId+'.24', 
+                                id: notificationId+'.24',
+                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                 children: 
                                     <CommonNotificationBody
                                         header={
@@ -274,7 +302,8 @@ const NotificationsLoader = () => {
                                 if (request.type === ReqType.OwnershipAdjustment) {
                                     // 23.2 Original NFT disputed
                                     addNotification({
-                                        id: notificationId+'.23.2', 
+                                        id: notificationId+'.23.2',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children: 
                                             <CommonNotificationBody
                                                 header={
@@ -287,7 +316,8 @@ const NotificationsLoader = () => {
                                 } else if (request.type === ReqType.Burn) {
                                     // 23.1 pNFT burn disputed
                                     addNotification({
-                                        id: notificationId+'.23.1', 
+                                        id: notificationId+'.23.1',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children: 
                                             <CommonNotificationBody
                                                 header={
@@ -304,7 +334,8 @@ const NotificationsLoader = () => {
                         } else if (dispute.period === Period.Commit || dispute.period === Period.Vote) {
                             // 26 Voting period started
                             addNotification({
-                                id: notificationId+'.26', 
+                                id: notificationId+'.26',
+                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                 children: 
                                     <CommonNotificationBody
                                         header={
@@ -330,7 +361,8 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
                         addNotification({
-                            id: notificationId+'.21', 
+                            id: notificationId+'.21',
+                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                             children:
                                 <CommonNotificationBody
                                     header={

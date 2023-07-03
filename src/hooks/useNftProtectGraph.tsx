@@ -39,7 +39,7 @@ export interface RequestGraphData extends RequestGraphMinimalData {
 
 export interface TokenGraphData {
     id: BigNumber,
-    //tokenId: BigNumber,
+    tokenId: BigNumber,
     securityLevel: number,
     ownerAddress: string,
     originalOwnerAddress: string,
@@ -267,7 +267,7 @@ export const useNftProtectGraph = () => {
             const { data } = await performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
-                //tokenId: BigNumber.from(it.tokeinId),
+                tokenId: BigNumber.from(it.tokenId),
                 securityLevel: parseInt(it.securityLevel),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
@@ -327,7 +327,7 @@ export const useNftProtectGraph = () => {
             const { data } = await performQuery(graphURI, query, { owner: owner.toLowerCase() })
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
-                //tokenId: BigNumber.from(it.tokeinId),
+                tokenId: BigNumber.from(it.tokenId),
                 securityLevel: parseInt(it.securityLevel),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
