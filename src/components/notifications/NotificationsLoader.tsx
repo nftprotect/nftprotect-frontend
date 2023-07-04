@@ -38,6 +38,8 @@ const CommonNotificationBody = ({
         </Text>
     </div>
 
+const klerosAppealPeriod = 84
+
 const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
@@ -72,6 +74,25 @@ const NotificationsLoader = () => {
         return result
     }
 
+    const getCourtSides = (nft: TokenGraphData, requestType: ReqType): {
+        claimant: string,
+        defendant: string
+    } => {
+        switch(requestType) {
+            case ReqType.Burn:
+            case ReqType.OwnershipRestore: // actually defendant probably is not nft.ownerAddress
+                return {
+                    claimant: nft.originalOwnerAddress,
+                    defendant: nft.ownerAddress
+                }
+            case ReqType.OwnershipAdjustment:
+                return {
+                    claimant: nft.ownerAddress,
+                    defendant: nft.originalOwnerAddress
+                }
+        }
+    }
+
     const loadNotifications = async () => {
         if (account) {
             // All pNFTs received by account
@@ -79,6 +100,7 @@ const NotificationsLoader = () => {
             // All pNfts transfered from account
             const transferedNfts = await listTokensTransfered(account)
             console.log('GRAPH TOKENS', receivedNfts, transferedNfts)
+            // So these notifications are for the pNFT owner
             receivedNfts.forEach(async (nft) => {
                 const notificationId = generateNotificationId(nft)
                 const { latestRequest: request } = nft
@@ -142,14 +164,182 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Disputed) {
                         // If request is disputed we have to load data from arbitrator graph
                         const dispute = await getDispute(loadedRequest.externalDisputeId)
+                        const { claimant } = getCourtSides(nft, request.type)
                         if (dispute.period === Period.Evidence) {
-
-                        } else if (dispute.period === Period.Commit) {
-
-                        } else if (dispute.period === Period.Vote) {
-
+                            if (nft.ownerAddress === claimant) {
+                                // 3 Evidence period started
+                                addNotification({
+                                    id: notificationId+'.3',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Evidence period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            } else {
+                                // 24 Evidence period started
+                                addNotification({
+                                    id: notificationId+'.24',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Evidence Period for the dispute #{loadedRequest.externalDisputeId.toString()} has been started.</Trans>
+                                            }
+                                            message={
+                                                <Trans>You can now submit your evidence.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            }
+                        } else if ((dispute.period === Period.Commit) || (dispute.period === Period.Vote)) {
+                            if (nft.ownerAddress === claimant) {
+                                // 8 Voting period started
+                                addNotification({
+                                    id: notificationId+'.8',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            } else {
+                                // 26 Voting period started
+                                addNotification({
+                                    id: notificationId+'.26',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            }
                         } else if (dispute.period === Period.Appeal) {
-
+                            if (nft.ownerAddress === claimant) {
+                                if (dispute.currentRulling.toNumber() === 0) {
+                                    // 9 Case refused
+                                    addNotification({
+                                        id: notificationId+'.9',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>The case will now be closed.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    })
+                                } else if (dispute.currentRulling.toNumber() === 1) {
+                                    // 10 You have won the case
+                                    addNotification({
+                                        id: notificationId+'.10',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Congratulations! You have won the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    }) 
+                                } else if (dispute.currentRulling.toNumber() === 2) {
+                                    // 11 You have lost the case
+                                    const currentDate = new Date()
+                                    const targetDate = timestampToDate(dispute.startTime)
+                                    const timePassed = targetDate.getTime() - currentDate.getTime()
+                                    const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                    const hoursLeft = klerosAppealPeriod - hoursPassed
+                                    addNotification({
+                                        id: notificationId+'.11',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: targetDate
+                                    })
+                                }
+                            } else {
+                                if (dispute.currentRulling.toNumber() === 0) {
+                                    // 27 Case refused
+                                    addNotification({
+                                        id: notificationId+'.27',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                }
+                                                message={
+                                                    <Trans>The case will now be closed.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    })
+                                } else if (dispute.currentRulling.toNumber() === 2) {
+                                    // 28 You have won the case
+                                    addNotification({
+                                        id: notificationId+'.28',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Congratulations! You have won the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    }) 
+                                } else if (dispute.currentRulling.toNumber() === 1) {
+                                    // 11 You have lost the case
+                                    const currentDate = new Date()
+                                    const targetDate = timestampToDate(dispute.startTime)
+                                    const timePassed = targetDate.getTime() - currentDate.getTime()
+                                    const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                    const hoursLeft = klerosAppealPeriod - hoursPassed
+                                    addNotification({
+                                        id: notificationId+'.11',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: targetDate
+                                    })
+                                }
+                            }
                         } else if (dispute.period === Period.Execution) {
 
                         }
@@ -251,6 +441,7 @@ const NotificationsLoader = () => {
                 }
 
             })
+            // So these notifications are for the ORIGINAL NFT owner
             transferedNfts.forEach(async (nft) => {
                 const notificationId = generateNotificationId(nft)
                 const { latestRequest: request } = nft
@@ -281,23 +472,40 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Disputed) {
                         // If request is disputed we have to load data from arbitrator graph
                         const dispute = await getDispute(loadedRequest.externalDisputeId)
+                        const { claimant } = getCourtSides(nft, request.type)
                         if (dispute.period === Period.Evidence) {
-                            // 24 Evidence period started
-                            addNotification({
-                                id: notificationId+'.24',
-                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>The Evidence Period for the dispute #{loadedRequest.externalDisputeId.toString()} has been started.</Trans>
-                                        }
-                                        message={
-                                            <Trans>You can now submit your evidence.</Trans>
-                                        }
-                                    />, 
-                                severity: SeverityLevel.Major,
-                                dateCreated: request.updateDate
-                            })
+                            if (nft.originalOwnerAddress === claimant) {
+                                // 3 Evidence period started
+                                addNotification({
+                                    id: notificationId+'.3',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Evidence period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            } else {
+                                // 24 Evidence period started
+                                addNotification({
+                                    id: notificationId+'.24',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Evidence Period for the dispute #{loadedRequest.externalDisputeId.toString()} has been started.</Trans>
+                                            }
+                                            message={
+                                                <Trans>You can now submit your evidence.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            }
                             if (!dispute.appealed) { // First time
                                 if (request.type === ReqType.OwnershipAdjustment) {
                                     // 23.2 Original NFT disputed
@@ -331,22 +539,148 @@ const NotificationsLoader = () => {
                             } else { // it's an appeal
 
                             }
-                        } else if (dispute.period === Period.Commit || dispute.period === Period.Vote) {
-                            // 26 Voting period started
-                            addNotification({
-                                id: notificationId+'.26',
-                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
-                                        }
-                                    />, 
-                                severity: SeverityLevel.Info,
-                                dateCreated: timestampToDate(dispute.startTime)
-                            })
+                        } else if ((dispute.period === Period.Commit) || (dispute.period === Period.Vote)) {
+                            if (nft.originalOwnerAddress === claimant) {
+                                // 8 Voting period started
+                                addNotification({
+                                    id: notificationId+'.8',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            } else {
+                                // 26 Voting period started
+                                addNotification({
+                                    id: notificationId+'.26',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>The Voting period for the dispute #{loadedRequest.externalDisputeId.toString()} is on.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Info,
+                                    dateCreated: timestampToDate(dispute.startTime)
+                                })
+                            }
                         } else if (dispute.period === Period.Appeal) { // User can make an appeal
-
+                            if (nft.originalOwnerAddress === claimant) {
+                                if (dispute.currentRulling.toNumber() === 0) {
+                                    // 9 Case refused
+                                    addNotification({
+                                        id: notificationId+'.9',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>The case will now be closed.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    })
+                                } else if (dispute.currentRulling.toNumber() === 1) {
+                                    // 10 You have won the case
+                                    addNotification({
+                                        id: notificationId+'.10',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Congratulations! You have won the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    }) 
+                                } else if (dispute.currentRulling.toNumber() === 2) {
+                                    // 11 You have lost the case
+                                    const currentDate = new Date()
+                                    const targetDate = timestampToDate(dispute.startTime)
+                                    const timePassed = targetDate.getTime() - currentDate.getTime()
+                                    const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                    const hoursLeft = klerosAppealPeriod - hoursPassed
+                                    addNotification({
+                                        id: notificationId+'.11',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: targetDate
+                                    })
+                                }
+                            } else {
+                                if (dispute.currentRulling.toNumber() === 0) {
+                                    // 27 Case refused
+                                    addNotification({
+                                        id: notificationId+'.27',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                }
+                                                message={
+                                                    <Trans>The case will now be closed.</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    })
+                                } else if (dispute.currentRulling.toNumber() === 2) {
+                                    // 28 You have won the case
+                                    addNotification({
+                                        id: notificationId+'.28',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Congratulations! You have won the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Major,
+                                        dateCreated: timestampToDate(dispute.startTime)
+                                    }) 
+                                } else if (dispute.currentRulling.toNumber() === 1) {
+                                    // 11 You have lost the case
+                                    const currentDate = new Date()
+                                    const targetDate = timestampToDate(dispute.startTime)
+                                    const timePassed = targetDate.getTime() - currentDate.getTime()
+                                    const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                    const hoursLeft = klerosAppealPeriod - hoursPassed
+                                    addNotification({
+                                        id: notificationId+'.11',
+                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        children: 
+                                            <CommonNotificationBody
+                                                header={
+                                                    <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                }
+                                                message={
+                                                    <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                }
+                                            />, 
+                                        severity: SeverityLevel.Critical,
+                                        dateCreated: targetDate
+                                    })
+                                }
+                            }
                         } else if (dispute.period === Period.Execution) {
                             if (dispute.ruled) { // Rule performed
                                 if (dispute.ruling === 0) { // Refused to arbitrate
