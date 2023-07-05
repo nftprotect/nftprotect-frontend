@@ -17,9 +17,10 @@ import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
 import { ActionRequest } from '../../classes/NFT'
-import { useArbitrableProxy, DisputePeriod, DisputePeriodData } from '../../hooks/useArbitrableProxy'
+import { useArbitrableProxy, DisputePeriodData } from '../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../utils/ipfs'
 import { timestampToDate } from '../../utils/helpers'
+import { DisputeGraphData, useArbitratorGraph } from '../../hooks/useArbitratorGraph'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -43,9 +44,11 @@ const RequestPage: NextPage = () => {
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
+    const [ disputeData, setDisputeData ] = useState<DisputeGraphData>()
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
-    const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
+    const { getNftMetadata } = useAlchemy(currentChain.alchemyId)
+    const { getDispute } = useArbitratorGraph(currentChain.id, defaultArbitrator)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
@@ -145,22 +148,31 @@ const RequestPage: NextPage = () => {
                     setError(t`Incorrect requestId`)
                 } else {
                     setRequestGraphData(result)
-                    !loadNftStarted && loadNft(result.tokenId).then((result) => {
+                    if (!loadNftStarted) {
+                        loadNft(result.tokenId).then((result) => {
+                            currentNFT = result
+                            currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
+                            currentNFT.loadInitialData()
+                        })
+                    }
+                }
+                loadNftStarted = true
+            })
+            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
+                setRequestData(result)
+                if (!loadNftStarted) {
+                    loadNft(result.tokenId).then((result) => {
                         currentNFT = result
                         currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                         currentNFT.loadInitialData()
                     })
                 }
                 loadNftStarted = true
-            })
-            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
-                setRequestData(result)
-                !loadNftStarted && loadNft(result.tokenId).then((result) => {
-                    currentNFT = result
-                    currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
-                    currentNFT.loadInitialData()
-                })
-                loadNftStarted = true
+                if (result.externalDisputeId) {
+                    getDispute(result.externalDisputeId).then((disputeData) => {
+                        setDisputeData(disputeData)
+                    })
+                }
             })
             return () => {
                 currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
@@ -230,11 +242,7 @@ const RequestPage: NextPage = () => {
                 claimantAddress={claimantAddress}
                 defendantAddress={defendantAddress}
                 evidences={evidences}
-                disputeData={{
-                    disputeId: requestData.externalDisputeId, 
-                    createDate: requestGraphData?.createDate,
-                    period
-                }}
+                disputeData={disputeData}
                 pageData={ metaEvidenceType.page }
             />}
         </Container>

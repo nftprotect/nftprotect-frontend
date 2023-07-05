@@ -43,7 +43,8 @@ import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 import { NFTEvents } from '../../../../classes/NFT';
-import { DisputePeriod, DisputePeriodData } from '../../../../hooks/useArbitrableProxy';
+import { DisputePeriodData } from '../../../../hooks/useArbitrableProxy';
+import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import TimeCounter from '../../../../hooks/useTimeCounter';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
 
@@ -64,7 +65,7 @@ export interface EvidenceUpload {
 
 interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
-    disputeData?: DisputeData,
+    disputeData?: DisputeGraphData,
 }
 
 interface PageData {
@@ -77,12 +78,6 @@ interface PageData {
     defendantText: string,
     defendantTooltip: string,
     caseSubject: string
-}
-
-interface DisputeData {
-    disputeId: BigNumber,
-    createDate?: Date,
-    period?: DisputePeriodData
 }
 
 const KlerosCaseContent = ({
@@ -147,7 +142,7 @@ const KlerosCaseContent = ({
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
     // Current step
     const step = useMemo(() => {
-        return (disputeData?.period !== undefined) ? steps[disputeData.period.period] : undefined
+        return (disputeData?.period !== undefined) ? steps[disputeData.period] : undefined
     }, [disputeData])
     const stepKey = useMemo(() => {
         return step?.key
@@ -178,8 +173,8 @@ const KlerosCaseContent = ({
     const caseDescription = evidences && evidences[0] ? evidences[0].evidenceJson.description : ''
 
     const { formattedTime } = useTimeCounter(
-        disputeData?.period?.lastPeriodChange && step ?
-        addTimestampToDate(disputeData.period.lastPeriodChange, step.timeDiff) : 
+        disputeData?.lastPeriodChange && step ?
+        addTimestampToDate(disputeData.lastPeriodChange, step.timeDiff) : 
         new Date())
 
     // Finds pNFT minting TX
@@ -332,7 +327,7 @@ const KlerosCaseContent = ({
                     </Flex>
                 </Link>
                 { disputeData && <Link
-                    href={ createDisputeLink(disputeData?.disputeId) } 
+                    href={ createDisputeLink(disputeData.id) } 
                     isExternal 
                     rel="noreferrer" 
                     color="#2D7BD6" 
@@ -357,7 +352,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             {"#"}
                         </InputLeftElement>
-                        <Input value={ disputeData?.disputeId?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="4px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={ disputeData?.id?.toString() || t`Not yet`} type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="4px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
 
@@ -369,7 +364,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
                             <Calendar fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={disputeData?.createDate && formatDate(disputeData.createDate) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={disputeData?.startTime && formatDate(disputeData.startTime) } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
                 
@@ -407,11 +402,16 @@ const KlerosCaseContent = ({
                             <Box mr={{base: "20px"}}>
                                 <Info fontSize="24px" color="#009AFF" />
                             </Box>
-                            
-                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                <Trans>Winner{":"}</Trans>
-                                {" "}the Claimant
-                            </Text>
+                            { disputeData?.currentRulling === 0 ?
+                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                    <Trans>Case refused to arbitrate</Trans>
+                                </Text> :
+                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                    <Trans>{"Winner:"}</Trans>
+                                    { disputeData?.currentRulling === 1 && t` the Claimant` }
+                                    { disputeData?.currentRulling === 2 && t` the Defendant` }
+                                </Text>
+                            }
                         </Flex>
                     }
                     {/* Visible only on step 3 "Apealing period" */}

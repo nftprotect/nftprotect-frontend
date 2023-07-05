@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { arbitratorGraphs } from "../utils/config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
+import { timestampToDate } from "../utils/helpers";
 
 export enum Period {
     Evidence,
@@ -10,6 +11,33 @@ export enum Period {
     Vote, 
     Appeal,
     Execution
+}
+
+export interface DisputeGraphData {
+    id: string,
+    // arbitrable: {
+    //     id
+    // },
+    // creator: {
+    //     id
+    // },
+    // subcourtID: {
+    //     id,
+    //     subcourtID
+    // },
+    numberOfChoices: BigNumber,
+    period: Period,
+    startTime: Date,
+    lastPeriodChange: Date,
+    numberOfRounds: BigNumber,
+    numberOfVotes: BigNumber,
+    numberOfCoherentVotes: BigNumber,
+    coherency: BigNumber,
+    appealed: Boolean,
+    ruled: Boolean,
+    currentRulling: number,
+    metaevidence: string,
+    txid: string
 }
 
 export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
@@ -31,21 +59,21 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
         }
     }
 
-    const getDispute = async (disputeId: BigNumber) => {
+    const getDispute = async (disputeId: BigNumber): Promise<DisputeGraphData|undefined> => {
         checkURI()
         if (graphURI) {
             const query = `
                 query getDispute($disputeId: BigInt!) {
-                    dispute(disputeID: $disputeId) {
+                    dispute(id: $disputeId) {
                         id,
                         disputeID,
-                        arbitrable: {
+                        arbitrable {
                             id
                         },
-                        creator: {
+                        creator {
                             id
                         },
-                        subcourtID: {
+                        subcourtID {
                             id,
                             subcourtID
                         },
@@ -65,12 +93,23 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { disputeId })
-            return result
+            const { data } = await performQuery(graphURI, query, { disputeId: disputeId.toString() })
+            const { dispute } = data
+            return {
+                ...dispute,
+                startTime: timestampToDate(dispute.startTime),
+                lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
+                numberOfChoices: BigNumber.from(dispute.numberOfChoices),
+                numberOfRounds: BigNumber.from(dispute.numberOfRounds),
+                numberOfVotes: BigNumber.from(dispute.numberOfVotes),
+                numberOfCoherentVotes: BigNumber.from(dispute.numberOfCoherentVotes),
+                coherency: BigNumber.from(dispute.coherency),
+                currentRulling: parseInt(dispute.currentRulling)
+            }
         }
     }
 
-    const listDisputes = async (creator: string) => {
+    const listDisputes = async (creator: string): Promise<DisputeGraphData[]|undefined> => {
         checkURI()
         if (graphURI) {
             const query = `
@@ -79,14 +118,13 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                         creator: { id: $creator }
                     }) {
                         id,
-                        disputeID,
-                        arbitrable: {
+                        arbitrable {
                             id
                         },
-                        creator: {
+                        creator {
                             id
                         },
-                        subcourtID: {
+                        subcourtID {
                             id,
                             subcourtID
                         },
@@ -106,7 +144,20 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { creator })
+            const { data } = await performQuery(graphURI, query, { creator })
+            const result = data.disputes.map((dispute: any) => {
+                return {
+                    ...dispute,
+                    startTime: timestampToDate(dispute.startTime),
+                    lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
+                    numberOfChoices: BigNumber.from(dispute.numberOfChoices),
+                    numberOfRounds: BigNumber.from(dispute.numberOfRounds),
+                    numberOfVotes: BigNumber.from(dispute.numberOfVotes),
+                    numberOfCoherentVotes: BigNumber.from(dispute.numberOfCoherentVotes),
+                    coherency: BigNumber.from(dispute.coherency),
+                    currentRulling: parseInt(dispute.currentRulling)
+                }
+            })
             return result
         }
     }
