@@ -13,11 +13,23 @@ export interface NotificationContextInterface {
 export type Notification = {
     id: string,
     children: React.ReactElement,
-    severity: SeverityLevel,
     dateCreated: Date,
     closeable: boolean,
-    callback: Function|undefined,
-    image: {url: string, text: string}|undefined
+    severity: SeverityLevel,
+    image?: JSX.Element,
+    onOpen?: Function,
+    onClose?: Function,
+}
+
+export interface NewNotification {
+    id: string,
+    children: React.ReactElement,
+    dateCreated?: Date,
+    closeable?: boolean,
+    severity?: SeverityLevel,
+    image?: JSX.Element,
+    onOpen?: Function,
+    onClose?: Function,
 }
 
 export enum SeverityLevel {
@@ -43,15 +55,7 @@ export function NotificationContextProvider({ children }:any) {
         return notifications.findIndex(it => it.id === id)
     }
 
-    const addNotification = (newNotification: {
-        id: string, 
-        children: React.ReactElement,
-        severity: SeverityLevel|undefined,
-        dateCreated: Date|undefined,
-        closeable: boolean|undefined,
-        callback: Function|undefined,
-        image: {url: string, text: string}|undefined
-    }) => {
+    const addNotification = (newNotification: NewNotification) => {
         const existingIdx = notifications.findIndex(it => it.id === newNotification.id)
         const updatedNotifications = [...notifications]
         const newData = {
@@ -60,13 +64,14 @@ export function NotificationContextProvider({ children }:any) {
             severity: (newNotification.severity === undefined) ? SeverityLevel.Info : newNotification.severity,
             dateCreated: newNotification.dateCreated || new Date(),
             closeable: (newNotification.closeable === undefined) ? true : newNotification.closeable,
-            callback: newNotification.callback,
+            onOpen: newNotification.onOpen,
             image: newNotification.image
         }
         if (existingIdx > -1) {
             updatedNotifications[existingIdx] = newData
         } else {
             updatedNotifications.push(newData)
+            newData.onOpen && newData.onOpen()
         }
         setNotifications(updatedNotifications)
         setUpdateCounter(updateCounter+1)
@@ -85,6 +90,7 @@ export function NotificationContextProvider({ children }:any) {
                 const idx = getNotificationIndex(id)
                 if (idx > -1) {
                     newState.splice(idx, 1)
+                    notification.onClose && notification.onClose()
                 } else {
                     console.error('No such notification:', id)
                 }

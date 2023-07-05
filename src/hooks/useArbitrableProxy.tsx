@@ -7,6 +7,7 @@ import { maxBlocksPerRequest } from "../utils/config";
 import { BigNumber } from '@ethersproject/bignumber';
 import KlerosLiquidABI from "../abi/KlerosLiquidABI";
 import { timestampToDate } from "../utils/helpers";
+import { Period } from "./useArbitratorGraph";
 
 export interface EvidenceSubmission {
     evidenceURI: string,
@@ -20,16 +21,8 @@ interface ContractsHolder {
     arbitrator?: Contract
 }
 
-export enum DisputePeriod {
-    evidence, // Evidence can be submitted. This is also when drawing has to take place.
-    commit, // Jurors commit a hashed vote. This is skipped for courts without hidden votes.
-    vote, // Jurors reveal/cast their vote depending on whether the court has hidden votes or not.
-    appeal, // The dispute can be appealed.
-    execution // Tokens are redistributed and the ruling is executed.
-}
-
 export interface DisputePeriodData {
-    period: DisputePeriod,
+    period: Period,
     lastPeriodChange: Date
 }
 
