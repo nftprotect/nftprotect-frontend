@@ -107,17 +107,20 @@ const NotificationsLoader = () => {
                 if (request) {
                     const loadedRequest = await loadRequest(request.id)
                     // NFT has a pending request
-                    if (request.status === ReqStatus.Accepted) {
-                        if (loadedRequest.externalDisputeId) {
+                    if (request.status === ReqStatus.Accepted) { 
+                        if (loadedRequest.externalDisputeId) { // Decision is already applied
                             if (request.type === ReqType.OwnershipAdjustment) {
-                                // 19. Original NFT received by request with dispute
+                                // 19.2 Original NFT received by request with dispute
                                 addNotification({
-                                    id: notificationId+'.19',
+                                    id: notificationId+'.19.2',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>{`The Arbitrator’s ruling on the dispute #${loadedRequest.externalDisputeId.toString()} is now in effect.`}</Trans>
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -131,7 +134,7 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>Dispute #{loadedRequest.externalDisputeId.toString()} decision is now in force.</Trans>
+                                                <Trans>The Ruling on dispute #{loadedRequest.externalDisputeId.toString()} is now enforced!</Trans>
                                             }
                                             message={
                                                 <Trans>Your pNFT has been burned.</Trans>
@@ -242,7 +245,7 @@ const NotificationsLoader = () => {
                                                         <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>The case will now be closed.</Trans>
+                                                        <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
@@ -387,14 +390,34 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Rejected) {
                         if (loadedRequest.externalDisputeId) {
                             if (request.type === ReqType.OwnershipAdjustment) {
-                                // 20. Original NFT rejected by request with dispute
+                                // 20.2 Original NFT rejected by request with dispute
                                 addNotification({
-                                    id: notificationId+'.20',
+                                    id: notificationId+'.20.2',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>{`The Arbitrator’s ruling on the dispute #${loadedRequest.externalDisputeId.toString()} is now in effect.`}</Trans>
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>User {nft.originalOwnerAddress} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            } else if (request.type === ReqType.Burn) {
+                                // 31.2 Burn pNFT rejected by request with dispute
+                                addNotification({
+                                    id: notificationId+'.31.2',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>Your pNFT remains unchanged. We suggest contacting the NFT owner to request the original version.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -460,10 +483,27 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>Dispute #{loadedRequest.externalDisputeId.toString()} decision is now in force.</Trans>
+                                                <Trans>The Ruling on dispute #{loadedRequest.externalDisputeId.toString()} is now enforced!</Trans>
                                             }
                                             message={
-                                                <Trans>{`The original NFT has been transferred to the new owner ${formatAddress(nft.ownerAddress, 4)}.`}</Trans>
+                                                <Trans>{`The original NFT has been transferred to a new owner ${formatAddress(nft.ownerAddress, 4)}.`}</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    dateCreated: request.updateDate
+                                })
+                            } else if (request.type === ReqType.Burn) {
+                                // 19.1 pNFT burned by request with dispute
+                                addNotification({
+                                    id: notificationId+'.19.1',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -585,7 +625,7 @@ const NotificationsLoader = () => {
                                                         <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>The case will now be closed.</Trans>
+                                                        <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
@@ -714,7 +754,41 @@ const NotificationsLoader = () => {
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
-
+                        if (request.type === ReqType.Burn) {
+                            // 20.1 Burn rejected by request with dispute
+                            addNotification({
+                                id: notificationId+'.20.1',
+                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                                children: 
+                                    <CommonNotificationBody
+                                        header={
+                                            <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                        }
+                                        message={
+                                            <Trans>User {nft.originalOwnerAddress} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans>
+                                        }
+                                    />, 
+                                severity: SeverityLevel.Major,
+                                dateCreated: request.updateDate
+                            })
+                        } else if (request.type === ReqType.OwnershipAdjustment) {
+                            // 31.1 Ownership adjustment rejected by request with dispute
+                            addNotification({
+                                id: notificationId+'.31.1',
+                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                                children: 
+                                    <CommonNotificationBody
+                                        header={
+                                            <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                        }
+                                        message={
+                                            <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT.</Trans>
+                                        }
+                                    />, 
+                                severity: SeverityLevel.Major,
+                                dateCreated: request.updateDate
+                            })
+                        }
                     }
                 } else {
                     // NFT has no pending request
