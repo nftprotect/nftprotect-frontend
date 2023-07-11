@@ -47,7 +47,7 @@ import { DisputePeriodData } from '../../../../hooks/useArbitrableProxy';
 import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import TimeCounter from '../../../../hooks/useTimeCounter';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
-import { ReqStatus } from '../../../../hooks/useNftProtectGraph';
+import { ReqStatus, ReqType } from '../../../../hooks/useNftProtectGraph';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -66,7 +66,8 @@ export interface EvidenceUpload {
 
 interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
-    requestData?: ActionRequest,
+    requestType: ReqType,
+    requestStatus?: RequestStatus,
     disputeData?: DisputeGraphData,
 }
 
@@ -89,7 +90,8 @@ const KlerosCaseContent = ({
     defendantAddress, 
     contractAddress,
     evidences,
-    requestData,
+    requestType,
+    requestStatus = RequestStatus.Disputed,
     disputeData
 }: CaseContentInitialData) => {
 
@@ -402,7 +404,7 @@ const KlerosCaseContent = ({
                 <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
                     { ((): JSX.Element => {
                         const isAppealingPeriod: boolean = stepKey === 'Apealing period'
-                        const enforced: boolean = (requestData?.status === RequestStatus.Accepted || requestData?.status === RequestStatus.Rejected)
+                        const enforced: boolean = (requestStatus === RequestStatus.Accepted || requestStatus === RequestStatus.Rejected)
                         const appealButton = <Flex w={{base: "200px"}}>
                             <Button variant="primaryLight">
                                 <Trans>File an appeal</Trans>
@@ -442,9 +444,16 @@ const KlerosCaseContent = ({
                                             <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} fontWeight="600">
                                                 <Trans>Winner: the Claimant</Trans>
                                             </Text>
-                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                                <Trans>{"The original NFT has been restored to the Claimant's wallet. The pNFT was burned. You may file an appeal."}</Trans>
-                                            </Text>
+                                            { requestType === ReqType.OwnershipAdjustment && (
+                                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                    <Trans>{"The original NFT has been transfered to the Claimant's wallet. The pNFT was burned."}</Trans>
+                                                </Text> 
+                                            )}
+                                            { requestType === ReqType.OwnershipRestore && (
+                                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                    <Trans>{"The original NFT has been restored to the Claimant's wallet. The pNFT was burned."}</Trans>
+                                                </Text> 
+                                            )}
                                             {
                                                 isAppealingPeriod ?
                                                     <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
@@ -468,12 +477,16 @@ const KlerosCaseContent = ({
                                             <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} fontWeight="600">
                                                 <Trans>Winner: the Defendant</Trans>
                                             </Text>
-                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                                <Trans>The defendant is still the owner of the Original NFT.</Trans>
-                                            </Text>
-                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                                <Trans>The pNFT remains intact.</Trans>
-                                            </Text>
+                                            { requestType === ReqType.OwnershipAdjustment && (
+                                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                    <Trans>The defendant is still the owner of the Original NFT.<br/>The pNFT remains intact.</Trans>
+                                                </Text> 
+                                            )}
+                                            { requestType === ReqType.OwnershipRestore && (
+                                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                    <Trans>No changes enforced.</Trans>
+                                                </Text> 
+                                            )}
                                             {
                                                 isAppealingPeriod ?
                                                     <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
