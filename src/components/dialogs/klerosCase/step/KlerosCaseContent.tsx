@@ -27,7 +27,7 @@ import {
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
 import { ExternalLinkIcon, ArrowDownIcon, ArrowUpIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import NFT from '../../../../classes/NFT';
+import NFT, { ActionRequest, RequestStatus } from '../../../../classes/NFT';
 import { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
@@ -47,6 +47,7 @@ import { DisputePeriodData } from '../../../../hooks/useArbitrableProxy';
 import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import TimeCounter from '../../../../hooks/useTimeCounter';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
+import { ReqStatus } from '../../../../hooks/useNftProtectGraph';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -65,6 +66,7 @@ export interface EvidenceUpload {
 
 interface CaseContentInitialData extends KlerosCaseInitialData {
     pageData: PageData,
+    requestData?: ActionRequest,
     disputeData?: DisputeGraphData,
 }
 
@@ -87,6 +89,7 @@ const KlerosCaseContent = ({
     defendantAddress, 
     contractAddress,
     evidences,
+    requestData,
     disputeData
 }: CaseContentInitialData) => {
 
@@ -397,29 +400,100 @@ const KlerosCaseContent = ({
             {/* Visible only on step 3 "Apealing period" and step 4 "Decision period" */}
             { (stepKey === 'Decision period' || stepKey === 'Apealing period') &&
                 <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
-                    { stepKey === 'Decision period' &&
-                        <Flex>
-                            <Box mr={{base: "20px"}}>
-                                <Info fontSize="24px" color="#009AFF" />
-                            </Box>
-                            { disputeData?.currentRulling === 0 ?
-                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                    <Trans>Case refused to arbitrate</Trans>
-                                </Text> :
-                                <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
-                                    <Trans>{"Winner:"}</Trans>
-                                    { disputeData?.currentRulling === 1 && t` the Claimant` }
-                                    { disputeData?.currentRulling === 2 && t` the Defendant` }
-                                </Text>
-                            }
+                    { ((): JSX.Element => {
+                        const isAppealingPeriod: boolean = stepKey === 'Apealing period'
+                        const enforced: boolean = (requestData?.status === RequestStatus.Accepted || requestData?.status === RequestStatus.Rejected)
+                        const appealButton = <Flex w={{base: "200px"}}>
+                            <Button variant="primaryLight">
+                                <Trans>File an appeal</Trans>
+                            </Button>
                         </Flex>
-                    }
-                    {/* Visible only on step 3 "Apealing period" */}
-                    { stepKey === 'Apealing period' &&
-                        <Flex w={{base: "200px"}}>
-                            <Button variant="primaryLight">File an appeal</Button>
+                        const enforceButton = !enforced && <Flex w={{base: "200px"}}>
+                            <Button variant="primaryLight">
+                                <Trans>Enforce the ruling</Trans>
+                            </Button>
                         </Flex>
-                    }
+                        const button = isAppealingPeriod ?
+                            appealButton :
+                            enforceButton
+                        switch (disputeData?.currentRulling) {
+                            case 0:
+                                return (<>
+                                    <Flex>
+                                        <Box>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} fontWeight="600" color={'#C21313'}>
+                                                <Trans>The jurors refused to arbitrate the dispute</Trans>
+                                            </Text>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                <Trans>The case will now be closed.</Trans>
+                                            </Text>
+                                            <br/>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} color={'grey'}>
+                                                <Trans>The Ruling on this case must be enforced to open a new case on this pNFT in the future.</Trans>
+                                            </Text>
+                                        </Box>
+                                    </Flex>
+                                    { enforceButton }
+                                </>)
+                            case 1:
+                                return (<>
+                                    <Flex>
+                                        <Box>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} fontWeight="600">
+                                                <Trans>Winner: the Claimant</Trans>
+                                            </Text>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                <Trans>{"The original NFT has been restored to the Claimant's wallet. The pNFT was burned. You may file an appeal."}</Trans>
+                                            </Text>
+                                            {
+                                                isAppealingPeriod ?
+                                                    <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                        <Trans>You may file an appeal.</Trans>
+                                                    </Text> :
+                                                    !enforced && <>
+                                                        <br/>
+                                                        <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} color={'grey'}>
+                                                            <Trans>Press the button to enforce the ruling.</Trans>
+                                                        </Text>
+                                                    </>
+                                            }
+                                        </Box>
+                                    </Flex>
+                                    { button }
+                                </>)
+                            case 2:
+                                return (<>
+                                    <Flex>
+                                        <Box>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} fontWeight="600">
+                                                <Trans>Winner: the Defendant</Trans>
+                                            </Text>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                <Trans>The defendant is still the owner of the Original NFT.</Trans>
+                                            </Text>
+                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                <Trans>The pNFT remains intact.</Trans>
+                                            </Text>
+                                            {
+                                                isAppealingPeriod ?
+                                                    <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                        <Trans>You may file an appeal.</Trans>
+                                                    </Text> :
+                                                    !enforced && <>
+                                                        <br/>
+                                                        <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} color={'grey'}>
+                                                            <Trans>Press the button to enforce the ruling.</Trans>
+                                                        </Text>
+                                                    </>
+                                            }
+                                        </Box>
+                                    </Flex>
+                                    { button }
+                                </>)
+                            default:
+                                return <></>
+                        }
+                    })() }
                 </Flex>
             }
 
