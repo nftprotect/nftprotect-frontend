@@ -243,7 +243,8 @@ const RequestPage: NextPage = () => {
                 defendantAddress={defendantAddress}
                 evidences={evidences}
                 disputeData={disputeData}
-                requestData={requestData}
+                requestType={requestData.reqtype}
+                requestStatus={requestData.status}
                 pageData={ metaEvidenceType.page }
             />}
         </Container>

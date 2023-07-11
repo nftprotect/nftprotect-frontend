@@ -20,6 +20,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { Trans, t } from '@lingui/macro';
 import Footer from '../../footer/Footer'
 import NavBar from '../../navBar/NavBar'
+import { ReqType } from '../../../hooks/useNftProtectGraph';
 
 const KlerosCaseDialog = () => {
 
@@ -78,6 +79,11 @@ const KlerosCaseDialog = () => {
                         <ModalBody mx={{base: "220px"}}>
                             <Flex flexDir="column" width="100%">
                                 { nft && caseData && <KlerosCaseContent
+                                    requestType={
+                                        caseData.metaEvidenceId === 3 ? 
+                                            ReqType.OwnershipAdjustment : 
+                                            ReqType.OwnershipRestore
+                                    }
                                     pageData={pageData}
                                     {...caseData}
                                 /> }
