@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import {
     chakra,
     Flex,
-    Grid,
-    GridItem,
+    Box,
+    Container,
     Modal,
     ModalOverlay,
     ModalBody,
@@ -11,15 +11,10 @@ import {
     ModalCloseButton,
     useDisclosure
 } from '@chakra-ui/react'
-// import { StepsTheme as Steps } from 'chakra-ui-steps';
 import KlerosCaseContent from './step/KlerosCaseContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { metaEvidenceTypes } from '../../../utils/metaEvidence';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
-import { useAppContext } from '../../../context/AppContextProvider';
-import { Trans, t } from '@lingui/macro';
-import Footer from '../../footer/Footer'
-import NavBar from '../../navBar/NavBar'
 import { ReqType } from '../../../hooks/useNftProtectGraph';
 
 const KlerosCaseDialog = () => {
@@ -30,7 +25,6 @@ const KlerosCaseDialog = () => {
     const [ caseData, setCaseData ] = useState<KlerosCaseInitialData>()
     const { nft, metaEvidenceId } = caseData || {}
     const pageData = metaEvidenceId && metaEvidenceTypes.find((item) => item.value === metaEvidenceId.toString() )?.page
-    const { account, library } = useAppContext()
 
     useEffect(() => {
         setDialog('KlerosCaseDialog', {...disclosure, setCaseData})
@@ -47,7 +41,6 @@ const KlerosCaseDialog = () => {
             >
                 <ModalOverlay />
                 <ModalContent
-                    // as="Grid"
                     borderRadius="0"
                     sx={{
                         "::-webkit-scrollbar": {
@@ -55,14 +48,14 @@ const KlerosCaseDialog = () => {
                         },
                         "::-webkit-scrollbar-track": {
                             my: '16px',
-                            overflowY: "hidden"
+                            // overflowY: "hidden"
                         },
                         "::-webkit-scrollbar-thumb": {
                             bgColor: 'brand.light',
                         }
                     }}
                 >
-                    <GridItem
+                    <Box
                         position="sticky"
                         top="0"
                         zIndex="1"
@@ -71,12 +64,16 @@ const KlerosCaseDialog = () => {
                         w="100%"
                         display="flex"
                     >
-                        <NavBar />
-                        <ModalCloseButton onClick={onClose} />
-                    </GridItem>
+                        <ModalCloseButton onClick={onClose} color={'grey'}/>
+                    </Box>
 
-                    <GridItem area={'main'}>
-                        <ModalBody mx={{base: "220px"}}>
+                    <ModalBody mx={{base: "220px"}}>
+                        <Container 
+                            p={0}
+                            maxW="1920px"
+                            width={"auto"}
+                            h={"auto"}
+                        >
                             <Flex flexDir="column" width="100%">
                                 { nft && caseData && <KlerosCaseContent
                                     requestType={
@@ -88,12 +85,8 @@ const KlerosCaseDialog = () => {
                                     {...caseData}
                                 /> }
                             </Flex>
-                        </ModalBody>
-                    </GridItem>
-
-                    <GridItem area={'footer'}>
-                        <Footer />
-                    </GridItem>
+                        </Container>
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </>

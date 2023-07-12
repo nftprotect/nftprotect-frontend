@@ -191,11 +191,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 undefined
 
     const metaEvidenceId = (lostReason === 'protocol breach') ?
-                                7 :
-                            (lostReason === 'phishing attack') ?
                                 6 :
-                            (lostReason === 'sending to an incorrect address') ?
+                            (lostReason === 'phishing attack') ?
                                 5 :
+                            (lostReason === 'sending to an incorrect address') ?
+                                4 :
                             undefined
 
     const dialogClose = () => {
