@@ -263,6 +263,18 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 <Trans>Lost pNFT</Trans>
                             </Button>
                         </Box>
+                        <Box mt={[2]}>
+                            <Button
+                                variant={"primaryLight"}
+                                onClick={ () => {
+                                    const dialog = getDialog('TransferOriginalNftDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                } }
+                            >
+                                <Trans>Transfer original</Trans>
+                            </Button>
+                        </Box>
                     </>)
                 } else if (pendingRequest.status === RequestStatus.Disputed) {
                     buttons =   <Flex 
