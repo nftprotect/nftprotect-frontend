@@ -91,10 +91,12 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
             setNextStep(StepMapping.waitingForFinal);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
-                    console.log("Transaction successful", tx.hash);
-                    nftReFetch();
+                    console.log("Transaction successful", tx.hash)
+                    //nftReFetch()
+                    // List of NFTs is the same after reFetch() so component won't be re-rendered
+                    // So in this case we have to reload request only
+                    nft?.loadPendingRequest()
                     setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
