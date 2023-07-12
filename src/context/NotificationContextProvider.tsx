@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 export interface NotificationContextInterface {
     getNotification: Function,
@@ -43,21 +43,20 @@ export const NotificationContext = createContext<NotificationContextInterface|nu
 
 export function NotificationContextProvider({ children }:any) {
 
-    const [ notifications, setNotifications ] = useState<Notification[]>([])
+    const notifications = useRef<Notification[]>([])
     const [ updateCounter, setUpdateCounter ] = useState<number>(0)
-    const notificationsCount = notifications.length
+    const notificationsCount = notifications.current.length
 
     const getNotification = (id: string) => {
-        return notifications.find(it => it.id === id)
+        return notifications.current.find(it => it.id === id)
     }
 
     const getNotificationIndex = (id: string) => {
-        return notifications.findIndex(it => it.id === id)
+        return notifications.current.findIndex(it => it.id === id)
     }
 
     const addNotification = (newNotification: NewNotification) => {
-        const existingIdx = notifications.findIndex(it => it.id === newNotification.id)
-        const updatedNotifications = [...notifications]
+        const existingIdx = notifications.current.findIndex(it => it.id === newNotification.id)
         const newData = {
             id: newNotification.id,
             children: newNotification.children,
@@ -68,17 +67,15 @@ export function NotificationContextProvider({ children }:any) {
             image: newNotification.image
         }
         if (existingIdx > -1) {
-            updatedNotifications[existingIdx] = newData
+            notifications.current[existingIdx] = newData
         } else {
-            updatedNotifications.push(newData)
+            notifications.current.push(newData)
             newData.onOpen && newData.onOpen()
         }
-        setNotifications(updatedNotifications)
         setUpdateCounter(updateCounter+1)
     }
 
     const deleteNotifications = (toDelete: any[]) => {
-        const newState = [...notifications]
         if (toDelete.length > 0) {
             toDelete.forEach((notification) => {
                 let id: string
@@ -89,16 +86,13 @@ export function NotificationContextProvider({ children }:any) {
                 }
                 const idx = getNotificationIndex(id)
                 if (idx > -1) {
-                    newState.splice(idx, 1)
+                    notifications.current.splice(idx, 1)
+                    setUpdateCounter(updateCounter+1)
                     notification.onClose && notification.onClose()
                 } else {
                     console.error('No such notification:', id)
                 }
             })
-            if (notifications.length > newState.length) {
-                setNotifications(newState)
-                setUpdateCounter(updateCounter+1)
-            }
         }
     }
 
@@ -113,7 +107,7 @@ export function NotificationContextProvider({ children }:any) {
     }
 
     const listNotifications = (compareFunction: Function = defaultSort) => {
-        return notifications.sort(compareFunction as any)
+        return notifications.current.sort(compareFunction as any)
     }
 
     return (
