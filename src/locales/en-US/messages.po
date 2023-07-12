@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-07-11 13:59+0700\n"
+"POT-Creation-Date: 2023-07-12 12:37+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -476,7 +476,7 @@ msgstr "Links"
 
 #: src/components/nftView/NFTCard.tsx:219
 #: src/components/nftView/NFTCard.tsx:263
-#: src/components/nftView/NFTCard.tsx:320
+#: src/components/nftView/NFTCard.tsx:332
 msgid "Lost pNFT"
 msgstr "Lost pNFT"
 
@@ -682,7 +682,7 @@ msgstr "Proceed to payment"
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:308
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:245
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:242
-#: src/components/nftView/NFTCard.tsx:306
+#: src/components/nftView/NFTCard.tsx:318
 #: src/components/notifications/ClaimantWinDialog.tsx:96
 msgid "Protect NFT"
 msgstr "Protect NFT"
@@ -1104,6 +1104,7 @@ msgstr "Transfer NFT"
 
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:134
 #: src/components/nftView/NFTCard.tsx:231
+#: src/components/nftView/NFTCard.tsx:275
 msgid "Transfer original"
 msgstr "Transfer original"
 
@@ -1121,7 +1122,7 @@ msgid "Transfered pNFT"
 msgstr "Transfered pNFT"
 
 #: src/components/nftView/NFTCard.tsx:198
-#: src/components/nftView/NFTCard.tsx:286
+#: src/components/nftView/NFTCard.tsx:298
 msgid "Under dispute"
 msgstr "Under dispute"
 
