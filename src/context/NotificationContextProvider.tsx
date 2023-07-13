@@ -1,10 +1,11 @@
+import { Notification } from "@web3uikit/core";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 export interface NotificationContextInterface {
     getNotification: Function,
     getNotificationIndex: Function,
     addNotification: Function,
-    deleteNotifications: Function,
+    deleteNotification: Function,
     listNotifications: Function,
     notificationsCount: number,
     updateCounter: number
@@ -47,11 +48,11 @@ export function NotificationContextProvider({ children }:any) {
     const [ updateCounter, setUpdateCounter ] = useState<number>(0)
     const notificationsCount = notifications.current.length
 
-    const getNotification = (id: string) => {
+    const getNotification = (id: string): Notification|undefined => {
         return notifications.current.find(it => it.id === id)
     }
 
-    const getNotificationIndex = (id: string) => {
+    const getNotificationIndex = (id: string): number => {
         return notifications.current.findIndex(it => it.id === id)
     }
 
@@ -75,24 +76,19 @@ export function NotificationContextProvider({ children }:any) {
         setUpdateCounter(updateCounter+1)
     }
 
-    const deleteNotifications = (toDelete: any[]) => {
-        if (toDelete.length > 0) {
-            toDelete.forEach((notification) => {
-                let id: string
-                if (typeof notification === 'string') {
-                    id = notification
-                } else {
-                    id = notification.id
-                }
-                const idx = getNotificationIndex(id)
-                if (idx > -1) {
-                    notifications.current.splice(idx, 1)
-                    setUpdateCounter(updateCounter+1)
-                    notification.onClose && notification.onClose()
-                } else {
-                    console.error('No such notification:', id)
-                }
-            })
+    const deleteNotification = (toDelete: Notification|string) => {
+        const notification = (typeof toDelete === 'string') ?
+            getNotification(toDelete) :
+            toDelete
+        const idx = notification ?
+            getNotificationIndex(notification.id) : 
+            -1
+        if (idx > -1) {
+            notifications.current.splice(idx, 1)
+            setUpdateCounter(updateCounter+1)
+            notification?.onClose && notification.onClose()
+        } else {
+            console.error('No such notification:', toDelete)
         }
     }
 
@@ -115,7 +111,7 @@ export function NotificationContextProvider({ children }:any) {
             getNotification,
             getNotificationIndex,
             addNotification,
-            deleteNotifications,
+            deleteNotification,
             listNotifications,
             notificationsCount,
             updateCounter
