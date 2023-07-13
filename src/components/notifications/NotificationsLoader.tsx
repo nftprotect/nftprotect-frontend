@@ -162,6 +162,12 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
+                                // Close message 1 if exists
+                                let toClose = getNotification(notificationId+'.1')
+                                toClose && deleteNotification(toClose)
+                                // Close message 4 if exists
+                                toClose = getNotification(notificationId+'.4')
+                                toClose && deleteNotification(toClose)
                             }
                         }
                     } else if (request.status === ReqStatus.Disputed) {
@@ -171,7 +177,7 @@ const NotificationsLoader = () => {
                         if (dispute) {
                             if (dispute.period === Period.Evidence) {
                                 if (nft.ownerAddress === claimant) {
-                                    // 3 Evidence period started
+                                    // 3. Evidence period started
                                     addNotification({
                                         id: notificationId+'.3',
                                         image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
@@ -204,7 +210,7 @@ const NotificationsLoader = () => {
                                 }
                             } else if ((dispute.period === Period.Commit) || (dispute.period === Period.Vote)) {
                                 if (nft.ownerAddress === claimant) {
-                                    // 8 Voting period started
+                                    // 8. Voting period started
                                     addNotification({
                                         id: notificationId+'.8',
                                         image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
@@ -235,7 +241,7 @@ const NotificationsLoader = () => {
                             } else if (dispute.period === Period.Appeal) {
                                 if (nft.ownerAddress === claimant) {
                                     if (dispute.currentRulling === 0) {
-                                        // 9 Case refused
+                                        // 9. Case refused
                                         addNotification({
                                             id: notificationId+'.9',
                                             image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
@@ -348,6 +354,9 @@ const NotificationsLoader = () => {
     
                             }
                         }
+                        // Close message 4 if exists
+                        let toClose = getNotification(notificationId+'.4')
+                        toClose && deleteNotification(toClose)
                     } else if (request.status === ReqStatus.Initial) {
                         if (request.type === ReqType.OwnershipAdjustment) {
                             // If request timeout expired
@@ -369,12 +378,10 @@ const NotificationsLoader = () => {
                                             />,
                                         severity: SeverityLevel.Major,
                                         dateCreated: timeoutDate,
-                                        onOpen: () => {
-                                            // Close message 1 if exists
-                                            const toClose = getNotification(notificationId+'.1')
-                                            toClose && deleteNotification(toClose)
-                                        }
                                     })
+                                    // Close message 1 if exists
+                                    const toClose = getNotification(notificationId+'.1')
+                                    toClose && deleteNotification(toClose)
                                 } else {
                                     // 1. Request sent to the original NFT owner
                                     addNotification({
@@ -447,6 +454,12 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
+                                // Close message 1 if exists
+                                let toClose = getNotification(notificationId+'.1')
+                                toClose && deleteNotification(toClose)
+                                // Close message 4 if exists
+                                toClose = getNotification(notificationId+'.4')
+                                toClose && deleteNotification(toClose)
                             }
                         }
                     }
@@ -523,9 +536,9 @@ const NotificationsLoader = () => {
                         if (dispute) {
                             if (dispute.period === Period.Evidence) {
                                 if (nft.originalOwnerAddress === claimant) {
-                                    // 3 Evidence period started
+                                    // 5. Evidence period started
                                     addNotification({
-                                        id: notificationId+'.3',
+                                        id: notificationId+'.5',
                                         image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children: 
                                             <CommonNotificationBody
@@ -739,6 +752,25 @@ const NotificationsLoader = () => {
     
                                     }
                                 }
+                            }
+                            // Closing notifications
+                            if (dispute.period !== Period.Evidence) {
+                                // Close message 5 if exists
+                                let toClose = getNotification(notificationId+'.5')
+                                toClose && deleteNotification(toClose)
+                            }
+                            if ((dispute.period !== Period.Commit) && (dispute.period !== Period.Vote)) {
+                                // Close message 8 if exists
+                                let toClose = getNotification(notificationId+'.8')
+                                toClose && deleteNotification(toClose)
+                            }
+                            if (dispute.period !== Period.Appeal) {
+                                // Close message 10 if exists
+                                let toClose = getNotification(notificationId+'.10')
+                                toClose && deleteNotification(toClose)
+                                // Close message 11 if exists
+                                toClose = getNotification(notificationId+'.11')
+                                toClose && deleteNotification(toClose)
                             }
                         }
                     } else if (request.status === ReqStatus.Initial) {
