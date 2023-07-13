@@ -45,7 +45,7 @@ const NotificationsLoader = () => {
     const { account, active, currentChain, nftProtectContract } = context
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
     const { getDispute } = useArbitratorGraph(currentChain.chainId, defaultArbitrator)
-    const { addNotification } = useNotifications()
+    const { addNotification, getNotification, deleteNotification } = useNotifications()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     const originalsCache = useRef<NFT[]>([])
 
@@ -368,7 +368,12 @@ const NotificationsLoader = () => {
                                                 }
                                             />,
                                         severity: SeverityLevel.Major,
-                                        dateCreated: timeoutDate
+                                        dateCreated: timeoutDate,
+                                        onOpen: () => {
+                                            // Close message 1 if exists
+                                            const toClose = getNotification(notificationId+'.1')
+                                            toClose && deleteNotification(toClose)
+                                        }
                                     })
                                 } else {
                                     // 1. Request sent to the original NFT owner

@@ -47,7 +47,6 @@ const ShowNotifications = () => {
         <Box 
             px={['1rem', '3rem']} 
             py={[4, 8]} 
-            bgColor="#000"
         >
             <Accordion defaultIndex={[0]} allowMultiple>
                 <AccordionItem
@@ -60,8 +59,8 @@ const ShowNotifications = () => {
                         justifyContent="space-between"
                         border="none"
                         borderRadius="15px"
-                        bgColor="#000"
-                        color="#FFF"
+                        bgColor="#FFF"
+                        color="#000"
                         _hover={{
                             bgColor: "none"
                         }}
@@ -126,13 +125,13 @@ const ShowNotifications = () => {
 const NotificationAlert = ({
     notification
 }: any) => {
-    const { deleteNotifications } = useNotifications()
+    const { deleteNotification } = useNotifications()
 
     return (
         <Flex 
             mb={[2]} 
-            border="4px solid #FF0000"
-            borderRadius="15px"
+            border="0px solid #FF0000"
+            borderRadius="8px"
             alignItems={{md: "center"}}
             bgColor="#FFF"
             h={{base: "auto", md: "80px"}}
@@ -176,7 +175,7 @@ const NotificationAlert = ({
                     {
                         notification.closeable && 
                         <CloseButton
-                            onClick={ () => deleteNotifications([notification.id]) }
+                            onClick={ () => deleteNotification(notification) }
                             border="2px solid #000"
                             _hover={{
                                 bgColor: "rgba(255, 255, 255, 0.15)",
