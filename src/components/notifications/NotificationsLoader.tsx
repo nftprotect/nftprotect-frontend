@@ -51,7 +51,7 @@ const NotificationsLoader = () => {
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
-            `${nft.latestRequest.id}-${nft.latestRequest.type}-${nft.latestRequest.status}` :
+            `${nft.latestRequest.id}-${nft.latestRequest.type}` :
             'none'
         return `${nft.id}-${requestPart}`
     }
