@@ -130,7 +130,7 @@ const NotificationAlert = ({
     return (
         <Flex 
             mb={[2]} 
-            border="0px solid #FF0000"
+            border="1px solid #FF0000"
             borderRadius="8px"
             alignItems={{md: "center"}}
             bgColor="#FFF"
@@ -176,10 +176,11 @@ const NotificationAlert = ({
                         notification.closeable && 
                         <CloseButton
                             onClick={ () => deleteNotification(notification) }
-                            border="2px solid #000"
+                            border="2px solid #c0c0c0"
+                            color="#c0c0c0"
                             _hover={{
                                 bgColor: "rgba(255, 255, 255, 0.15)",
-                                transform: "scale(1.03)"
+                                transform: "scale(1.05)"
                             }}
                             _active={{
                                 bgColor: "rgba(255, 255, 255, 0.15)"
