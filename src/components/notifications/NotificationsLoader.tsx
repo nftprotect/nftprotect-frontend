@@ -465,6 +465,7 @@ const NotificationsLoader = () => {
                     }
                 } else {
                     // NFT has no pending request
+                    // TODO: hide if NFT appears in the wallet
                     // 0. pNFT received
                     addNotification({
                         id: notificationId+'.0',
@@ -758,10 +759,16 @@ const NotificationsLoader = () => {
                                 // Close message 5 if exists
                                 let toClose = getNotification(notificationId+'.5')
                                 toClose && deleteNotification(toClose)
+                                // Close message 24 if exists
+                                toClose = getNotification(notificationId+'.24')
+                                toClose && deleteNotification(toClose)
                             }
                             if ((dispute.period !== Period.Commit) && (dispute.period !== Period.Vote)) {
                                 // Close message 8 if exists
                                 let toClose = getNotification(notificationId+'.8')
+                                toClose && deleteNotification(toClose)
+                                // Close message 26 if exists
+                                toClose = getNotification(notificationId+'.26')
                                 toClose && deleteNotification(toClose)
                             }
                             if (dispute.period !== Period.Appeal) {
@@ -770,6 +777,12 @@ const NotificationsLoader = () => {
                                 toClose && deleteNotification(toClose)
                                 // Close message 11 if exists
                                 toClose = getNotification(notificationId+'.11')
+                                toClose && deleteNotification(toClose)
+                                // Close message 28 if exists
+                                toClose = getNotification(notificationId+'.28')
+                                toClose && deleteNotification(toClose)
+                                // Close message 29 if exists
+                                toClose = getNotification(notificationId+'.29')
                                 toClose && deleteNotification(toClose)
                             }
                         }
@@ -826,6 +839,12 @@ const NotificationsLoader = () => {
                                 dateCreated: request.updateDate
                             })
                         }
+                    }
+                    // Closing notifications
+                    if (request.status !== ReqStatus.Initial) {
+                        // Close message 21 if exists
+                        let toClose = getNotification(notificationId+'.21')
+                        toClose && deleteNotification(toClose)
                     }
                 } else {
                     // NFT has no pending request
