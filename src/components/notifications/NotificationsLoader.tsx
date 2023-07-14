@@ -17,6 +17,8 @@ import {
     Nft as AlchemyNFT, 
 } from "alchemy-sdk";
 import NFTImage from "../nftView/NFTImage"
+import OriginalNftReceivedDialog from "./OriginalNftReceivedDialog"
+import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 
 const CommonNotificationBody = ({
     header,
@@ -48,6 +50,7 @@ const NotificationsLoader = () => {
     const { addNotification, getNotification, deleteNotification } = useNotifications()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     const originalsCache = useRef<NFT[]>([])
+    const { getDialog } = useCallableDialogContext()
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
@@ -147,9 +150,10 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 2. Original NFT received by request without dispute
+                                const originalNft = await getOriginalNft(nft)
                                 addNotification({
                                     id: notificationId+'.2',
-                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -159,6 +163,12 @@ const NotificationsLoader = () => {
                                                 <Trans>We recommend protecting it using NFT Protect.</Trans>
                                             }
                                         />,
+                                    buttonCallback: () => {
+                                        const dialog = getDialog('OriginalNftReceivedDialog')
+                                        dialog.setNft(originalNft)
+                                        dialog.setPreviousOriginalOwner(nft.ownerAddress)
+                                        dialog.onOpen()
+                                    },
                                     severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
@@ -788,9 +798,10 @@ const NotificationsLoader = () => {
                         }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
+                        const originalNft = await getOriginalNft(nft)
                         addNotification({
                             id: notificationId+'.21',
-                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                            image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
                             children:
                                 <CommonNotificationBody
                                     header={
@@ -858,7 +869,9 @@ const NotificationsLoader = () => {
     useEffect(() => { loadNotifications() }, [account, active])
 
 
-    return <></>
+    return (<>
+        <OriginalNftReceivedDialog/>
+    </>)
 }
 
 export default NotificationsLoader
