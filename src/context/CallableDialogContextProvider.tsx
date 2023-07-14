@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef } from "react";
 
 export interface CallableDialogContextInterface {
     getDialog: Function,
@@ -24,10 +24,10 @@ const CallableDialogContext = createContext<CallableDialogContextInterface|null>
 
 export function CallableDialogContextProvider({ children }:any) {
 
-    const [ dialogs, setDialogs ] = useState<Array<Dialog>>([])
+    const dialogs = useRef<Array<Dialog>>([])
     
     const getDialog = (id: string) => {
-        const dialog = dialogs.find((dialog: Dialog) => dialog.id === id);
+        const dialog = dialogs.current.find((dialog: Dialog) => dialog.id === id);
         if (!dialog) {
           throw Error(`Dialog ${id} is not registered!`);
         } else {
@@ -36,7 +36,7 @@ export function CallableDialogContextProvider({ children }:any) {
       };
     
     const setDialog = (id: string, dialog: DialogInterface) => {
-        setDialogs((dialogs) => [...dialogs, { id, dialog }]);
+        dialogs.current.push({ id, dialog })
     };
 
     return (

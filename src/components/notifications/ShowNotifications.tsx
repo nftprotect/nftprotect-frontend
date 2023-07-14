@@ -20,6 +20,7 @@ import { useEffect, useMemo } from "react"
 import { useNotifications } from "../../hooks/useNotifications"
 import {Bell} from '@web3uikit/icons'
 import { Trans } from '@lingui/macro'
+import { Notification } from "../../context/NotificationContextProvider"
 
 const severityMapping: {
     status: 'success'|'info'|'warning'|'error'
@@ -124,7 +125,9 @@ const ShowNotifications = () => {
 
 const NotificationAlert = ({
     notification
-}: any) => {
+}: { 
+    notification: Notification 
+}) => {
     const { deleteNotification } = useNotifications()
 
     return (
@@ -159,7 +162,7 @@ const NotificationAlert = ({
                 alignItems= "center"
                 
             >
-                { notification.callback && <Button 
+                { notification.buttonCallback && <Button 
                     variant="darkOutline"
                     fontSize={{base: "0.875rem"}}
                     mr={{base: "0.875rem"}}
@@ -167,7 +170,7 @@ const NotificationAlert = ({
                     px={{base:"2.25rem"}}
                     w={{base: "80%", md: "auto"}}
                     minW="170px"
-                    onClick={notification.callback}
+                    onClick={notification.buttonCallback}
                 >
                     <Trans>Read more</Trans>
                 </Button> }
