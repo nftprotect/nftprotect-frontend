@@ -20,6 +20,7 @@ export type Notification = {
     image?: JSX.Element,
     onOpen?: Function,
     onClose?: Function,
+    buttonCallback?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export interface NewNotification {
@@ -31,6 +32,7 @@ export interface NewNotification {
     image?: JSX.Element,
     onOpen?: Function,
     onClose?: Function,
+    buttonCallback?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export enum SeverityLevel {
@@ -65,7 +67,8 @@ export function NotificationContextProvider({ children }:any) {
             dateCreated: newNotification.dateCreated || new Date(),
             closeable: (newNotification.closeable === undefined) ? true : newNotification.closeable,
             onOpen: newNotification.onOpen,
-            image: newNotification.image
+            image: newNotification.image,
+            buttonCallback: newNotification.buttonCallback
         }
         if (existingIdx > -1) {
             notifications.current[existingIdx] = newData

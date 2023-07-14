@@ -17,6 +17,8 @@ import {
     Nft as AlchemyNFT, 
 } from "alchemy-sdk";
 import NFTImage from "../nftView/NFTImage"
+import OriginalNftReceivedDialog from "./OriginalNftReceivedDialog"
+import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 
 const CommonNotificationBody = ({
     header,
@@ -48,10 +50,11 @@ const NotificationsLoader = () => {
     const { addNotification, getNotification, deleteNotification } = useNotifications()
     const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
     const originalsCache = useRef<NFT[]>([])
+    const { getDialog } = useCallableDialogContext()
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
-            `${nft.latestRequest.id}-${nft.latestRequest.type}-${nft.latestRequest.status}` :
+            `${nft.latestRequest.id}-${nft.latestRequest.type}` :
             'none'
         return `${nft.id}-${requestPart}`
     }
@@ -147,9 +150,10 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 2. Original NFT received by request without dispute
+                                const originalNft = await getOriginalNft(nft)
                                 addNotification({
                                     id: notificationId+'.2',
-                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
                                     children: 
                                         <CommonNotificationBody
                                             header={
@@ -159,6 +163,12 @@ const NotificationsLoader = () => {
                                                 <Trans>We recommend protecting it using NFT Protect.</Trans>
                                             }
                                         />,
+                                    buttonCallback: () => {
+                                        const dialog = getDialog('OriginalNftReceivedDialog')
+                                        dialog.setNft(originalNft)
+                                        dialog.setPreviousOriginalOwner(nft.ownerAddress)
+                                        dialog.onOpen()
+                                    },
                                     severity: SeverityLevel.Major,
                                     dateCreated: request.updateDate
                                 })
@@ -465,6 +475,7 @@ const NotificationsLoader = () => {
                     }
                 } else {
                     // NFT has no pending request
+                    // TODO: hide if NFT appears in the wallet
                     // 0. pNFT received
                     addNotification({
                         id: notificationId+'.0',
@@ -758,10 +769,16 @@ const NotificationsLoader = () => {
                                 // Close message 5 if exists
                                 let toClose = getNotification(notificationId+'.5')
                                 toClose && deleteNotification(toClose)
+                                // Close message 24 if exists
+                                toClose = getNotification(notificationId+'.24')
+                                toClose && deleteNotification(toClose)
                             }
                             if ((dispute.period !== Period.Commit) && (dispute.period !== Period.Vote)) {
                                 // Close message 8 if exists
                                 let toClose = getNotification(notificationId+'.8')
+                                toClose && deleteNotification(toClose)
+                                // Close message 26 if exists
+                                toClose = getNotification(notificationId+'.26')
                                 toClose && deleteNotification(toClose)
                             }
                             if (dispute.period !== Period.Appeal) {
@@ -771,13 +788,20 @@ const NotificationsLoader = () => {
                                 // Close message 11 if exists
                                 toClose = getNotification(notificationId+'.11')
                                 toClose && deleteNotification(toClose)
+                                // Close message 28 if exists
+                                toClose = getNotification(notificationId+'.28')
+                                toClose && deleteNotification(toClose)
+                                // Close message 29 if exists
+                                toClose = getNotification(notificationId+'.29')
+                                toClose && deleteNotification(toClose)
                             }
                         }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
+                        const originalNft = await getOriginalNft(nft)
                         addNotification({
                             id: notificationId+'.21',
-                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                            image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
                             children:
                                 <CommonNotificationBody
                                     header={
@@ -827,6 +851,12 @@ const NotificationsLoader = () => {
                             })
                         }
                     }
+                    // Closing notifications
+                    if (request.status !== ReqStatus.Initial) {
+                        // Close message 21 if exists
+                        let toClose = getNotification(notificationId+'.21')
+                        toClose && deleteNotification(toClose)
+                    }
                 } else {
                     // NFT has no pending request
 
@@ -839,7 +869,9 @@ const NotificationsLoader = () => {
     useEffect(() => { loadNotifications() }, [account, active])
 
 
-    return <></>
+    return (<>
+        <OriginalNftReceivedDialog/>
+    </>)
 }
 
 export default NotificationsLoader
