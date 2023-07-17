@@ -23,14 +23,15 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
-import NFT from '../../classes/NFT';
-import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import NFTImage from "../nftView/NFTImage";
+import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
+import NFTImage from "../../nftView/NFTImage";
 
-const ClaimantLostDialog = () => {
+const SuedForReturnTheOriginalNFTDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()
@@ -43,14 +44,14 @@ const ClaimantLostDialog = () => {
     }
 
     useEffect(() => {
-        setDialog('ClaimantLostDialog', {...disclosure, setNft})
+        setDialog('SuedForReturnTheOriginalNFTDialog', {...disclosure, setNft})
     }, [])
 
     return (<>
         <Modal
             variant="stepModal"
             closeOnOverlayClick={false}
-            isOpen={isOpen}
+            isOpen={disclosure.isOpen}
             onClose={() => {
                 onClose()
             }}
@@ -77,35 +78,28 @@ const ClaimantLostDialog = () => {
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3">
-                                <Trans>The court{'\u0027'}s decision<br/>is now in effect</Trans>
+                                <Trans>You{'\u0027'}re being sued</Trans>
                             </Text>
                         </CardHeader>
-
                         <CardBody>
+
                             { nft && <NFTImage nft={nft} /> }
+
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                 <Popover placement='top'>
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
-                                        <Trans>User</Trans>
+                                        <Trans>The owner of the pNFT</Trans>
                                         {" "}
+                                        <chakra.span id='originalOwnerAddressHolder'>
+                                            { originalOwner && (formatAddress(originalOwner, 4)) }
+                                        </chakra.span>
                                         <PopoverTrigger>
-                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
+                                            <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
                                         </PopoverTrigger>
-                                        {/* TODO add pNFT owner address if the pNFT owner win */}
-                                        {/* 
-                                        <chakra.span id='originalOwnerAddressHolder'>
-                                            { " " + formatAddress(pNFTOwner, 4) + " " }
-                                        </chakra.span>
-                                        TODO add condition that claimant lost the court and pNFT remains at pNFT owner
-                                        <Trans>is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans> 
-                                        */}
-                                        
-                                        {/* TODO add condition original NFT owner win */}
-                                        <chakra.span id='originalOwnerAddressHolder'>
-                                            { originalOwner && (" " + formatAddress(originalOwner, 4) + " ") }
-                                        </chakra.span>
-                                        <Trans>is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
+                                        {" "}
+                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to obtain</Trans>
                                     </Text>
+                                    
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
                                         <PopoverCloseButton />
@@ -115,12 +109,34 @@ const ClaimantLostDialog = () => {
                                     </PopoverContent>
                                 </Popover>
 
-                                <Text>
+                                <Text mb={{base: "20px"}}>
                                     <Trans>Check out the details<br/> </Trans>
                                     <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
                                         <Trans>dispute N1234</Trans>
                                     </Link>
                                 </Text>
+
+                                <Text>
+                                    <Trans>You can add more evidence to your dispute using the provided link within the <chakra.span color="danger">next</chakra.span> 48 hours while the evidence collection phase is still ongoing.</Trans>
+                                </Text>
+                            </Flex>
+
+                            <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid #2D7BD6" borderRadius="16px">
+                                <Box color="#2D7BD6" mr={[2]}>
+                                    <Info fontSize='32px' />
+                                </Box>
+                                <Flex flexDirection="column">
+                                    <Text textStyle="paragraph" color="text.muted">
+                                        <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 
+                                        to resolve disputes fairly.</Trans>
+                                    </Text>
+                                    <Text>
+                                        <Link href='https://kleros.io/' isExternal rel="noreferrer" color="#2D7BD6" textStyle="paragraph" textDecoration="underline">
+                                            <Trans> To learn more</Trans>
+                                            <ArrowForwardIcon ml={{base: '2px'}} />
+                                        </Link>
+                                    </Text>
+                                </Flex>
                             </Flex>
                         </CardBody>
                     </Card>
@@ -130,4 +146,4 @@ const ClaimantLostDialog = () => {
     </>)
 }
 
-export default ClaimantLostDialog
+export default SuedForReturnTheOriginalNFTDialog

@@ -18,9 +18,9 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import { Trans, t } from '@lingui/macro';
-import NFT from '../../classes/NFT';
-import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import NFTImage from "../nftView/NFTImage";
+import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
+import NFTImage from "../../nftView/NFTImage";
 
 const ClaimantWinDialog = () => {
 

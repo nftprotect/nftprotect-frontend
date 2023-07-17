@@ -23,15 +23,15 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
-import NFT from '../../classes/NFT';
-import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import NFTImage from "../nftView/NFTImage";
+import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
+import NFTImage from "../../nftView/NFTImage";
 
-const SuedForReturnTheOriginalNFTDialog = () => {
+const SuedForBurnNFTDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()
@@ -44,7 +44,7 @@ const SuedForReturnTheOriginalNFTDialog = () => {
     }
 
     useEffect(() => {
-        setDialog('SuedForReturnTheOriginalNFTDialog', {...disclosure, setNft})
+        setDialog('SuedForBurnNFTDialog', {...disclosure, setNft})
     }, [])
 
     return (<>
@@ -88,18 +88,17 @@ const SuedForReturnTheOriginalNFTDialog = () => {
                             <Flex flexDirection="column" textStyle="paragraph" letterSpacing={{base: "0.04em"}} mb={{base: "20px"}} textAlign="center">
                                 <Popover placement='top'>
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "20px"}}>
-                                        <Trans>The owner of the pNFT</Trans>
+                                        <Trans>The owner of the original NFT</Trans>
                                         {" "}
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { originalOwner && (formatAddress(originalOwner, 4)) }
+                                            { originalOwner && (" " + formatAddress(originalOwner, 4)) }
                                         </chakra.span>
                                         <PopoverTrigger>
                                             <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
                                         </PopoverTrigger>
-                                        {" "}
-                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to obtain</Trans>
+                                        
+                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT.</Trans>
                                     </Text>
-                                    
                                     <PopoverContent w="150px">
                                         <PopoverArrow />
                                         <PopoverCloseButton />
@@ -117,7 +116,7 @@ const SuedForReturnTheOriginalNFTDialog = () => {
                                 </Text>
 
                                 <Text>
-                                    <Trans>You can add more evidence to your dispute using the provided link within the <chakra.span color="danger">next</chakra.span> 48 hours while the evidence collection phase is still ongoing.</Trans>
+                                    <Trans>You can add more evidence to your dispute using the provided link within the next 48 hours while the evidence collection phase is still ongoing.</Trans>
                                 </Text>
                             </Flex>
 
@@ -146,4 +145,4 @@ const SuedForReturnTheOriginalNFTDialog = () => {
     </>)
 }
 
-export default SuedForReturnTheOriginalNFTDialog
+export default SuedForBurnNFTDialog

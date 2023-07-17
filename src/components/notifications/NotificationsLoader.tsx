@@ -17,7 +17,8 @@ import {
     Nft as AlchemyNFT, 
 } from "alchemy-sdk";
 import NFTImage from "../nftView/NFTImage"
-import OriginalNftReceivedDialog from "./OriginalNftReceivedDialog"
+import OriginalNftReceivedDialog from "../dialogs/notifications/OriginalNftReceivedDialog"
+import OriginalNftRejectedDialog from "../dialogs/notifications/OriginalNftRejectedDialog"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 
 const CommonNotificationBody = ({
@@ -187,9 +188,9 @@ const NotificationsLoader = () => {
                         if (dispute) {
                             if (dispute.period === Period.Evidence) {
                                 if (nft.ownerAddress === claimant) {
-                                    // 3. Evidence period started
+                                    // 5. Evidence period started
                                     addNotification({
-                                        id: notificationId+'.3',
+                                        id: notificationId+'.5',
                                         image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                         children: 
                                             <CommonNotificationBody
@@ -449,9 +450,10 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
+                                const originalNft = await getOriginalNft(nft)
                                 addNotification({
                                     id: notificationId+'.3',
-                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -462,6 +464,11 @@ const NotificationsLoader = () => {
                                             }
                                         />,
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const dialog = getDialog('OriginalNftRejectedDialog')
+                                        dialog.setNft(originalNft)
+                                        dialog.onOpen()
+                                    },
                                     dateCreated: request.updateDate
                                 })
                                 // Close message 1 if exists
@@ -871,6 +878,7 @@ const NotificationsLoader = () => {
 
     return (<>
         <OriginalNftReceivedDialog/>
+        <OriginalNftRejectedDialog/>
     </>)
 }
 

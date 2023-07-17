@@ -25,12 +25,12 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../utils/helpers';
+import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
-import NFT from '../../classes/NFT';
-import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
-import NFTImage from "../nftView/NFTImage";
+import NFT from '../../../classes/NFT';
+import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
+import NFTImage from "../../nftView/NFTImage";
 
 const OriginalNftReceivedDialog = () => {
 
