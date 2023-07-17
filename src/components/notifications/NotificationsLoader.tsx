@@ -388,6 +388,11 @@ const NotificationsLoader = () => {
                                                 }
                                             />,
                                         severity: SeverityLevel.Major,
+                                        buttonCallback: () => {
+                                            const dialog = getDialog('OriginalNftUnresponsiveDialog')
+                                            dialog.setNft(nft)
+                                            dialog.onOpen()
+                                        },
                                         dateCreated: timeoutDate,
                                     })
                                     // Close message 1 if exists
@@ -450,10 +455,9 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
-                                const originalNft = await getOriginalNft(nft)
                                 addNotification({
                                     id: notificationId+'.3',
-                                    image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -466,7 +470,7 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
                                         const dialog = getDialog('OriginalNftRejectedDialog')
-                                        dialog.setNft(originalNft)
+                                        dialog.setNft(nft)
                                         dialog.onOpen()
                                     },
                                     dateCreated: request.updateDate

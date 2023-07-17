@@ -62,7 +62,7 @@ const OriginalNftRejectedDialog = () => {
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3">
-                                <Trans>THE Original NFT owner REFUSED!</Trans>
+                                <Trans>The Original NFT owner refused!</Trans>
                             </Text>
                         </CardHeader>
 
