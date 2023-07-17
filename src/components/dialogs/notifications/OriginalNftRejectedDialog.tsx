@@ -69,7 +69,7 @@ const OriginalNftRejectedDialog = () => {
                         <CardBody mb={{base: "20px"}} >
                             { nft && <NFTImage nft={nft} /> }
                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                <Trans>Don't agree? Initiate a dispute in<br/>the Kleros decentralized court.</Trans>
+                                <Trans>{"Don't agree? Initiate a dispute in<br/>the Kleros decentralized court."}</Trans>
                             </Text>
                             <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "0px"}}>
                                 <Trans>{"(Paid separately)"}</Trans>
