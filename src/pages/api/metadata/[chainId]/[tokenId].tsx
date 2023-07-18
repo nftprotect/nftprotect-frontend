@@ -80,6 +80,7 @@ const getNft = async (tokenId: string, client: ApolloClient<InMemoryCache>): Pro
 }
 
 const tokenCache:any = {}
+const protectionText = "Warning! This is a Protected NFT (pNFT). Please contact the Owner via nftprotect.app (https://nftprotect.app/) to request the Original NFT"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) => {
     const { tokenId, chainId } = req.query
@@ -114,7 +115,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
             console.log(originalMetadata)
             const additionalData = {
                 //protectionStandard: "EIPXXX",
-                protectionDescription: "This NFT is a copy of original NFT protected by NFTProtect",
+                protectionDescription: protectionText,
                 originalToken: {
                     standard: NFTPTokenStandard[parseInt(nftGraphData.assetType)].toString(),
                     address: nftGraphData.contract,
@@ -127,7 +128,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
             const additionalProperties = {
                 protectedNFTDescription: {
                     name: "Description of pNFT",
-                    value: "This NFT is a copy of original NFT protected by NFTProtect"
+                    value: protectionText
                 },
                 originalOwner: {
                     name: "Owner of original NFT",
