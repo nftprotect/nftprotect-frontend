@@ -11,7 +11,7 @@ export interface TheGraphContextInterface {
     performQuery: Function,
 }
 
-const defaultOptions: DefaultOptions = {
+export const defaultOptions: DefaultOptions = {
     watchQuery: {
         fetchPolicy: 'no-cache',
         errorPolicy: 'ignore',
