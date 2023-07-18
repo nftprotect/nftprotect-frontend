@@ -5,7 +5,7 @@ import { useNotifications } from "../../hooks/useNotifications"
 import { Heading, Text, Link } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { Trans } from "@lingui/macro"
-import { formatAddress, timestampToDate } from "../../utils/helpers"
+import { formatAddress, generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
 import { BigNumber } from '@ethersproject/bignumber'
 import NFT, { ActionRequest } from "../../classes/NFT"
@@ -199,6 +199,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 } else {
