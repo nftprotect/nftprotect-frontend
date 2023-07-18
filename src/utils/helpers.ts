@@ -1,5 +1,6 @@
 import { hexValue } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
+import { defaultChain } from './config';
 
 export function formatAddress(value: string, length: number = 4) {
     if (value.length <= length*2+2) return value
@@ -62,4 +63,8 @@ export const addTimestampToDate = (date: Date, timestamp: number) => {
     const currentTimestamp = date.getTime()
     const newTimestamp = currentTimestamp + timestamp
     return new Date(newTimestamp)
+}
+
+export const generateRequestLink = (requestId: any, chainId: number = defaultChain) => {
+    return `/request/${requestId.toString()}?chainId=${chainId}`
 }

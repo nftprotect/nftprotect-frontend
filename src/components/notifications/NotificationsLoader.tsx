@@ -5,7 +5,7 @@ import { useNotifications } from "../../hooks/useNotifications"
 import { Heading, Text, Link } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { Trans } from "@lingui/macro"
-import { formatAddress, timestampToDate } from "../../utils/helpers"
+import { formatAddress, generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
 import { BigNumber } from '@ethersproject/bignumber'
 import NFT, { ActionRequest } from "../../classes/NFT"
@@ -199,6 +199,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 } else {
@@ -388,6 +392,11 @@ const NotificationsLoader = () => {
                                                 }
                                             />,
                                         severity: SeverityLevel.Major,
+                                        buttonCallback: () => {
+                                            const dialog = getDialog('OriginalNftUnresponsiveDialog')
+                                            dialog.setNft(nft)
+                                            dialog.onOpen()
+                                        },
                                         dateCreated: timeoutDate,
                                     })
                                     // Close message 1 if exists
@@ -450,10 +459,9 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
-                                const originalNft = await getOriginalNft(nft)
                                 addNotification({
                                     id: notificationId+'.3',
-                                    image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -466,7 +474,7 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
                                         const dialog = getDialog('OriginalNftRejectedDialog')
-                                        dialog.setNft(originalNft)
+                                        dialog.setNft(nft)
                                         dialog.onOpen()
                                     },
                                     dateCreated: request.updateDate
