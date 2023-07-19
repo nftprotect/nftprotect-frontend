@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { nftProtectGraphs, supportedChains } from '../../../../utils/config'
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
 import { defaultOptions } from '../../../../context/TheGraphContextProvider'
-import { Alchemy, Network, Nft } from 'alchemy-sdk'
+import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
 import { formatAddress } from '../../../../utils/helpers'
 import { generateTokenURL } from '../../../../utils/etherscan'
 
@@ -111,8 +111,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
         const nftGraphData = await getNft(tokenId as string, graphClient)
         if (nftGraphData) {
             const alchemy = createAlchemy(currentChain.alchemyId)
-            const originalMetadata = await alchemy.nft.getNftMetadata(nftGraphData.contract, nftGraphData.tokenId)
-            console.log(originalMetadata)
+            const tokenType = nftGraphData.assetType === NFTPTokenStandard.ERC1155 ?
+                NftTokenType.ERC1155 :
+                NFTPTokenStandard.ERC721 ?
+                NftTokenType.ERC721 :
+                NftTokenType.NO_SUPPORTED_NFT_STANDARD
+            const originalMetadata = await alchemy.nft.getNftMetadata(
+                nftGraphData.contract, 
+                nftGraphData.tokenId,
+                {
+                    tokenType
+                }
+            )
             const additionalData = {
                 //protectionStandard: "EIPXXX",
                 protectionDescription: protectionText,
