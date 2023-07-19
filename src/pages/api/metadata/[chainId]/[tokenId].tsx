@@ -120,7 +120,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     standard: NFTPTokenStandard[parseInt(nftGraphData.assetType)].toString(),
                     address: nftGraphData.contract,
                     id: nftGraphData.tokenId,
-                    amount: nftGraphData.amount,
+                    amount: nftGraphData.amount.toString(),
                     uri: originalMetadata.tokenUri?.raw,
                     owner: nftGraphData.ownerOriginal.id
                 }
