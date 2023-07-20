@@ -15,27 +15,27 @@ import { t } from '@lingui/macro'
 const ConnectMetamask = ({onClose}: any) => {
 
     const { activate, deactivate, setError, active } = useWeb3React<Web3Provider>()
-    const { defaultChain } = useAppContext()
+    const { defaultChain, currentChain } = useAppContext()
     const { nextStep } = useWizard()
     const onClickConnect = async () => {
-        
         nextStep()
-        switchNetwork(defaultChain?.id).then(() => {
-            activate(injected,(error) => {
-                if (error instanceof UserRejectedRequestError) {
-                    // ignore user rejected error
-                    console.log("user refused")
-                } else if (error instanceof UnsupportedChainIdError) {
-                    onClose()
-                    const networkNames = supportedChains.map(it => {it.name}).join(', ')
-                    alert(t`Please switch to one of these networks: ${networkNames}`)
-                    deactivate()
-                } else {
-                    console.log(error)
-                    setError(error)
-                }
-            }, false)
-        })
+        if (!currentChain) {
+            await switchNetwork(defaultChain?.id)
+        }
+        activate(injected,(error) => {
+            if (error instanceof UserRejectedRequestError) {
+                // ignore user rejected error
+                console.log("user refused")
+            } else if (error instanceof UnsupportedChainIdError) {
+                onClose()
+                const networkNames = supportedChains.map(it => {it.name}).join(', ')
+                alert(t`Please switch to one of these networks: ${networkNames}`)
+                deactivate()
+            } else {
+                console.log(error)
+                setError(error)
+            }
+        }, false)
     }
 
     const onClickDisconnect = () => {

@@ -152,7 +152,7 @@ export default class NFT implements NFTInterface {
         try {
             this.ownerAddress = await this.loadedContract.ownerOf(this.tokenId)
         } catch (e: any) {
-            if (e.reason.includes('invalid token ID')) {
+            if (e.reason?.includes('invalid token ID')) {
                 // do nothing
             } else {
                 throw e

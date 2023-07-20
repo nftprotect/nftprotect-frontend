@@ -28,7 +28,7 @@ export const supportedChains = [
         alchemyId: Network.ETH_SEPOLIA,
         name: "Sepolia",
         symbol: "ETH",
-        nodeUrl: "https://eth-sepolia-public.unifra.io",
+        nodeUrl: "https://rpc.bordel.wtf/sepolia",
         explorerUrl: "https://sepolia.etherscan.io",
         nftpContractAddress: '0xB1A382a0946528cAc1Bde3f419B69809CC347613',
         userRegistryContractAddress: '0x49ba52fe9dF9e55BeF56BE7D0F19eF8b645D51F3',
@@ -93,7 +93,7 @@ export const nftProtectGraphs = [
         uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
     }, {
         chainId: 11155111,
-        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotectsepolia'
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect-sepolia'
     }
 ]
 
@@ -111,8 +111,8 @@ export const arbitratorGraphs = [
         chainId: 11155111,
         arbitrators: [
             {
-                arbitratorId: 2,
-                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/klerosboard'
+                arbitratorId: 1,
+                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/kleros-sepolia'
             }
         ]
     }
