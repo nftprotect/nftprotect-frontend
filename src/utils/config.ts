@@ -91,6 +91,9 @@ export const nftProtectGraphs = [
     {
         chainId: 5,
         uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+    }, {
+        chainId: 11155111,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotectsepolia'
     }
 ]
 
