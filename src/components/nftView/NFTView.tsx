@@ -9,7 +9,6 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import NFTCard from './NFTCard'
-import { nftpContractAddress } from '../../utils/config'
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
@@ -99,7 +98,7 @@ const NFTView = () => {
             getMintedNfts([
                 account,
                 {
-                    contractAddresses: [nftpContractAddress]
+                    contractAddresses: [currentChain.nftpContractAddress]
                 }
             ]).then(({blockHash, nfts, totalCount}) => {
                 const nftObjects = nfts
@@ -131,14 +130,14 @@ const NFTView = () => {
         // non-protected NFTs owned by account
         setMyOwnNfts(
             ownedNfts?.filter((item: NFT) => {
-                return !item.isMintedBy(nftpContractAddress)
+                return !item.isMintedBy(currentChain.nftpContractAddress)
             })
         )
 
         // all pNFTs owned by account (minted by him or another account)
         setOwnedPNfts(
             ownedNfts?.filter((item: NFT) => {
-                return item.isMintedBy(nftpContractAddress)
+                return item.isMintedBy(currentChain.nftpContractAddress)
             })
         )
     }, [ownedNfts])

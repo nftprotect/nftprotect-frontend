@@ -2,11 +2,8 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultArbitrator, defaultChain, nftpDeployBlockNumber } from '../../utils/config'
+import { defaultChain, nftpDeployBlockNumber } from '../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
-import { nftpContractAddress } from '../../utils/config'
-import NFTProtectABI from '../../abi/NFTProtectABI'
-import { Contract } from '@ethersproject/contracts'
 import { useAlchemy } from '../../hooks/useAlchemy'
 import NFT from '../../classes/NFT'
 import { useAppContext } from '../../context/AppContextProvider'
@@ -48,7 +45,7 @@ const RequestPage: NextPage = () => {
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy(currentChain.alchemyId)
-    const { getDispute } = useArbitratorGraph(currentChain.id, defaultArbitrator)
+    const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()

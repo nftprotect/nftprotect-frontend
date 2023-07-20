@@ -25,7 +25,6 @@ import { AlertCircle, Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons';
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
-import { defaultArbitrator } from '../../../utils/config';
 import { t } from '@lingui/macro';
 import CancelledStepContent from '../../steps/CancelledStepContent'
 import ErrorStepContent from '../../steps/ErrorStepContent'
@@ -40,7 +39,7 @@ interface DialogInitialData {
 const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract } = useAppContext()
+    const { nftProtectContract, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -98,7 +97,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     if (nft.pendingRequest) {
                         return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, true, '')
                     } else {
-                        return nftProtectContract.adjustOwnership(nft.tokenId, defaultArbitrator, '')
+                        return nftProtectContract.adjustOwnership(nft.tokenId, currentChain.defaultArbitrator, '')
                     }
                 }
                 performAnswer().then( finalTransactionSent(

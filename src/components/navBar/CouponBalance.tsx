@@ -1,31 +1,29 @@
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import ERC20ABI from '../../abi/ERC20ABI'
-import { couponsContractAddress } from '../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import { useState, useEffect } from 'react';
 import { formatEther } from "@ethersproject/units";
 import useSWR from 'swr'
 import { t } from '@lingui/macro';
+import { useAppContext } from '../../context/AppContextProvider';
 
 const CouponBalance = () => {
 
-    const { account, active, setError, library } = useWeb3React<Web3Provider>()
+    const { account, active, library, currentChain } = useAppContext()
     const [ symbol, setSymbol ] = useState<string>("")
-    const contract: Contract = new Contract(couponsContractAddress, ERC20ABI, library?.getSigner())
+    const contract: Contract = new Contract(currentChain.couponsContractAddress, ERC20ABI, library?.getSigner())
     
     const couponsBalanceFetcher = (account: string) => {
         return contract.balanceOf(account)
     }
     
-    const { data: balance, mutate } = useSWR([account, couponsContractAddress, 'balanceOf'], {
+    const { data: balance, mutate } = useSWR([account, currentChain, 'balanceOf'], {
         fetcher: couponsBalanceFetcher,
     })
 
     useEffect( () => {
         if(!(active && account && library)) return
     
-        library.getCode(couponsContractAddress).then((result:string)=>{
+        library.getCode(currentChain.couponsContractAddress).then((result:string)=>{
           //check whether it is a contract
           if(result === '0x') return
     

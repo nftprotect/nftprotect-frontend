@@ -1,11 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { createContext, useContext, useEffect, useState } from "react";
-import { 
-    nftpContractAddress, 
-    userRegistryContractAddress, 
+import {  
     supportedChains,
-    dynamicArbRegistryContractAddress,
-    arbRegistryContractAddress,
     defaultChain 
 } from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
@@ -47,12 +43,13 @@ export function AppContextProvider({ children }:any) {
     const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     const chainId = providedLibrary?.network?.chainId || defaultChainId
-    const nftProtectContract = useMemo(() => new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library), [library])
-    const userRegistryContract = useMemo(() => new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const arbRegistryContract = useMemo(() => new Contract(arbRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const dynamicArbRegistryContract = useMemo(() => new Contract(dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const referrerAddress = '0x0000000000000000000000000000000000000000'
     const currentChain = useMemo(() => chainId ? supportedChains.find( it => it.id === chainId ) : undefined, [chainId])
+    const nullAddress = '0x0000000000000000000000000000000000000000'
+    const nftProtectContract = useMemo(() => new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, providedLibrary?.getSigner() || library), [library])
+    const userRegistryContract = useMemo(() => new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, providedLibrary?.getSigner() || library), [library])
+    const arbRegistryContract = useMemo(() => new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
+    const dynamicArbRegistryContract = useMemo(() => new Contract(currentChain?.dynamicArbRegistryContractAddress || nullAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
+    const referrerAddress = nullAddress
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
     const [ didRegistered, setDidRegistered ] = useState<boolean>()
@@ -61,7 +58,7 @@ export function AppContextProvider({ children }:any) {
     const [ currentBlock, setCurrentBlock] = useState<number>()
 
     const setDidState = () => {
-        if (active && currentChain) {
+        if (active && currentChain && userRegistryContract) {
             userRegistryContract.isRegistered(account).then((result: boolean) => {
                 console.log('DID Registered:', result)
                 setDidRegistered(result)
@@ -72,7 +69,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (active && currentChain) {
+        if (active && currentChain && nftProtectContract) {
             nftProtectContract.feeWei(0).then((result: number) => {
                 console.log('Fee:', result)
                 setFee(result)

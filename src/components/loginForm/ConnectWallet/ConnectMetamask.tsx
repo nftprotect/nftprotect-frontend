@@ -9,6 +9,7 @@ import {Metamask} from '@web3uikit/icons'
 import { useWizard } from 'react-use-wizard';
 import { useEffect } from 'react'
 import { useAppContext } from '../../../context/AppContextProvider'
+import { supportedChains } from '../../../utils/config'
 import { t } from '@lingui/macro'
 
 const ConnectMetamask = ({onClose}: any) => {
@@ -20,14 +21,14 @@ const ConnectMetamask = ({onClose}: any) => {
         
         nextStep()
         switchNetwork(defaultChain?.id).then(() => {
-            const defaultChainName = defaultChain?.name
             activate(injected,(error) => {
                 if (error instanceof UserRejectedRequestError) {
                     // ignore user rejected error
                     console.log("user refused")
                 } else if (error instanceof UnsupportedChainIdError) {
                     onClose()
-                    alert(t`Please switch to ${defaultChainName} network!`)
+                    const networkNames = supportedChains.map(it => {it.name}).join(', ')
+                    alert(t`Please switch to one of these networks: ${networkNames}`)
                     deactivate()
                 } else {
                     console.log(error)
