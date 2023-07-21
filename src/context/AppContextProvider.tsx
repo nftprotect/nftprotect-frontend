@@ -69,8 +69,6 @@ export function AppContextProvider({ children }:any) {
     //const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     const [ chainId, setChainId ] = useState<number>()
-    //const chainId = library?.network?.chainId || defaultChainId
-    //const currentChain = chainId ? supportedChains.find( it => it.id === chainId ) : undefined
     const referrerAddress = nullAddress
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
@@ -80,7 +78,7 @@ export function AppContextProvider({ children }:any) {
     const [ currentBlock, setCurrentBlock] = useState<number>()
 
     const setDidState = () => {
-        if (active && account) {
+        if (active && account && appState.currentChain) {
             console.log('IS REGISTERED', account)
             const { userRegistryContract } = appState
             userRegistryContract.isRegistered(account).then((result: boolean) => {
@@ -93,7 +91,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (active) {
+        if (active && appState.currentChain) {
             const { nftProtectContract } = appState
             nftProtectContract.feeWei(0).then((result: number) => {
                 console.log('Fee:', result)
