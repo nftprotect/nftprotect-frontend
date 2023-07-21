@@ -19,16 +19,13 @@ const ConnectMetamask = ({onClose}: any) => {
     const { nextStep } = useWizard()
     const onClickConnect = async () => {
         nextStep()
-        if (!currentChain) {
-            await switchNetwork(defaultChain?.id)
-        }
         activate(injected,(error) => {
             if (error instanceof UserRejectedRequestError) {
                 // ignore user rejected error
                 console.log("user refused")
             } else if (error instanceof UnsupportedChainIdError) {
                 onClose()
-                const networkNames = supportedChains.map(it => {it.name}).join(', ')
+                const networkNames = supportedChains.map(it => it.name).join(', ')
                 alert(t`Please switch to one of these networks: ${networkNames}`)
                 deactivate()
             } else {

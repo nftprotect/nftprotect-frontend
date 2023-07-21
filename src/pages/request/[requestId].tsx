@@ -44,7 +44,7 @@ const RequestPage: NextPage = () => {
     const [ disputeData, setDisputeData ] = useState<DisputeGraphData>()
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
-    const { getNftMetadata } = useAlchemy(currentChain.alchemyId)
+    const { getNftMetadata } = useAlchemy()
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()

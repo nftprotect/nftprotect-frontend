@@ -158,7 +158,7 @@ const NFTView = () => {
         console.log('GIVEN pNFTS', givenPNfts)
     },[myOwnNfts, ownedPNfts, givenPNfts])
 
-    useEffect(subscribeNftTransfers, [account, active])
+    useEffect(subscribeNftTransfers, [account, currentChain])
 
     return (
         <>
