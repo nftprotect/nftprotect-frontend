@@ -7,8 +7,9 @@ export interface NotificationContextInterface {
     addNotification: Function,
     deleteNotification: Function,
     listNotifications: Function,
+    clearNotifications: Function,
     notificationsCount: number,
-    updateCounter: number
+    updateCounter: number,
 }
 
 export type Notification = {
@@ -76,7 +77,7 @@ export function NotificationContextProvider({ children }:any) {
             notifications.current.push(newData)
             newData.onOpen && newData.onOpen()
         }
-        setUpdateCounter(updateCounter+1)
+        setUpdateCounter(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
     }
 
     const deleteNotification = (toDelete: Notification|string) => {
@@ -88,7 +89,7 @@ export function NotificationContextProvider({ children }:any) {
             -1
         if (idx > -1) {
             notifications.current.splice(idx, 1)
-            setUpdateCounter(updateCounter+1)
+            setUpdateCounter(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
             notification?.onClose && notification.onClose()
         } else {
             console.error('No such notification:', toDelete)
@@ -109,6 +110,11 @@ export function NotificationContextProvider({ children }:any) {
         return notifications.current.sort(compareFunction as any)
     }
 
+    const clearNotifications = () => {
+        notifications.current = []
+        setUpdateCounter(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
+    }
+
     return (
         <NotificationContext.Provider value={{
             getNotification,
@@ -117,7 +123,8 @@ export function NotificationContextProvider({ children }:any) {
             deleteNotification,
             listNotifications,
             notificationsCount,
-            updateCounter
+            updateCounter,
+            clearNotifications
         }}>
             {children}
         </NotificationContext.Provider>

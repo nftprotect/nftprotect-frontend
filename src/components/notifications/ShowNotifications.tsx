@@ -16,7 +16,7 @@ import {
     Image,
     Button
 } from "@chakra-ui/react"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNotifications } from "../../hooks/useNotifications"
 import {Bell} from '@web3uikit/icons'
 import { Trans } from '@lingui/macro'
@@ -39,10 +39,14 @@ const severityMapping: {
 const ShowNotifications = () => {
     const {
         listNotifications,
-        updateCounter
+        updateCounter,
+        notificationsCount
     } = useNotifications()
-    const notifications = useMemo(() => listNotifications(), [updateCounter])
-    const notificationsCount = notifications.length
+    const [notifications, setNotifications] = useState<Notification[]>()
+    useEffect(() => {
+        setNotifications(listNotifications())
+    }, [updateCounter])
+    //const notificationsCount = notifications?.length || 0
 
     return (
         <Box 
@@ -113,7 +117,7 @@ const ShowNotifications = () => {
                             maxHeight={'13em'}
                             overflowY={'scroll'}
                         >
-                            { notifications.map((notification:any) => {
+                            { notifications && notifications.map((notification:any) => {
                                 return <NotificationAlert key={notification.id} notification={notification}/>
                             }) }
                         </Box>

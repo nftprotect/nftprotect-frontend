@@ -1,4 +1,4 @@
-import { defaultArbitrator, dialogsTimeout } from '../../../utils/config'
+import { dialogsTimeout } from '../../../utils/config'
 import { useEffect, useState } from 'react';
 import {
     chakra,
@@ -54,7 +54,7 @@ interface DialogInitialData {
 const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
+    const {account, didRegistered, nftProtectContract, referrerAddress, fee, currentChain} = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -159,7 +159,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 nftProtectContract.askOwnershipRestoreArbitrate(
                     nft.tokenId,
                     account, // TODO: Must be replaced by new address
-                    defaultArbitrator,
+                    currentChain.defaultArbitrator,
                     lostReason && evidenceTypes[lostReason],
                     evidenceJSONUrl,
                     {

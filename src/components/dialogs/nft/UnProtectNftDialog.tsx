@@ -25,7 +25,6 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
-import { defaultArbitrator } from '../../../utils/config';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
@@ -37,7 +36,7 @@ interface DialogInitialData {
 const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account } = useAppContext()
+    const { nftProtectContract, account, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -95,7 +94,7 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
             try {
                 setNextStep(StepMapping.confirmTransaction);
                 onOpen()
-                nftProtectContract.burn(nft.tokenId, account, defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
+                nftProtectContract.burn(nft.tokenId, account, currentChain.defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
                     .then( finalTransactionSent(nftProtectContract) )
                     .catch(
                         handleContractError({

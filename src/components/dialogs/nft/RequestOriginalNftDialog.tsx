@@ -36,7 +36,6 @@ import {AlertCircle, Info} from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
-import { defaultArbitrator } from '../../../utils/config';
 import ErrorStepContent from '../../steps/ErrorStepContent'
 import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import NFT from '../../../classes/NFT';
@@ -50,7 +49,7 @@ interface DialogInitialData {
 const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { account, nftProtectContract, referrerAddress } = useAppContext()
+    const { account, nftProtectContract, referrerAddress, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { setDialog } = useCallableDialogContext()
@@ -108,7 +107,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const startButtonOnClick = () => {
         try {
             setNextStep(StepMapping.confirmTransaction)
-            nft && nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, defaultArbitrator) // account used temporary: will be changed to a new wallet address
+            nft && nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, currentChain.defaultArbitrator) // account used temporary: will be changed to a new wallet address
                 .then( finalTransactionSent(nftProtectContract) )
                 .catch( 
                     handleContractError({

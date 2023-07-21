@@ -7,6 +7,7 @@ import { formatAddress } from '../../../utils/helpers'
 import { Button, Box } from '@chakra-ui/react'
 import { Wallet } from '@web3uikit/icons'
 import { useAppContext } from '../../../context/AppContextProvider'
+import { supportedChains } from '../../../utils/config'
 import { t } from '@lingui/macro'
 
 const ConnectWalletConnect = ({onClose}: any) => {
@@ -22,7 +23,8 @@ const ConnectWalletConnect = ({onClose}: any) => {
                 console.log("user refused")
             } else if (error instanceof UnsupportedChainIdError) {
                 onClose()
-                alert(t`Please switch to ${defaultChainName} network!`)
+                const networkNames = supportedChains.map(it => it.name).join(', ')
+                alert(t`Please switch to one of these networks: ${networkNames}`)
                 deactivate()
             } else {
                 setError(error)

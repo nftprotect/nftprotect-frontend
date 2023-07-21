@@ -11,7 +11,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import NFT, { ActionRequest } from "../../classes/NFT"
 import { createDisputeLink } from "../../utils/kleros"
 import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
-import { defaultArbitrator } from "../../utils/config"
 import { SeverityLevel } from "../../context/NotificationContextProvider"
 import { 
     Nft as AlchemyNFT, 
@@ -47,9 +46,9 @@ const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
-    const { getDispute } = useArbitratorGraph(currentChain.chainId, defaultArbitrator)
-    const { addNotification, getNotification, deleteNotification } = useNotifications()
-    const { getNftMetadata } = useAlchemy(currentChain?.alchemyId)
+    const { getDispute } = useArbitratorGraph(currentChain.chainId, currentChain.defaultArbitrator)
+    const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
+    const { getNftMetadata } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
 
@@ -98,6 +97,7 @@ const NotificationsLoader = () => {
     }
 
     const loadNotifications = async () => {
+        clearNotifications()
         if (account) {
             // All pNFTs received by account
             const receivedNfts = await listTokensReceived(account)
@@ -881,7 +881,7 @@ const NotificationsLoader = () => {
         }
     }
 
-    useEffect(() => { loadNotifications() }, [account, active])
+    useEffect(() => { loadNotifications() }, [account, currentChain])
 
 
     return (<>

@@ -1,11 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { createContext, useContext, useEffect, useState } from "react";
-import { 
-    nftpContractAddress, 
-    userRegistryContractAddress, 
+import {  
     supportedChains,
-    dynamicArbRegistryContractAddress,
-    arbRegistryContractAddress,
     defaultChain 
 } from "../utils/config";
 import NFTProtectABI from "../abi/NFTProtectABI";
@@ -17,6 +13,7 @@ import { defaultChain as defaultChainId } from "../utils/config";
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
+import { switchNetwork } from "../utils/helpers";
 
 export interface AppContextInterface {
     active: boolean,
@@ -35,7 +32,20 @@ export interface AppContextInterface {
     setChainId: Function
 }
 
+interface AppState {
+    active: boolean,
+    account: string | null | undefined,
+    currentChain: any | undefined,
+    nftProtectContract: Contract,
+    userRegistryContract: Contract,
+    arbRegistryContract: Contract,
+    dynamicArbRegistryContract: Contract,
+    library: JsonRpcProvider
+}
+
 export const AppContext = createContext<AppContextInterface|null>(null);
+
+const nullAddress = '0x0000000000000000000000000000000000000000'
 
 export function AppContextProvider({ children }:any) {
     const { 
@@ -44,15 +54,22 @@ export function AppContextProvider({ children }:any) {
         // If no provider (library) provided, we will set JsonRpcProvider
         library: providedLibrary
     } = useWeb3React()
-    const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
+
+    const [appState, setAppState] = useState<AppState>({
+        active: false,
+        account: undefined,
+        currentChain: undefined,
+        library: providedLibrary, // this and next props temporarily not null
+        nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary?.getSigner()),
+        userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary?.getSigner()),
+        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary?.getSigner()),
+        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner())
+    })
+
+    //const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
-    const chainId = providedLibrary?.network?.chainId || defaultChainId
-    const nftProtectContract = useMemo(() => new Contract(nftpContractAddress, NFTProtectABI, providedLibrary?.getSigner() || library), [library])
-    const userRegistryContract = useMemo(() => new Contract(userRegistryContractAddress, UserRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const arbRegistryContract = useMemo(() => new Contract(arbRegistryContractAddress, ArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const dynamicArbRegistryContract = useMemo(() => new Contract(dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner() || library), [library])
-    const referrerAddress = '0x0000000000000000000000000000000000000000'
-    const currentChain = useMemo(() => chainId ? supportedChains.find( it => it.id === chainId ) : undefined, [chainId])
+    const [ chainId, setChainId ] = useState<number>()
+    const referrerAddress = nullAddress
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
     const [ didRegistered, setDidRegistered ] = useState<boolean>()
@@ -61,7 +78,9 @@ export function AppContextProvider({ children }:any) {
     const [ currentBlock, setCurrentBlock] = useState<number>()
 
     const setDidState = () => {
-        if (active && currentChain) {
+        if (active && account && appState.currentChain) {
+            console.log('IS REGISTERED', account)
+            const { userRegistryContract } = appState
             userRegistryContract.isRegistered(account).then((result: boolean) => {
                 console.log('DID Registered:', result)
                 setDidRegistered(result)
@@ -72,7 +91,8 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (active && currentChain) {
+        if (active && appState.currentChain) {
+            const { nftProtectContract } = appState
             nftProtectContract.feeWei(0).then((result: number) => {
                 console.log('Fee:', result)
                 setFee(result)
@@ -83,6 +103,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const subscribeBlockUpdates = () => {
+        const {library} = appState
         if (library) {
             library.getBlockNumber().then(blockNumber => setCurrentBlock(blockNumber))
             library.on('block', (blockNumber: number) => {
@@ -94,22 +115,10 @@ export function AppContextProvider({ children }:any) {
             }
         }
     }
-
-    const setChainId = (chainId: number) => {
-        if (!providedLibrary) {
-            const chain = supportedChains.find( it => it.id === chainId )
-            if (chain) {
-                setLibrary(new JsonRpcProvider(chain.nodeUrl, chainId))
-            } else {
-                console.error('Chain not supported:', chainId)
-            }
-        } else {
-            console.error('You can set chainId only when fallback provider is used')
-        }
-    }
     
     // Loads and sets current base token price in USD
     const updateBaseTokenPrice = () => {
+        const { currentChain } = appState 
         if (currentChain) {
             getTokenPrice(currentChain.symbol).then((result) => {
                 setBaseTokenPrice(result)
@@ -117,29 +126,63 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    useEffect(setDidState, [active, account, chainId])
-    useEffect(subscribeBlockUpdates, [active, account, chainId])
-    useEffect(setCurrentFee, [active, chainId])
-    useEffect(() => {
-        if (providedLibrary) {
-            (providedLibrary !== library) && setLibrary(providedLibrary)
-        } else {
-            setChainId(chainId)
-        }
-    }, [providedLibrary])
+    useEffect(setDidState, [account, providedLibrary])
+    useEffect(subscribeBlockUpdates, [account, providedLibrary])
+    useEffect(setCurrentFee, [providedLibrary])
     
-   useEffect(updateBaseTokenPrice, [chainId])
+    useEffect(updateBaseTokenPrice, [providedLibrary])
+    useEffect(() => {
+        const stateSetter  = async () => {
+            let library: JsonRpcProvider|undefined = undefined
+            let currentChain: any
+            if (chainId) {
+                if (!providedLibrary) {
+                    currentChain = supportedChains.find( it => it.id === chainId )
+                    if (currentChain) {
+                        library = new JsonRpcProvider(currentChain.nodeUrl, chainId)
+                    } else {
+                        console.error('Chain not supported:', chainId)
+                    }
+                } else {
+                    console.error('You can set chainId only when fallback provider is used')
+                }
+            }
+            if (!library) {
+                library = providedLibrary as JsonRpcProvider
+                const network = await library?.getNetwork()
+                if (network) {
+                    currentChain = supportedChains.find( it => it.id === network?.chainId )
+                    if (!currentChain) {
+                        // It doesn't reach this point actually because of exception in connector (e.g. ConnectMetamask)
+                        switchNetwork(defaultChainId)
+                        console.error('Chain not supported:', network?.chainId)
+                        return
+                    }
+                } else {
+                    console.error("Provider has no network", library)
+                    return
+                }
+                
+            }
+            
+            setAppState({
+                active,
+                account,
+                currentChain,
+                library, // this and next props temporarily not null
+                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, library.getSigner()),
+                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, library.getSigner()),
+                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, library.getSigner()),
+                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, library.getSigner())
+            })
+        }
+        stateSetter()
+    }, [providedLibrary, account, active, chainId])
 
     return (
         <AppContext.Provider value={{
-            active,
-            account,
-            library: providedLibrary || library,
-            currentChain,
+            ...appState,
             defaultChain,
-            nftProtectContract,
-            arbRegistryContract,
-            dynamicArbRegistryContract,
             referrerAddress,
             didRegistered,
             currentBlock,

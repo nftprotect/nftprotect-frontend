@@ -16,8 +16,27 @@ export const supportedChains = [
         name: "Goerli",
         symbol: "ETH",
         nodeUrl: "https://rpc.ankr.com/eth_goerli",
-        explorerUrl: "https://goerli.etherscan.io"
-    }, 
+        explorerUrl: "https://goerli.etherscan.io",
+        nftpContractAddress: '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F',
+        userRegistryContractAddress: '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC',
+        arbRegistryContractAddress: '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04',
+        dynamicArbRegistryContractAddress: '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d',
+        couponsContractAddress: '0x3D9D532351C473C476b1077D1770f373B5f1AAc4',
+        defaultArbitrator: 2
+    }, {
+        id: 11155111,
+        alchemyId: Network.ETH_SEPOLIA,
+        name: "Sepolia",
+        symbol: "ETH",
+        nodeUrl: "https://rpc.sepolia.dev",
+        explorerUrl: "https://sepolia.etherscan.io",
+        nftpContractAddress: '0xB1A382a0946528cAc1Bde3f419B69809CC347613',
+        userRegistryContractAddress: '0x49ba52fe9dF9e55BeF56BE7D0F19eF8b645D51F3',
+        arbRegistryContractAddress: '0x0cEC9a8A65A5d9D0e39fa9B26e5F9dE3FDC4D7fb',
+        dynamicArbRegistryContractAddress: '0x0000000000000000000000000000000000000000',
+        couponsContractAddress: '0x8c743B717e960fa00779b7b148D63a59009E9c9d',
+        defaultArbitrator: 1
+    },
     // {
     //     id: 137,
     //     alchemyId: Network.MATIC_MAINNET,
@@ -39,11 +58,6 @@ export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
 export const maxBlocksPerRequest = 3000
 
 export const libraryPollingInterval = 12000
-export const nftpContractAddress = '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F'
-export const userRegistryContractAddress = '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC'
-export const arbRegistryContractAddress = '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04'
-export const dynamicArbRegistryContractAddress = '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d'
-export const couponsContractAddress = '0x3D9D532351C473C476b1077D1770f373B5f1AAc4'
 export const nftpDeployBlockNumber = 9073902
 
 export const dialogsTimeout = 5000
@@ -60,7 +74,6 @@ export enum Arbitrators {
     Dummy,
     Kleros
 }
-export const defaultArbitrator = 2
 
 // Kleros
 export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe'
@@ -78,6 +91,9 @@ export const nftProtectGraphs = [
     {
         chainId: 5,
         uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+    }, {
+        chainId: 11155111,
+        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect-sepolia'
     }
 ]
 
@@ -88,6 +104,15 @@ export const arbitratorGraphs = [
             {
                 arbitratorId: 2,
                 uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/klerosboard'
+            }
+        ]
+    },
+    {
+        chainId: 11155111,
+        arbitrators: [
+            {
+                arbitratorId: 1,
+                uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/kleros-sepolia'
             }
         ]
     }
