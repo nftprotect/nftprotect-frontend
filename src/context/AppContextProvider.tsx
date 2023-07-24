@@ -126,11 +126,10 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    useEffect(setDidState, [account, providedLibrary])
-    useEffect(subscribeBlockUpdates, [account, providedLibrary])
-    useEffect(setCurrentFee, [providedLibrary])
-    
-    useEffect(updateBaseTokenPrice, [providedLibrary])
+    useEffect(setDidState, [appState.account, appState.library])
+    useEffect(subscribeBlockUpdates, [appState.account, appState.library])
+    useEffect(setCurrentFee, [appState.library])
+    useEffect(updateBaseTokenPrice, [appState.library])
     useEffect(() => {
         const stateSetter  = async () => {
             let library: JsonRpcProvider|undefined = undefined
@@ -154,7 +153,7 @@ export function AppContextProvider({ children }:any) {
                     currentChain = supportedChains.find( it => it.id === network?.chainId )
                     if (!currentChain) {
                         // It doesn't reach this point actually because of exception in connector (e.g. ConnectMetamask)
-                        switchNetwork(defaultChainId)
+                        await switchNetwork(defaultChainId)
                         console.error('Chain not supported:', network?.chainId)
                         return
                     }
@@ -164,6 +163,7 @@ export function AppContextProvider({ children }:any) {
                 }
                 
             }
+            console.log('SETAPPSTATE', active,account, currentChain, chainId)
             
             setAppState({
                 active,
