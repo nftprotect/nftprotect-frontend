@@ -65,7 +65,7 @@ export const useNftProtectGraph = () => {
     const { performQuery } = useTheGraph()
     const { currentChain } = useAppContext()
     const { uri: graphURI } = useMemo(() => { 
-        return nftProtectGraphs.find( it => it.chainId === currentChain.id ) || { uri: undefined }
+        return nftProtectGraphs.find( it => it.chainId === currentChain?.id ) || { uri: undefined }
     }, [currentChain])
 
     const getSystem = async () => {

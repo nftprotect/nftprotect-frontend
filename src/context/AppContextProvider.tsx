@@ -103,8 +103,8 @@ export function AppContextProvider({ children }:any) {
     }
 
     const subscribeBlockUpdates = () => {
-        const {library} = appState
-        if (library) {
+        const {library, currentChain} = appState
+        if (library && currentChain) {
             library.getBlockNumber().then(blockNumber => setCurrentBlock(blockNumber))
             library.on('block', (blockNumber: number) => {
                 setCurrentBlock(blockNumber)
@@ -126,10 +126,10 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    useEffect(setDidState, [appState.account, appState.library])
-    useEffect(subscribeBlockUpdates, [appState.account, appState.library])
-    useEffect(setCurrentFee, [appState.library])
-    useEffect(updateBaseTokenPrice, [appState.library])
+    useEffect(setDidState, [appState.account, appState.library, appState.currentChain])
+    useEffect(subscribeBlockUpdates, [appState.account, appState.library, appState.currentChain])
+    useEffect(setCurrentFee, [appState.library, appState.currentChain])
+    useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
     useEffect(() => {
         const stateSetter  = async () => {
             let library: JsonRpcProvider|undefined = undefined
@@ -170,10 +170,10 @@ export function AppContextProvider({ children }:any) {
                 account,
                 currentChain,
                 library, // this and next props temporarily not null
-                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, library.getSigner()),
-                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, library.getSigner()),
-                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, library.getSigner()),
-                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, library.getSigner())
+                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, library),
+                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, library),
+                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, library),
+                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, library)
             })
         }
         stateSetter()
