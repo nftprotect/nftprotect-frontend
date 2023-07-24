@@ -163,17 +163,17 @@ export function AppContextProvider({ children }:any) {
                 }
                 
             }
-            console.log('SETAPPSTATE', active,account, currentChain, chainId)
-            
+            // I don't know why, but for web3provider we have to pass signer
+            const signer = chainId ? library : library.getSigner() 
             setAppState({
                 active,
                 account,
                 currentChain,
                 library, // this and next props temporarily not null
-                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, library),
-                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, library),
-                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, library),
-                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, library)
+                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer),
+                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer),
+                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer),
+                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer)
             })
         }
         stateSetter()
