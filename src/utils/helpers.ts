@@ -66,5 +66,5 @@ export const addTimestampToDate = (date: Date, timestamp: number) => {
 }
 
 export const generateRequestLink = (requestId: any, chainId: number = defaultChain) => {
-    return `/request/${requestId.toString()}?chainId=${chainId}`
+    return `/request/${chainId}/${requestId.toString()}`
 }
