@@ -103,8 +103,8 @@ export function AppContextProvider({ children }:any) {
     }
 
     const subscribeBlockUpdates = () => {
-        const {library} = appState
-        if (library) {
+        const {library, currentChain} = appState
+        if (library && currentChain) {
             library.getBlockNumber().then(blockNumber => setCurrentBlock(blockNumber))
             library.on('block', (blockNumber: number) => {
                 setCurrentBlock(blockNumber)
@@ -126,11 +126,10 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    useEffect(setDidState, [account, providedLibrary])
-    useEffect(subscribeBlockUpdates, [account, providedLibrary])
-    useEffect(setCurrentFee, [providedLibrary])
-    
-    useEffect(updateBaseTokenPrice, [providedLibrary])
+    useEffect(setDidState, [appState.account, appState.library, appState.currentChain])
+    useEffect(subscribeBlockUpdates, [appState.account, appState.library, appState.currentChain])
+    useEffect(setCurrentFee, [appState.library, appState.currentChain])
+    useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
     useEffect(() => {
         const stateSetter  = async () => {
             let library: JsonRpcProvider|undefined = undefined
@@ -154,7 +153,7 @@ export function AppContextProvider({ children }:any) {
                     currentChain = supportedChains.find( it => it.id === network?.chainId )
                     if (!currentChain) {
                         // It doesn't reach this point actually because of exception in connector (e.g. ConnectMetamask)
-                        switchNetwork(defaultChainId)
+                        await switchNetwork(defaultChainId)
                         console.error('Chain not supported:', network?.chainId)
                         return
                     }
@@ -164,16 +163,17 @@ export function AppContextProvider({ children }:any) {
                 }
                 
             }
-            
+            // I don't know why, but for web3provider we have to pass signer
+            const signer = chainId ? library : library.getSigner() 
             setAppState({
                 active,
                 account,
                 currentChain,
                 library, // this and next props temporarily not null
-                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, library.getSigner()),
-                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, library.getSigner()),
-                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, library.getSigner()),
-                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, library.getSigner())
+                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer),
+                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer),
+                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer),
+                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer)
             })
         }
         stateSetter()

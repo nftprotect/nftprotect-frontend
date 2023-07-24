@@ -32,7 +32,7 @@ function initTranslation(i18n: I18n): void {
 initTranslation(i18n);
 
 function getLibrary(provider: any): Web3Provider {
-    const library = new Web3Provider(provider)
+    const library = new Web3Provider(provider, 'any')
     library.pollingInterval = libraryPollingInterval
     return library
 }

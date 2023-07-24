@@ -1,23 +1,23 @@
 import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
-import { loadTranslation } from '../../utils/lingui'
+import { loadTranslation } from '../../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultChain, nftpDeployBlockNumber } from '../../utils/config'
+import { defaultChain, nftpDeployBlockNumber, supportedChains } from '../../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAlchemy } from '../../hooks/useAlchemy'
-import NFT from '../../classes/NFT'
-import { useAppContext } from '../../context/AppContextProvider'
-import KlerosCaseContent, { EvidenceUpload } from '../../components/dialogs/klerosCase/step/KlerosCaseContent'
-import { metaEvidenceTypes } from '../../utils/metaEvidence'
-import { NFTEvents } from '../../classes/NFT'
+import { useAlchemy } from '../../../hooks/useAlchemy'
+import NFT from '../../../classes/NFT'
+import { useAppContext } from '../../../context/AppContextProvider'
+import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/klerosCase/step/KlerosCaseContent'
+import { metaEvidenceTypes } from '../../../utils/metaEvidence'
+import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
-import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../hooks/useNftProtectGraph'
+import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../../hooks/useNftProtectGraph'
 import { Container } from '@chakra-ui/react'
-import { ActionRequest } from '../../classes/NFT'
-import { useArbitrableProxy, DisputePeriodData } from '../../hooks/useArbitrableProxy'
-import { centralizeIpfsUrl } from '../../utils/ipfs'
-import { timestampToDate } from '../../utils/helpers'
-import { DisputeGraphData, useArbitratorGraph } from '../../hooks/useArbitratorGraph'
+import { ActionRequest } from '../../../classes/NFT'
+import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
+import { centralizeIpfsUrl } from '../../../utils/ipfs'
+import { timestampToDate } from '../../../utils/helpers'
+import { DisputeGraphData, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -33,6 +33,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
     }
 }
 
+const defaultChainArbitrator = supportedChains.find(it => it.id === defaultChain)?.defaultArbitrator
+
 const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, library, currentChain, nftProtectContract } = context
@@ -45,7 +47,7 @@ const RequestPage: NextPage = () => {
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy()
-    const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
+    const { getDispute } = useArbitratorGraph(currentChain?.id || defaultChain, currentChain?.defaultArbitrator || defaultChainArbitrator)
     //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
@@ -110,17 +112,25 @@ const RequestPage: NextPage = () => {
                 chainId = parseInt(query.chainId?.toString())
             } catch (ex) {
                 console.error('Incorrect chainId', ex)
-                setError(t`Incorrect requestId`)
+                setError(t`Incorrect chainId`)
             }
         } else {
             chainId = defaultChain
         }
         if (chainId > -1) {
-            context.setChainId(chainId)
+            const currentChain = supportedChains.find(it => it.id === chainId)
+            if (currentChain) {
+                context.setChainId(chainId)
+            } else {
+                console.error('Unsupported chain', chainId)
+                setError(t`Unsupported chain`)
+            }
+            
         } else {
             console.error('Unsupported chain', chainId)
-            setError(t`Unsupported chain`)
+            setError(t`Unsupported chain`,)
         }
+        console.log('INITIAL', chainId, requestId)
     }, [query])
 
     const loadNft = async (tokenId: BigNumber) => {
@@ -175,7 +185,7 @@ const RequestPage: NextPage = () => {
                 currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
             }
         }
-    }, [requestId, library])
+    }, [requestId, library, currentChain])
 
     // Load original NFT data
     useEffect(() => {
@@ -205,9 +215,11 @@ const RequestPage: NextPage = () => {
 
     // Load evidences and period
     useEffect(() => {
-        loadEvidences()
-        loadPeriod()
-    }, [requestData])
+        if (currentChain) {
+            loadEvidences()
+            loadPeriod()
+        }
+    }, [requestData, currentChain])
 
     useEffect(() => {
         if (requestData) {
