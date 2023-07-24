@@ -27,6 +27,7 @@ import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitrato
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 import { loadTranslation } from '../utils/lingui'
 import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
+import { defaultChain } from '../utils/config'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -47,7 +48,7 @@ const ArbitratorPage: NextPage = () => {
     const [ disputeId, setDisputeId ] = useState<BigNumber>()
     const { setBaseUrl } = useIPFSContext()
     const { getDialog } = useCallableDialogContext()
-    const { loadDyArbitrators } = useDyArbitratorGraph(currentChain.id)
+    const { loadDyArbitrators } = useDyArbitratorGraph(currentChain?.id || defaultChain)
     const [ arbitratorsData, setArbitratorsData ] = useState<{
         arbitrators: ArbitratorData[]
         requests: ArbitratorRequest[]
