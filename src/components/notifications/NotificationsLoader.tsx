@@ -520,25 +520,36 @@ const NotificationsLoader = () => {
                     }
                 } else {
                     // NFT has no pending request
-                    // TODO: hide if NFT appears in the wallet
-                    // 0. pNFT received
-                    addNotification({
-                        id: notificationId+'.0',
-                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
-                        children:
-                            <CommonNotificationBody
-                                header={
-                                    <Trans>You have received a pNFT! </Trans>
-                                }
-                                message={
-                                    <Trans>Would you like to request the original NFT?</Trans>
-                                }
-                            />,
-                        severity: SeverityLevel.Major,
-                        dateCreated: new Date() // TODO: search for transaction
-                    })
+                    if (!nft.burned) {
+                        // 0. pNFT received
+                        addNotification({
+                            id: notificationId+'.0',
+                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                            children:
+                                <CommonNotificationBody
+                                    header={
+                                        <Trans>You have received a pNFT! </Trans>
+                                    }
+                                    message={
+                                        <Trans>Would you like to request the original NFT?</Trans>
+                                    }
+                                />,
+                            severity: SeverityLevel.Major,
+                            buttonCallback: () => {
+                                const dialog = getDialog('RequestOriginalNftDialog')
+                                dialog.setNft(nft)
+                                dialog.onOpen()
+                            },
+                            dateCreated: new Date() // TODO: search for transaction
+                        })
+                    } else {
+                        // If received pNFT is burned and there was no request,
+                        // it means there was a transfer of original
+                        // Close message 0 if exists
+                        let toClose = getNotification(notificationId+'.0')
+                        toClose && deleteNotification(toClose)
+                    }
                 }
-
             })
             // So these notifications are for the ORIGINAL NFT owner
             transferedNfts.forEach(async (nft) => {
