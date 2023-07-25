@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-07-24 14:08+0700\n"
+"POT-Creation-Date: 2023-07-25 13:24+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Arbitrator deleted successfully!"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:109
+#: src/pages/arbitrator.tsx:110
 msgid "Arbitrator management"
 msgstr ""
 
@@ -127,6 +127,10 @@ msgstr ""
 
 #: src/components/dialogs/arbitrator/DeleteArbitratorDialog.tsx:185
 msgid "Are you sure to delete arbitrator?"
+msgstr ""
+
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:174
+msgid "Are you sure want to transfer original NFT to"
 msgstr ""
 
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:148
@@ -164,8 +168,8 @@ msgid "Chat logs or emails: If the loss of pNFT resulted from a phishing attack 
 msgstr ""
 
 #: src/components/dialogs/notifications/ClaimantLostDialog.tsx:119
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:112
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:113
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:115
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:116
 msgid "Check out the details<0/>"
 msgstr ""
 
@@ -189,7 +193,7 @@ msgstr ""
 #: src/components/dialogs/nft/LostPNftDialog.tsx:597
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:340
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:220
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:161
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:251
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:187
 msgid "Confirm the transaction in the wallet"
 msgstr ""
@@ -202,10 +206,10 @@ msgstr ""
 msgid "Congrats!"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:283
-#: src/components/notifications/NotificationsLoader.tsx:338
-#: src/components/notifications/NotificationsLoader.tsx:686
-#: src/components/notifications/NotificationsLoader.tsx:741
+#: src/components/notifications/NotificationsLoader.tsx:301
+#: src/components/notifications/NotificationsLoader.tsx:356
+#: src/components/notifications/NotificationsLoader.tsx:744
+#: src/components/notifications/NotificationsLoader.tsx:807
 msgid "Congratulations! You have won the dispute #{0}"
 msgstr ""
 
@@ -221,7 +225,7 @@ msgstr ""
 msgid "Connect your wallet<0/>& get protected"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:135
+#: src/pages/arbitrator.tsx:136
 msgid "Connect your wallet<0/>& register"
 msgstr ""
 
@@ -248,10 +252,11 @@ msgstr ""
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:118
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:157
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:176
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:186
 #: src/components/dialogs/notifications/ClaimantLostDialog.tsx:113
 #: src/components/dialogs/notifications/OriginalNftReceivedDialog.tsx:104
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:106
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:107
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:109
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:110
 msgid "Copied!"
 msgstr ""
 
@@ -317,7 +322,7 @@ msgstr ""
 msgid "Do not transfer original"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:826
+#: src/components/notifications/NotificationsLoader.tsx:900
 msgid "Do you want to transfer the original NFT to them?"
 msgstr ""
 
@@ -378,7 +383,7 @@ msgstr ""
 #: src/components/dialogs/nft/LostPNftDialog.tsx:653
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:415
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:293
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:212
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:302
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:253
 #: src/components/steps/CancelledStepContent.tsx:26
 msgid "Fail!"
@@ -413,7 +418,7 @@ msgstr ""
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:116
+#: src/pages/arbitrator.tsx:117
 msgid "Here you can register new arbitrator or change the parameters of the existing one"
 msgstr ""
 
@@ -474,8 +479,8 @@ msgstr ""
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:363
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:272
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:129
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:130
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:132
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:133
 msgid "Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing to resolve disputes fairly."
 msgstr ""
 
@@ -515,6 +520,7 @@ msgstr ""
 msgid "New extraData is set"
 msgstr ""
 
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:216
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:167
 msgid "No"
 msgstr ""
@@ -598,7 +604,7 @@ msgstr ""
 msgid "Pending Action"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:180
+#: src/pages/arbitrator.tsx:181
 msgid "Pending Requests"
 msgstr ""
 
@@ -627,7 +633,7 @@ msgstr ""
 msgid "Please complete DID verification"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:143
+#: src/pages/arbitrator.tsx:144
 msgid "Please connect your wallet to register <0/>a new arbitrator"
 msgstr ""
 
@@ -750,11 +756,11 @@ msgstr ""
 msgid "Register as arbitrator"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:126
+#: src/pages/arbitrator.tsx:127
 msgid "Register new arbitrator"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:169
+#: src/pages/arbitrator.tsx:170
 msgid "Registered Arbitrators"
 msgstr ""
 
@@ -783,7 +789,7 @@ msgstr ""
 msgid "Request original"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:413
+#: src/components/notifications/NotificationsLoader.tsx:435
 msgid "Request sent to the original NFT owner."
 msgstr ""
 
@@ -899,23 +905,23 @@ msgstr ""
 msgid "The Defendant"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:216
-#: src/components/notifications/NotificationsLoader.tsx:586
+#: src/components/notifications/NotificationsLoader.tsx:226
+#: src/components/notifications/NotificationsLoader.tsx:624
 msgid "The Evidence Period for the dispute #{0} has been started."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:198
-#: src/components/notifications/NotificationsLoader.tsx:572
+#: src/components/notifications/NotificationsLoader.tsx:208
+#: src/components/notifications/NotificationsLoader.tsx:610
 msgid "The Evidence period for the dispute #{0} is on."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:266
-#: src/components/notifications/NotificationsLoader.tsx:669
+#: src/components/notifications/NotificationsLoader.tsx:280
+#: src/components/notifications/NotificationsLoader.tsx:727
 msgid "The Jurors refused to arbitrate the dispute #{0}"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:321
-#: src/components/notifications/NotificationsLoader.tsx:724
+#: src/components/notifications/NotificationsLoader.tsx:339
+#: src/components/notifications/NotificationsLoader.tsx:786
 msgid "The Jurors refused to arbitrate the dispute #{0}."
 msgstr ""
 
@@ -927,14 +933,14 @@ msgstr ""
 msgid "The Original NFT owner unresponsive"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:124
-#: src/components/notifications/NotificationsLoader.tsx:141
-#: src/components/notifications/NotificationsLoader.tsx:432
-#: src/components/notifications/NotificationsLoader.tsx:449
-#: src/components/notifications/NotificationsLoader.tsx:530
-#: src/components/notifications/NotificationsLoader.tsx:547
-#: src/components/notifications/NotificationsLoader.tsx:841
-#: src/components/notifications/NotificationsLoader.tsx:858
+#: src/components/notifications/NotificationsLoader.tsx:126
+#: src/components/notifications/NotificationsLoader.tsx:147
+#: src/components/notifications/NotificationsLoader.tsx:454
+#: src/components/notifications/NotificationsLoader.tsx:475
+#: src/components/notifications/NotificationsLoader.tsx:560
+#: src/components/notifications/NotificationsLoader.tsx:581
+#: src/components/notifications/NotificationsLoader.tsx:920
+#: src/components/notifications/NotificationsLoader.tsx:941
 msgid "The Ruling on dispute #{0} is now enforced!"
 msgstr ""
 
@@ -946,21 +952,21 @@ msgstr ""
 msgid "The Subject of the Dispute:"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:235
-#: src/components/notifications/NotificationsLoader.tsx:249
-#: src/components/notifications/NotificationsLoader.tsx:638
-#: src/components/notifications/NotificationsLoader.tsx:652
+#: src/components/notifications/NotificationsLoader.tsx:245
+#: src/components/notifications/NotificationsLoader.tsx:263
+#: src/components/notifications/NotificationsLoader.tsx:692
+#: src/components/notifications/NotificationsLoader.tsx:706
 msgid "The Voting period for the dispute #{0} is on."
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:430
-#: src/components/notifications/NotificationsLoader.tsx:324
-#: src/components/notifications/NotificationsLoader.tsx:727
+#: src/components/notifications/NotificationsLoader.tsx:342
+#: src/components/notifications/NotificationsLoader.tsx:789
 msgid "The case will now be closed."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:269
-#: src/components/notifications/NotificationsLoader.tsx:672
+#: src/components/notifications/NotificationsLoader.tsx:283
+#: src/components/notifications/NotificationsLoader.tsx:730
 msgid "The case will now be closed. Press the button to enforce the ruling."
 msgstr ""
 
@@ -1016,7 +1022,7 @@ msgstr ""
 msgid "The original NFT <0/> remains in your <1/> wallet"
 msgstr ""
 
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:194
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:284
 msgid "The original NFT <0/> was transferred <1/> to new owner"
 msgstr ""
 
@@ -1028,8 +1034,8 @@ msgstr ""
 msgid "The original NFT has been restored to your wallet."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:127
-#: src/components/notifications/NotificationsLoader.tsx:550
+#: src/components/notifications/NotificationsLoader.tsx:129
+#: src/components/notifications/NotificationsLoader.tsx:584
 msgid "The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once."
 msgstr ""
 
@@ -1037,7 +1043,7 @@ msgstr ""
 msgid "The original NFT has been transfered to the Claimant's wallet. The pNFT was burned."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:533
+#: src/components/notifications/NotificationsLoader.tsx:563
 msgid "The original NFT has been transferred to a new owner {0}."
 msgstr ""
 
@@ -1045,11 +1051,11 @@ msgstr ""
 msgid "The original NFT restored succesfully!"
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:91
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:94
 msgid "The owner of the original NFT"
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:91
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:94
 msgid "The owner of the pNFT"
 msgstr ""
 
@@ -1097,8 +1103,8 @@ msgstr ""
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:266
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:295
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:277
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:134
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:135
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:137
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:138
 msgid "To learn more"
 msgstr ""
 
@@ -1122,8 +1128,9 @@ msgstr ""
 msgid "Transaction is still in progress…"
 msgstr ""
 
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:153
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:174
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:167
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:243
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:264
 msgid "Transfer <0/>the original NFT <1/>to a new owner?"
 msgstr ""
 
@@ -1150,15 +1157,19 @@ msgstr ""
 msgid "Transfered pNFT"
 msgstr ""
 
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:229
+msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
+msgstr ""
+
 #: src/components/nftView/NFTCard.tsx:198
 #: src/components/nftView/NFTCard.tsx:298
 msgid "Under dispute"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:302
-#: src/components/notifications/NotificationsLoader.tsx:357
-#: src/components/notifications/NotificationsLoader.tsx:705
-#: src/components/notifications/NotificationsLoader.tsx:760
+#: src/components/notifications/NotificationsLoader.tsx:320
+#: src/components/notifications/NotificationsLoader.tsx:375
+#: src/components/notifications/NotificationsLoader.tsx:767
+#: src/components/notifications/NotificationsLoader.tsx:830
 msgid "Unfortunately, you have lost the dispute #{0}"
 msgstr ""
 
@@ -1184,35 +1195,35 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:388
+#: src/components/notifications/NotificationsLoader.tsx:410
 msgid "User ${0} has not responded."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:468
+#: src/components/notifications/NotificationsLoader.tsx:498
 msgid "User ${0} has refused to transfer the original NFT to you."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:161
+#: src/components/notifications/NotificationsLoader.tsx:171
 msgid "User ${0} has transferred the original NFT to you."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:823
+#: src/components/notifications/NotificationsLoader.tsx:897
 msgid "User ${0} is requesting the original NFT."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:605
+#: src/components/notifications/NotificationsLoader.tsx:647
 msgid "User {0} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{1}."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:619
+#: src/components/notifications/NotificationsLoader.tsx:667
 msgid "User {0} has filed a claim to burn your pNFT. More details on dispute #{1}."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:435
+#: src/components/notifications/NotificationsLoader.tsx:457
 msgid "User {0} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:844
+#: src/components/notifications/NotificationsLoader.tsx:923
 msgid "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer."
 msgstr ""
 
@@ -1236,7 +1247,7 @@ msgstr ""
 #: src/components/dialogs/nft/LostPNftDialog.tsx:614
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:379
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:237
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:182
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:272
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:206
 msgid "Wait for transaction to confirm…"
 msgstr ""
@@ -1254,7 +1265,11 @@ msgstr ""
 msgid "Want to initiate a dispute in the<0/>Kleros decentralized court?"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:164
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:226
+msgid "Warning!"
+msgstr ""
+
+#: src/components/notifications/NotificationsLoader.tsx:174
 msgid "We recommend protecting it using NFT Protect."
 msgstr ""
 
@@ -1283,12 +1298,12 @@ msgstr ""
 msgid "Winner: the Defendant"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:391
-#: src/components/notifications/NotificationsLoader.tsx:471
+#: src/components/notifications/NotificationsLoader.tsx:413
+#: src/components/notifications/NotificationsLoader.tsx:501
 msgid "Would you like to initiate the transfer of the original NFT through the court?"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:504
+#: src/components/notifications/NotificationsLoader.tsx:534
 msgid "Would you like to request the original NFT?"
 msgstr ""
 
@@ -1307,11 +1322,12 @@ msgstr ""
 msgid "Write your supported contractAddresses (each in a new line)"
 msgstr ""
 
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:207
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:158
 msgid "Yes"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:861
+#: src/components/notifications/NotificationsLoader.tsx:944
 msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT."
 msgstr ""
 
@@ -1319,16 +1335,16 @@ msgstr ""
 msgid "You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase."
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:120
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:123
 msgid "You can add more evidence to your dispute using the provided link within the <0>next</0> 48 hours while the evidence collection phase is still ongoing."
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:119
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:122
 msgid "You can add more evidence to your dispute using the provided link within the next 48 hours while the evidence collection phase is still ongoing."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:219
-#: src/components/notifications/NotificationsLoader.tsx:589
+#: src/components/notifications/NotificationsLoader.tsx:229
+#: src/components/notifications/NotificationsLoader.tsx:627
 msgid "You can now submit your evidence."
 msgstr ""
 
@@ -1344,28 +1360,26 @@ msgstr ""
 #: src/components/dialogs/nft/LostPNftDialog.tsx:662
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:424
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:302
-#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:221
+#: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:311
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:262
 #: src/components/steps/CancelledStepContent.tsx:35
 msgid "You cancelled a transaction"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:174
+#: src/pages/arbitrator.tsx:175
 msgid "You did not register any arbitrator yet"
 msgstr ""
 
-#: src/pages/arbitrator.tsx:185
+#: src/pages/arbitrator.tsx:186
 msgid "You have no requests yet"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:501
+#: src/components/notifications/NotificationsLoader.tsx:531
 msgid "You have received a pNFT!"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:305
-#: src/components/notifications/NotificationsLoader.tsx:360
-#: src/components/notifications/NotificationsLoader.tsx:708
-#: src/components/notifications/NotificationsLoader.tsx:763
+#: src/components/notifications/NotificationsLoader.tsx:323
+#: src/components/notifications/NotificationsLoader.tsx:770
 msgid "You have the option to file an appeal within {hoursLeft} hours"
 msgstr ""
 
@@ -1373,13 +1387,18 @@ msgstr ""
 msgid "You have to choose at least one operation"
 msgstr ""
 
+#: src/components/notifications/NotificationsLoader.tsx:378
+#: src/components/notifications/NotificationsLoader.tsx:833
+msgid "You may file an appeal within {hoursLeft} hours"
+msgstr ""
+
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:460
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:493
 msgid "You may file an appeal."
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:81
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:81
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:84
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:84
 msgid "You're being sued"
 msgstr ""
 
@@ -1392,11 +1411,11 @@ msgstr ""
 msgid "Your dispute <0/> sent to Kleros"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:144
+#: src/components/notifications/NotificationsLoader.tsx:150
 msgid "Your pNFT has been burned."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:452
+#: src/components/notifications/NotificationsLoader.tsx:478
 msgid "Your pNFT remains unchanged. We suggest contacting the NFT owner to request the original version."
 msgstr ""
 
@@ -1418,17 +1437,20 @@ msgstr ""
 msgid "confirm the transmission of the original NFT"
 msgstr ""
 
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:117
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:118
+msgid "dispute #{0}"
+msgstr ""
+
 #: src/components/dialogs/notifications/ClaimantLostDialog.tsx:121
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:114
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:115
 msgid "dispute N1234"
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:100
+#: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:103
 msgid "has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT."
 msgstr ""
 
-#: src/components/dialogs/notifications/SuedForReturnTheOriginalNFTDialog.tsx:100
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:103
 msgid "has initiated a dispute in the Kleros decentralized court, in order to obtain"
 msgstr ""
 

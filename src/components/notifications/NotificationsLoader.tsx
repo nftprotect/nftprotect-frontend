@@ -19,6 +19,8 @@ import NFTImage from "../nftView/NFTImage"
 import OriginalNftReceivedDialog from "../dialogs/notifications/OriginalNftReceivedDialog"
 import OriginalNftRejectedDialog from "../dialogs/notifications/OriginalNftRejectedDialog"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import SuedForBurnNFTDialog from "../dialogs/notifications/SuedForBurnNFTDialog"
+import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObtainTheOriginalNFTDialog"
 
 const CommonNotificationBody = ({
     header,
@@ -646,6 +648,12 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const dialog = getDialog('SuedToObtainTheOriginalNFTDialog')
+                                                dialog.setNft(nft)
+                                                dialog.setRequest(loadedRequest)
+                                                dialog.onOpen()
+                                            },
                                             dateCreated: request.updateDate
                                         })
                                     } else if (request.type === ReqType.Burn) {
@@ -660,6 +668,12 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const dialog = getDialog('SuedForBurnNFTDialog')
+                                                dialog.setNft(nft)
+                                                dialog.setRequest(loadedRequest)
+                                                dialog.onOpen()
+                                            },
                                             dateCreated: request.updateDate
                                         })
                                     }
@@ -960,6 +974,8 @@ const NotificationsLoader = () => {
     return (<>
         <OriginalNftReceivedDialog/>
         <OriginalNftRejectedDialog/>
+        <SuedForBurnNFTDialog/>
+        <SuedToObtainTheOriginalNFTDialog/>
     </>)
 }
 
