@@ -128,6 +128,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -145,6 +149,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
@@ -236,6 +244,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 } else {
@@ -270,6 +282,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         })
                                     } else if (dispute.currentRulling === 1) {
@@ -342,14 +358,14 @@ const NotificationsLoader = () => {
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 1) {
-                                        // 11 You have lost the case
+                                        // 29 You have lost the case
                                         const currentDate = new Date()
                                         const targetDate = dispute.startTime
                                         const timePassed = targetDate.getTime() - currentDate.getTime()
                                         const hoursPassed = Math.floor(timePassed / 60000 / 60)
                                         const hoursLeft = klerosAppealPeriod - hoursPassed
                                         addNotification({
-                                            id: notificationId+'.11',
+                                            id: notificationId+'.29',
                                             image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
@@ -357,10 +373,14 @@ const NotificationsLoader = () => {
                                                         <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                        <Trans>You may file an appeal within {hoursLeft} hours</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: targetDate
                                         })
                                     }
@@ -436,6 +456,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -453,6 +477,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
@@ -534,6 +562,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -551,6 +583,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
@@ -590,6 +626,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Major,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 }
@@ -653,6 +693,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 }
@@ -687,6 +731,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 2) {
@@ -728,6 +776,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         })
                                     } else if (dispute.currentRulling === 2) {
@@ -742,17 +794,21 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 1) {
-                                        // 11 You have lost the case
+                                        // 29 You have lost the case
                                         const currentDate = new Date()
                                         const targetDate = dispute.startTime
                                         const timePassed = targetDate.getTime() - currentDate.getTime()
                                         const hoursPassed = Math.floor(timePassed / 60000 / 60)
                                         const hoursLeft = klerosAppealPeriod - hoursPassed
                                         addNotification({
-                                            id: notificationId+'.11',
+                                            id: notificationId+'.29',
                                             image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
@@ -760,10 +816,14 @@ const NotificationsLoader = () => {
                                                         <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                        <Trans>You may file an appeal within {hoursLeft} hours</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: targetDate
                                         })
                                     }
@@ -827,6 +887,11 @@ const NotificationsLoader = () => {
                                     }
                                 />,
                             severity: SeverityLevel.Major,
+                            buttonCallback: () => {
+                                const dialog = getDialog('TransferOriginalNftDialog')
+                                dialog.setNft(nft)
+                                dialog.onOpen()
+                            },
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
@@ -845,6 +910,10 @@ const NotificationsLoader = () => {
                                         }
                                     />, 
                                 severity: SeverityLevel.Major,
+                                buttonCallback: () => {
+                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                    window.open(uri, '_blank');
+                                },
                                 dateCreated: request.updateDate
                             })
                         } else if (request.type === ReqType.OwnershipAdjustment) {
@@ -862,6 +931,10 @@ const NotificationsLoader = () => {
                                         }
                                     />, 
                                 severity: SeverityLevel.Major,
+                                buttonCallback: () => {
+                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                    window.open(uri, '_blank');
+                                },
                                 dateCreated: request.updateDate
                             })
                         }
