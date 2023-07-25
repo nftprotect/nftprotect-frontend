@@ -114,9 +114,9 @@ const SuedToObtainTheOriginalNFTDialog = () => {
 
                                 <Text mb={{base: "20px"}}>
                                     <Trans>Check out the details<br/> </Trans>
-                                    <Link href={ generateRequestLink(request, currentChain.id) } isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
+                                    { request && <Link href={ generateRequestLink(request, currentChain.id) } isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
                                         <Trans>{`dispute #${request?.externalDisputeId}`}</Trans>
-                                    </Link>
+                                    </Link> }
                                 </Text>
 
                                 <Text>

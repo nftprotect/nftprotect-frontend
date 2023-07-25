@@ -388,7 +388,144 @@ const NotificationsLoader = () => {
                                     }
                                 }
                             } else if (dispute.period === Period.Execution) {
-    
+                                // TODO: Probably have to show also if period is Appeal and time is up.
+                                if (dispute.ruled) {
+                                    if (nft.ownerAddress === claimant) {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    } else {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    }
+                                }
                             }
                         }
                         // Close message 4 if exists
@@ -855,12 +992,141 @@ const NotificationsLoader = () => {
                                 }
                             } else if (dispute.period === Period.Execution) {
                                 if (dispute.ruled) { // Rule performed
-                                    if (dispute.currentRulling === 0) { // Refused to arbitrate
-    
-                                    } else if (dispute.currentRulling === 2) { // Accepted
-                                        
-                                    } else { // Rejected
-    
+                                    // TODO: Probably have to show also if period is Appeal and time is up.
+                                    if (nft.originalOwnerAddress === claimant) {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    } else {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
                                     }
                                 }
                             }
