@@ -102,7 +102,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const startTransaction = () => {
         try {
             if (nft) {
-                console.log('Choosed to transfer an original NFT.')
+                console.log('Choosed to transfer an original NFT.', nft, nft.pendingRequest)
                 setNextStep(StepMapping.confirmTransaction)
                 const performAnswer = () => {
                     if (nft.pendingRequest) {

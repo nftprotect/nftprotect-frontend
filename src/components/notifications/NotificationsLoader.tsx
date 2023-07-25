@@ -21,6 +21,7 @@ import OriginalNftRejectedDialog from "../dialogs/notifications/OriginalNftRejec
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 import SuedForBurnNFTDialog from "../dialogs/notifications/SuedForBurnNFTDialog"
 import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObtainTheOriginalNFTDialog"
+import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftUnresponsiveDialog"
 
 const CommonNotificationBody = ({
     header,
@@ -52,6 +53,7 @@ const NotificationsLoader = () => {
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { getNftMetadata } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
+    const pNftsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
 
     const generateNotificationId = (nft: TokenGraphData) => {
@@ -71,10 +73,30 @@ const NotificationsLoader = () => {
         return new NFT(result, context)
     }
 
+    const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
+        const result = await getNftMetadata([nftProtectContract.address, nft.id])
+        return new NFT(result, context)
+    }
+
     const getOriginalNft = async (nft: TokenGraphData): Promise<NFT> => {
-        let result = originalsCache.current.find( it => (it.tokenId === nftProtectContract.tokenId) && (it.contract.address === nftProtectContract.contractAddress))
+        let result = originalsCache.current.find( it => {
+            return (it.tokenId === nft.tokenId.toString()) && 
+                    (it.contract.address.toLowerCase() === nft.contractAddress.toLowerCase())
+        })
         if (!result) {
             result = await loadOriginalNFT(nft)
+            originalsCache.current.push(result)
+        }
+        return result
+    }
+
+    const getPNft = async (nft: TokenGraphData): Promise<NFT> => {
+        let result = pNftsCache.current.find( it => {
+            return (it.tokenId === nft.id.toString())
+        })
+        if (!result) {
+            result = await loadPNFT(nft)
+            pNftsCache.current.push(result)
         }
         return result
     }
@@ -537,10 +559,15 @@ const NotificationsLoader = () => {
                             if (loadedRequest.timeout) {
                                 const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
                                 if (timeoutDate <= new Date()) {
+                                    const loadedNft = await getPNft(nft)
+                                    // Pending request is needed for dialog
+                                    if (!loadedNft.pendingRequest) {
+                                        await loadedNft.loadPendingRequest()
+                                    }
                                     // 4. Original NFT request timeout
                                     addNotification({
                                         id: notificationId+'.4',
-                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -553,7 +580,7 @@ const NotificationsLoader = () => {
                                         severity: SeverityLevel.Major,
                                         buttonCallback: () => {
                                             const dialog = getDialog('OriginalNftUnresponsiveDialog')
-                                            dialog.setNft(nft)
+                                            dialog.setNft(loadedNft)
                                             dialog.onOpen()
                                         },
                                         dateCreated: timeoutDate,
@@ -626,9 +653,10 @@ const NotificationsLoader = () => {
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
+                                const loadedNft = await getPNft(nft)
                                 addNotification({
                                     id: notificationId+'.3',
-                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -641,7 +669,7 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
                                         const dialog = getDialog('OriginalNftRejectedDialog')
-                                        dialog.setNft(nft)
+                                        dialog.setNft(loadedNft)
                                         dialog.onOpen()
                                     },
                                     dateCreated: request.updateDate
@@ -658,10 +686,11 @@ const NotificationsLoader = () => {
                 } else {
                     // NFT has no pending request
                     if (!nft.burned) {
+                        const loadedNft = await getPNft(nft)
                         // 0. pNFT received
                         addNotification({
                             id: notificationId+'.0',
-                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                            image: <NFTImage nft={ loadedNft} setDefaultStyles={false} />, 
                             children:
                                 <CommonNotificationBody
                                     header={
@@ -674,7 +703,7 @@ const NotificationsLoader = () => {
                             severity: SeverityLevel.Major,
                             buttonCallback: () => {
                                 const dialog = getDialog('RequestOriginalNftDialog')
-                                dialog.setNft(nft)
+                                dialog.setNft(loadedNft)
                                 dialog.onOpen()
                             },
                             dateCreated: new Date() // TODO: search for transaction
@@ -785,10 +814,11 @@ const NotificationsLoader = () => {
                                 }
                                 if (!dispute.appealed) { // First time
                                     if (request.type === ReqType.OwnershipAdjustment) {
+                                        const loadedNft = await getPNft(nft)
                                         // 23.2 Original NFT disputed
                                         addNotification({
                                             id: notificationId+'.23.2',
-                                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
@@ -798,17 +828,18 @@ const NotificationsLoader = () => {
                                             severity: SeverityLevel.Critical,
                                             buttonCallback: () => {
                                                 const dialog = getDialog('SuedToObtainTheOriginalNFTDialog')
-                                                dialog.setNft(nft)
+                                                dialog.setNft(loadedNft)
                                                 dialog.setRequest(loadedRequest)
                                                 dialog.onOpen()
                                             },
                                             dateCreated: request.updateDate
                                         })
                                     } else if (request.type === ReqType.Burn) {
+                                        const loadedNft = await getPNft(nft)
                                         // 23.1 pNFT burn disputed
                                         addNotification({
                                             id: notificationId+'.23.1',
-                                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
@@ -818,7 +849,7 @@ const NotificationsLoader = () => {
                                             severity: SeverityLevel.Critical,
                                             buttonCallback: () => {
                                                 const dialog = getDialog('SuedForBurnNFTDialog')
-                                                dialog.setNft(nft)
+                                                dialog.setNft(loadedNft)
                                                 dialog.setRequest(loadedRequest)
                                                 dialog.onOpen()
                                             },
@@ -1164,10 +1195,14 @@ const NotificationsLoader = () => {
                         }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
-                        const originalNft = await getOriginalNft(nft)
+                        const loadedNft = await getPNft(nft)
+                        // Pending request is needed for dialog
+                        if (!loadedNft.pendingRequest) {
+                            await loadedNft.loadPendingRequest()
+                        }
                         addNotification({
                             id: notificationId+'.21',
-                            image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
+                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                             children:
                                 <CommonNotificationBody
                                     header={
@@ -1180,7 +1215,7 @@ const NotificationsLoader = () => {
                             severity: SeverityLevel.Major,
                             buttonCallback: () => {
                                 const dialog = getDialog('TransferOriginalNftDialog')
-                                dialog.setNft(nft)
+                                dialog.setNft(loadedNft)
                                 dialog.onOpen()
                             },
                             dateCreated: request.updateDate
@@ -1251,6 +1286,7 @@ const NotificationsLoader = () => {
     return (<>
         <OriginalNftReceivedDialog/>
         <OriginalNftRejectedDialog/>
+        <OriginalNftUnresponsiveDialog/>
         <SuedForBurnNFTDialog/>
         <SuedToObtainTheOriginalNFTDialog/>
     </>)
