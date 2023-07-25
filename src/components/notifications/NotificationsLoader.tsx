@@ -19,6 +19,9 @@ import NFTImage from "../nftView/NFTImage"
 import OriginalNftReceivedDialog from "../dialogs/notifications/OriginalNftReceivedDialog"
 import OriginalNftRejectedDialog from "../dialogs/notifications/OriginalNftRejectedDialog"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
+import SuedForBurnNFTDialog from "../dialogs/notifications/SuedForBurnNFTDialog"
+import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObtainTheOriginalNFTDialog"
+import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftUnresponsiveDialog"
 
 const CommonNotificationBody = ({
     header,
@@ -50,6 +53,7 @@ const NotificationsLoader = () => {
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { getNftMetadata } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
+    const pNftsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
 
     const generateNotificationId = (nft: TokenGraphData) => {
@@ -69,10 +73,30 @@ const NotificationsLoader = () => {
         return new NFT(result, context)
     }
 
+    const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
+        const result = await getNftMetadata([nftProtectContract.address, nft.id])
+        return new NFT(result, context)
+    }
+
     const getOriginalNft = async (nft: TokenGraphData): Promise<NFT> => {
-        let result = originalsCache.current.find( it => (it.tokenId === nftProtectContract.tokenId) && (it.contract.address === nftProtectContract.contractAddress))
+        let result = originalsCache.current.find( it => {
+            return (it.tokenId === nft.tokenId.toString()) && 
+                    (it.contract.address.toLowerCase() === nft.contractAddress.toLowerCase())
+        })
         if (!result) {
             result = await loadOriginalNFT(nft)
+            originalsCache.current.push(result)
+        }
+        return result
+    }
+
+    const getPNft = async (nft: TokenGraphData): Promise<NFT> => {
+        let result = pNftsCache.current.find( it => {
+            return (it.tokenId === nft.id.toString())
+        })
+        if (!result) {
+            result = await loadPNFT(nft)
+            pNftsCache.current.push(result)
         }
         return result
     }
@@ -128,6 +152,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -145,6 +173,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
@@ -236,6 +268,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 } else {
@@ -270,6 +306,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         })
                                     } else if (dispute.currentRulling === 1) {
@@ -342,14 +382,14 @@ const NotificationsLoader = () => {
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 1) {
-                                        // 11 You have lost the case
+                                        // 29 You have lost the case
                                         const currentDate = new Date()
                                         const targetDate = dispute.startTime
                                         const timePassed = targetDate.getTime() - currentDate.getTime()
                                         const hoursPassed = Math.floor(timePassed / 60000 / 60)
                                         const hoursLeft = klerosAppealPeriod - hoursPassed
                                         addNotification({
-                                            id: notificationId+'.11',
+                                            id: notificationId+'.29',
                                             image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
@@ -357,16 +397,157 @@ const NotificationsLoader = () => {
                                                         <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                        <Trans>You may file an appeal within {hoursLeft} hours</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: targetDate
                                         })
                                     }
                                 }
                             } else if (dispute.period === Period.Execution) {
-    
+                                // TODO: Probably have to show also if period is Appeal and time is up.
+                                if (dispute.ruled) {
+                                    if (nft.ownerAddress === claimant) {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    } else {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    }
+                                }
                             }
                         }
                         // Close message 4 if exists
@@ -378,10 +559,15 @@ const NotificationsLoader = () => {
                             if (loadedRequest.timeout) {
                                 const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
                                 if (timeoutDate <= new Date()) {
+                                    const loadedNft = await getPNft(nft)
+                                    // Pending request is needed for dialog
+                                    if (!loadedNft.pendingRequest) {
+                                        await loadedNft.loadPendingRequest()
+                                    }
                                     // 4. Original NFT request timeout
                                     addNotification({
                                         id: notificationId+'.4',
-                                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                        image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                         children:
                                             <CommonNotificationBody
                                                 header={
@@ -394,7 +580,7 @@ const NotificationsLoader = () => {
                                         severity: SeverityLevel.Major,
                                         buttonCallback: () => {
                                             const dialog = getDialog('OriginalNftUnresponsiveDialog')
-                                            dialog.setNft(nft)
+                                            dialog.setNft(loadedNft)
                                             dialog.onOpen()
                                         },
                                         dateCreated: timeoutDate,
@@ -436,6 +622,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -453,15 +643,20 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
                         } else {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 3. Original NFT request rejected without dispute
+                                const loadedNft = await getPNft(nft)
                                 addNotification({
                                     id: notificationId+'.3',
-                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                    image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                     children:
                                         <CommonNotificationBody
                                             header={
@@ -474,7 +669,7 @@ const NotificationsLoader = () => {
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
                                         const dialog = getDialog('OriginalNftRejectedDialog')
-                                        dialog.setNft(nft)
+                                        dialog.setNft(loadedNft)
                                         dialog.onOpen()
                                     },
                                     dateCreated: request.updateDate
@@ -490,25 +685,37 @@ const NotificationsLoader = () => {
                     }
                 } else {
                     // NFT has no pending request
-                    // TODO: hide if NFT appears in the wallet
-                    // 0. pNFT received
-                    addNotification({
-                        id: notificationId+'.0',
-                        image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
-                        children:
-                            <CommonNotificationBody
-                                header={
-                                    <Trans>You have received a pNFT! </Trans>
-                                }
-                                message={
-                                    <Trans>Would you like to request the original NFT?</Trans>
-                                }
-                            />,
-                        severity: SeverityLevel.Major,
-                        dateCreated: new Date() // TODO: search for transaction
-                    })
+                    if (!nft.burned) {
+                        const loadedNft = await getPNft(nft)
+                        // 0. pNFT received
+                        addNotification({
+                            id: notificationId+'.0',
+                            image: <NFTImage nft={ loadedNft} setDefaultStyles={false} />, 
+                            children:
+                                <CommonNotificationBody
+                                    header={
+                                        <Trans>You have received a pNFT! </Trans>
+                                    }
+                                    message={
+                                        <Trans>Would you like to request the original NFT?</Trans>
+                                    }
+                                />,
+                            severity: SeverityLevel.Major,
+                            buttonCallback: () => {
+                                const dialog = getDialog('RequestOriginalNftDialog')
+                                dialog.setNft(loadedNft)
+                                dialog.onOpen()
+                            },
+                            dateCreated: new Date() // TODO: search for transaction
+                        })
+                    } else {
+                        // If received pNFT is burned and there was no request,
+                        // it means there was a transfer of original
+                        // Close message 0 if exists
+                        let toClose = getNotification(notificationId+'.0')
+                        toClose && deleteNotification(toClose)
+                    }
                 }
-
             })
             // So these notifications are for the ORIGINAL NFT owner
             transferedNfts.forEach(async (nft) => {
@@ -534,6 +741,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             } else if (request.type === ReqType.Burn) {
@@ -551,6 +762,10 @@ const NotificationsLoader = () => {
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
                                     dateCreated: request.updateDate
                                 })
                             }
@@ -590,15 +805,20 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Major,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 }
                                 if (!dispute.appealed) { // First time
                                     if (request.type === ReqType.OwnershipAdjustment) {
+                                        const loadedNft = await getPNft(nft)
                                         // 23.2 Original NFT disputed
                                         addNotification({
                                             id: notificationId+'.23.2',
-                                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
@@ -606,13 +826,20 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const dialog = getDialog('SuedToObtainTheOriginalNFTDialog')
+                                                dialog.setNft(loadedNft)
+                                                dialog.setRequest(loadedRequest)
+                                                dialog.onOpen()
+                                            },
                                             dateCreated: request.updateDate
                                         })
                                     } else if (request.type === ReqType.Burn) {
+                                        const loadedNft = await getPNft(nft)
                                         // 23.1 pNFT burn disputed
                                         addNotification({
                                             id: notificationId+'.23.1',
-                                            image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
@@ -620,6 +847,12 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const dialog = getDialog('SuedForBurnNFTDialog')
+                                                dialog.setNft(loadedNft)
+                                                dialog.setRequest(loadedRequest)
+                                                dialog.onOpen()
+                                            },
                                             dateCreated: request.updateDate
                                         })
                                     }
@@ -653,6 +886,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 }
@@ -687,6 +924,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 2) {
@@ -728,6 +969,10 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         })
                                     } else if (dispute.currentRulling === 2) {
@@ -742,17 +987,21 @@ const NotificationsLoader = () => {
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Major,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: dispute.startTime
                                         }) 
                                     } else if (dispute.currentRulling === 1) {
-                                        // 11 You have lost the case
+                                        // 29 You have lost the case
                                         const currentDate = new Date()
                                         const targetDate = dispute.startTime
                                         const timePassed = targetDate.getTime() - currentDate.getTime()
                                         const hoursPassed = Math.floor(timePassed / 60000 / 60)
                                         const hoursLeft = klerosAppealPeriod - hoursPassed
                                         addNotification({
-                                            id: notificationId+'.11',
+                                            id: notificationId+'.29',
                                             image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
@@ -760,22 +1009,155 @@ const NotificationsLoader = () => {
                                                         <Trans>Unfortunately, you have lost the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
                                                     }
                                                     message={
-                                                        <Trans>You have the option to file an appeal within {hoursLeft} hours</Trans>
+                                                        <Trans>You may file an appeal within {hoursLeft} hours</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
+                                            buttonCallback: () => {
+                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                window.open(uri, '_blank');
+                                            },
                                             dateCreated: targetDate
                                         })
                                     }
                                 }
                             } else if (dispute.period === Period.Execution) {
                                 if (dispute.ruled) { // Rule performed
-                                    if (dispute.currentRulling === 0) { // Refused to arbitrate
-    
-                                    } else if (dispute.currentRulling === 2) { // Accepted
-                                        
-                                    } else { // Rejected
-    
+                                    // TODO: Probably have to show also if period is Appeal and time is up.
+                                    if (nft.originalOwnerAddress === claimant) {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
+                                    } else {
+                                        if (dispute.currentRulling === 0) {
+                                            // 9. Case refused (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.9',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The Jurors refused to arbitrate the dispute #{loadedRequest.externalDisputeId.toString()}</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>The case will now be closed. Press the button to enforce the ruling.</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            })
+                                        } else if (dispute.currentRulling === 2) {
+                                            // 38 You have won the case (final decision, not enforced)
+                                            addNotification({
+                                                id: notificationId+'.38',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You won the dispute!</Trans>
+                                                        }
+                                                        message={
+                                                            <Trans>{'Press the button to enforce the ruling…'}</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Major,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: dispute.startTime
+                                            }) 
+                                        } else if (dispute.currentRulling === 1) {
+                                            // 39 You have lost the case (final decision, not enforced)
+                                            const currentDate = new Date()
+                                            const targetDate = dispute.startTime
+                                            const timePassed = targetDate.getTime() - currentDate.getTime()
+                                            const hoursPassed = Math.floor(timePassed / 60000 / 60)
+                                            const hoursLeft = klerosAppealPeriod - hoursPassed
+                                            addNotification({
+                                                id: notificationId+'.39',
+                                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
+                                                children: 
+                                                    <CommonNotificationBody
+                                                        header={
+                                                            <Trans>The jury reached a verdict! You lost the dispute!</Trans>
+                                                        }
+                                                    />, 
+                                                severity: SeverityLevel.Critical,
+                                                buttonCallback: () => {
+                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    window.open(uri, '_blank');
+                                                },
+                                                dateCreated: targetDate
+                                            })
+                                        }
                                     }
                                 }
                             }
@@ -813,10 +1195,14 @@ const NotificationsLoader = () => {
                         }
                     } else if (request.status === ReqStatus.Initial) {
                         // 21. Request to transfer original received
-                        const originalNft = await getOriginalNft(nft)
+                        const loadedNft = await getPNft(nft)
+                        // Pending request is needed for dialog
+                        if (!loadedNft.pendingRequest) {
+                            await loadedNft.loadPendingRequest()
+                        }
                         addNotification({
                             id: notificationId+'.21',
-                            image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
+                            image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                             children:
                                 <CommonNotificationBody
                                     header={
@@ -827,6 +1213,11 @@ const NotificationsLoader = () => {
                                     }
                                 />,
                             severity: SeverityLevel.Major,
+                            buttonCallback: () => {
+                                const dialog = getDialog('TransferOriginalNftDialog')
+                                dialog.setNft(loadedNft)
+                                dialog.onOpen()
+                            },
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
@@ -845,6 +1236,10 @@ const NotificationsLoader = () => {
                                         }
                                     />, 
                                 severity: SeverityLevel.Major,
+                                buttonCallback: () => {
+                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                    window.open(uri, '_blank');
+                                },
                                 dateCreated: request.updateDate
                             })
                         } else if (request.type === ReqType.OwnershipAdjustment) {
@@ -862,6 +1257,10 @@ const NotificationsLoader = () => {
                                         }
                                     />, 
                                 severity: SeverityLevel.Major,
+                                buttonCallback: () => {
+                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                    window.open(uri, '_blank');
+                                },
                                 dateCreated: request.updateDate
                             })
                         }
@@ -887,6 +1286,9 @@ const NotificationsLoader = () => {
     return (<>
         <OriginalNftReceivedDialog/>
         <OriginalNftRejectedDialog/>
+        <OriginalNftUnresponsiveDialog/>
+        <SuedForBurnNFTDialog/>
+        <SuedToObtainTheOriginalNFTDialog/>
     </>)
 }
 

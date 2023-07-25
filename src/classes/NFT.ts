@@ -181,7 +181,7 @@ export default class NFT implements NFTInterface {
     }
 
     //** If our NFT is pNFT we have to know about the original NFT */
-    loadOriginalNFTData(): void {
+    async loadOriginalNFTData(): Promise<any> {
         if (!this.isPNFT()) {
           return;
         }
@@ -190,56 +190,63 @@ export default class NFT implements NFTInterface {
         const isNotNullAddress = (address: string): boolean => address !== this.nullAddress;
       
         // Get NFT data from the contract
-        this.context.nftProtectContract.tokens(this.tokenId)
-        .then(([standardId, contractAddress, tokenId, amount, owner, securityLevel]: any[]) => {
-            // Create an object with the retrieved data
-            const nftData:any = {
-                tokenId: tokenId.toString(),
-                amount,
-                contractAddress,
-                ownerAddress: owner,
-                securityLevel,
-            };
-            
-            // Determine the NFT token type based on the standard ID
-            switch (standardId) {
-                case NftProtectStandard.ERC721:
-                    nftData.tokenType = NftTokenType.ERC721;
-                break;
-                case NftProtectStandard.ERC1155:
-                    nftData.tokenType = NftTokenType.ERC1155;
-                break;
-                case NftProtectStandard.ERC20:
-                default:    
-                    nftData.tokenType = NftTokenType.NO_SUPPORTED_NFT_STANDARD;
-                break;
-            }
+        const [ 
+            standardId, 
+            contractAddress, 
+            tokenId, 
+            amount, 
+            owner, 
+            securityLevel
+        ] = await this.context.nftProtectContract.tokens(this.tokenId)
+        // Create an object with the retrieved data
+        const nftData:any = {
+            tokenId: tokenId.toString(),
+            amount,
+            contractAddress,
+            ownerAddress: owner,
+            securityLevel,
+        };
         
-            // Store the original NFT data and dispatch an event to notify listeners
-            this.originalData = { ...nftData };
-            this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
-        });
+        // Determine the NFT token type based on the standard ID
+        switch (standardId) {
+            case NftProtectStandard.ERC721:
+                nftData.tokenType = NftTokenType.ERC721;
+            break;
+            case NftProtectStandard.ERC1155:
+                nftData.tokenType = NftTokenType.ERC1155;
+            break;
+            case NftProtectStandard.ERC20:
+            default:    
+                nftData.tokenType = NftTokenType.NO_SUPPORTED_NFT_STANDARD;
+            break;
+        }
+    
+        // Store the original NFT data and dispatch an event to notify listeners
+        this.originalData = { ...nftData };
+        this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
+        return this.originalData
     }
 
     //** Loads a pending request if exists */
-    loadPendingRequest():void {
+    async loadPendingRequest():Promise<ActionRequest|undefined> {
         if (this.isPNFT()) {
             const nftProtectContract = this.context.nftProtectContract
-            nftProtectContract.tokenToRequest(this.tokenId).then((requestId: BigNumber) => {
-                if (requestId.toString() !== '0') {
-                    nftProtectContract.requests(requestId).then((request: any) => {
-                        this.pendingRequest = {id: requestId, ...request}
-                        this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
-                    })
-                }
-            })
+            const requestId: BigNumber = nftProtectContract.tokenToRequest(this.tokenId)
+            if (requestId.toString() !== '0') {
+                const request:any = await nftProtectContract.requests(requestId)
+                this.pendingRequest = {id: requestId, ...request}
+                this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
+                return this.pendingRequest
+            }
         }
     }
 
     //** Runs assigned functions to fetch another additional data */
-    loadAnotherData() {
-        this.loadOriginalNFTData()
-        this.loadPendingRequest()
+    async loadAnotherData() {
+        return Promise.all([
+            this.loadOriginalNFTData(),
+            this.loadPendingRequest()
+        ])
     }
 
     //** Add event listener */

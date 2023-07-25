@@ -23,20 +23,23 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { formatAddress, copyTextToClipboard, generateRequestLink } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
-import NFT from '../../../classes/NFT';
+import NFT, { ActionRequest } from '../../../classes/NFT';
 import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
 import NFTImage from "../../nftView/NFTImage";
+import { useAppContext } from "../../../context/AppContextProvider";
 
-const SuedForReturnTheOriginalNFTDialog = () => {
+const SuedToObtainTheOriginalNFTDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
+    const [ request, setRequest ] = useState<ActionRequest>()
     const disclosure = useDisclosure()
     const { onClose, isOpen } = disclosure
     const { setDialog } = useCallableDialogContext()
+    const { currentChain } = useAppContext()
     const originalOwner = nft?.originalData?.ownerAddress
 
     const copyOriginalOwnerToClipboard = () => {
@@ -44,7 +47,7 @@ const SuedForReturnTheOriginalNFTDialog = () => {
     }
 
     useEffect(() => {
-        setDialog('SuedForReturnTheOriginalNFTDialog', {...disclosure, setNft})
+        setDialog('SuedToObtainTheOriginalNFTDialog', {...disclosure, setNft, setRequest})
     }, [])
 
     return (<>
@@ -111,9 +114,9 @@ const SuedForReturnTheOriginalNFTDialog = () => {
 
                                 <Text mb={{base: "20px"}}>
                                     <Trans>Check out the details<br/> </Trans>
-                                    <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
-                                        <Trans>dispute N1234</Trans>
-                                    </Link>
+                                    { request && <Link href={ generateRequestLink(request, currentChain.id) } isExternal rel="noreferrer" textDecoration="underline" cursor="pointer" color="#2D7BD6">
+                                        <Trans>{`dispute #${request?.externalDisputeId}`}</Trans>
+                                    </Link> }
                                 </Text>
 
                                 <Text>
@@ -146,4 +149,4 @@ const SuedForReturnTheOriginalNFTDialog = () => {
     </>)
 }
 
-export default SuedForReturnTheOriginalNFTDialog
+export default SuedToObtainTheOriginalNFTDialog

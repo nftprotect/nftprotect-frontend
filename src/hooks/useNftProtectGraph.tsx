@@ -48,7 +48,8 @@ export interface TokenGraphData {
     amount: BigNumber,
     mintDate: Date,
     mintBlockNumber: number,
-    latestRequest: RequestGraphMinimalData | null
+    latestRequest: RequestGraphMinimalData | null,
+    burned: Boolean
 }
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
@@ -155,7 +156,8 @@ export const useNftProtectGraph = () => {
                         tokenId,
                         amount,
                         timestamp,
-                        blocknumber
+                        blocknumber,
+                        burned
                     }
                 }
             `
@@ -261,6 +263,7 @@ export const useNftProtectGraph = () => {
                             type
                             timestampChange
                         }
+                        burned
                     }
                 }
             `
@@ -281,7 +284,8 @@ export const useNftProtectGraph = () => {
                     status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
-                } : null
+                } : null,
+                burned: it.burned
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))
@@ -321,6 +325,7 @@ export const useNftProtectGraph = () => {
                             type
                             timestampChange
                         }
+                        burned
                     }
                 }
             `
@@ -341,7 +346,8 @@ export const useNftProtectGraph = () => {
                     status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
-                } : null
+                } : null,
+                burned: it.burned
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))
