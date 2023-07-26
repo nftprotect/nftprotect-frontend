@@ -234,7 +234,9 @@ export default class NFT implements NFTInterface {
             const requestId: BigNumber = nftProtectContract.tokenToRequest(this.tokenId)
             if (requestId.toString() !== '0') {
                 const request:any = await nftProtectContract.requests(requestId)
-                this.pendingRequest = {id: requestId, ...request}
+                if (request.tokenId.toNumber() !== 0) {
+                    this.pendingRequest = {id: requestId, ...request}
+                }
                 this.dispatchEvent(new Event(NFTEvents.PendingRequestLoaded))
                 return this.pendingRequest
             }
