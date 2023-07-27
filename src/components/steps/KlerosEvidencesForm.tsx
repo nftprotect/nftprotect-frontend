@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -25,8 +25,9 @@ import Link from 'next/link';
 
 interface FormInitialData {
     onSubmit?: Function | undefined,
-    goBack: Function,
+    goBack: MouseEventHandler,
     title?: string,
+    buttonText: string,
     evidenceData: EvidenceData,
     ipfsUpload: IPFSUpload,
 }
@@ -51,6 +52,7 @@ const KlerosEvidencesForm = ({
     onSubmit: outerOnSubmit, 
     goBack, 
     title,
+    buttonText,
     ipfsUpload,
     evidenceData,
 }: FormInitialData) => {
@@ -182,7 +184,7 @@ const KlerosEvidencesForm = ({
                         <CardFooter alignItems="center">
                             <Box w={{base: "60%", sm: "40%"}}>
                                 <Button 
-                                    onClick={goBack as any}
+                                    onClick={goBack}
                                     variant="darkOutline"
                                 >
                                     <Trans>Back</Trans>
@@ -195,7 +197,7 @@ const KlerosEvidencesForm = ({
                                     variant="darkOutline"
                                     isDisabled={ !props.isValid }
                                 >
-                                    <Trans>Open dispute</Trans>
+                                    { buttonText }
                                 </Button>
                             </Box>
                         </CardFooter>

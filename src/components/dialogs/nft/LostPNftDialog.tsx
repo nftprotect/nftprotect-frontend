@@ -382,7 +382,9 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
                                 defendant={nft?.ownerAddress || ''}
+                                header={t`Open dispute in Kleros`}
                                 title={ klerosCaseFormTitle }
+                                buttonText={t`Open dispute`}
                                 requireProtocolAddress={(lostReason === 'protocol breach')}
                             >
                                     <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
@@ -482,6 +484,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 goBack={() => setNextStep(StepMapping.evidenceFillForm)}
                                 onSubmit={ klerosEvidenceFormSubmit }
                                 title={ klerosCaseFormTitle }
+                                buttonText={t`Open dispute`}
                                 ipfsUpload={ evidenceFiles }
                                 evidenceData={{
                                     name: `Evidence of ${klerosCaseFormTitle}`,

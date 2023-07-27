@@ -40,6 +40,8 @@ interface FormInitialData {
     onClose: Function,
     claimant: string,
     defendant: string,
+    header: string,
+    buttonText: string,
     title?: string,
     requireProtocolAddress?: boolean,
     children?: React.ReactNode
@@ -50,6 +52,8 @@ const KlerosCaseForm = ({
     onClose, 
     claimant,
     defendant,
+    header,
+    buttonText,
     title,
     requireProtocolAddress = false,
     children
@@ -101,7 +105,7 @@ const KlerosCaseForm = ({
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                <Trans>Open dispute <br /> in Kleros</Trans>
+                                { header }
                             </Text>
                             {
                                 title && <Text textStyle="paragraph" textAlign="center" fontWeight="700">
@@ -156,7 +160,7 @@ const KlerosCaseForm = ({
                                     variant="darkOutline"
                                     isDisabled={ !props.isValid || !evidenceUpload }
                                 >
-                                    <Trans>Open dispute</Trans>
+                                    { buttonText }
                                 </Button>
                             </Box>
                         </CardFooter>

@@ -327,7 +327,9 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 onSubmit={klerosFormSubmit}
                                 claimant={account || ''}
                                 defendant={nft?.originalData?.ownerAddress || ''}
+                                header={t`Open dispute in Kleros`}
                                 title={t`Bona fide transfer`}
+                                buttonText={t`Open dispute`}
                                 requireProtocolAddress={false}
                             >
                                 <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
@@ -346,6 +348,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 goBack={() => setNextStep(StepMapping.klerosForm)}
                                 onSubmit={ klerosEvidenceFormSubmit }
                                 title={t`Bona fide transfer`}
+                                buttonText={t`Open dispute`}
                                 ipfsUpload={ evidenceFiles }
                                 evidenceData={{
                                     name: `Evidence of Bona fide transfer`,
