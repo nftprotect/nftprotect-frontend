@@ -274,7 +274,8 @@ const RequestPage: NextPage = () => {
             />
             </>}
             {/* Dialogs registration flollowing */}
-            <AddEvidencesDialog/>
+            {/* TODO: Evidences not reloading */}
+            <AddEvidencesDialog onSubmitted={loadEvidences} />
         </Container>
     )
 }

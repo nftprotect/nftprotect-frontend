@@ -157,7 +157,7 @@ const KlerosCaseContent = ({
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
     });
-    const { library, account } = useAppContext()
+    const { library, account, active } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
 
@@ -790,10 +790,10 @@ const KlerosCaseContent = ({
                             <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                 <Text textStyle="paragraph">
                                     <Trans>Submitted by</Trans> {
-                                        evidence.evidenceJson.evidenceSide === 0 ? 
-                                            formatAddress(claimantAddress, 4) : 
-                                        evidence.evidenceJson.evidenceSide === 1 ?
-                                            formatAddress(defendantAddress, 4) :
+                                        // evidence.evidenceJson.evidenceSide === 0 ? 
+                                        //     formatAddress(claimantAddress, 4) : 
+                                        // evidence.evidenceJson.evidenceSide === 1 ?
+                                        //     formatAddress(defendantAddress, 4) :
                                         formatAddress(evidence.submittedBy, 4)
                                     }
                                 </Text>
@@ -829,6 +829,7 @@ const KlerosCaseContent = ({
                             dialog.setNft(nft)
                             dialog.onOpen()
                         }}
+                        isDisabled={!active}
                     >
                         <Trans>Submit new evidence</Trans>
                     </Button>

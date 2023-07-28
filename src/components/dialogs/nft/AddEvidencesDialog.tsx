@@ -45,7 +45,7 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
 
-const AddEvidencesDialog = () => {
+const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
     const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract, account, library, fee, currentBlock, currentChain } = useAppContext()
@@ -103,11 +103,9 @@ const AddEvidencesDialog = () => {
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    nft && nft.loadPendingRequest()
-                    // after mined fire wrap
                     setNextStep(StepMapping.evidenceSubmitted)
                     console.log("Transaction successful", tx.hash);
-                    setTimeout(dialogClose, dialogsTimeout)
+                    onSubmitted && onSubmitted()
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -238,7 +236,7 @@ const AddEvidencesDialog = () => {
                                 evidenceData={{
                                     name: `Additional evidence`,
                                     description: evidenceData.description,
-                                    evidenceSide: 0, // does nothing
+                                    evidenceSide: 0, // TODO: Add logic or remove completely because untrusted
                                 }}
                             />}
                         </SwitchableOutside>
