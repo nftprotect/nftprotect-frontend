@@ -495,7 +495,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             </Image>
                                         </Box>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            <Trans>If you{'\u0027'}ve missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link</Trans>
+                                            <Trans>If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing.</Trans>
                                         </Text>
                                         
                                         <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">

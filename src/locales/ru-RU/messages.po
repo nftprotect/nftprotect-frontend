@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-07-25 15:43+0700\n"
+"POT-Creation-Date: 2023-07-28 13:38+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -276,10 +276,6 @@ msgstr ""
 msgid "Date of creation"
 msgstr ""
 
-#: src/pages/index.tsx:144
-msgid "Decentralized self-custody protocol <0/>for safeguarding digital assets <1/>from theft and private key compromise"
-msgstr ""
-
 #: src/components/dialogs/arbitrator/ShowArbitratorDialog.tsx:171
 #: src/components/dialogs/arbitrator/ShowArbitratorDialog.tsx:210
 msgid "Delete"
@@ -438,10 +434,14 @@ msgstr ""
 msgid "If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"
 msgstr ""
 
+#: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:498
+#: src/components/dialogs/nft/LostPNftDialog.tsx:636
+msgid "If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing."
+msgstr ""
+
 #: src/components/dialogs/arbitrator/AddContractsDialog.tsx:382
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:439
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:495
-#: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:498
 msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
 msgstr ""
 
@@ -497,6 +497,10 @@ msgstr ""
 #: src/components/nftView/NFTCard.tsx:263
 #: src/components/nftView/NFTCard.tsx:332
 msgid "Lost pNFT"
+msgstr ""
+
+#: src/pages/index.tsx:142
+msgid "Manage your NFTs and pNFTs,<0/>stay updated with notifications, <1/>and rest assured with our advanced secuirity features."
 msgstr ""
 
 #: src/components/nftView/NFTImage.tsx:17
@@ -637,10 +641,6 @@ msgstr ""
 msgid "Please connect your wallet to register <0/>a new arbitrator"
 msgstr ""
 
-#: src/pages/index.tsx:113
-msgid "Please connect your wallet to see your digital assets and protect them"
-msgstr ""
-
 #: src/components/steps/KlerosEvidencesForm.tsx:138
 msgid "Please fill the description"
 msgstr ""
@@ -715,10 +715,6 @@ msgstr ""
 #: src/components/dialogs/notifications/OriginalNftReceivedDialog.tsx:126
 #: src/components/nftView/NFTCard.tsx:318
 msgid "Protect NFT"
-msgstr ""
-
-#: src/pages/index.tsx:136
-msgid "Protect your digital <0/>assets from bad actors"
 msgstr ""
 
 #: src/components/dialogs/nft/ProtectNftDialog.tsx:225
@@ -1047,12 +1043,12 @@ msgstr ""
 msgid "The original NFT"
 msgstr ""
 
-#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:206
-msgid "The original NFT <0/> remains in your <1/> wallet"
-msgstr ""
-
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:284
 msgid "The original NFT <0/> was transferred <1/> to new owner"
+msgstr ""
+
+#: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:206
+msgid "The original NFT <0/>remains in your wallet"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:454
@@ -1109,7 +1105,7 @@ msgid "They explain the situation as follows:"
 msgstr ""
 
 #: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:236
-msgid "This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT (by opening the dispute)"
+msgid "This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."
 msgstr ""
 
 #: src/components/nftView/NFTView.tsx:224
@@ -1175,7 +1171,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:170
 #: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:188
-msgid "Transfer the <0/>original NFT to <1/> the new owner"
+msgid "Transfer the original NFT <0/>to the new owner"
 msgstr ""
 
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:94
@@ -1314,6 +1310,10 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+#: src/pages/index.tsx:134
+msgid "Welcome to NFT Protect <0/>your digital asset guardian"
+msgstr ""
+
 #: src/components/footer/Footer.tsx:35
 #: src/components/navBar/MainMenu.tsx:42
 msgid "Whitepaper"
@@ -1351,6 +1351,10 @@ msgstr ""
 msgid "Write your supported contractAddresses (each in a new line)"
 msgstr ""
 
+#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:162
+msgid "YOUR ASSET MAY HAVE BEEN STOLEN!"
+msgstr ""
+
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:207
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:158
 msgid "Yes"
@@ -1360,16 +1364,9 @@ msgstr ""
 msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT."
 msgstr ""
 
-#: src/components/dialogs/nft/LostPNftDialog.tsx:636
-msgid "You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase."
-msgstr ""
-
-#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:123
-msgid "You can add more evidence to your dispute using the provided link within the <0>next</0> 48 hours while the evidence collection phase is still ongoing."
-msgstr ""
-
 #: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:122
-msgid "You can add more evidence to your dispute using the provided link within the next 48 hours while the evidence collection phase is still ongoing."
+#: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:123
+msgid "You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:251
@@ -1510,10 +1507,6 @@ msgstr ""
 #: src/components/arbitrator/ArbitratorRequestList.tsx:45
 #: src/components/arbitrator/ArbitratorsList.tsx:50
 msgid "unknown"
-msgstr ""
-
-#: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:162
-msgid "your asset may have been stolen!"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:522

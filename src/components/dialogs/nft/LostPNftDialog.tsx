@@ -634,7 +634,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         </Box>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
                                             <Trans>
-                                                You can add any missing evidence to your dispute within 48 hours using the link provided, during the ongoing evidence collection phase.
+                                            If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing.
                                             </Trans>
                                         </Text>
                                         <Text textStyle="paragraph" textAlign="center">
