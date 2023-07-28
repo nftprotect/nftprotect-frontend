@@ -169,7 +169,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const startButtonOnClick = () => {
         try {
             if (nft?.tokenType === NftTokenType.ERC721) {
-                const tokenContract = nft.loadedContract
+                const tokenContract = nft.getContract()
                 secureNFT(
                     tokenContract,
                     () => tokenContract.getApproved(nft.tokenId),
@@ -178,7 +178,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, 0, referrerAddress, {value: fee})
                 )
             } else if (nft?.tokenType === NftTokenType.ERC1155) {
-                const tokenContract = nft.loadedContract
+                const tokenContract = nft.getContract()
                 secureNFT(
                     tokenContract,
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),

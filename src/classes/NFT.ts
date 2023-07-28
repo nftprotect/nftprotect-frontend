@@ -55,6 +55,8 @@ enum NftProtectStandard
     ERC20
 }
 
+const nullAddress = '0x0000000000000000000000000000000000000000'
+
 export default class NFT implements NFTInterface {
     tokenId: string;
     /** The type of ERC token, if known. */
@@ -90,17 +92,39 @@ export default class NFT implements NFTInterface {
     amount: number | undefined
     /** Holds application context */
     context: AppContextInterface
-    /** Holds loaded ethers contract object */
-    loadedContract: Contract
     //** Holds pending request data */
     pendingRequest: ActionRequest | undefined
 
     private events: EventTarget
-    private nullAddress = '0x0000000000000000000000000000000000000000'
 
     //** Returns true if NFT is pNFT issued by NFTProtect */
     isPNFT(): boolean {
         return (this.contract.address.toLowerCase() === this.context.nftProtectContract.address.toLowerCase())
+    }
+
+    /** Returns loaded ethers contract object */
+    getContract(): Contract {
+        if (this.isPNFT()) {
+            console.log('THIS CONTEXT ->', this.context, this.context.active, this.context.nftProtectContract)
+            return this.context.nftProtectContract
+        } else {
+            console.log('THIS CONTEXT ->', this.context, this.context.active)
+            if (this.tokenType === NftTokenType.ERC721) {
+                return new Contract(
+                    this.contract.address, 
+                    ERC721ABI, 
+                    this.context.active ? this.context.library.getSigner() : this.context.library
+                ) 
+            } else {
+                return new Contract(
+                    this.contract.address, 
+                    ERC1155ABI, 
+                    this.context.active ? this.context.library.getSigner() : this.context.library
+                )
+            }
+        }
+
+
     }
 
     //** Returns true if NFT is pNFT transfered to another address */
@@ -133,7 +157,7 @@ export default class NFT implements NFTInterface {
 
     //** Returns true if NFT is burned */
     isBurned(): boolean {
-        return (this.ownerAddress === undefined) || (this.ownerAddress === this.nullAddress)
+        return (this.ownerAddress === undefined) || (this.ownerAddress === nullAddress)
     }
 
     //** Returns true if nft is owned by address */
@@ -150,7 +174,7 @@ export default class NFT implements NFTInterface {
     async loadOwnerAddress() {
         if (this.ownerAddress !== undefined) return
         try {
-            this.ownerAddress = await this.loadedContract.ownerOf(this.tokenId)
+            this.ownerAddress = await this.getContract().ownerOf(this.tokenId)
         } catch (e: any) {
             if (e.reason?.includes('invalid token ID')) {
                 // do nothing
@@ -164,7 +188,7 @@ export default class NFT implements NFTInterface {
     async loadTokenAmount() {
         if (this.amount !== undefined) return
         if (this.tokenType == NftTokenType.ERC1155) {
-            this.amount = await this.loadedContract.balanceOf(this.context.account, BigNumber.from(this.tokenId))
+            this.amount = await this.getContract().balanceOf(this.context.account, BigNumber.from(this.tokenId))
         } else {
             this.amount = 1
         }
@@ -187,7 +211,7 @@ export default class NFT implements NFTInterface {
         }
       
         // Function to check if an address is not null
-        const isNotNullAddress = (address: string): boolean => address !== this.nullAddress;
+        const isNotNullAddress = (address: string): boolean => address !== nullAddress;
       
         // Get NFT data from the contract
         const [ 
@@ -286,9 +310,6 @@ export default class NFT implements NFTInterface {
             Object.assign(this, otherProps);
         }
 
-        this.loadedContract = (this.tokenType === NftTokenType.ERC721) ?
-            new Contract(this.contract.address, ERC721ABI, context.active ? context.library.getSigner() : context.library) :
-            new Contract(this.contract.address, ERC1155ABI, context.active ? context.library.getSigner() : context.library)
     }
   
 }
