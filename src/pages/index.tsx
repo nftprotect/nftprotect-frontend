@@ -108,10 +108,10 @@ const Home: NextPage = () => {
                                 <Text fontFamily="Lexend" fontSize={{base: "44px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center">
                                     <Trans>Connect your wallet<br></br>& get protected</Trans>
                                 </Text>
-                                    
-                        
-                                <Box w={{base: "14rem", sm: "16rem"}} >
-                                    <LoginForm buttonVariant={'primaryLight'} />
+                                <Box mt={10}>                             
+                                    <Box w={{base: "14rem", sm: "16rem"}} >
+                                        <LoginForm buttonVariant={'primaryLight'} />
+                                    </Box>
                                 </Box>
                             </Flex>
                         </Flex>
