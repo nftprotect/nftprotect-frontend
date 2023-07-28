@@ -347,6 +347,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             {evidenceFiles && <KlerosEvidencesForm
                                 goBack={() => setNextStep(StepMapping.klerosForm)}
                                 onSubmit={ klerosEvidenceFormSubmit }
+                                header={ t`Open dispute in Kleros` }
                                 title={t`Bona fide transfer`}
                                 buttonText={t`Open dispute`}
                                 ipfsUpload={ evidenceFiles }
