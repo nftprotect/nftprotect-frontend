@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import {
     Button,
     Box,
@@ -25,8 +25,10 @@ import Link from 'next/link';
 
 interface FormInitialData {
     onSubmit?: Function | undefined,
-    goBack: Function,
+    goBack: MouseEventHandler,
+    header: string,
     title?: string,
+    buttonText: string,
     evidenceData: EvidenceData,
     ipfsUpload: IPFSUpload,
 }
@@ -50,7 +52,9 @@ export interface EvidenceData {
 const KlerosEvidencesForm = ({
     onSubmit: outerOnSubmit, 
     goBack, 
+    header,
     title,
+    buttonText,
     ipfsUpload,
     evidenceData,
 }: FormInitialData) => {
@@ -118,7 +122,7 @@ const KlerosEvidencesForm = ({
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                <Trans>Open dispute <br /> in Kleros</Trans>
+                                { header }
                             </Text>
                             {
                                 title && <Text textStyle="paragraph" textAlign="center" fontWeight="700">
@@ -182,7 +186,7 @@ const KlerosEvidencesForm = ({
                         <CardFooter alignItems="center">
                             <Box w={{base: "60%", sm: "40%"}}>
                                 <Button 
-                                    onClick={goBack as any}
+                                    onClick={goBack}
                                     variant="darkOutline"
                                 >
                                     <Trans>Back</Trans>
@@ -195,7 +199,7 @@ const KlerosEvidencesForm = ({
                                     variant="darkOutline"
                                     isDisabled={ !props.isValid }
                                 >
-                                    <Trans>Open dispute</Trans>
+                                    { buttonText }
                                 </Button>
                             </Box>
                         </CardFooter>

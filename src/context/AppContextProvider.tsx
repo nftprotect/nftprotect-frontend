@@ -164,7 +164,7 @@ export function AppContextProvider({ children }:any) {
                 
             }
             // I don't know why, but for web3provider we have to pass signer
-            const signer = chainId ? library : library.getSigner() 
+            const signer = active ? library.getSigner() : library
             setAppState({
                 active,
                 account,
