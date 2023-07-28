@@ -175,7 +175,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         </chakra.span>
                                         
                                         <Text id='newOwnerAddressHolder' whiteSpace="nowrap">
-                                            { formatAddress(nft?.ownerAddress || '', 4) }{'\u003F'}
+                                            { formatAddress(nft?.ownerAddress || '', 4) }
                                             <Popover placement='top'>
                                                 <PopoverTrigger>
                                                     <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />
@@ -188,6 +188,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                     </PopoverBody>
                                                 </PopoverContent>
                                             </Popover>
+                                            {'\u003F'}
                                         </Text>
                                     </Text>
                                 </CardBody>
