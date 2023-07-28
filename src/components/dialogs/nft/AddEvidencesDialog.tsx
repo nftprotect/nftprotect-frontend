@@ -43,11 +43,12 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
 
 const AddEvidencesDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, fee, currentBlock } = useAppContext()
+    const { nftProtectContract, account, library, fee, currentBlock, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -59,6 +60,7 @@ const AddEvidencesDialog = () => {
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const [ requestTimedOut, setRequestTimedOut ] = useState(false)
+    const { submitEvidence } = useArbitrableProxy()
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
     const DISPUTE_PRICE = '0.03'
@@ -124,15 +126,13 @@ const AddEvidencesDialog = () => {
         setEvidence(upload)
     }
 
-    const submitEvidence = () => {
+    const submitPreparedEvidence = () => {
         setNextStep(StepMapping.confirmTransaction)
         if (evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nftProtectContract.askOwnershipAdjustmentArbitrate(nft?.pendingRequest?.id, evidenceJSONUrl, {
-                    value: parseEther(DISPUTE_PRICE),
-                //    gasLimit: 1000000
-                })
+                nft?.pendingRequest && 
+                    submitEvidence(currentChain.defaultArbitrator, nft.pendingRequest.localDisputeId, evidenceJSONUrl)
                     .then( finalTransactionSent() )
                     .catch( 
                         handleContractError({
@@ -168,7 +168,7 @@ const AddEvidencesDialog = () => {
     }, [currentBlock])
 
     useEffect(() => {
-        evidence && submitEvidence()
+        evidence && submitPreparedEvidence()
     }, [evidenceData, evidence])
 
     useEffect(() => {
@@ -232,7 +232,7 @@ const AddEvidencesDialog = () => {
                             {evidenceFiles && <KlerosEvidencesForm
                                 goBack={() => setNextStep(StepMapping.evidenceForm)}
                                 onSubmit={ klerosEvidenceFormSubmit }
-                                title={t`Submit new evidence`}
+                                header={t`Submit new evidence`}
                                 buttonText={t`Submit`}
                                 ipfsUpload={ evidenceFiles }
                                 evidenceData={{
@@ -248,7 +248,7 @@ const AddEvidencesDialog = () => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Submit new evidence</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -266,7 +266,7 @@ const AddEvidencesDialog = () => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Submit new evidence</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>

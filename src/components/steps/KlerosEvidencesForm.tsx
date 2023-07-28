@@ -26,6 +26,7 @@ import Link from 'next/link';
 interface FormInitialData {
     onSubmit?: Function | undefined,
     goBack: MouseEventHandler,
+    header: string,
     title?: string,
     buttonText: string,
     evidenceData: EvidenceData,
@@ -51,6 +52,7 @@ export interface EvidenceData {
 const KlerosEvidencesForm = ({
     onSubmit: outerOnSubmit, 
     goBack, 
+    header,
     title,
     buttonText,
     ipfsUpload,
@@ -120,7 +122,7 @@ const KlerosEvidencesForm = ({
                     <Card variant="stepContent">
                         <CardHeader>
                             <Text as="h3" textStyle="h3" mb={{base: "10px"}}>
-                                <Trans>Open dispute <br /> in Kleros</Trans>
+                                { header }
                             </Text>
                             {
                                 title && <Text textStyle="paragraph" textAlign="center" fontWeight="700">

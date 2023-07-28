@@ -172,23 +172,25 @@ const RequestPage: NextPage = () => {
                             currentNFT = result
                             currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                             currentNFT.loadInitialData()
+                            currentNFT.loadPendingRequest() // TODO: remove because loading twice
                         })
                     }
                 }
                 loadNftStarted = true
             })
-            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
-                setRequestData(result)
+            nftProtectContract.requests(requestId.toString()).then((resultRequest: ActionRequest) => {
+                setRequestData(resultRequest)
                 if (!loadNftStarted) {
-                    loadNft(result.tokenId).then((result) => {
+                    loadNft(resultRequest.tokenId).then((result) => {
                         currentNFT = result
                         currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                         currentNFT.loadInitialData()
+                        currentNFT.pendingRequest = resultRequest
                     })
                 }
                 loadNftStarted = true
-                if (result.externalDisputeId) {
-                    getDispute(result.externalDisputeId).then((disputeData) => {
+                if (resultRequest.externalDisputeId) {
+                    getDispute(resultRequest.externalDisputeId).then((disputeData) => {
                         setDisputeData(disputeData)
                     })
                 }

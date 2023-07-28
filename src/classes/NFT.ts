@@ -105,10 +105,8 @@ export default class NFT implements NFTInterface {
     /** Returns loaded ethers contract object */
     getContract(): Contract {
         if (this.isPNFT()) {
-            console.log('THIS CONTEXT ->', this.context, this.context.active, this.context.nftProtectContract)
             return this.context.nftProtectContract
         } else {
-            console.log('THIS CONTEXT ->', this.context, this.context.active)
             if (this.tokenType === NftTokenType.ERC721) {
                 return new Contract(
                     this.contract.address, 

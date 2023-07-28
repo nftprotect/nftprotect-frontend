@@ -483,6 +483,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             {evidenceFiles && <KlerosEvidencesForm
                                 goBack={() => setNextStep(StepMapping.evidenceFillForm)}
                                 onSubmit={ klerosEvidenceFormSubmit }
+                                header={t`Open dispute in Kleros`}
                                 title={ klerosCaseFormTitle }
                                 buttonText={t`Open dispute`}
                                 ipfsUpload={ evidenceFiles }
