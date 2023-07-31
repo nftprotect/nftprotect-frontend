@@ -309,13 +309,6 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             </Button>
                                         }
                                     </Box>
-                                    <Box w={{base: "60%", sm: "50%"}}>
-                                        <Button
-                                            variant="darkOutline"
-                                            onClick={onClose}
-                                        ><Trans>Close</Trans>
-                                        </Button>
-                                    </Box>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside>
@@ -332,7 +325,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             >
                                 <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
                                     <Text mb={{base: "8px"}}>
-                                        <Trans>Upload all available evidence:</Trans>
+                                        <Trans>Upload all available evidence.</Trans>
                                     </Text>
                                     <Text>
                                         <Trans>To ensure a fair review by expert arbitrators, be sure to provide evidence. The more detail you provide, including text, images, or other documentation, the better the review.</Trans>
