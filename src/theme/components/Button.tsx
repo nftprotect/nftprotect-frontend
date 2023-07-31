@@ -29,7 +29,7 @@ const primaryLight = defineStyle({
     color: "#FFF",
     boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
     _hover: {
-        bgColor: "brand.dark",
+        bgColor: "brand.dark !important",
     },
     _active: {
         bgColor: "brand.dark",
