@@ -89,7 +89,13 @@ export const useNftProtectGraph = () => {
                 }
             `
             const result = await performQuery(graphURI, query)
-            return result
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data.system
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -119,7 +125,13 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const { data } = await performQuery(graphURI, query, { requestId: requestId.toString() })
+            const result = await performQuery(graphURI, query, { requestId: requestId.toString() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
             const { request } = data
             return request ? {
                 id: BigNumber.from(request.id),
@@ -162,7 +174,13 @@ export const useNftProtectGraph = () => {
                 }
             `
             const result = await performQuery(graphURI, query, { tokenId })
-            return result
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data.token
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -181,7 +199,13 @@ export const useNftProtectGraph = () => {
                 }
             `
             const result = await performQuery(graphURI, query, { address })
-            return result
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data.user
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -224,7 +248,13 @@ export const useNftProtectGraph = () => {
                 }
             `
             const result = await performQuery(graphURI, query, params)
-            return result
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data.requests
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -267,7 +297,13 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const { data } = await performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
+            const result = await performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
                 tokenId: BigNumber.from(it.tokenId),
@@ -329,7 +365,13 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const { data } = await performQuery(graphURI, query, { owner: owner.toLowerCase() })
+            const result = await performQuery(graphURI, query, { owner: owner.toLowerCase() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
                 tokenId: BigNumber.from(it.tokenId),
