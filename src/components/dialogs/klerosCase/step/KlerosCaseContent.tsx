@@ -413,7 +413,15 @@ const KlerosCaseContent = ({
                             </Button>
                         </Flex>
                         const enforceButton = !enforced && <Flex w={{base: "200px"}}>
-                            <Button variant="primaryLight">
+                            <Button 
+                                variant="primaryLight"
+                                onClick={() => {
+                                    const dialog = getDialog('EnforceRulingDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                }}
+                                isDisabled={!active}
+                            >
                                 <Trans>Enforce the ruling</Trans>
                             </Button>
                         </Flex>
