@@ -18,11 +18,12 @@ import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitra
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
 import { timestampToDate } from '../../../utils/helpers'
 import { DisputeGraphData, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
-import AddEvidencesDialog from '../../../components/dialogs/nft/AddEvidencesDialog'
+import AddEvidencesDialog from '../../../components/dialogs/request/AddEvidencesDialog'
 import { useIPFSContext } from '../../../context/IPFSContextProvider'
 import { useWeb3React } from '@web3-react/core'
 import { injected } from '../../../utils/connectors'
 import LoginForm from '../../../components/loginForm/LoginForm'
+import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -276,6 +277,10 @@ const RequestPage: NextPage = () => {
             {/* Dialogs registration flollowing */}
             {/* TODO: Evidences not reloading */}
             <AddEvidencesDialog onSubmitted={loadEvidences} />
+            <EnforceRulingDialog onSubmitted={async () => {
+                const request = await nft?.loadPendingRequest()
+                request && setRequestData(request)
+            }} />
         </Container>
     )
 }
