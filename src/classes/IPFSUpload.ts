@@ -41,7 +41,7 @@ export default class IPFSUpload {
 
     getCentralizedUrl(fileName?: string): string {
         fileName && this.checkFileName(fileName)
-        let name = this.isMultiple ? fileName : this.fileName
+        let name = this.isMultiple ? fileName : (this.wrappedWithDirectory ? this.fileName : undefined)
         return name ?
             getCentralizedUrl(this.getV2Hash(), name) :
             getCentralizedUrl(this.getV2Hash())
@@ -49,7 +49,7 @@ export default class IPFSUpload {
 
     getRelativeIPFSUrl(fileName?: string): string {
         fileName && this.checkFileName(fileName)
-        let name = this.isMultiple ? fileName : this.fileName
+        let name = this.isMultiple ? fileName : (this.wrappedWithDirectory ? this.fileName : undefined)
         return name ?
             getRelativeIpfsUrl(this.getV2Hash(), name) :
             getRelativeIpfsUrl(this.getV2Hash())
@@ -57,7 +57,7 @@ export default class IPFSUpload {
 
     getAbsoluteIPFSUrl(fileName?: string): string {
         fileName && this.checkFileName(fileName)
-        let name = this.isMultiple ? fileName : this.fileName
+        let name = this.isMultiple ? fileName : (this.wrappedWithDirectory ? this.fileName : undefined)
         return name ?
             getIpfsUrl(this.getV2Hash(), name) :
             getIpfsUrl(this.getV2Hash())

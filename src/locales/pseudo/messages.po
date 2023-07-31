@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-07-31 12:49+0700\n"
+"POT-Creation-Date: 2023-07-31 16:02+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,6 +73,10 @@ msgstr ""
 
 #: src/components/popups/CheckUrlPopup.tsx:30
 msgid "Always make sure the URL is nftprotect.app"
+msgstr ""
+
+#: src/pages/minter.tsx:256
+msgid "Amount of minted NFTs"
 msgstr ""
 
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:296
@@ -228,6 +232,7 @@ msgid "Connect your wallet<0/>& get protected"
 msgstr ""
 
 #: src/pages/arbitrator.tsx:136
+#: src/pages/minter.tsx:148
 msgid "Connect your wallet<0/>& register"
 msgstr ""
 
@@ -301,6 +306,10 @@ msgstr ""
 
 #: src/components/steps/KlerosCaseForm.tsx:124
 msgid "Describe the situation in details…"
+msgstr ""
+
+#: src/pages/minter.tsx:240
+msgid "Describe your NFT in details…"
 msgstr ""
 
 #: src/components/steps/KlerosCaseForm.tsx:78
@@ -426,6 +435,10 @@ msgstr ""
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr ""
 
+#: src/pages/minter.tsx:140
+msgid "Here you can mint any NFTs for your purposes"
+msgstr ""
+
 #: src/pages/arbitrator.tsx:117
 msgid "Here you can register new arbitrator or change the parameters of the existing one"
 msgstr ""
@@ -507,6 +520,10 @@ msgstr ""
 msgid "Lost pNFT"
 msgstr ""
 
+#: src/pages/minter.tsx:284
+msgid "Mint"
+msgstr ""
+
 #: src/components/nftView/NFTImage.tsx:17
 msgid "NFT image"
 msgstr ""
@@ -514,6 +531,10 @@ msgstr ""
 #: src/components/arbitrator/ArbitratorRequestList.tsx:61
 #: src/components/arbitrator/ArbitratorsList.tsx:102
 msgid "Name"
+msgstr ""
+
+#: src/pages/minter.tsx:224
+msgid "Name of your NFT"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:540
@@ -645,6 +666,10 @@ msgstr ""
 msgid "Please complete DID verification"
 msgstr ""
 
+#: src/pages/minter.tsx:156
+msgid "Please connect your wallet to mint <0/>an NFT"
+msgstr ""
+
 #: src/pages/arbitrator.tsx:144
 msgid "Please connect your wallet to register <0/>a new arbitrator"
 msgstr ""
@@ -663,6 +688,10 @@ msgstr ""
 
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:265
 msgid "Please fill the form to add operations"
+msgstr ""
+
+#: src/pages/minter.tsx:195
+msgid "Please fill the form to create an NFT"
 msgstr ""
 
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:285
@@ -867,6 +896,10 @@ msgstr ""
 
 #: src/components/notifications/ShowNotifications.tsx:107
 msgid "Show all"
+msgstr ""
+
+#: src/pages/minter.tsx:133
+msgid "Simple NFT Minter"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:685
@@ -1222,6 +1255,10 @@ msgstr ""
 
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:229
 msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
+msgstr ""
+
+#: src/pages/minter.tsx:205
+msgid "Type of your NFT"
 msgstr ""
 
 #: src/components/nftView/NFTCard.tsx:198

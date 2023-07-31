@@ -15,19 +15,22 @@ import all from 'it-all'
 interface UploaderInitialData {
     multiple?: boolean,
     returnLoadedFiles?: Function,
-    returnUploadedFiles?: Function
+    returnUploadedFiles?: Function,
+    fileTypes?: Array<string>
 }
+
+const defaultFileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"];
 
 export const IPFSFileUpload = ({
     multiple = true,
     returnLoadedFiles, 
-    returnUploadedFiles 
+    returnUploadedFiles, 
+    fileTypes
 } : UploaderInitialData ) => {
     const { ipfs } = useIPFSContext()
     const [loading, setLoading] = useState<boolean>(false)
     const [loadedFiles, setLoadedFiles] = useState<File|FileList>()
     const [uploadedFiles, setUploadedFiles] = useState<IPFSUpload>()
-    const fileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"];
 
     const uploadFile = async (files: File|FileList) => {
         if (!files) {
@@ -95,7 +98,7 @@ export const IPFSFileUpload = ({
                     setLoadedFiles(data)
                 }}
                 name="file"
-                types={fileTypes}
+                types={fileTypes || defaultFileTypes}
                 multiple={multiple}
                 fileOrFiles={null}
             >

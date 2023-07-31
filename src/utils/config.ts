@@ -117,3 +117,19 @@ export const arbitratorGraphs = [
         ]
     }
 ]
+
+export const simpleMinters = [
+    {
+        chainId: 5,
+        contracts: {
+            ERC721: '',
+            ERC1155: ''
+        }
+    }, {
+        chainId: 11155111,
+        contracts: {
+            ERC721: '0x81130a8a3ee226a735Cd0E153305054a9fdE721F',
+            ERC1155: '0x6DF767f2bc19e8C0DA48aBFAA247aA08636f21C5'
+        }
+    }
+]
