@@ -164,7 +164,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
+                                        <Trans>Transfer the original NFT <br />to a new owner{"?"}</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
@@ -241,7 +241,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Flex flexDirection="column">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
+                                            <Trans>Transfer the original NFT <br />to a new owner{"?"}</Trans>
                                         </Text>
                                     </CardHeader>
                                     <CardBody>
@@ -262,7 +262,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Flex flexDirection="column">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Transfer <br />the original NFT <br />to a new owner{"?"}</Trans>
+                                            <Trans>Transfer the original NFT <br />to a new owner{"?"}</Trans>
                                         </Text>
                                     </CardHeader>
                                     <CardBody>
@@ -282,7 +282,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>The original NFT <br/> was transferred <br/> to new owner</Trans>
+                                        <Trans>The original NFT was <br/>transferred to new owner</Trans>
                                     </Text>
                                 </CardHeader>
 

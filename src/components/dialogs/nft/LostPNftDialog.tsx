@@ -472,6 +472,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 <Trans>Other Evidence including chat logs or emails, screen recordings, law enforcement reports or any other information that may be relevant to the case, such as information about the platform where the theft occurred or any security breaches that may have led to the theft.</Trans>
                                             </ListItem>
                                         </OrderedList>
+                                        <Trans>The more detail you provide, including text, images, or other documentation, the better the review.</Trans>
                                     </Flex>
                             </KlerosCaseForm>
                         </SwitchableOutside>
@@ -497,13 +498,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
                                     <Text textStyle="paragraph" mt={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence
+                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence.  If everything is OK, press the 'Proceed to payment' button.
                                         </Trans>
                                     </Text>
                                 </CardBody>
@@ -550,7 +551,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Open dispute<br /> in Kleros</Trans>
+                                            <Trans>Open dispute in Kleros</Trans>
                                         </Text>
                                     </CardHeader>
                                     
@@ -587,7 +588,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -605,7 +606,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>

@@ -20,9 +20,9 @@ export const metaEvidenceTypes = [
             summary: t`The Claimant alleges that he purchased the pNFT bona fide but the owner of the original NFT refused to transfer him the original.`,
             policyURL: 'https://cloudflare-ipfs.com/ipfs/QmbaUb1TLEj8ZLrjfSiXfn6aqycZRVGfPzSSUVj7MRjR8M/nftprotect-policy-bonafide-transfer.pdf',
             claimantText: t`Claimant acquired the pNFT through this transaction:`,
-            claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
+            claimantTooltip: t`The Claimant is the party that has obtained a pNFT in a bona fide transaction`,
             defendantText: t`Defendant was the Original Owner of the NFT and insured it through the Protocol:`,
-            defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`,
+            defendantTooltip: t`The Defendant is the party that has insured the Original throught the Protocol (Original Owner)`,
             caseSubject: t`Original NFT`
         }
     }, {
@@ -49,7 +49,7 @@ export const metaEvidenceTypes = [
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`Defendant acquired the pNFT through this transaction:`,
             defendantTooltip: t`The Defendant is the party that has aquired the pNFT and is challenged.`,
-            caseSubject: t`Protected NFT`
+            caseSubject: t`Protected NFT (pNFT)`
         }
     }, {
         label: t`Protocol breach`,
@@ -62,8 +62,8 @@ export const metaEvidenceTypes = [
             claimantText2: t`Claimant sent pNFT to partner protocol:`,
             claimantTooltip: t`The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)`,
             defendantText: t`The pNFT was transfered out of the protocol:`,
-            defendantTooltip: t`The Defendant is a smart contract.`,
-            caseSubject: t`Protected NFT`
+            defendantTooltip: t`The Defendant is the protocol, that lost the pNFT due to breach and is challenged`,
+            caseSubject: t`Protected NFT (pNFT)`
         }
     }
 ]

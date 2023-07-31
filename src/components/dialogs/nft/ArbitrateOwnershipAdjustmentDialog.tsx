@@ -360,13 +360,13 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence
+                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence.  If everything is OK, press the 'Proceed to payment' button.
                                         </Trans>
                                     </Text>
                                 </CardBody>
@@ -412,7 +412,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>Open dispute<br /> in Kleros</Trans>
+                                            <Trans>Open dispute in Kleros</Trans>
                                         </Text>
                                     </CardHeader>
                                     
@@ -449,7 +449,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
 
@@ -467,7 +467,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textAlign="center" fontWeight="700">
-                                        <Trans>Open dispute<br /> in Kleros</Trans>
+                                        <Trans>Open dispute in Kleros</Trans>
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
