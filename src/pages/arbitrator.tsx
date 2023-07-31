@@ -159,7 +159,7 @@ const ArbitratorPage: NextPage = () => {
                         w={{base: "100%",  md: "60%"}}
                         zIndex="0"
                     >
-                        <Image src="/images/phone.png" alt="Phone"></Image>
+                        <Image src="/images/mainBannerBackground.png" alt="Bubbles"></Image>
                     </Box>
                 }
                 </Box>

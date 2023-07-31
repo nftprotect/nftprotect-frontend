@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-07-31 12:49+0700\n"
+"POT-Creation-Date: 2023-07-31 16:02+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -74,6 +74,10 @@ msgstr "All your protected assets"
 #: src/components/popups/CheckUrlPopup.tsx:30
 msgid "Always make sure the URL is nftprotect.app"
 msgstr "Always make sure the URL is nftprotect.app"
+
+#: src/pages/minter.tsx:256
+msgid "Amount of minted NFTs"
+msgstr "Amount of minted NFTs"
 
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:296
 msgid "An address of your arbitrator contract"
@@ -228,6 +232,7 @@ msgid "Connect your wallet<0/>& get protected"
 msgstr "Connect your wallet<0/>& get protected"
 
 #: src/pages/arbitrator.tsx:136
+#: src/pages/minter.tsx:148
 msgid "Connect your wallet<0/>& register"
 msgstr "Connect your wallet<0/>& register"
 
@@ -302,6 +307,10 @@ msgstr "Describe the file…"
 #: src/components/steps/KlerosCaseForm.tsx:124
 msgid "Describe the situation in details…"
 msgstr "Describe the situation in details…"
+
+#: src/pages/minter.tsx:240
+msgid "Describe your NFT in details…"
+msgstr "Describe your NFT in details…"
 
 #: src/components/steps/KlerosCaseForm.tsx:78
 msgid "Description is required"
@@ -426,6 +435,10 @@ msgstr "Get Started"
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr "Have you lost<0/> access to your pNFT?"
 
+#: src/pages/minter.tsx:140
+msgid "Here you can mint any NFTs for your purposes"
+msgstr "Here you can mint any NFTs for your purposes"
+
 #: src/pages/arbitrator.tsx:117
 msgid "Here you can register new arbitrator or change the parameters of the existing one"
 msgstr "Here you can register new arbitrator or change the parameters of the existing one"
@@ -507,6 +520,10 @@ msgstr "Links"
 msgid "Lost pNFT"
 msgstr "Lost pNFT"
 
+#: src/pages/minter.tsx:284
+msgid "Mint"
+msgstr "Mint"
+
 #: src/components/nftView/NFTImage.tsx:17
 msgid "NFT image"
 msgstr "NFT image"
@@ -515,6 +532,10 @@ msgstr "NFT image"
 #: src/components/arbitrator/ArbitratorsList.tsx:102
 msgid "Name"
 msgstr "Name"
+
+#: src/pages/minter.tsx:224
+msgid "Name of your NFT"
+msgstr "Name of your NFT"
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:540
 msgid "Name:"
@@ -645,6 +666,10 @@ msgstr "Please check operations you want to remove"
 msgid "Please complete DID verification"
 msgstr "Please complete DID verification"
 
+#: src/pages/minter.tsx:156
+msgid "Please connect your wallet to mint <0/>an NFT"
+msgstr "Please connect your wallet to mint <0/>an NFT"
+
 #: src/pages/arbitrator.tsx:144
 msgid "Please connect your wallet to register <0/>a new arbitrator"
 msgstr "Please connect your wallet to register <0/>a new arbitrator"
@@ -664,6 +689,10 @@ msgstr "Please fill the form to add collections"
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:265
 msgid "Please fill the form to add operations"
 msgstr "Please fill the form to add operations"
+
+#: src/pages/minter.tsx:195
+msgid "Please fill the form to create an NFT"
+msgstr "Please fill the form to create an NFT"
 
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:285
 msgid "Please fill the form to register"
@@ -868,6 +897,10 @@ msgstr "Sending to an incorrect address"
 #: src/components/notifications/ShowNotifications.tsx:107
 msgid "Show all"
 msgstr "Show all"
+
+#: src/pages/minter.tsx:133
+msgid "Simple NFT Minter"
+msgstr "Simple NFT Minter"
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:685
 msgid "Smart contract:"
@@ -1223,6 +1256,10 @@ msgstr "Transfered pNFT"
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:229
 msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
 msgstr "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
+
+#: src/pages/minter.tsx:205
+msgid "Type of your NFT"
+msgstr "Type of your NFT"
 
 #: src/components/nftView/NFTCard.tsx:198
 #: src/components/nftView/NFTCard.tsx:298
