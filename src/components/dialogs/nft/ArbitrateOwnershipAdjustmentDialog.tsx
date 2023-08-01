@@ -359,7 +359,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 <CardBody mb={{base: "20px"}}>
                                     <Text textStyle="paragraph" my={{base: "20px"}} textAlign="center">
                                         <Trans>
-                                            Before we raise the dispute in Kleros Court, please review the case and collect evidence.  If everything is OK, press the 'Proceed to payment' button.
+                                            {"Before we raise the dispute in Kleros Court, please review the case and collect evidence.  If everything is OK, press the 'Proceed to payment' button."}
                                         </Trans>
                                     </Text>
                                 </CardBody>
@@ -488,7 +488,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             </Image>
                                         </Box>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                            <Trans>If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing.</Trans>
+                                            <Trans>{"If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing."}</Trans>
                                         </Text>
                                         
                                         <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">

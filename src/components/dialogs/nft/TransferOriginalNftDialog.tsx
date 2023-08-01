@@ -188,7 +188,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                     </PopoverBody>
                                                 </PopoverContent>
                                             </Popover>
-                                            {'\u003F'}
+                                            {"?"}
                                         </Text>
                                     </Text>
                                 </CardBody>

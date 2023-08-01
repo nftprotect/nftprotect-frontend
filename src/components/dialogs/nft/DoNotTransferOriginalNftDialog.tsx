@@ -233,7 +233,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                             </Box>
                                             <Flex flexDirection="column">
                                                 <Text textStyle="paragraph">
-                                                    <Trans>This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure.</Trans>
+                                                    <Trans>{"This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."}</Trans>
                                                 </Text>
                                             </Flex>
                                         </Flex>
