@@ -48,6 +48,7 @@ import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import TimeCounter from '../../../../hooks/useTimeCounter';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
 import { ReqStatus, ReqType } from '../../../../hooks/useNftProtectGraph';
+import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -156,7 +157,8 @@ const KlerosCaseContent = ({
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
     });
-    const { library, account } = useAppContext()
+    const { library, account, active } = useAppContext()
+    const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
 
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
@@ -411,7 +413,15 @@ const KlerosCaseContent = ({
                             </Button>
                         </Flex>
                         const enforceButton = !enforced && <Flex w={{base: "200px"}}>
-                            <Button variant="primaryLight">
+                            <Button 
+                                variant="primaryLight"
+                                onClick={() => {
+                                    const dialog = getDialog('EnforceRulingDialog')
+                                    dialog.setNft(nft)
+                                    dialog.onOpen()
+                                }}
+                                isDisabled={!active}
+                            >
                                 <Trans>Enforce the ruling</Trans>
                             </Button>
                         </Flex>
@@ -788,10 +798,10 @@ const KlerosCaseContent = ({
                             <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                 <Text textStyle="paragraph">
                                     <Trans>Submitted by</Trans> {
-                                        evidence.evidenceJson.evidenceSide === 0 ? 
-                                            formatAddress(claimantAddress, 4) : 
-                                        evidence.evidenceJson.evidenceSide === 1 ?
-                                            formatAddress(defendantAddress, 4) :
+                                        // evidence.evidenceJson.evidenceSide === 0 ? 
+                                        //     formatAddress(claimantAddress, 4) : 
+                                        // evidence.evidenceJson.evidenceSide === 1 ?
+                                        //     formatAddress(defendantAddress, 4) :
                                         formatAddress(evidence.submittedBy, 4)
                                     }
                                 </Text>
@@ -817,7 +827,18 @@ const KlerosCaseContent = ({
             }
             {/* Visible only on step 1 "Evidence period" */}
             { (stepKey === 'Evidence period') && <Flex mt={{base: "80px"}} alignItems="center" justifyContent="center">
-                    <Button variant="primaryLight" w={{base: "200px"}} px={{base: "32px"}} py={{base: "12px"}}>
+                    <Button 
+                        variant="primaryLight" 
+                        w={{base: "200px"}} 
+                        px={{base: "32px"}} 
+                        py={{base: "12px"}}
+                        onClick={() => {
+                            const dialog = getDialog('AddEvidencesDialog')
+                            dialog.setNft(nft)
+                            dialog.onOpen()
+                        }}
+                        isDisabled={!active}
+                    >
                         <Trans>Submit new evidence</Trans>
                     </Button>
                 </Flex>

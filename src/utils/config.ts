@@ -93,7 +93,7 @@ export const nftProtectGraphs = [
         uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
     }, {
         chainId: 11155111,
-        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect-sepolia'
+        uri: 'https://api.studio.thegraph.com/proxy/17884/nftprotect-sepolia/y'
     }
 ]
 
@@ -115,5 +115,21 @@ export const arbitratorGraphs = [
                 uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/kleros-sepolia'
             }
         ]
+    }
+]
+
+export const simpleMinters = [
+    {
+        chainId: 5,
+        contracts: {
+            ERC721: '',
+            ERC1155: ''
+        }
+    }, {
+        chainId: 11155111,
+        contracts: {
+            ERC721: '0x81130a8a3ee226a735Cd0E153305054a9fdE721F',
+            ERC1155: '0x6DF767f2bc19e8C0DA48aBFAA247aA08636f21C5'
+        }
     }
 ]

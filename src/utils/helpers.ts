@@ -68,3 +68,5 @@ export const addTimestampToDate = (date: Date, timestamp: number) => {
 export const generateRequestLink = (requestId: any, chainId: number = defaultChain) => {
     return `/request/${chainId}/${requestId.toString()}`
 }
+
+export const capitalize = (s: string) => s.length > 0 ? `${s[0].toUpperCase()}${s.slice(1,s.length)}` : ''

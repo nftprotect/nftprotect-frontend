@@ -112,7 +112,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     }
                 }
                 performAnswer().then( finalTransactionSent(
-                    nft.loadedContract,
+                    nft.getContract(),
                     StepMapping.pendingTransaction,
                     StepMapping.transferredSuccessfully
                 ))

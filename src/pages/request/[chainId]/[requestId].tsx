@@ -18,6 +18,12 @@ import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitra
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
 import { timestampToDate } from '../../../utils/helpers'
 import { DisputeGraphData, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
+import AddEvidencesDialog from '../../../components/dialogs/request/AddEvidencesDialog'
+import { useIPFSContext } from '../../../context/IPFSContextProvider'
+import { useWeb3React } from '@web3-react/core'
+import { injected } from '../../../utils/connectors'
+import LoginForm from '../../../components/loginForm/LoginForm'
+import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -37,7 +43,8 @@ const defaultChainArbitrator = supportedChains.find(it => it.id === defaultChain
 
 const RequestPage: NextPage = () => {
     const context = useAppContext()
-    const { account, library, currentChain, nftProtectContract } = context
+    const { account, active, library, currentChain, nftProtectContract } = context
+    const { activate } = useWeb3React()
     const { listEvidences, getPeriod } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
@@ -58,6 +65,12 @@ const RequestPage: NextPage = () => {
     }, [requestData])
     const { getRequest } = useNftProtectGraph()
     const [ period, setPeriod ] = useState<DisputePeriodData>()
+    const { setBaseUrl } = useIPFSContext()
+
+    // setup ipfs endpoint
+    useEffect(() => {
+        setBaseUrl(window.location.origin)
+    }, [])
 
     const getBlockDate = async (blockNumber: number) => {
         const block = await library.getBlock(blockNumber)
@@ -160,23 +173,25 @@ const RequestPage: NextPage = () => {
                             currentNFT = result
                             currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                             currentNFT.loadInitialData()
+                            currentNFT.loadPendingRequest() // TODO: remove because loading twice
                         })
                     }
                 }
                 loadNftStarted = true
             })
-            nftProtectContract.requests(requestId.toString()).then((result: ActionRequest) => {
-                setRequestData(result)
+            nftProtectContract.requests(requestId.toString()).then((resultRequest: ActionRequest) => {
+                setRequestData(resultRequest)
                 if (!loadNftStarted) {
-                    loadNft(result.tokenId).then((result) => {
+                    loadNft(resultRequest.tokenId).then((result) => {
                         currentNFT = result
                         currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
                         currentNFT.loadInitialData()
+                        currentNFT.pendingRequest = resultRequest
                     })
                 }
                 loadNftStarted = true
-                if (result.externalDisputeId) {
-                    getDispute(result.externalDisputeId).then((disputeData) => {
+                if (resultRequest.externalDisputeId) {
+                    getDispute(resultRequest.externalDisputeId).then((disputeData) => {
                         setDisputeData(disputeData)
                     })
                 }
@@ -245,7 +260,9 @@ const RequestPage: NextPage = () => {
         >
             { error && <h1>{error}</h1> }
             { !error && !allRequiredLoaded && <h1>Loading...</h1> }
-            { !error && allRequiredLoaded && <KlerosCaseContent
+            { !error && allRequiredLoaded && <>
+            { !active && <LoginForm buttonVariant={'primaryLight'} /> }
+            <KlerosCaseContent
                 metaEvidenceId={parseInt(metaEvidenceType.value)}
                 nft={nft}
                 claimantAddress={claimantAddress}
@@ -255,7 +272,15 @@ const RequestPage: NextPage = () => {
                 requestType={requestData.reqtype}
                 requestStatus={requestData.status}
                 pageData={ metaEvidenceType.page }
-            />}
+            />
+            </>}
+            {/* Dialogs registration flollowing */}
+            {/* TODO: Evidences not reloading */}
+            <AddEvidencesDialog onSubmitted={loadEvidences} />
+            <EnforceRulingDialog onSubmitted={async () => {
+                const request = await nft?.loadPendingRequest()
+                request && setRequestData(request)
+            }} />
         </Container>
     )
 }

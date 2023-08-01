@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { arbitratorGraphs } from "../utils/config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
-import { timestampToDate } from "../utils/helpers";
+import { capitalize, timestampToDate } from "../utils/helpers";
 
 export enum Period {
     Evidence,
@@ -97,6 +97,7 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
             const { dispute } = data
             return {
                 ...dispute,
+                period: dispute.period ? Period[capitalize(dispute.period) as keyof typeof Period] : undefined,
                 startTime: timestampToDate(dispute.startTime),
                 lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
                 numberOfChoices: BigNumber.from(dispute.numberOfChoices),
@@ -148,6 +149,7 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
             const result = data.disputes.map((dispute: any) => {
                 return {
                     ...dispute,
+                    period: dispute.period ? Period[capitalize(dispute.period) as keyof typeof Period] : undefined,
                     startTime: timestampToDate(dispute.startTime),
                     lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
                     numberOfChoices: BigNumber.from(dispute.numberOfChoices),

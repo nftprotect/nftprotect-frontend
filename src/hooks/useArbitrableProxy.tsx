@@ -1,4 +1,4 @@
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
@@ -33,18 +33,26 @@ export const useArbitrableProxy = () => {
             "useArbitrable has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
+    const { currentChain, active, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
         const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
-        const contract = new Contract(arbitrableProxyAddress, ArbitrableProxyABI, library)
+        const contract = new Contract(
+            arbitrableProxyAddress,
+            ArbitrableProxyABI, 
+            active ? library.getSigner() : library
+        )
         return contract
     }
 
     const loadArbitrator = async (arbitrableProxy: Contract) => {
         const arbitratorAddress = await arbitrableProxy.arbitrator()
-        const contract = new Contract(arbitratorAddress, KlerosLiquidABI, library)
+        const contract = new Contract(
+            arbitratorAddress, 
+            KlerosLiquidABI, 
+            active ? library.getSigner() : library
+        )
         return contract
     }
 
@@ -130,8 +138,22 @@ export const useArbitrableProxy = () => {
         }
     }
 
+    const submitEvidence = async ( 
+        arbitratorId: number, 
+        localDisputeId: BigNumber,
+        evidenceURI: string
+    ): Promise<any> => {
+        const contract = await getArbitrableProxy(arbitratorId)
+        return contract.submitEvidence(localDisputeId, evidenceURI)
+    }
+
+    useEffect(() => {
+        contracts.current = []
+    }, [active, currentChain])
+
     return {
         listEvidences,
-        getPeriod
+        getPeriod,
+        submitEvidence
     }
 }
