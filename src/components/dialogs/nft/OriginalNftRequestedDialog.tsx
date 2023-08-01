@@ -159,7 +159,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </PopoverContent>
                             </Popover>
                             <Text textStyle="paragraph" fontWeight="700" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em" color="danger">
-                                <Trans>your asset may have been stolen!</Trans>
+                                <Trans>YOUR ASSET MAY HAVE BEEN STOLEN!</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "20px"}}>
                                 <Trans>We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker{'\u0027'}s wallet.</Trans>

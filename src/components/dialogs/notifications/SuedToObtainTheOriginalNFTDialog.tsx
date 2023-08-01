@@ -120,7 +120,7 @@ const SuedToObtainTheOriginalNFTDialog = () => {
                                 </Text>
 
                                 <Text>
-                                    <Trans>You can add more evidence to your dispute using the provided link within the <chakra.span color="danger">next</chakra.span> 48 hours while the evidence collection phase is still ongoing.</Trans>
+                                    <Trans>You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing.</Trans>
                                 </Text>
                             </Flex>
 

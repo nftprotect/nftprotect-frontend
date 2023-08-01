@@ -563,7 +563,7 @@ const KlerosCaseContent = ({
                 <Flex flexDirection="column" borderRight="2px solid #ADADAD" w="50%" pr={{base: "10px"}}>
                     <Flex alignItems="center" mb={{base: "4px"}}>
                         <Text fontSize="18px" fontWeight="700">
-                            <Trans>The claimant</Trans>
+                            <Trans>The Claimant</Trans>
                         </Text>
                         <Popover placement="right">
                             <PopoverTrigger>

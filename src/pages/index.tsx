@@ -105,15 +105,13 @@ const Home: NextPage = () => {
                                     h={{base: '75px'}}
                                     mb={{base: "40px"}}
                                 />
-                                <Text fontFamily="Roboto" fontSize={{base: "36px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center">
+                                <Text fontFamily="Lexend" fontSize={{base: "44px"}} lineHeight={{base: "42px"}} fontWeight={{base: "900"}} letterSpacing={{base: "0.04em"}} textAlign="center">
                                     <Trans>Connect your wallet<br></br>& get protected</Trans>
                                 </Text>
-                                    
-                                <Text textStyle="paragraph" fontWeight={{base: "500"}} letterSpacing={{base: "0.04em"}} textAlign="center" pt="1.25rem" pb="2rem">
-                                    <Trans>Please connect your wallet to see your digital assets and protect them</Trans>
-                                </Text>
-                                <Box w={{base: "14rem", sm: "16rem"}} >
-                                    <LoginForm buttonVariant={'primaryLight'} />
+                                <Box mt={10}>                             
+                                    <Box w={{base: "14rem", sm: "16rem"}} >
+                                        <LoginForm buttonVariant={'primaryLight'} />
+                                    </Box>
                                 </Box>
                             </Flex>
                         </Flex>
@@ -133,7 +131,7 @@ const Home: NextPage = () => {
                                 <Flex flexDir="column" color="#FFF" w={{base: "60%"}} 
                                 >
                                     <Text fontSize={{base: '64px'}} lineHeight={{base: "68px"}} fontWeight={{base: "600"}}>
-                                        <Trans>Protect your digital <br />assets from bad actors</Trans>
+                                        <Trans>Welcome to NFT Protect <br />your digital asset guardian</Trans>
                                     </Text>
                                     <Text 
                                         pt="1.25rem"
@@ -141,7 +139,7 @@ const Home: NextPage = () => {
                                         textStyle="h3"
                                         fontWeight="500"
                                     >
-                                        <Trans>Decentralized self-custody protocol <br/>for safeguarding digital assets <br/>from theft and private key compromise</Trans>
+                                        <Trans>Manage your NFTs and pNFTs, stay updated with notifications, <br/>and rest assured with our advanced secuirity features.</Trans>
                                     </Text>
                                 </Flex>
 

@@ -216,7 +216,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                     dialog.onOpen()
                                 } }
                             >
-                                <Trans>Lost pNFT</Trans>
+                                <Trans>Open dispute</Trans>
                             </Button>
                         </Box>
                         <Box mt={[2]}>
@@ -260,7 +260,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                     dialog.onOpen()
                                 } }
                             >
-                                <Trans>Lost pNFT</Trans>
+                                <Trans>Open dispute</Trans>
                             </Button>
                         </Box>
                         <Box mt={[2]}>
@@ -329,7 +329,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 dialog.onOpen()
                             } }
                         >
-                            <Trans>Lost pNFT</Trans>
+                            <Trans>Open dispute</Trans>
                         </Button>
                     </Box>
             }
