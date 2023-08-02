@@ -167,7 +167,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer the <br/>original NFT to <br/> the new owner</Trans>{"?"}
+                                        <Trans>Transfer the original NFT <br/>to the new owner</Trans>{"?"}
                                     </Text>
                                 </CardHeader>
 
@@ -185,7 +185,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer the <br/>original NFT to <br/> the new owner</Trans>{"?"}
+                                        <Trans>Transfer the original NFT <br/>to the new owner</Trans>{"?"}
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -203,7 +203,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                 <Flex flexDirection="column" alignItems="center">
                                     <CardHeader>
                                         <Text as="h3" textStyle="h3">
-                                            <Trans>The original NFT <br/> remains in your <br/> wallet</Trans>
+                                            <Trans>The original NFT <br/>remains in your wallet</Trans>
                                         </Text>
                                     </CardHeader>
 
@@ -233,7 +233,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                             </Box>
                                             <Flex flexDirection="column">
                                                 <Text textStyle="paragraph">
-                                                    <Trans>This is a controversial issue, we recommend that you either transfer the original nft or burn the pNFT {"("}by opening the dispute{")"}</Trans>
+                                                    <Trans>{"This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."}</Trans>
                                                 </Text>
                                             </Flex>
                                         </Flex>

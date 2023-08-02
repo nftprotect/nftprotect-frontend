@@ -119,7 +119,7 @@ const SuedForBurnNFTDialog = () => {
                                 </Text>
 
                                 <Text>
-                                    <Trans>You can add more evidence to your dispute using the provided link within the next 48 hours while the evidence collection phase is still ongoing.</Trans>
+                                    <Trans>You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing.</Trans>
                                 </Text>
                             </Flex>
 
