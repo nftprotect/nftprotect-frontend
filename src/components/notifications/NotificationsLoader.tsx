@@ -1206,7 +1206,7 @@ const NotificationsLoader = () => {
                             children:
                                 <CommonNotificationBody
                                     header={
-                                        <Trans>User ${formatAddress(nft.ownerAddress, 4)} is requesting the original NFT.</Trans>
+                                        <Trans>User {formatAddress(nft.ownerAddress, 4)} is requesting the original NFT.</Trans>
                                     }
                                     message={
                                         <Trans>Do you want to transfer the original NFT to them?</Trans>
