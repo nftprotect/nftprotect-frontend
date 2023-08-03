@@ -1221,48 +1221,50 @@ const NotificationsLoader = () => {
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
-                        if (request.type === ReqType.Burn) {
-                            // 20.1 Burn rejected by request with dispute
-                            addNotification({
-                                id: notificationId+'.20.1',
-                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
-                                        }
-                                        message={
-                                            <Trans>User {nft.originalOwnerAddress} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans>
-                                        }
-                                    />, 
-                                severity: SeverityLevel.Major,
-                                buttonCallback: () => {
-                                    const uri = generateRequestLink(request.id, currentChain?.id)
-                                    window.open(uri, '_blank');
-                                },
-                                dateCreated: request.updateDate
-                            })
-                        } else if (request.type === ReqType.OwnershipAdjustment) {
-                            // 31.1 Ownership adjustment rejected by request with dispute
-                            addNotification({
-                                id: notificationId+'.31.1',
-                                image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
-                                children: 
-                                    <CommonNotificationBody
-                                        header={
-                                            <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
-                                        }
-                                        message={
-                                            <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT.</Trans>
-                                        }
-                                    />, 
-                                severity: SeverityLevel.Major,
-                                buttonCallback: () => {
-                                    const uri = generateRequestLink(request.id, currentChain?.id)
-                                    window.open(uri, '_blank');
-                                },
-                                dateCreated: request.updateDate
-                            })
+                        if (loadedRequest.externalDisputeId) {
+                            if (request.type === ReqType.Burn) {
+                                // 20.1 Burn rejected by request with dispute
+                                addNotification({
+                                    id: notificationId+'.20.1',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>User {nft.originalOwnerAddress} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
+                                    dateCreated: request.updateDate
+                                })
+                            } else if (request.type === ReqType.OwnershipAdjustment) {
+                                // 31.1 Ownership adjustment rejected by request with dispute
+                                addNotification({
+                                    id: notificationId+'.31.1',
+                                    image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
+                                    children: 
+                                        <CommonNotificationBody
+                                            header={
+                                                <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
+                                            }
+                                            message={
+                                                <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT.</Trans>
+                                            }
+                                        />, 
+                                    severity: SeverityLevel.Major,
+                                    buttonCallback: () => {
+                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        window.open(uri, '_blank');
+                                    },
+                                    dateCreated: request.updateDate
+                                })
+                            }
                         }
                     }
                     // Closing notifications
