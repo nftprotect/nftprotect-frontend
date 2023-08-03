@@ -60,7 +60,7 @@ const NotificationsLoader = () => {
         const requestPart = nft.latestRequest ? 
             `${nft.latestRequest.id}-${nft.latestRequest.type}` :
             'none'
-        return `${nft.id}-${requestPart}`
+        return `${currentChain?.id}-${nft.id}-${requestPart}`
     }
 
     const loadRequest = async (requestId: BigNumber): Promise<ActionRequest> => {
