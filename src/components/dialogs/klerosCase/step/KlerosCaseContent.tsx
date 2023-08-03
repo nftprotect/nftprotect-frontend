@@ -810,14 +810,22 @@ const KlerosCaseContent = ({
                                         { formatDate(evidence.submitDate) }
                                     </Text>
                                     <Flex flexDirection="column" textAlign="right">
-                                    { evidence.evidenceJson.files.map((file, idx) => {
-                                        return <Text key={`file-${idx}`} textStyle="paragraph" color="#2D7BD6">
-                                            { file.description }
-                                            <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
-                                                <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
-                                            </Link>
+                                    { evidence.evidenceJson.files ? 
+                                        evidence.evidenceJson.files.map((file, idx) => {
+                                            return <Text key={`file-${idx}`} textStyle="paragraph" color="#2D7BD6">
+                                                { file.description }
+                                                <Link href={centralizeIpfsUrl(file.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
+                                                    <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                                </Link>
+                                            </Text>
+                                        }) : 
+                                        <Text textStyle="paragraph" color="#2D7BD6">
+                                                <Trans>File link</Trans>
+                                                <Link href={centralizeIpfsUrl(evidence.evidenceJson.fileURI)} isExternal rel="noreferrer" color="#2D7BD6">
+                                                    <ExternalLinkIcon mb="3px" mx='5px' fontSize="16px" lineHeight={{base: "18px"}}/>
+                                                </Link>
                                         </Text>
-                                    })}
+                                    }
                                     </Flex>
                                 </Flex>
                             </Flex>

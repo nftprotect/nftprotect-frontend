@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-01 12:08+0700\n"
+"POT-Creation-Date: 2023-08-03 14:39+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -166,6 +166,10 @@ msgstr "Bona fide transfer"
 #: src/components/arbitrator/ArbitratorsList.tsx:104
 msgid "Cases admissible for arbitration"
 msgstr "Cases admissible for arbitration"
+
+#: src/pages/validate.tsx:277
+msgid "Chain"
+msgstr "Chain"
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:428
 msgid "Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent."
@@ -377,6 +381,14 @@ msgstr "English"
 msgid "Enjoy your new life in protected world!"
 msgstr "Enjoy your new life in protected world!"
 
+#: src/pages/validate.tsx:321
+msgid "Enter the ID*"
+msgstr "Enter the ID*"
+
+#: src/pages/validate.tsx:305
+msgid "Enter the token smart contract address"
+msgstr "Enter the token smart contract address"
+
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:167
 #: src/components/dialogs/arbitrator/EditOperationsDialog.tsx:149
 #: src/components/dialogs/arbitrator/RegisterArbitratorDialog.tsx:160
@@ -411,6 +423,10 @@ msgstr "Fetching balance…"
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:412
 msgid "File an appeal"
 msgstr "File an appeal"
+
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:823
+msgid "File link"
+msgstr "File link"
 
 #: src/components/dialogs/arbitrator/AddContractsDialog.tsx:391
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:448
@@ -913,7 +929,7 @@ msgstr "Some error occured"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:842
+#: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:850
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:214
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:233
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:249
@@ -1320,6 +1336,14 @@ msgstr "User {0} is still the owner of the orginal NFT. He can now sue you for O
 #: src/components/notifications/NotificationsLoader.tsx:1235
 msgid "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer."
 msgstr "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer."
+
+#: src/pages/validate.tsx:267
+msgid "Validate"
+msgstr "Validate"
+
+#: src/pages/validate.tsx:339
+msgid "Verify"
+msgstr "Verify"
 
 #: src/components/arbitrator/ArbitratorsList.tsx:80
 msgid "View on Etherscan"
