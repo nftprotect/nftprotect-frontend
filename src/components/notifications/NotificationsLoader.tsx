@@ -711,6 +711,29 @@ const NotificationsLoader = () => {
                     } else {
                         // If received pNFT is burned and there was no request,
                         // it means there was a transfer of original
+                        // 22. Original transfered without request
+                        const originalNft = await getOriginalNft(nft)
+                        addNotification({
+                            id: notificationId+'.22',
+                            image: <NFTImage nft={ originalNft } setDefaultStyles={false} />,
+                            children: 
+                                <CommonNotificationBody
+                                    header={
+                                        <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} transferred the original NFT to you.</Trans>
+                                    }
+                                    message={
+                                        <Trans>We recommend protecting it using NFT Protect</Trans>
+                                    }
+                                />, 
+                            severity: SeverityLevel.Major,
+                            buttonCallback: () => {
+                                const dialog = getDialog('OriginalNftReceivedDialog')
+                                dialog.setNft(originalNft)
+                                dialog.setPreviousOriginalOwner(nft.ownerAddress)
+                                dialog.onOpen()
+                            },
+                            dateCreated: new Date() // TODO: put burn date
+                        })
                         // Close message 0 if exists
                         let toClose = getNotification(notificationId+'.0')
                         toClose && deleteNotification(toClose)
