@@ -93,7 +93,7 @@ export const nftProtectGraphs = [
         uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
     }, {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/proxy/17884/nftprotect-sepolia/y'
+        uri: 'https://api.studio.thegraph.com/proxy/17884/nftprotect-sepolia/version/latest'
     }
 ]
 

@@ -35,7 +35,7 @@ interface FormInitialData {
 
 export interface EvidenceJson extends EvidenceData {
     fileURI: string,
-    files: {
+    files?: {
         fileURI: string,
         description: string
     }[]
