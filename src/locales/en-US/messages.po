@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-04 15:02+0700\n"
+"POT-Creation-Date: 2023-08-04 15:05+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1305,18 +1305,6 @@ msgstr "Upload all available evidence:"
 msgid "User"
 msgstr "User"
 
-#: src/components/notifications/NotificationsLoader.tsx:574
-msgid "User ${0} has not responded."
-msgstr "User ${0} has not responded."
-
-#: src/components/notifications/NotificationsLoader.tsx:663
-msgid "User ${0} has refused to transfer the original NFT to you."
-msgstr "User ${0} has refused to transfer the original NFT to you."
-
-#: src/components/notifications/NotificationsLoader.tsx:193
-msgid "User ${0} has transferred the original NFT to you."
-msgstr "User ${0} has transferred the original NFT to you."
-
 #: src/components/notifications/NotificationsLoader.tsx:848
 msgid "User {0} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{1}."
 msgstr "User {0} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{1}."
@@ -1324,6 +1312,18 @@ msgstr "User {0} has filed a claim for Ownership Adjustment and wants to obtain 
 #: src/components/notifications/NotificationsLoader.tsx:869
 msgid "User {0} has filed a claim to burn your pNFT. More details on dispute #{1}."
 msgstr "User {0} has filed a claim to burn your pNFT. More details on dispute #{1}."
+
+#: src/components/notifications/NotificationsLoader.tsx:574
+msgid "User {0} has not responded."
+msgstr "User {0} has not responded."
+
+#: src/components/notifications/NotificationsLoader.tsx:663
+msgid "User {0} has refused to transfer the original NFT to you."
+msgstr "User {0} has refused to transfer the original NFT to you."
+
+#: src/components/notifications/NotificationsLoader.tsx:193
+msgid "User {0} has transferred the original NFT to you."
+msgstr "User {0} has transferred the original NFT to you."
 
 #: src/components/notifications/NotificationsLoader.tsx:1232
 msgid "User {0} is requesting the original NFT."

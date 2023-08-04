@@ -190,7 +190,7 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has transferred the original NFT to you.</Trans>
+                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has transferred the original NFT to you.</Trans>
                                             }
                                             message={
                                                 <Trans>We recommend protecting it using NFT Protect.</Trans>
@@ -571,7 +571,7 @@ const NotificationsLoader = () => {
                                         children:
                                             <CommonNotificationBody
                                                 header={
-                                                    <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has not responded.</Trans>
+                                                    <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has not responded.</Trans>
                                                 }
                                                 message={
                                                     <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
@@ -660,7 +660,7 @@ const NotificationsLoader = () => {
                                     children:
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>User ${formatAddress(nft.originalOwnerAddress, 4)} has refused to transfer the original NFT to you.</Trans>
+                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has refused to transfer the original NFT to you.</Trans>
                                             }
                                             message={
                                                 <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
