@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-03 14:39+0700\n"
+"POT-Creation-Date: 2023-08-04 15:02+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -217,8 +217,8 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:323
 #: src/components/notifications/NotificationsLoader.tsx:378
-#: src/components/notifications/NotificationsLoader.tsx:923
-#: src/components/notifications/NotificationsLoader.tsx:986
+#: src/components/notifications/NotificationsLoader.tsx:946
+#: src/components/notifications/NotificationsLoader.tsx:1009
 msgid "Congratulations! You have won the dispute #{0}"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgstr ""
 msgid "Do not transfer original"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:1212
+#: src/components/notifications/NotificationsLoader.tsx:1235
 msgid "Do you want to transfer the original NFT to them?"
 msgstr ""
 
@@ -739,8 +739,8 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:448
 #: src/components/notifications/NotificationsLoader.tsx:515
-#: src/components/notifications/NotificationsLoader.tsx:1060
-#: src/components/notifications/NotificationsLoader.tsx:1127
+#: src/components/notifications/NotificationsLoader.tsx:1083
+#: src/components/notifications/NotificationsLoader.tsx:1150
 msgid "Press the button to enforce the ruling…"
 msgstr ""
 
@@ -976,26 +976,26 @@ msgid "The Defendant"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:248
-#: src/components/notifications/NotificationsLoader.tsx:801
+#: src/components/notifications/NotificationsLoader.tsx:824
 msgid "The Evidence Period for the dispute #{0} has been started."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:230
-#: src/components/notifications/NotificationsLoader.tsx:787
+#: src/components/notifications/NotificationsLoader.tsx:810
 msgid "The Evidence period for the dispute #{0} is on."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:302
 #: src/components/notifications/NotificationsLoader.tsx:424
 #: src/components/notifications/NotificationsLoader.tsx:491
-#: src/components/notifications/NotificationsLoader.tsx:906
-#: src/components/notifications/NotificationsLoader.tsx:1036
-#: src/components/notifications/NotificationsLoader.tsx:1103
+#: src/components/notifications/NotificationsLoader.tsx:929
+#: src/components/notifications/NotificationsLoader.tsx:1059
+#: src/components/notifications/NotificationsLoader.tsx:1126
 msgid "The Jurors refused to arbitrate the dispute #{0}"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:361
-#: src/components/notifications/NotificationsLoader.tsx:965
+#: src/components/notifications/NotificationsLoader.tsx:988
 msgid "The Jurors refused to arbitrate the dispute #{0}."
 msgstr ""
 
@@ -1012,10 +1012,10 @@ msgstr ""
 #: src/components/notifications/NotificationsLoader.tsx:169
 #: src/components/notifications/NotificationsLoader.tsx:618
 #: src/components/notifications/NotificationsLoader.tsx:639
-#: src/components/notifications/NotificationsLoader.tsx:737
-#: src/components/notifications/NotificationsLoader.tsx:758
-#: src/components/notifications/NotificationsLoader.tsx:1232
-#: src/components/notifications/NotificationsLoader.tsx:1253
+#: src/components/notifications/NotificationsLoader.tsx:760
+#: src/components/notifications/NotificationsLoader.tsx:781
+#: src/components/notifications/NotificationsLoader.tsx:1256
+#: src/components/notifications/NotificationsLoader.tsx:1277
 msgid "The Ruling on dispute #{0} is now enforced!"
 msgstr ""
 
@@ -1029,23 +1029,23 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:267
 #: src/components/notifications/NotificationsLoader.tsx:285
-#: src/components/notifications/NotificationsLoader.tsx:871
-#: src/components/notifications/NotificationsLoader.tsx:885
+#: src/components/notifications/NotificationsLoader.tsx:894
+#: src/components/notifications/NotificationsLoader.tsx:908
 msgid "The Voting period for the dispute #{0} is on."
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:440
 #: src/components/notifications/NotificationsLoader.tsx:364
-#: src/components/notifications/NotificationsLoader.tsx:968
+#: src/components/notifications/NotificationsLoader.tsx:991
 msgid "The case will now be closed."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:305
 #: src/components/notifications/NotificationsLoader.tsx:427
 #: src/components/notifications/NotificationsLoader.tsx:494
-#: src/components/notifications/NotificationsLoader.tsx:909
-#: src/components/notifications/NotificationsLoader.tsx:1039
-#: src/components/notifications/NotificationsLoader.tsx:1106
+#: src/components/notifications/NotificationsLoader.tsx:932
+#: src/components/notifications/NotificationsLoader.tsx:1062
+#: src/components/notifications/NotificationsLoader.tsx:1129
 msgid "The case will now be closed. Press the button to enforce the ruling."
 msgstr ""
 
@@ -1090,15 +1090,15 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:471
 #: src/components/notifications/NotificationsLoader.tsx:538
-#: src/components/notifications/NotificationsLoader.tsx:1083
-#: src/components/notifications/NotificationsLoader.tsx:1150
+#: src/components/notifications/NotificationsLoader.tsx:1106
+#: src/components/notifications/NotificationsLoader.tsx:1173
 msgid "The jury reached a verdict! You lost the dispute!"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:445
 #: src/components/notifications/NotificationsLoader.tsx:512
-#: src/components/notifications/NotificationsLoader.tsx:1057
-#: src/components/notifications/NotificationsLoader.tsx:1124
+#: src/components/notifications/NotificationsLoader.tsx:1080
+#: src/components/notifications/NotificationsLoader.tsx:1147
 msgid "The jury reached a verdict! You won the dispute!"
 msgstr ""
 
@@ -1129,7 +1129,7 @@ msgid "The original NFT has been restored to your wallet."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:151
-#: src/components/notifications/NotificationsLoader.tsx:761
+#: src/components/notifications/NotificationsLoader.tsx:784
 msgid "The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once."
 msgstr ""
 
@@ -1137,7 +1137,7 @@ msgstr ""
 msgid "The original NFT has been transfered to the Claimant's wallet. The pNFT was burned."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:740
+#: src/components/notifications/NotificationsLoader.tsx:763
 msgid "The original NFT has been transferred to a new owner {0}."
 msgstr ""
 
@@ -1274,8 +1274,8 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:342
 #: src/components/notifications/NotificationsLoader.tsx:397
-#: src/components/notifications/NotificationsLoader.tsx:946
-#: src/components/notifications/NotificationsLoader.tsx:1009
+#: src/components/notifications/NotificationsLoader.tsx:969
+#: src/components/notifications/NotificationsLoader.tsx:1032
 msgid "Unfortunately, you have lost the dispute #{0}"
 msgstr ""
 
@@ -1317,24 +1317,28 @@ msgstr ""
 msgid "User ${0} has transferred the original NFT to you."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:1209
-msgid "User ${0} is requesting the original NFT."
-msgstr ""
-
-#: src/components/notifications/NotificationsLoader.tsx:825
+#: src/components/notifications/NotificationsLoader.tsx:848
 msgid "User {0} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{1}."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:846
+#: src/components/notifications/NotificationsLoader.tsx:869
 msgid "User {0} has filed a claim to burn your pNFT. More details on dispute #{1}."
+msgstr ""
+
+#: src/components/notifications/NotificationsLoader.tsx:1232
+msgid "User {0} is requesting the original NFT."
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:621
 msgid "User {0} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT."
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:1235
+#: src/components/notifications/NotificationsLoader.tsx:1259
 msgid "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer."
+msgstr ""
+
+#: src/components/notifications/NotificationsLoader.tsx:722
+msgid "User {0} transferred the original NFT to you."
 msgstr ""
 
 #: src/pages/validate.tsx:267
@@ -1387,6 +1391,10 @@ msgstr ""
 
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:227
 msgid "Warning!"
+msgstr ""
+
+#: src/components/notifications/NotificationsLoader.tsx:725
+msgid "We recommend protecting it using NFT Protect"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:196
@@ -1455,7 +1463,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: src/components/notifications/NotificationsLoader.tsx:1256
+#: src/components/notifications/NotificationsLoader.tsx:1280
 msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT."
 msgstr ""
 
@@ -1465,7 +1473,7 @@ msgid "You can add more evidence to your dispute using the provided link while t
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:251
-#: src/components/notifications/NotificationsLoader.tsx:804
+#: src/components/notifications/NotificationsLoader.tsx:827
 msgid "You can now submit your evidence."
 msgstr ""
 
@@ -1502,7 +1510,7 @@ msgid "You have received a pNFT!"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:345
-#: src/components/notifications/NotificationsLoader.tsx:949
+#: src/components/notifications/NotificationsLoader.tsx:972
 msgid "You have the option to file an appeal within {hoursLeft} hours"
 msgstr ""
 
@@ -1511,7 +1519,7 @@ msgid "You have to choose at least one operation"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:400
-#: src/components/notifications/NotificationsLoader.tsx:1012
+#: src/components/notifications/NotificationsLoader.tsx:1035
 msgid "You may file an appeal within {hoursLeft} hours"
 msgstr ""
 
