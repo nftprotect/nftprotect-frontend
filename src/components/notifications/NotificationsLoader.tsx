@@ -136,7 +136,7 @@ const NotificationsLoader = () => {
                     const loadedRequest = await loadRequest(request.id)
                     // NFT has a pending request
                     if (request.status === ReqStatus.Accepted) { 
-                        if (loadedRequest.externalDisputeId) { // Decision is already applied
+                        if (loadedRequest.externalDisputeId.toString() !== '0') { // Decision is already applied
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 19.2 Original NFT received by request with dispute
                                 addNotification({
@@ -556,7 +556,7 @@ const NotificationsLoader = () => {
                     } else if (request.status === ReqStatus.Initial) {
                         if (request.type === ReqType.OwnershipAdjustment) {
                             // If request timeout expired
-                            if (loadedRequest.timeout) {
+                            if (loadedRequest.timeout.toString() !== '0') {
                                 const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
                                 if (timeoutDate <= new Date()) {
                                     const loadedNft = await getPNft(nft)
@@ -606,7 +606,7 @@ const NotificationsLoader = () => {
                             }
                         }
                     } else if (request.status === ReqStatus.Rejected) {
-                        if (loadedRequest.externalDisputeId) {
+                        if (loadedRequest.externalDisputeId.toString() !== '0') {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 20.2 Original NFT rejected by request with dispute
                                 addNotification({
@@ -748,7 +748,7 @@ const NotificationsLoader = () => {
                     const loadedRequest = await loadRequest(request.id)
                     // NFT has a pending request
                     if (request.status === ReqStatus.Accepted) {
-                        if (loadedRequest.externalDisputeId) {
+                        if (loadedRequest.externalDisputeId.toString() !== '0') {
                             if (request.type === ReqType.OwnershipAdjustment) {
                                 // 30.1 Original NFT request accepted with dispute (original owner)
                                 addNotification({
@@ -1244,7 +1244,7 @@ const NotificationsLoader = () => {
                             dateCreated: request.updateDate
                         })
                     } else if (request.status === ReqStatus.Rejected) {
-                        if (loadedRequest.externalDisputeId) {
+                        if (loadedRequest.externalDisputeId.toString() !== '0') {
                             if (request.type === ReqType.Burn) {
                                 // 20.1 Burn rejected by request with dispute
                                 addNotification({
