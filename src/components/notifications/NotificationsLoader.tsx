@@ -49,7 +49,7 @@ const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
-    const { getDispute } = useArbitratorGraph(currentChain.chainId, currentChain.defaultArbitrator)
+    const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { getNftMetadata } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
@@ -252,6 +252,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Major,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 }
@@ -814,6 +818,10 @@ const NotificationsLoader = () => {
                                                 }
                                             />, 
                                         severity: SeverityLevel.Info,
+                                        buttonCallback: () => {
+                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            window.open(uri, '_blank');
+                                        },
                                         dateCreated: dispute.startTime
                                     })
                                 } else {

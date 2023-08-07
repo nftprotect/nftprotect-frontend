@@ -93,7 +93,12 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const { data } = await performQuery(graphURI, query, { disputeId: disputeId.toString() })
+            const { data, errors } = await performQuery(graphURI, query, { disputeId: disputeId.toString() })
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
             const { dispute } = data
             return {
                 ...dispute,
@@ -145,7 +150,12 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const { data } = await performQuery(graphURI, query, { creator })
+            const { data, errors } = await performQuery(graphURI, query, { creator })
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
             const result = data.disputes.map((dispute: any) => {
                 return {
                     ...dispute,
