@@ -618,7 +618,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>User {nft.originalOwnerAddress} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
+                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -688,6 +688,9 @@ const NotificationsLoader = () => {
                     if (!nft.burned) {
                         const loadedNft = await getPNft(nft)
                         // 0. pNFT received
+                        if (!loadedNft.ownerAddress) {
+                            await loadedNft.loadOwnerAddress()
+                        }
                         addNotification({
                             id: notificationId+'.0',
                             image: <NFTImage nft={ loadedNft} setDefaultStyles={false} />, 
@@ -1222,6 +1225,9 @@ const NotificationsLoader = () => {
                         // Pending request is needed for dialog
                         if (!loadedNft.pendingRequest) {
                             await loadedNft.loadPendingRequest()
+                        }
+                        if (!loadedNft.ownerAddress) {
+                            await loadedNft.loadOwnerAddress()
                         }
                         addNotification({
                             id: notificationId+'.21',
