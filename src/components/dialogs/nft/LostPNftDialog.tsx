@@ -84,9 +84,9 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
     }
 
     const evidenceTypes: any = {
-        'protocol breach': 7,
-        'phishing attack': 6,
-        'sending to an incorrect address': 5
+        'protocol breach': 6,
+        'phishing attack': 5,
+        'sending to an incorrect address': 4
     }
 
     const handleUnknownError = (error: any) => {
