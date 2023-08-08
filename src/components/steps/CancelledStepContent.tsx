@@ -36,16 +36,6 @@ const CancelledStepContent = () => {
                         </Text>
                     </CardBody>
                 </Flex>
-                <CardFooter>
-                    <Box w={{base: "100%", xs: "50%"}}>
-                        <Button 
-                            onClick={ onClose}
-                            variant="darkOutline"
-                        >
-                            <Trans>Close</Trans>
-                        </Button>
-                    </Box>
-                </CardFooter>
             </Card>
     </>)
 }
