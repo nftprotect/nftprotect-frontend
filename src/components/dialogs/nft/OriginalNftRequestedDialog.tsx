@@ -127,6 +127,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                     onClick={ () => {
                                         const dialog = getDialog('TransferOriginalNftDialog')
                                         onClose()
+                                        dialog.setStartWithDialog(false)
                                         dialog.setNft(nft)
                                         dialog.onOpen()
                                     } }

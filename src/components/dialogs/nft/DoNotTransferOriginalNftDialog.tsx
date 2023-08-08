@@ -167,7 +167,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer the original NFT <br/>to the new owner</Trans>{"?"}
+                                        <Trans>Do not transfer the original NFT <br/>to the new owner</Trans>{"?"}
                                     </Text>
                                 </CardHeader>
 
@@ -185,7 +185,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                             <Card variant="stepContent" minH={{base: "270px"}}>
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3">
-                                        <Trans>Transfer the original NFT <br/>to the new owner</Trans>{"?"}
+                                        <Trans>Do not transfer the original NFT <br/>to the new owner</Trans>{"?"}
                                     </Text>
                                 </CardHeader>
                                 <CardBody>
@@ -253,6 +253,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                                     onClick={ () => {
                                                         const dialog = getDialog('TransferOriginalNftDialog')
                                                         onClose()
+                                                        dialog.setStartWithDialog(false)
                                                         dialog.setNft(nft)
                                                         dialog.onOpen()
                                                     } }

@@ -53,6 +53,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
+    const [ startWithDialog, setStartWithDialog ] = useState<boolean>(true)
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     // Naming of wizard step numbers
@@ -133,17 +134,29 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     }
 
     const dialogClose = () => {
-        setNextStep(StepMapping.start)
+     //   setNextStep(StepMapping.start)
         onClose()
     }
 
     useEffect(() => {
-        setDialog('TransferOriginalNftDialog', {...disclosure, setNft})
+        setDialog('TransferOriginalNftDialog', {...disclosure, setNft, setStartWithDialog})
     }, [])
 
     useEffect(() => {
-        isOpen && setNextStep(StepMapping.start)
+        if (isOpen) {
+            if (!startWithDialog) {
+                startTransaction()
+            }
+        }
     }, [isOpen])
+
+    useEffect(() => {
+        if (startWithDialog) {
+            setNextStep(StepMapping.start)
+        } else {
+            setNextStep(StepMapping.confirmTransaction)
+        }
+    }, [startWithDialog, isOpen])
 
     return (<>
         <Modal

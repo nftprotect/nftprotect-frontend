@@ -1251,7 +1251,7 @@ const NotificationsLoader = () => {
                                 />,
                             severity: SeverityLevel.Major,
                             buttonCallback: () => {
-                                const dialog = getDialog('TransferOriginalNftDialog')
+                                const dialog = getDialog('OriginalNftRequestedDialog')
                                 dialog.setNft(loadedNft)
                                 dialog.onOpen()
                             },
