@@ -146,15 +146,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 }
             }
             const additionalProperties = {
-                originalOwner: {
-                    name: "Owner of original NFT",
-                    value: nftGraphData.ownerOriginal.id,
-                    display_value: formatAddress(nftGraphData.ownerOriginal.id, 4)
-                },
-                originalToken: {
-                    name: "Original token",
-                    value: generateTokenURL(nftGraphData.contract, nftGraphData.tokenId, currentChain.id)
-                },
+                // originalOwner: {
+                //     name: "Owner of original NFT",
+                //     value: nftGraphData.ownerOriginal.id,
+                //     display_value: formatAddress(nftGraphData.ownerOriginal.id, 4)
+                // },
+                // originalToken: {
+                //     name: "Original token",
+                //     value: generateTokenURL(nftGraphData.contract, nftGraphData.tokenId, currentChain.id)
+                // },
                 protectedByURI: {
                     name: "Protected by",
                     value: "https://dev.nftprotect.app"

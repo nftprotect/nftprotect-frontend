@@ -224,6 +224,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('TransferOriginalNftDialog')
+                                    dialog.setStartWithDialog(true)
                                     dialog.setNft(nft)
                                     dialog.onOpen()
                                 } }
@@ -268,6 +269,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 variant={"primaryLight"}
                                 onClick={ () => {
                                     const dialog = getDialog('TransferOriginalNftDialog')
+                                    dialog.setStartWithDialog(true)
                                     dialog.setNft(nft)
                                     dialog.onOpen()
                                 } }
