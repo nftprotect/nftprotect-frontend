@@ -24,6 +24,7 @@ import { useWeb3React } from '@web3-react/core'
 import { injected } from '../../../utils/connectors'
 import LoginForm from '../../../components/loginForm/LoginForm'
 import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
+import Head from 'next/head'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -250,7 +251,12 @@ const RequestPage: NextPage = () => {
 
     const allRequiredLoaded = requestData && nft && metaEvidenceType && claimantAddress && defendantAddress
 
-    return (
+    return (<>
+        { currentChain && <Head>
+            { requestId ? 
+                <title>{t`NFT Protect App: Request #${requestId}, ${currentChain.name}`}</title> :
+                <title>{t`NFT Protect App: Incorrect requestId`}</title> }
+        </Head> }
         <Container 
             p={0}
             maxW="1920px"
@@ -282,7 +288,7 @@ const RequestPage: NextPage = () => {
                 request && setRequestData(request)
             }} />
         </Container>
-    )
+    </>)
 }
 
 export default RequestPage;

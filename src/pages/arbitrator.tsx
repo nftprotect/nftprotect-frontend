@@ -14,7 +14,7 @@ import {
     CardHeader
 } from '@chakra-ui/react'
 import { useAppContext } from '../context/AppContextProvider'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { useIPFSContext } from '../context/IPFSContextProvider'
 import { useEffect, useState } from 'react'
@@ -28,6 +28,7 @@ import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialo
 import { loadTranslation } from '../utils/lingui'
 import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
 import { defaultChain } from '../utils/config'
+import Head from 'next/head'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -82,6 +83,9 @@ const ArbitratorPage: NextPage = () => {
 
     return (
         <>
+        <Head>
+            <title>{t`NFT Protect Dynamic Arbitrator Registry`}</title>
+        </Head>
         <Container 
             p={0}
             maxW="1920px"

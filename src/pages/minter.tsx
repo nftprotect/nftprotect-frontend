@@ -39,6 +39,7 @@ import { Form, Field, Formik } from 'formik';
 import { IPFSFileUpload } from '../components/IPFSFileUpload'
 import IPFSUpload from '../classes/IPFSUpload'
 import { useMinters } from '../hooks/useMinters'
+import Head from 'next/head'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -106,6 +107,9 @@ const MinterPage: NextPage = () => {
 
     return (
         <>
+        <Head>
+            <title>{t`NFT Protect NFT Minter`}</title>
+        </Head>
         <Container 
             p={0}
             maxW="1920px"
