@@ -87,6 +87,9 @@ const NFTView = () => {
                     console.log('ALCHEMY ALL MY NFTS:', nftObjects)
                     setOwnedNfts(nftObjects);
                 })
+            }).catch((error) => {
+                console.error(error)
+                setOwnedNfts([])
             })
         }
     }
@@ -110,8 +113,11 @@ const NFTView = () => {
                     return nft.loadInitialData()
                 })).then(() => {
                     console.log('ALCHEMY ALL pNFTS:', nftObjects)
-                    setMintedNfts(nftObjects);
+                    setMintedNfts(nftObjects)
                 })
+            }).catch((error) => {
+                console.error(error)
+                setMintedNfts([])
             })
         }
     }
