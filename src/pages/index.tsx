@@ -18,12 +18,13 @@ import NFTView from '../components/nftView/NFTView'
 import Footer from '../components/footer/Footer'
 import ShowNotifications from '../components/notifications/ShowNotifications'
 import { useNotifications } from '../hooks/useNotifications'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { GetStaticProps } from 'next'
 import { useIPFSContext } from '../context/IPFSContextProvider'
 import { useEffect } from 'react'
 import { loadTranslation } from '../utils/lingui'
 import NotificationsLoader from '../components/notifications/NotificationsLoader'
+import Head from 'next/head'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -58,6 +59,9 @@ const Home: NextPage = () => {
 
     return (
         <>
+        <Head>
+            <title>{t`NFT Protect App`}</title>
+        </Head>
         <Grid
             templateAreas={`"nav"
                             "main"
