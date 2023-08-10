@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-08 13:17+0700\n"
+"POT-Creation-Date: 2023-08-10 13:50+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -63,11 +63,11 @@ msgstr "Address already registered"
 msgid "All available"
 msgstr "All available"
 
-#: src/components/nftView/NFTView.tsx:169
+#: src/components/nftView/NFTView.tsx:175
 msgid "All your NFTs"
 msgstr "All your NFTs"
 
-#: src/components/nftView/NFTView.tsx:221
+#: src/components/nftView/NFTView.tsx:227
 msgid "All your protected assets"
 msgstr "All your protected assets"
 
@@ -75,7 +75,7 @@ msgstr "All your protected assets"
 msgid "Always make sure the URL is nftprotect.app"
 msgstr "Always make sure the URL is nftprotect.app"
 
-#: src/pages/minter.tsx:256
+#: src/pages/minter.tsx:260
 msgid "Amount of minted NFTs"
 msgstr "Amount of minted NFTs"
 
@@ -107,7 +107,7 @@ msgstr "Approve connection"
 msgid "Arbitrator deleted successfully!"
 msgstr "Arbitrator deleted successfully!"
 
-#: src/pages/arbitrator.tsx:110
+#: src/pages/arbitrator.tsx:114
 msgid "Arbitrator management"
 msgstr "Arbitrator management"
 
@@ -167,7 +167,7 @@ msgstr "Bona fide transfer"
 msgid "Cases admissible for arbitration"
 msgstr "Cases admissible for arbitration"
 
-#: src/pages/validate.tsx:277
+#: src/pages/validate.tsx:281
 msgid "Chain"
 msgstr "Chain"
 
@@ -184,10 +184,6 @@ msgstr "Check out the details<0/>"
 #: src/components/loginForm/ConnectWallet/ChooseWalletCard.tsx:50
 msgid "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "Choosing to connect indicates that you have accepted <0>Terms of Service</0> and <1>Privacy Policy</1>"
-
-#: src/components/steps/CancelledStepContent.tsx:45
-msgid "Close"
-msgstr "Close"
 
 #: src/components/dialogs/arbitrator/AddContractsDialog.tsx:343
 #: src/components/dialogs/arbitrator/AddOperationsDialog.tsx:400
@@ -230,12 +226,12 @@ msgstr "Connect Wallet"
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
 
-#: src/pages/index.tsx:109
+#: src/pages/index.tsx:113
 msgid "Connect your wallet<0/>& get protected"
 msgstr "Connect your wallet<0/>& get protected"
 
-#: src/pages/arbitrator.tsx:136
-#: src/pages/minter.tsx:148
+#: src/pages/arbitrator.tsx:140
+#: src/pages/minter.tsx:152
 msgid "Connect your wallet<0/>& register"
 msgstr "Connect your wallet<0/>& register"
 
@@ -307,7 +303,7 @@ msgstr "Describe the file…"
 msgid "Describe the situation in details…"
 msgstr "Describe the situation in details…"
 
-#: src/pages/minter.tsx:240
+#: src/pages/minter.tsx:244
 msgid "Describe your NFT in details…"
 msgstr "Describe your NFT in details…"
 
@@ -386,11 +382,11 @@ msgstr "English"
 msgid "Enjoy your new life in protected world!"
 msgstr "Enjoy your new life in protected world!"
 
-#: src/pages/validate.tsx:321
+#: src/pages/validate.tsx:325
 msgid "Enter the ID*"
 msgstr "Enter the ID*"
 
-#: src/pages/validate.tsx:305
+#: src/pages/validate.tsx:309
 msgid "Enter the token smart contract address"
 msgstr "Enter the token smart contract address"
 
@@ -451,11 +447,11 @@ msgstr "Get Started"
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr "Have you lost<0/> access to your pNFT?"
 
-#: src/pages/minter.tsx:140
+#: src/pages/minter.tsx:144
 msgid "Here you can mint any NFTs for your purposes"
 msgstr "Here you can mint any NFTs for your purposes"
 
-#: src/pages/arbitrator.tsx:117
+#: src/pages/arbitrator.tsx:121
 msgid "Here you can register new arbitrator or change the parameters of the existing one"
 msgstr "Here you can register new arbitrator or change the parameters of the existing one"
 
@@ -493,12 +489,12 @@ msgstr "If you've missed including any evidences, you have up to 48 hours to add
 msgid "Incorrect address"
 msgstr "Incorrect address"
 
-#: src/pages/request/[chainId]/[requestId].tsx:128
+#: src/pages/request/[chainId]/[requestId].tsx:129
 msgid "Incorrect chainId"
 msgstr "Incorrect chainId"
 
-#: src/pages/request/[chainId]/[requestId].tsx:120
-#: src/pages/request/[chainId]/[requestId].tsx:168
+#: src/pages/request/[chainId]/[requestId].tsx:121
+#: src/pages/request/[chainId]/[requestId].tsx:169
 msgid "Incorrect requestId"
 msgstr "Incorrect requestId"
 
@@ -506,7 +502,7 @@ msgstr "Incorrect requestId"
 msgid "Initial evidence"
 msgstr "Initial evidence"
 
-#: src/components/nftView/NFTView.tsx:172
+#: src/components/nftView/NFTView.tsx:178
 msgid "It's all not protected yet"
 msgstr "It's all not protected yet"
 
@@ -534,13 +530,37 @@ msgstr "Law enforcement reports: If the loss of pNFT has been reported to law en
 msgid "Links"
 msgstr "Links"
 
-#: src/pages/index.tsx:142
+#: src/pages/index.tsx:146
 msgid "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 msgstr "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 
-#: src/pages/minter.tsx:284
+#: src/pages/minter.tsx:288
 msgid "Mint"
 msgstr "Mint"
+
+#: src/pages/index.tsx:63
+msgid "NFT Protect App"
+msgstr "NFT Protect App"
+
+#: src/pages/request/[chainId]/[requestId].tsx:258
+msgid "NFT Protect App: Incorrect requestId"
+msgstr "NFT Protect App: Incorrect requestId"
+
+#: src/pages/request/[chainId]/[requestId].tsx:257
+msgid "NFT Protect App: Request #{requestId}, {0}"
+msgstr "NFT Protect App: Request #{requestId}, {0}"
+
+#: src/pages/arbitrator.tsx:87
+msgid "NFT Protect Dynamic Arbitrator Registry"
+msgstr "NFT Protect Dynamic Arbitrator Registry"
+
+#: src/pages/minter.tsx:111
+msgid "NFT Protect NFT Minter"
+msgstr "NFT Protect NFT Minter"
+
+#: src/pages/validate.tsx:245
+msgid "NFT Protect pNFT Validator"
+msgstr "NFT Protect pNFT Validator"
 
 #: src/components/nftView/NFTImage.tsx:17
 msgid "NFT image"
@@ -551,7 +571,7 @@ msgstr "NFT image"
 msgid "Name"
 msgstr "Name"
 
-#: src/pages/minter.tsx:224
+#: src/pages/minter.tsx:228
 msgid "Name of your NFT"
 msgstr "Name of your NFT"
 
@@ -655,7 +675,7 @@ msgstr "Pay the dispute"
 msgid "Pending Action"
 msgstr "Pending Action"
 
-#: src/pages/arbitrator.tsx:181
+#: src/pages/arbitrator.tsx:185
 msgid "Pending Requests"
 msgstr "Pending Requests"
 
@@ -684,11 +704,11 @@ msgstr "Please check operations you want to remove"
 msgid "Please complete DID verification"
 msgstr "Please complete DID verification"
 
-#: src/pages/minter.tsx:156
+#: src/pages/minter.tsx:160
 msgid "Please connect your wallet to mint <0/>an NFT"
 msgstr "Please connect your wallet to mint <0/>an NFT"
 
-#: src/pages/arbitrator.tsx:144
+#: src/pages/arbitrator.tsx:148
 msgid "Please connect your wallet to register <0/>a new arbitrator"
 msgstr "Please connect your wallet to register <0/>a new arbitrator"
 
@@ -704,7 +724,7 @@ msgstr "Please fill the form to add collections"
 msgid "Please fill the form to add operations"
 msgstr "Please fill the form to add operations"
 
-#: src/pages/minter.tsx:195
+#: src/pages/minter.tsx:199
 msgid "Please fill the form to create an NFT"
 msgstr "Please fill the form to create an NFT"
 
@@ -814,11 +834,11 @@ msgstr "Register"
 msgid "Register as arbitrator"
 msgstr "Register as arbitrator"
 
-#: src/pages/arbitrator.tsx:127
+#: src/pages/arbitrator.tsx:131
 msgid "Register new arbitrator"
 msgstr "Register new arbitrator"
 
-#: src/pages/arbitrator.tsx:170
+#: src/pages/arbitrator.tsx:174
 msgid "Registered Arbitrators"
 msgstr "Registered Arbitrators"
 
@@ -908,7 +928,7 @@ msgstr "Sending to an incorrect address"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/pages/minter.tsx:133
+#: src/pages/minter.tsx:137
 msgid "Simple NFT Minter"
 msgstr "Simple NFT Minter"
 
@@ -1186,11 +1206,11 @@ msgstr "They explain the situation as follows:"
 msgid "This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."
 msgstr "This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."
 
-#: src/components/nftView/NFTView.tsx:224
+#: src/components/nftView/NFTView.tsx:230
 msgid "This section displays all the NFTs and their associated pNFTs that you own"
 msgstr "This section displays all the NFTs and their associated pNFTs that you own"
 
-#: src/components/nftView/NFTView.tsx:198
+#: src/components/nftView/NFTView.tsx:204
 msgid "This section displays your pNFTs that were moved to another adresses"
 msgstr "This section displays your pNFTs that were moved to another adresses"
 
@@ -1255,7 +1275,7 @@ msgstr "Transfer the original NFT <0/>to a new owner?"
 msgid "Transfer the original NFT<0/> to the new owner?"
 msgstr "Transfer the original NFT<0/> to the new owner?"
 
-#: src/components/nftView/NFTView.tsx:195
+#: src/components/nftView/NFTView.tsx:201
 msgid "Transfered pNFT"
 msgstr "Transfered pNFT"
 
@@ -1263,7 +1283,7 @@ msgstr "Transfered pNFT"
 msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
 msgstr "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
 
-#: src/pages/minter.tsx:205
+#: src/pages/minter.tsx:209
 msgid "Type of your NFT"
 msgstr "Type of your NFT"
 
@@ -1283,8 +1303,8 @@ msgstr "Unfortunately, you have lost the dispute #{0}"
 msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"
 msgstr "Unless DID verification is done the only option available is to <0>request original NFT</0>"
 
-#: src/pages/request/[chainId]/[requestId].tsx:139
-#: src/pages/request/[chainId]/[requestId].tsx:144
+#: src/pages/request/[chainId]/[requestId].tsx:140
+#: src/pages/request/[chainId]/[requestId].tsx:145
 msgid "Unsupported chain"
 msgstr "Unsupported chain"
 
@@ -1341,11 +1361,11 @@ msgstr "User {0} is still the owner of the pNFT. He can now sue you for Ownershi
 msgid "User {0} transferred the original NFT to you."
 msgstr "User {0} transferred the original NFT to you."
 
-#: src/pages/validate.tsx:267
+#: src/pages/validate.tsx:271
 msgid "Validate"
 msgstr "Validate"
 
-#: src/pages/validate.tsx:339
+#: src/pages/validate.tsx:343
 msgid "Verify"
 msgstr "Verify"
 
@@ -1413,7 +1433,7 @@ msgstr "We recommend refuse to give the owner of the pNFT the original NFT and o
 msgid "Website"
 msgstr "Website"
 
-#: src/pages/index.tsx:134
+#: src/pages/index.tsx:138
 msgid "Welcome to NFT Protect <0/>your digital asset guardian"
 msgstr "Welcome to NFT Protect <0/>your digital asset guardian"
 
@@ -1497,11 +1517,11 @@ msgstr "You can try to find the owner through social media or use services like 
 msgid "You cancelled a transaction"
 msgstr "You cancelled a transaction"
 
-#: src/pages/arbitrator.tsx:175
+#: src/pages/arbitrator.tsx:179
 msgid "You did not register any arbitrator yet"
 msgstr "You did not register any arbitrator yet"
 
-#: src/pages/arbitrator.tsx:186
+#: src/pages/arbitrator.tsx:190
 msgid "You have no requests yet"
 msgstr "You have no requests yet"
 
