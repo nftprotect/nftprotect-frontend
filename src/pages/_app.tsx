@@ -14,7 +14,6 @@ import { en, ru } from 'make-plural/plurals'
 import { useRouter } from 'next/router'
 import { useRef, useEffect } from 'react'
 import { I18nProvider } from '@lingui/react'
-import GoogleAnalytics from '../components/GoogleAnalytics'
 import '@fontsource/lexend/400.css'
 import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
@@ -71,7 +70,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                             <NotificationContextProvider>
                                 <CallableDialogContextProvider>
                                     <I18nProvider i18n={i18n}>
-                                        { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
                                         <Component {...pageProps} />
                                     </I18nProvider>
                                 </CallableDialogContextProvider>
