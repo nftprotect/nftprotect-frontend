@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-10 13:50+0700\n"
+"POT-Creation-Date: 2023-08-11 14:25+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -455,8 +455,16 @@ msgstr ""
 msgid "Here you can register new arbitrator or change the parameters of the existing one"
 msgstr ""
 
+#: src/pages/uploader.tsx:93
+msgid "Here you can upload files to IPFS"
+msgstr ""
+
 #: src/components/dialogs/arbitrator/ShowRequestDialog.tsx:164
 msgid "Here's a complete description"
+msgstr ""
+
+#: src/pages/uploader.tsx:86
+msgid "IPFS File Uploader"
 msgstr ""
 
 #: src/components/dialogs/nft/OriginalNftRequestedDialog.tsx:146
@@ -554,6 +562,10 @@ msgstr ""
 msgid "NFT Protect Dynamic Arbitrator Registry"
 msgstr ""
 
+#: src/pages/uploader.tsx:63
+msgid "NFT Protect IPFS File Uploader"
+msgstr ""
+
 #: src/pages/minter.tsx:111
 msgid "NFT Protect NFT Minter"
 msgstr ""
@@ -573,6 +585,10 @@ msgstr ""
 
 #: src/pages/minter.tsx:228
 msgid "Name of your NFT"
+msgstr ""
+
+#: src/pages/uploader.tsx:127
+msgid "Name of your file"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:540
@@ -917,6 +933,10 @@ msgstr ""
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:445
 msgid "Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited."
+msgstr ""
+
+#: src/pages/uploader.tsx:116
+msgid "Select a file to upload"
 msgstr ""
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:190
