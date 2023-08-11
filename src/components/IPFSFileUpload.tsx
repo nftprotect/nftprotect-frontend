@@ -16,7 +16,8 @@ interface UploaderInitialData {
     multiple?: boolean,
     returnLoadedFiles?: Function,
     returnUploadedFiles?: Function,
-    fileTypes?: Array<string>
+    fileTypes?: Array<string>,
+    fileName?: string
 }
 
 const defaultFileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"];
@@ -25,7 +26,8 @@ export const IPFSFileUpload = ({
     multiple = true,
     returnLoadedFiles, 
     returnUploadedFiles, 
-    fileTypes
+    fileTypes,
+    fileName // you can set uploaded file name for single file upload
 } : UploaderInitialData ) => {
     const { ipfs } = useIPFSContext()
     const [loading, setLoading] = useState<boolean>(false)
@@ -71,6 +73,18 @@ export const IPFSFileUpload = ({
         }
     }
 
+    const setLoadedFilesWithFileName = (files: File|FileList) => {
+        if (!multiple && fileName) {
+            if (files instanceof File) {
+                const blob = files.slice(0, files.size, files.type)
+                const newFile = new File([blob], fileName, {type: files.type})
+                setLoadedFiles(newFile)
+            }
+        } else {
+            setLoadedFiles(files)
+        }
+    }
+
     const returnFileUrl = async () => {
         if (loadedFiles) {
             setLoading(true)
@@ -94,9 +108,7 @@ export const IPFSFileUpload = ({
 
     return <>
             <FileUploader 
-                handleChange={(data: File|FileList) => {
-                    setLoadedFiles(data)
-                }}
+                handleChange={setLoadedFilesWithFileName}
                 name="file"
                 types={fileTypes || defaultFileTypes}
                 multiple={multiple}
