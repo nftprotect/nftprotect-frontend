@@ -45,10 +45,20 @@ enum NFTPTokenStandard
     ERC20
 }
 
+const svgBackground = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='red' stroke-width='2'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='2'/></svg>")`;
+
 const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
+    const {
+        account, 
+        didRegistered, 
+        nftProtectContract, 
+        referrerAddress, 
+        fee, 
+        baseTokenPrice, 
+        couponsBalance
+    } = useAppContext()
     const { setDialog } = useCallableDialogContext()
     const didDialogDisclosure = useDisclosure()
     const disclosure = useDisclosure()
@@ -228,12 +238,27 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody mb={{base: "20px"}} >
                                     { nft && <NFTImage nft={nft} /> }
-                                    <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                        <Trans>Fee for Protection your NFT:</Trans>
-                                    </Text>
-                                    <Text textStyle="h3" textAlign="center">
-                                        {"Ξ"}{ formatEther(fee || 0) } 
-                                    </Text>
+                                    <Box
+                                        backgroundImage={(couponsBalance !== undefined) && (couponsBalance > 0) ? svgBackground : undefined }
+                                    >
+                                        <Text textStyle="paragraph" mb={{base: "1em"}} letterSpacing="0.04em" fontWeight={'bold'}>
+                                            <Trans>Fee for Protection your NFT:</Trans>
+                                        </Text>
+                                        <Flex justifyContent="center" w={"100%"}>
+                                            <Text textStyle="h3">
+                                                {"Ξ"}{ formatEther(fee || 0) } 
+                                            </Text>
+                                            &nbsp;
+                                            { fee && baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
+                                                ~${ Math.round(parseFloat(formatEther(fee)) * baseTokenPrice) }
+                                            </Text> }
+                                        </Flex>
+                                    </Box>
+                                    { (couponsBalance !== undefined) && (couponsBalance > 0) &&
+                                        <Text textStyle="paragraph" mt={'1em'} textAlign="center" letterSpacing="0.04em" fontWeight={'bold'}>
+                                            <Trans>You have special NFT Protect coupon! It allows you to protect of your NFT for FREE!</Trans>
+                                        </Text>
+                                    }
                                 </CardBody>
 
                                 <CardFooter w="100%" justifySelf="flex-start">

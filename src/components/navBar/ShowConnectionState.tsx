@@ -19,17 +19,20 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import { Copy, Off } from '@web3uikit/icons'
-import CouponBalance from './CouponBalance'
 import Davatar from '@davatar/react'
+import { t, Trans } from '@lingui/macro'
+import { useAppContext } from '../../context/AppContextProvider'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const ShowConnectionState = () => {
 
-    const { account, active, deactivate, library } = useWeb3React<Web3Provider>()
+    const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
+    const { deactivate } = useWeb3React<Web3Provider>()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
 
     useEffect(() => {
         if(active && account){
-            library?.getBalance(account).then((result)=>{
+            library?.getBalance(account).then((result: BigNumber)=>{
                 setEthBalance(Number(formatEther(result)))
             })
         }
@@ -143,21 +146,21 @@ const ShowConnectionState = () => {
                             </Flex>
                         </Flex>
                         <Box textAlign="center">
-                            <Text fontSize={['14px']}>
-                                ETH Balance
-                            </Text>
                             <Text fontSize={['24px']}>
                                 { ethBalance?.toFixed(4) } ETH
                             </Text>
+                            { baseTokenPrice && ethBalance && <Text fontSize={['14px']} color="text.muted">
+                                ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
+                            </Text> }
                         </Box>
-                        {/* <Box textAlign="center">
-                            <Text fontSize={['14px']}>
-                                Coupon Balance
-                            </Text>
+                        <Box textAlign="center">
                             <Text fontSize={['24px']}>
-                                <CouponBalance />
+                                { (couponsBalance !== undefined) ? t`${ couponsBalance } coupons` : t`Fetching balance…` }
                             </Text>
-                        </Box> */}
+                            <Text fontSize={['14px']} color="text.muted">
+                                <Trans>for free protection</Trans>
+                            </Text>
+                        </Box>
                     </CardBody>
                 </Card>
             </MenuList>
