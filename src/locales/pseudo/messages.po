@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-08-11 14:25+0700\n"
+"POT-Creation-Date: 2023-08-14 14:07+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -194,7 +194,7 @@ msgstr ""
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:456
 #: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:177
 #: src/components/dialogs/nft/LostPNftDialog.tsx:602
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:340
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:365
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:220
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:265
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:187
@@ -378,15 +378,15 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:403
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:428
 msgid "Enjoy your new life in protected world!"
 msgstr ""
 
-#: src/pages/validate.tsx:325
+#: src/pages/validate.tsx:323
 msgid "Enter the ID*"
 msgstr ""
 
-#: src/pages/validate.tsx:309
+#: src/pages/validate.tsx:307
 msgid "Enter the token smart contract address"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:517
 #: src/components/dialogs/nft/LostPNftDialog.tsx:658
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:415
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:440
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:293
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:316
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:253
@@ -413,11 +413,11 @@ msgstr ""
 msgid "Fail!"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:232
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:245
 msgid "Fee for Protection your NFT:"
 msgstr ""
 
-#: src/components/navBar/CouponBalance.tsx:70
+#: src/components/navBar/ShowConnectionState.tsx:158
 msgid "Fetching balance…"
 msgstr ""
 
@@ -765,11 +765,11 @@ msgstr ""
 msgid "Please switch to one of these networks: {networkNames}"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:273
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:298
 msgid "Please, allow access and <0/>transfer of your NFT"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:302
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:327
 msgid "Please, allow access and <0/>transfer of your NFTs"
 msgstr ""
 
@@ -800,7 +800,7 @@ msgid "Proceed to payment"
 msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:308
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:245
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:270
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:241
 #: src/components/dialogs/notifications/ClaimantWinDialog.tsx:96
 #: src/components/dialogs/notifications/OriginalNftReceivedDialog.tsx:126
@@ -808,13 +808,13 @@ msgstr ""
 msgid "Protect NFT"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:225
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:257
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:284
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:313
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:332
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:352
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:371
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:235
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:282
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:309
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:338
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:357
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:377
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:396
 msgid "Protecting your asset…"
 msgstr ""
 
@@ -958,7 +958,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:537
 #: src/components/dialogs/nft/LostPNftDialog.tsx:678
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:436
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:461
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:273
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:330
 #: src/components/dialogs/request/EnforceRulingDialog.tsx:225
@@ -990,7 +990,7 @@ msgstr ""
 #: src/components/dialogs/arbitrator/DeleteArbitratorDialog.tsx:245
 #: src/components/dialogs/arbitrator/EditOperationsDialog.tsx:357
 #: src/components/dialogs/arbitrator/RemoveOperationsDialog.tsx:308
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:390
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:415
 msgid "Success"
 msgstr ""
 
@@ -1243,8 +1243,8 @@ msgid "To ensure a fair review by expert arbitrators, be sure to provide evidenc
 msgstr ""
 
 #: src/components/dialogs/nft/LostPNftDialog.tsx:368
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:266
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:295
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:291
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:320
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:277
 #: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:137
 #: src/components/dialogs/notifications/SuedToObtainTheOriginalNFTDialog.tsx:138
@@ -1257,7 +1257,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:546
 #: src/components/dialogs/nft/LostPNftDialog.tsx:687
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:445
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:470
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:282
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:339
 #: src/components/dialogs/request/EnforceRulingDialog.tsx:234
@@ -1267,7 +1267,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:557
 #: src/components/dialogs/nft/LostPNftDialog.tsx:698
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:456
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:481
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:293
 #: src/components/dialogs/request/AddEvidencesDialog.tsx:350
 #: src/components/dialogs/request/EnforceRulingDialog.tsx:245
@@ -1385,7 +1385,7 @@ msgstr ""
 msgid "Validate"
 msgstr ""
 
-#: src/pages/validate.tsx:343
+#: src/pages/validate.tsx:341
 msgid "Verify"
 msgstr ""
 
@@ -1393,8 +1393,8 @@ msgstr ""
 msgid "View on Etherscan"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:321
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:360
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:346
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:385
 msgid "Wait for transaction to confirm..."
 msgstr ""
 
@@ -1407,7 +1407,7 @@ msgstr ""
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:473
 #: src/components/dialogs/nft/DoNotTransferOriginalNftDialog.tsx:194
 #: src/components/dialogs/nft/LostPNftDialog.tsx:619
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:379
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:404
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:237
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:286
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:206
@@ -1527,7 +1527,7 @@ msgstr ""
 
 #: src/components/dialogs/nft/ArbitrateOwnershipAdjustmentDialog.tsx:526
 #: src/components/dialogs/nft/LostPNftDialog.tsx:667
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:424
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:449
 #: src/components/dialogs/nft/RequestOriginalNftDialog.tsx:302
 #: src/components/dialogs/nft/TransferOriginalNftDialog.tsx:325
 #: src/components/dialogs/nft/UnProtectNftDialog.tsx:262
@@ -1547,6 +1547,10 @@ msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:704
 msgid "You have received a pNFT!"
+msgstr ""
+
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:259
+msgid "You have special NFT Protect coupon! It allows you to protect of your NFT for FREE!"
 msgstr ""
 
 #: src/components/notifications/NotificationsLoader.tsx:349
@@ -1573,7 +1577,7 @@ msgstr ""
 msgid "You're being sued"
 msgstr ""
 
-#: src/components/dialogs/nft/ProtectNftDialog.tsx:400
+#: src/components/dialogs/nft/ProtectNftDialog.tsx:425
 msgid "Your asset is now protected!"
 msgstr ""
 
@@ -1617,6 +1621,10 @@ msgstr ""
 msgid "dispute N1234"
 msgstr ""
 
+#: src/components/navBar/ShowConnectionState.tsx:161
+msgid "for free protection"
+msgstr ""
+
 #: src/components/dialogs/notifications/SuedForBurnNFTDialog.tsx:103
 msgid "has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT."
 msgstr ""
@@ -1656,6 +1664,10 @@ msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:532
 msgid "{0}"
+msgstr ""
+
+#: src/components/navBar/ShowConnectionState.tsx:158
+msgid "{couponsBalance} coupons"
 msgstr ""
 
 #: src/components/dialogs/klerosCase/step/KlerosCaseContent.tsx:535

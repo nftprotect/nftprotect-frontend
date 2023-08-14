@@ -14,6 +14,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
 import { switchNetwork } from "../utils/helpers";
+import ERC20ABI from "../abi/ERC20ABI";
 
 export interface AppContextInterface {
     active: boolean,
@@ -29,6 +30,7 @@ export interface AppContextInterface {
     currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
     fee: number | undefined,
+    couponsBalance: number | undefined,
     setChainId: Function
 }
 
@@ -40,6 +42,7 @@ interface AppState {
     userRegistryContract: Contract,
     arbRegistryContract: Contract,
     dynamicArbRegistryContract: Contract,
+    couponsContract: Contract,
     library: JsonRpcProvider
 }
 
@@ -63,7 +66,8 @@ export function AppContextProvider({ children }:any) {
         nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary?.getSigner()),
         userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary?.getSigner()),
         arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary?.getSigner()),
-        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner())
+        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner()),
+        couponsContract: new Contract(nullAddress, ERC20ABI, providedLibrary?.getSigner())
     })
 
     //const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
@@ -76,6 +80,7 @@ export function AppContextProvider({ children }:any) {
     // Current fee for protecting
     const [ fee, setFee ] = useState<number>()
     const [ currentBlock, setCurrentBlock] = useState<number>()
+    const [ couponsBalance, setCouponsBalance ] = useState<number>()
 
     const setDidState = () => {
         if (active && account && appState.currentChain) {
@@ -173,11 +178,51 @@ export function AppContextProvider({ children }:any) {
                 nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer),
                 userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer),
                 arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer),
-                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer)
+                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer),
+                couponsContract: new Contract(currentChain.couponsContractAddress, ERC20ABI, signer)
             })
         }
         stateSetter()
     }, [providedLibrary, account, active, chainId])
+
+    const couponsBalanceLoader = async () => {
+        const balance = await appState.couponsContract.balanceOf(appState.account)
+        console.log("Coupons balance:", balance)
+        setCouponsBalance(balance.toNumber())
+    }
+
+    // Set coupons balance
+    useEffect(() => {
+        const { active, account } = appState
+        if (active && account) {
+            couponsBalanceLoader()
+        }
+    }, [appState.active, appState.account, appState.currentChain])
+
+    // Update coupons balance
+    useEffect(() => {
+        const { active, account, couponsContract } = appState
+        if (active && account) {
+            const fromMe = couponsContract.filters.Transfer(account, null)
+            couponsContract.on(fromMe, (from, to, amount, event) => {
+                console.log('Transfer|sent', { from, to, amount, event })
+                couponsBalanceLoader()
+            })
+        
+            const toMe = couponsContract.filters.Transfer(null, account)
+            couponsContract.on(toMe, (from, to, amount, event) => {
+                console.log('Transfer|received', { from, to, amount, event })
+                couponsBalanceLoader()
+            })
+        
+            // remove listener when the component is unmounted
+            return () => {
+                couponsContract.removeAllListeners(toMe)
+                couponsContract.removeAllListeners(fromMe)
+            }
+        }
+        // trigger the effect only on component mount
+    }, [appState.active, appState.account, appState.currentChain])
 
     return (
         <AppContext.Provider value={{
@@ -188,7 +233,8 @@ export function AppContextProvider({ children }:any) {
             currentBlock,
             fee,
             setChainId,
-            baseTokenPrice
+            baseTokenPrice,
+            couponsBalance
         }}>
             {children}
         </AppContext.Provider>
