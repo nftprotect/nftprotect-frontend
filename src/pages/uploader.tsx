@@ -60,7 +60,8 @@ const UploaderPage: NextPage = () => {
     return (
         <>
         <Head>
-            <title>{t`NFT Protect IPFS File Uploader`}</title>
+            <meta name="robots" content="noindex,nofollow" />
+            <title>{t`NFT Protect • IPFS Uploader`}</title>
         </Head>
         <Container 
             p={0}

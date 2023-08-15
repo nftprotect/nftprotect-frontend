@@ -84,7 +84,8 @@ const ArbitratorPage: NextPage = () => {
     return (
         <>
         <Head>
-            <title>{t`NFT Protect Dynamic Arbitrator Registry`}</title>
+            <meta name="robots" content="noindex,nofollow" />
+            <title>{t`NFT Protect • Arbitrator Registry`}</title>
         </Head>
         <Container 
             p={0}

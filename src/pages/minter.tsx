@@ -108,7 +108,8 @@ const MinterPage: NextPage = () => {
     return (
         <>
         <Head>
-            <title>{t`NFT Protect NFT Minter`}</title>
+            <meta name="robots" content="noindex,nofollow" />
+            <title>{t`NFT Protect • NFT Minter`}</title>
         </Head>
         <Container 
             p={0}
