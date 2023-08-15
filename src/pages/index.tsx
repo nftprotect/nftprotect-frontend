@@ -60,7 +60,8 @@ const Home: NextPage = () => {
     return (
         <>
         <Head>
-            <title>{t`NFT Protect App`}</title>
+            <meta name="description" content={t`NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.`} />
+            <title>{t`NFT Protect • Dapp`}</title>
         </Head>
         <Grid
             templateAreas={`"nav"

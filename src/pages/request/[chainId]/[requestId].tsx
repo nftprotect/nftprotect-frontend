@@ -253,9 +253,12 @@ const RequestPage: NextPage = () => {
 
     return (<>
         { currentChain && <Head>
+            { requestId &&
+                <meta name="description" content={t`The page of the court session in the Kleros decentralized court for the NFT Protect request #${requestId}.`} /> 
+            }
             { requestId ? 
-                <title>{t`NFT Protect App: Request #${requestId}, ${currentChain.name}`}</title> :
-                <title>{t`NFT Protect App: Incorrect requestId`}</title> }
+                <title>{t`NFT Protect • Request #${requestId}, ${currentChain.name}`}</title> :
+                <title>{t`NFT Protect • Incorrect requestId`}</title> }
         </Head> }
         <Container 
             p={0}
