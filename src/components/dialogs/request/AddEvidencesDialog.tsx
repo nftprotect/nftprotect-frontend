@@ -61,12 +61,6 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const [ requestTimedOut, setRequestTimedOut ] = useState(false)
     const { submitEvidence } = useArbitrableProxy()
-    const subcourtID = KlerosCourts.General
-    const numberOfVotes = 3
-    const DISPUTE_PRICE = '0.03'
-    const metaEvidenceId = 3
-
-    const disputeId = nft?.pendingRequest?.externalDisputeId
 
     // Naming of wizard step numbers
     enum StepMapping {

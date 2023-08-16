@@ -51,7 +51,7 @@ interface DialogInitialData {
 const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, fee, currentBlock } = useAppContext()
+    const { nftProtectContract, account, library, baseTokenPrice, currentBlock } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -422,9 +422,15 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             <Trans>The fee for dispute resolution is</Trans>
                                         </Text>
 
-                                        <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
-                                            {"Ξ"}{ DISPUTE_PRICE } 
-                                        </Text>
+                                        <Flex justifyContent="center" w={"100%"}>
+                                            <Text fontSize={{base: "36px"}} textAlign="center" textTransform="uppercase">
+                                                {"Ξ"}{ DISPUTE_PRICE } 
+                                            </Text>
+                                            &nbsp;
+                                            { baseTokenPrice && <Text fontSize={['16px']} lineHeight={'1em'}>
+                                                ~${ Math.round(parseFloat(DISPUTE_PRICE) * baseTokenPrice) }
+                                            </Text> }
+                                        </Flex>
                                     </CardBody>
                                 </Flex>
 
