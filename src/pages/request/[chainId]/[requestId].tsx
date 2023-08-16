@@ -180,7 +180,8 @@ const RequestPage: NextPage = () => {
                 }
                 loadNftStarted = true
             })
-            nftProtectContract.requests(requestId.toString()).then((resultRequest: ActionRequest) => {
+            nftProtectContract.requests(requestId.toString()).then((result: any) => {
+                const resultRequest: ActionRequest = { id: requestId, ...result }
                 setRequestData(resultRequest)
                 if (!loadNftStarted) {
                     loadNft(resultRequest.tokenId).then((result) => {
