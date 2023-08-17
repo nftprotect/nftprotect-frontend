@@ -134,8 +134,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
 
             const additionalData = {
                 //protectionStandard: "EIPXXX",
-                name: `🛡️Protected ${originalMetadata.title}`,
-                description: `${protectionText}${originalMetadata.description ? `${originalMetadata.description}` : ''}`,
+                name: `🛡️Protected • ${originalMetadata.title}`,
+                description: `${protectionText}${originalMetadata.description ? ` • ${originalMetadata.description}` : ''}`,
                 originalToken: {
                     standard: NFTPTokenStandard[parseInt(nftGraphData.assetType)].toString(),
                     address: nftGraphData.contract,
