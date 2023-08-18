@@ -138,6 +138,15 @@ export const useArbitrableProxy = () => {
         }
     }
 
+    const isRuled = async ( 
+        arbitratorId: number, 
+        internalDisputeId: BigNumber, 
+    ): Promise<boolean> => {
+        const contract = await getArbitrableProxy(arbitratorId)
+        const { isRuled } = await contract.disputes(internalDisputeId)
+        return isRuled
+    }
+
     const submitEvidence = async ( 
         arbitratorId: number, 
         localDisputeId: BigNumber,
@@ -154,6 +163,7 @@ export const useArbitrableProxy = () => {
     return {
         listEvidences,
         getPeriod,
-        submitEvidence
+        submitEvidence,
+        isRuled
     }
 }

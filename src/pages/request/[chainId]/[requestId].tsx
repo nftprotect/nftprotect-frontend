@@ -17,11 +17,10 @@ import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
 import { timestampToDate } from '../../../utils/helpers'
-import { DisputeGraphData, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
+import { DisputeGraphData, Period, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
 import AddEvidencesDialog from '../../../components/dialogs/request/AddEvidencesDialog'
 import { useIPFSContext } from '../../../context/IPFSContextProvider'
 import { useWeb3React } from '@web3-react/core'
-import { injected } from '../../../utils/connectors'
 import LoginForm from '../../../components/loginForm/LoginForm'
 import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 import Head from 'next/head'
@@ -46,7 +45,7 @@ const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, active, library, currentChain, nftProtectContract } = context
     const { activate } = useWeb3React()
-    const { listEvidences, getPeriod } = useArbitrableProxy()
+    const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
@@ -67,6 +66,7 @@ const RequestPage: NextPage = () => {
     const { getRequest } = useNftProtectGraph()
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
+    const [ isRuled, setIsRuled ] = useState<boolean>(false)
 
     // setup ipfs endpoint
     useEffect(() => {
@@ -108,6 +108,15 @@ const RequestPage: NextPage = () => {
             const period = await getPeriod(requestData.arbitratorId, requestData.externalDisputeId)
             console.log('PERIOD:', period)
             setPeriod(period)
+        }
+    }
+
+    // Load a dispute period from arbitrableProxy -> arbitrator
+    const loadIsRuled = async () => {
+        if (requestData) {
+            const result = await checkIsRuled(requestData.arbitratorId, requestData.localDisputeId)
+            console.log('IS RULED:', result)
+            setIsRuled(result)
         }
     }
 
@@ -239,6 +248,12 @@ const RequestPage: NextPage = () => {
     }, [requestData, currentChain])
 
     useEffect(() => {
+        if (period?.period === Period.Execution) {
+            loadIsRuled()
+        }
+    }, [period])
+    
+    useEffect(() => {
         if (requestData) {
             console.log("REQUEST DATA", requestData)
         }
@@ -279,6 +294,7 @@ const RequestPage: NextPage = () => {
                 defendantAddress={defendantAddress}
                 evidences={evidences}
                 disputeData={disputeData}
+                disputeIsRuled={ isRuled }
                 requestType={requestData.reqtype}
                 requestStatus={requestData.status}
                 pageData={ metaEvidenceType.page }
