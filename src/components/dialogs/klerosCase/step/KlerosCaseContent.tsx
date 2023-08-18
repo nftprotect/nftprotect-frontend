@@ -27,8 +27,7 @@ import {
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
 import { ExternalLinkIcon, ArrowDownIcon, ArrowUpIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import NFT, { ActionRequest, RequestStatus } from '../../../../classes/NFT';
-import { BigNumber } from '@ethersproject/bignumber'
+import NFT, { RequestStatus } from '../../../../classes/NFT';
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
@@ -37,17 +36,14 @@ import { addTimestampToDate, formatAddress, timestampToDate } from '../../../../
 import { createDisputeLink } from '../../../../utils/kleros';
 import KlerosCaseLabel from './KlerosCaseLabel';
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import IPFSUpload from '../../../../classes/IPFSUpload';
 import { useAppContext } from '../../../../context/AppContextProvider';
 import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 import { NFTEvents } from '../../../../classes/NFT';
-import { DisputePeriodData } from '../../../../hooks/useArbitrableProxy';
-import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
-import TimeCounter from '../../../../hooks/useTimeCounter';
+import { DisputeGraphData } from '../../../../hooks/useArbitratorGraph';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
-import { ReqStatus, ReqType } from '../../../../hooks/useNftProtectGraph';
+import { ReqType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 
 export interface KlerosCaseInitialData {
@@ -70,6 +66,7 @@ interface CaseContentInitialData extends KlerosCaseInitialData {
     requestType: ReqType,
     requestStatus?: RequestStatus,
     disputeData?: DisputeGraphData,
+    disputeIsRuled?: boolean
 }
 
 interface PageData {
@@ -93,7 +90,8 @@ const KlerosCaseContent = ({
     evidences,
     requestType,
     requestStatus = RequestStatus.Disputed,
-    disputeData
+    disputeData,
+    disputeIsRuled
 }: CaseContentInitialData) => {
 
     // Step content mapping
@@ -412,7 +410,7 @@ const KlerosCaseContent = ({
                                 <Trans>File an appeal</Trans>
                             </Button>
                         </Flex>
-                        const enforceButton = !enforced && <Flex w={{base: "200px"}}>
+                        const enforceButton = (!enforced && !disputeIsRuled) ? <Flex w={{base: "200px"}}>
                             <Button 
                                 variant="primaryLight"
                                 onClick={() => {
@@ -424,7 +422,7 @@ const KlerosCaseContent = ({
                             >
                                 <Trans>Enforce the ruling</Trans>
                             </Button>
-                        </Flex>
+                        </Flex> : ''
                         const button = isAppealingPeriod ?
                             appealButton :
                             enforceButton
@@ -439,13 +437,21 @@ const KlerosCaseContent = ({
                                             <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
                                                 <Trans>The case will now be closed.</Trans>
                                             </Text>
-                                            <br/>
-                                            <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} color={'grey'}>
-                                                <Trans>The Ruling on this case must be enforced to open a new case on this pNFT in the future.</Trans>
-                                            </Text>
+                                            {
+                                                isAppealingPeriod ?
+                                                    <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}}>
+                                                        <Trans>You may file an appeal.</Trans>
+                                                    </Text> :
+                                                    !enforced && <>
+                                                        <br/>
+                                                        <Text fontSize={{base: "18px"}} lineHeight={{base: "22px"}} color={'grey'}>
+                                                            <Trans>The Ruling on this case must be enforced to open a new case on this pNFT in the future.</Trans>
+                                                        </Text>
+                                                    </>
+                                            }
                                         </Box>
                                     </Flex>
-                                    { enforceButton }
+                                    { button }
                                 </>)
                             case 1:
                                 return (<>
