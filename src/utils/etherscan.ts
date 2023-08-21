@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { supportedChains } from './config'
 
 export const generateBlockURL = (blockNumber: string | number, chainId: number) => {
     const decimalBlockNumber = blockNumber.toString().startsWith('0x') ?
@@ -8,7 +9,11 @@ export const generateBlockURL = (blockNumber: string | number, chainId: number) 
 }
 
 export const generateTxURL = (txHash: string, chainId: number) => {
-    return `https://goerli.etherscan.io/tx/${txHash}`
+    const chain = supportedChains.find(it => it.id === chainId)
+    if (!chain) {
+        throw new Error(`Invalid chainId: ${chainId}`)
+    }
+    return `${chain.explorerUrl}/tx/${txHash}`
 }
 
 export const generateAddressURL = (address: string, chainId: number) => {
