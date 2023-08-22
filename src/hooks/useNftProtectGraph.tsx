@@ -157,10 +157,10 @@ export const useNftProtectGraph = () => {
                     token(id: $tokenId) {
                         id,
                         securityLevel,
-                        ownerProtected: {
+                        ownerProtected {
                             id
                         },
-                        ownerOriginal: {
+                        ownerOriginal {
                             id
                         },
                         assetType,
@@ -173,7 +173,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { tokenId })
+            const result = await performQuery(graphURI, query, { tokenId: tokenId.toString() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
