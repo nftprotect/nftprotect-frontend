@@ -150,7 +150,7 @@ export const useNftProtectGraph = () => {
         }
     }
 
-    const getToken = async (tokenId: BigNumber) => {
+    const getToken = async (tokenId: BigNumber):Promise<TokenGraphData|undefined> => {
         if (graphURI) {
             const query = `
                 query getToken($tokenId: Bytes!) {
@@ -162,6 +162,12 @@ export const useNftProtectGraph = () => {
                         },
                         ownerOriginal {
                             id
+                        },
+                        latestRequest {
+                            id
+                            status
+                            type
+                            timestampChange
                         },
                         assetType,
                         contract,
@@ -180,7 +186,25 @@ export const useNftProtectGraph = () => {
                     throw new Error(error.message)
                 })
             }
-            return data.token
+            return data.token ? {
+                id: BigNumber.from(data.token.id),
+                tokenId: BigNumber.from(data.token.tokenId),
+                securityLevel: parseInt(data.token.securityLevel),
+                ownerAddress: data.token.ownerProtected.id,
+                originalOwnerAddress: data.token.ownerOriginal.id,
+                assetType: parseInt(data.token.assetType),
+                contractAddress: data.token.contract,
+                amount: BigNumber.from(data.token.amount),
+                mintDate: timestampToDate(parseInt(data.token.timestamp)),
+                mintBlockNumber: parseInt(data.token.blocknumber),
+                latestRequest: data.token.latestRequest ? {
+                    id: BigNumber.from(data.token.latestRequest.id),
+                    status: ReqStatus[data.token.latestRequest.status as keyof typeof ReqStatus],
+                    type: ReqType[data.token.latestRequest.type as keyof typeof ReqType],
+                    updateDate: timestampToDate(parseInt(data.token.latestRequest.timestampChange))
+                } : null,
+                burned: data.token.burned
+            } : undefined
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }

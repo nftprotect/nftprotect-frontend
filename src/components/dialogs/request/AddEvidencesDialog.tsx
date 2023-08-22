@@ -282,8 +282,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
 
                                     <CardBody>
                                         <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
-                                            </Image>
+                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%"/>
                                         </Box>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
                                             <Trans>The new evidence submitted succesfully.</Trans>

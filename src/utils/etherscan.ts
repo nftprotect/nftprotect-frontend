@@ -8,18 +8,25 @@ export const generateBlockURL = (blockNumber: string | number, chainId: number) 
     return `https://goerli.etherscan.io/block/${decimalBlockNumber}`
 }
 
-export const generateTxURL = (txHash: string, chainId: number) => {
+const getChain = (chainId: number) => {
     const chain = supportedChains.find(it => it.id === chainId)
     if (!chain) {
         throw new Error(`Invalid chainId: ${chainId}`)
     }
+    return chain
+}
+
+export const generateTxURL = (txHash: string, chainId: number) => {
+    const chain = getChain(chainId)
     return `${chain.explorerUrl}/tx/${txHash}`
 }
 
 export const generateAddressURL = (address: string, chainId: number) => {
-    return `https://goerli.etherscan.io/address/${address}`
+    const chain = getChain(chainId)
+    return `${chain.explorerUrl}/address/${address}`
 }
 
 export const generateTokenURL = (contractAddress: string, tokenId: string, chainId: number) => {
-    return `https://goerli.etherscan.io/nft/${contractAddress}/${tokenId}`
+    const chain = getChain(chainId)
+    return `${chain.explorerUrl}/nft/${contractAddress}/${tokenId}`
 }
