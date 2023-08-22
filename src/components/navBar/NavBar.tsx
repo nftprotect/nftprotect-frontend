@@ -11,7 +11,7 @@ import { useAppContext } from '../../context/AppContextProvider'
 import LoginForm from '../loginForm/LoginForm'
 import { LocaleMenu } from './LocaleMenu'
 
-const NavBar = () => {
+const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
 
     const { active } = useAppContext()
 
@@ -50,15 +50,15 @@ const NavBar = () => {
                 {/* <Box mr={[2, 4]}>
                     <MainMenu />
                 </Box> */}
-                { !active && <Box ml={{base: "1.25rem"}}>
+                { !active && showConnectButton && <Box ml={{base: "1.25rem"}}>
                     <LoginForm buttonVariant={'primaryDark'} />
                 </Box> }
-                <Box ml={{base: "1.25rem"}}>
-                    { active && <NetworkMenu /> }
-                </Box>
-                <Box ml={{base: "1.25rem"}}>
-                    { active && <ShowConnectionState /> }
-                </Box>
+                { active && <Box ml={{base: "1.25rem"}}>
+                   <NetworkMenu />
+                </Box> }
+                { active && <Box ml={{base: "1.25rem"}}>
+                    <ShowConnectionState />
+                </Box> }
             </Flex>
         </chakra.nav>
     )
