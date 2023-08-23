@@ -31,16 +31,23 @@ import {
     Grid,
     GridItem,
     Link,
-    Badge
+    Badge,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverBody,
+    Spinner
 } from '@chakra-ui/react'
 import { Form, Field, Formik } from 'formik';
 import Head from 'next/head'
 import NFTImage from '../components/nftView/NFTImage'
 import NavBar from '../components/navBar/NavBar'
 import { CheckCircleIcon, ExternalLinkIcon, WarningIcon } from '@chakra-ui/icons'
+import { HelpCircle, Info } from '@web3uikit/icons'
 import Footer from '../components/footer/Footer'
 import { generateAddressURL, generateTokenURL } from '../utils/etherscan'
-import { formatAddress } from '../utils/helpers'
+import { formatAddress, generateRequestLink } from '../utils/helpers'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -61,6 +68,8 @@ const ValidatePage: NextPage = () => {
     const [ nft, setNft ] = useState<NFT>()
     const [ nftGraphData, setNftGraphData ] = useState<TokenGraphData>()
     const [ validationResult, setValidationResult ] = useState<boolean>()
+    const [ loadingPending, setLoadingPending ] = useState<boolean>(false)
+    const [ nftLoadingPending, setNftLoadingPending ] = useState<boolean>(false)
     const { getNftMetadata } = useAlchemy()
     const { getToken, getRequest } = useNftProtectGraph()
     const [ request, setRequest ] = useState<RequestGraphData|null>()
@@ -86,6 +95,7 @@ const ValidatePage: NextPage = () => {
     }>()
     
     const onSubmit = async (formValues:any) => {
+        setLoadingPending(true)
         setChainId(parseInt(formValues.chainId))
         setValidationRequest({
             chainId: parseInt(formValues.chainId),
@@ -111,8 +121,13 @@ const ValidatePage: NextPage = () => {
             console.log('IS VALID:', isValid)
             setRequest(undefined)
             setValidationResult(isValid)
-            const nft = isValid ? await loadNft(validationRequest.tokenId) : undefined
-            setNft(nft)
+            setLoadingPending(false)
+            if (isValid) {
+                setNftLoadingPending(true)
+                const nft = await loadNft(validationRequest.tokenId)
+                setNft(nft)
+                setNftLoadingPending(false)
+            }
         }
     }
 
@@ -123,7 +138,7 @@ const ValidatePage: NextPage = () => {
         }
     }, [currentChain, validationRequest])
 
-    const loadDispute = async () => {
+    const loadRequest = async () => {
         if (nftGraphData?.latestRequest) {
             const request = await getRequest(nftGraphData.latestRequest.id)
             setRequest(request)
@@ -131,7 +146,7 @@ const ValidatePage: NextPage = () => {
     }
 
     useEffect(() => {
-        loadDispute()
+        loadRequest()
     }, [nftGraphData])
 
     return (<>
@@ -174,7 +189,7 @@ const ValidatePage: NextPage = () => {
                         h={"auto"}
                         mx={'2em'}
                     >
-                        <Heading>
+                        <Heading pb='0.5em'>
                             <Trans>Validate</Trans>
                         </Heading>
                         <Formik
@@ -190,8 +205,7 @@ const ValidatePage: NextPage = () => {
 
                             {(props) => (
                                 <Form onSubmit={props.handleSubmit}>
-                                    <Flex flexDirection="row" flexWrap="nowrap">
-
+                                    <Flex flexDirection={{md: 'row', base: 'column'}} flexWrap="nowrap" mb={{md: '0', base: '1.5em'}}>
                                         <Field name='contractAddress'>
                                             {({ field, form }: any) => (
                                                 <FormControl isInvalid={form.errors.contractAddress && form.touched.contractAddress} mb={{base: "20px"}}>
@@ -229,7 +243,7 @@ const ValidatePage: NextPage = () => {
                                                 <FormControl isInvalid={form.errors.chainId && form.touched.chainId} mb={{base: "20px"}}>
                                                     <Select
                                                         {...field} 
-                                                        placeholder={t`Chain`}
+                                                        placeholder={t`Network`}
                                                         variant='primary' 
                                                         resize="vertical"
                                                         isRequired
@@ -262,85 +276,140 @@ const ValidatePage: NextPage = () => {
                                 </Form>
                             )}
                         </Formik>
-                        { validationResult === true && <Box>
-                            <CheckCircleIcon color='green'/>&nbsp;
-                            <Trans>Valid</Trans>
-                        </Box> }
-                        { validationResult === false && <Box>
-                            <WarningIcon color='red'/>&nbsp;
-                            <Trans>Invalid</Trans>
-                        </Box> }
-                        { validationResult && nftGraphData && nft && 
-                            <Flex bgColor="#F8F8F8" p={{base: "18px"}} alignItems="flex-start" mb={{base: "30px"}}>
-                            <Box my={{base: "-20px"}}>
-                                { nft && <NFTImage nft={nft} /> }
-                            </Box>
-                            
-                            <Flex flexDirection="column" ml={{base: "18px"}} >
-                                <Heading size='md'>
-                                    { nft.title || nft?.contract?.name }
-                                </Heading>
-                                <Text textStyle="paragraph">
-                                    <chakra.span fontWeight="600">
-                                        <Trans>{"The original NFT:"}</Trans>
-                                    </chakra.span>
-                                    {" "}
-                                    <Link 
-                                        href={ generateTokenURL(nftGraphData.contractAddress, nftGraphData.tokenId.toString(), currentChain.id) }
-                                        isExternal 
-                                        rel="noreferrer" 
-                                        
-                                        ml={{base: "5px"}}
-                                    >
-                                        <chakra.span wordBreak="break-all">
-                                            { `${formatAddress(nftGraphData.contractAddress, 4) } (id: ${nftGraphData.tokenId})` }
-                                        </chakra.span>
-                                        <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                                    </Link>
-                                </Text>
-                                <Text textStyle="paragraph">
-                                    <chakra.span fontWeight="600">
-                                        <Trans>{"The original NFT owner:"}</Trans>
-                                    </chakra.span>
-                                    {" "}
-                                    <Link 
-                                        href={ generateAddressURL(nftGraphData.originalOwnerAddress, currentChain.id) }
-                                        isExternal 
-                                        rel="noreferrer" 
-                                        
-                                        ml={{base: "5px"}}
-                                    >
-                                        <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
-                                            { formatAddress(nftGraphData.originalOwnerAddress, 8) }
-                                        </chakra.span>
-                                        <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                                    </Link>
-                                </Text>
-                                <Text textStyle="paragraph">
-                                    <chakra.span fontWeight="600">
-                                        <Trans>{"The protected NFT (pNFT) owner:"}</Trans>
-                                    </chakra.span>
-                                    {" "}
-                                    <Link 
-                                        href={ generateAddressURL(nftGraphData.ownerAddress, currentChain.id) }
-                                        isExternal 
-                                        rel="noreferrer" 
-                                        
-                                        ml={{base: "5px"}}
-                                    >
-                                        <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
-                                            { formatAddress(nftGraphData.ownerAddress, 8) }
-                                        </chakra.span>
-                                        <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                                    </Link>
-                                </Text>
-                                { request && (request.status === ReqStatus.Disputed) && 
-                                    <Badge>
-                                        <Trans>Under dispute</Trans>
-                                    </Badge>
+                        { loadingPending ?
+                            <Spinner variant="primary" speed='0.65s' my={{base: "20px"}} /> : 
+                            <>
+                                { validationResult === true && <Box mb='1.5em'>
+                                    <Text fontSize={'18px'} fontWeight='600'>
+                                        <CheckCircleIcon color='green'/>&nbsp;
+                                        <Trans>Valid</Trans>
+                                    </Text>
+                                </Box> }
+                                { validationResult === false && <Box mb='1.5em'>
+                                    <Text fontSize={'18px'} fontWeight='600'>
+                                        <WarningIcon color='red'/>&nbsp;
+                                        <Trans>Invalid</Trans>
+                                    </Text>
+                                    <Text textStyle={'paragraph'}>
+                                        <Trans>The pNFT with the provided address and ID does not exist in {currentChain.name} network. Please ensure you have entered the correct information and try again.</Trans>
+                                    </Text>
+                                </Box> }
+                                { nftLoadingPending ?
+                                    <Spinner variant="primary" speed='0.65s' my={{base: "20px"}} /> :
+                                        <>
+                                        { validationResult && nftGraphData && nft && 
+                                            <Card variant='outline' bgColor={'body.bgColor'}><CardBody bgColor={'body.bgColor'}>
+                                                <Flex 
+                                                    flexDirection={{md: 'row', base: 'column'}} 
+                                                    bgColor={'body.bgColor'} 
+                                                    alignItems="flex-start"
+                                                >
+                                                    <Box maxWidth={{sm: '400px', md: '150px', base: '100%' }}>
+                                                        { nft && <NFTImage nft={nft} setDefaultStyles={ false } /> }
+                                                    </Box>
+                                                
+                                                    <Flex flexDirection="column" ml={{base: '0', md: "18px"}} mt={{base: '1em', md: "0"}}>
+                                                        <Heading size='md'>
+                                                            { nft.title || nft?.contract?.name }
+                                                        </Heading>
+                                                        <Text textStyle="paragraph" display={'flex'} flexDirection={{base: 'column', md: 'row'}}>
+                                                            <chakra.span fontWeight="600">
+                                                                <Trans>{"The original NFT:"}</Trans>
+                                                            </chakra.span>
+                                                            {" "}
+                                                            <Link 
+                                                                href={ generateTokenURL(nftGraphData.contractAddress, nftGraphData.tokenId.toString(), currentChain.id) }
+                                                                isExternal 
+                                                                rel="noreferrer" 
+                                                                
+                                                                ml={{base: "5px"}}
+                                                            >
+                                                                <chakra.span wordBreak="break-all">
+                                                                    { `${formatAddress(nftGraphData.contractAddress, 4) } (id: ${nftGraphData.tokenId})` }
+                                                                </chakra.span>
+                                                                <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                                                            </Link>
+                                                        </Text>
+                                                        <Text textStyle="paragraph" display={'flex'} flexDirection={{base: 'column', md: 'row'}} >
+                                                            <chakra.span fontWeight="600">
+                                                                <Trans>{"The original NFT owner:"}</Trans>
+                                                            </chakra.span>
+                                                            {" "}
+                                                            <Link 
+                                                                href={ generateAddressURL(nftGraphData.originalOwnerAddress, currentChain.id) }
+                                                                isExternal 
+                                                                rel="noreferrer" 
+                                                                
+                                                                ml={{base: "5px"}}
+                                                            >
+                                                                <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
+                                                                    { formatAddress(nftGraphData.originalOwnerAddress, 8) }
+                                                                </chakra.span>
+                                                                <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                                                            </Link>
+                                                        </Text>
+                                                            <Text textStyle="paragraph" display={'flex'} flexDirection={{base: 'column', md: 'row'}}>
+                                                                <chakra.span fontWeight="600">
+                                                                    <Trans>{"The protected NFT (pNFT) owner:"}</Trans>
+                                                                </chakra.span>
+                                                                {" "}
+                                                                <Flex direction={'row'}>
+                                                                    <Link 
+                                                                        href={ generateAddressURL(nftGraphData.ownerAddress, currentChain.id) }
+                                                                        isExternal 
+                                                                        rel="noreferrer" 
+                                                                        
+                                                                        ml={{base: "5px"}}
+                                                                    >
+                                                                        <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
+                                                                            { formatAddress(nftGraphData.ownerAddress, 8) }
+                                                                        </chakra.span>
+                                                                        <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
+                                                                    </Link>
+                                                                    { (nftGraphData.ownerAddress.toLowerCase() !== nftGraphData.originalOwnerAddress.toLowerCase()) && 
+                                                                        <Text textStyle="paragraph">
+                                                                            <Popover placement="right">
+                                                                                <PopoverTrigger>
+                                                                                    <Box cursor="pointer" color="red" ml={[2]}>
+                                                                                        <WarningIcon fontSize='18px' />
+                                                                                    </Box>
+                                                                                </PopoverTrigger>
+                                                                                <PopoverContent w={{base: "280px"}}  textStyle="paragraph" textAlign="left">
+                                                                                    <PopoverArrow />
+                                                                                    <PopoverBody  borderRadius="16px" px={{base: "10px"}} py={{base: "10px"}} >
+                                                                                        <Trans>The owner of the pNFT and the original owner are different! Please be extremely careful, as if you purchase a stolen pNFT, the original owner can prove the fact of theft through court and burn the pNFT.</Trans>
+                                                                                    </PopoverBody>
+                                                                                </PopoverContent>
+                                                                            </Popover>
+                                                                        </Text>
+                                                                    }
+                                                                </Flex>
+                                                            </Text>
+
+                                                        { request && (request.status === ReqStatus.Disputed) && 
+                                                            <Text textStyle="paragraph">
+                                                                <Badge bgColor='red' color='white' py='0.2em' px='0.4em'>
+                                                                    <Link
+                                                                        isExternal 
+                                                                        rel="noreferrer"
+                                                                        href={generateRequestLink(request.id, currentChain.id)}
+                                                                        whiteSpace="nowrap"
+                                                                        display="flex"
+                                                                        alignItems="center"
+                                                                    >
+                                                                        <Trans>Under dispute</Trans>
+                                                                        <ExternalLinkIcon fontSize='16px' ml="5px" />
+                                                                    </Link>
+                                                                </Badge>
+                                                            </Text> 
+                                                        }
+                                                    </Flex>
+                                                </Flex>
+                                            </CardBody></Card> }
+                                        </>
                                 }
-                            </Flex>
-                        </Flex> }
+                            </>
+                        }
                     </Container>
                 </main>
             </GridItem>

@@ -17,8 +17,8 @@ import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
 import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
-import { createDisputeLink } from '../../utils/kleros';
 import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { generateRequestLink } from '../../utils/helpers';
 
 interface NFTInitialData {
     nft: NFT,
@@ -26,7 +26,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { account, library, nftProtectContract, currentBlock } = useAppContext()
+    const { library, currentBlock, currentChain } = useAppContext()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -40,39 +40,9 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
     // Marks if request is timed out (if exists)
     const [ requestTimedOut, setRequestTimedOut] = useState(false)
-
-    const [components, setComponents] = useState(["Sample Component"]); 
     const { getDialog } = useCallableDialogContext()
 
-    // Fetching metadata if it's unawailable by default
-    // const fetchMetadataUri = async (uri: string) => {  
-    //     const response = await fetch(uri, {
-    //         headers: {
-    //             'Accept': 'application/json'
-    //         }
-    //     })
-    //     const data = await response.json()
-    //     return {response, data}
-    // }
-
     useEffect(() => {
-        // If no metadata preloaded trying to load it by tokenUri
-        // if (!metadata && hasMetadata) {
-        //     if (nft.tokenUri) {
-        //         fetchMetadataUri(nft.tokenUri || '').then(({response, data}) => {
-        //             if (response.ok) {
-        //                 setMetadata(data)
-        //             } else {
-        //                 setHasMetadata(false)
-        //             }
-        //             setFetchEnded(true)
-        //         }).catch(() => setFetchEnded(true))
-        //     } else {
-        //         setHasMetadata(false)
-        //         setFetchEnded(true)
-        //     }
-        // }
-
         // Load all secondary NFT data
         nft.loadAnotherData()
         const originalNFTDataLoadedListener = () => {
@@ -106,7 +76,6 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
         }
     }, [currentBlock])
 
-    let result = <div />
     let buttons = <div />
     if (nft.isPNFT()) {
         // We can't show buttons for pNFT before we have info about original NFT
@@ -190,7 +159,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                             <Link
                                                 isExternal 
                                                 rel="noreferrer"
-                                                href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                                href={generateRequestLink(pendingRequest.id, currentChain.id)}
                                                 whiteSpace="nowrap"
                                                 display="flex"
                                                 alignItems="center"
@@ -292,7 +261,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         <Link
                                             isExternal 
                                             rel="noreferrer"
-                                            href={createDisputeLink(pendingRequest.externalDisputeId)}
+                                            href={generateRequestLink(pendingRequest.id, currentChain.id)}
                                             whiteSpace="nowrap"
                                             display="flex"
                                             alignItems="center"
