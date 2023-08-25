@@ -19,6 +19,7 @@ import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
 import { CallableDialogContextProvider } from '../context/CallableDialogContextProvider'
 import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
+import GoogleAnalytics from '../components/GoogleAnalytics'
 
 function initTranslation(i18n: I18n): void {
     i18n.loadLocaleData({
@@ -71,6 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 <CallableDialogContextProvider>
                                     <I18nProvider i18n={i18n}>
                                         <Component {...pageProps} />
+                                        { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
                                     </I18nProvider>
                                 </CallableDialogContextProvider>
                             </NotificationContextProvider>

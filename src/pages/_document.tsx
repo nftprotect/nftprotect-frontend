@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-import GoogleAnalytics from '../components/GoogleAnalytics'
 
 export default function Document() {
     return (
@@ -8,7 +7,6 @@ export default function Document() {
             <body>
                 <Main />
                 <NextScript />
-                { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
             </body>
         </Html>
     )
