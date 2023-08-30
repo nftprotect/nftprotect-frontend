@@ -33,7 +33,6 @@ import CancelledStepContent from '../../steps/CancelledStepContent'
 import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import ErrorStepContent from '../../steps/ErrorStepContent'
 import NFT from "../../../classes/NFT";
-import { dialogsTimeout } from '../../../utils/config';
 import { Contract } from '@ethersproject/contracts';
 import { handleContractError } from '../../../utils/errorHandling';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
@@ -67,19 +66,16 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract) => {

@@ -1,4 +1,3 @@
-import { dialogsTimeout } from '../../../utils/config'
 import { useEffect, useState } from 'react';
 import {
     chakra,
@@ -92,19 +91,16 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = () => {
@@ -117,7 +113,6 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
-                    setTimeout(dialogClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }

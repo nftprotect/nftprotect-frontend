@@ -48,7 +48,6 @@ import IPFSUpload from "../../../classes/IPFSUpload";
 import { IPFSFileUpload } from "../../IPFSFileUpload";
 import { Wizard } from "react-use-wizard";
 import SwitchableOutside from "../../wizardHelpers/SwitchableOutside";
-import { dialogsTimeout } from "../../../utils/config";
 import { useAppContext } from "../../../context/AppContextProvider";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { isAddress } from "@ethersproject/address";
