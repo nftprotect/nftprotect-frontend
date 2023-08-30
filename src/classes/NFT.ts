@@ -253,7 +253,7 @@ export default class NFT implements NFTInterface {
     async loadPendingRequest():Promise<ActionRequest|undefined> {
         if (this.isPNFT()) {
             const nftProtectContract = this.context.nftProtectContract
-            const requestId: BigNumber = nftProtectContract.tokenToRequest(this.tokenId)
+            const requestId: BigNumber = await nftProtectContract.tokenToRequest(this.tokenId)
             if (requestId.toString() !== '0') {
                 const request:any = await nftProtectContract.requests(requestId)
                 if (request.tokenId.toNumber() !== 0) {
