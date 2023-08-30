@@ -78,14 +78,16 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (tokenContract: Contract) => {
+    const finalTransactionSent = (nft: NFT) => {
         return (tx: any) => {
+            const tokenContract = nft.getContract()
             setNextStep(StepMapping.waitForTransactionConfirmation);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
+                    nft.loadPendingRequest()
                     nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
@@ -99,9 +101,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
             if (nft && nft.pendingRequest) {
                 console.log('ANSWER ADJUSTMENT REJECT')
                 nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, false, '')
-                    .then( finalTransactionSent(
-                        nft.getContract(),
-                    ))
+                    .then( finalTransactionSent(nft) )
                     .catch(
                         handleContractError({
                             'ACTION_REJECTED': handleRejected,

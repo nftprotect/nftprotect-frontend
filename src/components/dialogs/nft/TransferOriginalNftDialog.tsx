@@ -81,13 +81,15 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (tokenContract: Contract, waitingStep: number, completeStep: number) => {
+    const finalTransactionSent = (nft: NFT, waitingStep: number, completeStep: number) => {
         return (tx: any) => {
+            const tokenContract = nft.getContract()
             setNextStep(waitingStep);
             tokenContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
+                    nft.loadPendingRequest()
                     nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
@@ -109,7 +111,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     }
                 }
                 performAnswer().then( finalTransactionSent(
-                    nft.getContract(),
+                    nft,
                     StepMapping.pendingTransaction,
                     StepMapping.transferredSuccessfully
                 ))
