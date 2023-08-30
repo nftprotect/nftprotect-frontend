@@ -43,7 +43,6 @@ import IPFSUpload from "../../../classes/IPFSUpload";
 import { IPFSFileUpload } from "../../IPFSFileUpload";
 import { Wizard } from "react-use-wizard";
 import SwitchableOutside from "../../wizardHelpers/SwitchableOutside";
-import { dialogsTimeout } from "../../../utils/config";
 import { useAppContext } from "../../../context/AppContextProvider";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { isAddress } from "@ethersproject/address";
@@ -83,19 +82,16 @@ const RemoveOperationsDialog = ({
     const handleUnknownError = (error: any) => {
         console.log({err: error})
         setNextStep(StepMapping.error)
-        setTimeout(onClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(onClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(onClose, dialogsTimeout)
     }
 
     const finalTransactionSent = () => {
@@ -107,7 +103,6 @@ const RemoveOperationsDialog = ({
                     // after mined fire wrap
                     setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);
-                    setTimeout(onClose, dialogsTimeout)
                 } else {
                     handleTransactionFailed(tx);
                 }

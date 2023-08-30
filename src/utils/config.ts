@@ -60,8 +60,6 @@ export const maxBlocksPerRequest = 3000
 export const libraryPollingInterval = 12000
 export const nftpDeployBlockNumber = 9073902
 
-export const dialogsTimeout = 5000
-
 // IPFS
 export const ipfsProviderUrl = 'https://ipfs.infura.io:5001/api/v0'
 export const ipfsUrlMask = 'https://cloudflare-ipfs.com/ipfs/{HASH}/{FILENAME}'

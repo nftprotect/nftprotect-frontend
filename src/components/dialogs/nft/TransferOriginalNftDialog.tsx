@@ -1,4 +1,3 @@
-import { dialogsTimeout } from '../../../utils/config' 
 import { Contract } from "@ethersproject/contracts";
 import React, { useEffect, useState } from 'react';
 import {
@@ -70,19 +69,16 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const handleUnknownError = (error: any) => {
         console.error(error)
         setNextStep(StepMapping.error)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleRejected = () => {
         // Transaction declined
         setNextStep(StepMapping.canceled)
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const handleTransactionFailed = (tx: any) => {
         setNextStep(StepMapping.error)
         console.log("Transaction failed", tx.hash);
-        setTimeout(dialogClose, dialogsTimeout)
     }
 
     const finalTransactionSent = (tokenContract: Contract, waitingStep: number, completeStep: number) => {
