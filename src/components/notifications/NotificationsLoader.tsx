@@ -846,7 +846,11 @@ const NotificationsLoader = () => {
                                         dateCreated: dispute.startTime
                                     })
                                 }
+                                console.log('ADDING 23.1 - 2')
+
                                 if (!dispute.appealed) { // First time
+                                    console.log('ADDING 23.1 - 3', request.type)
+
                                     if (request.type === ReqType.OwnershipAdjustment) {
                                         const loadedNft = await getPNft(nft)
                                         if (!loadedNft.originalData) {
@@ -874,16 +878,20 @@ const NotificationsLoader = () => {
                                             },
                                             dateCreated: request.updateDate
                                         })
-                                    } else if (request.type === ReqType.Burn) {
+                                    } else if (request.type === ReqType.OwnershipRestore) {
                                         const loadedNft = await getPNft(nft)
                                         // 23.1 pNFT burn disputed
+                                        console.log('ADDING 23.1 - 1')
                                         addNotification({
                                             id: notificationId+'.23.1',
                                             image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                        <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT.</Trans>
+                                                    }
+                                                    message={
+                                                        <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
