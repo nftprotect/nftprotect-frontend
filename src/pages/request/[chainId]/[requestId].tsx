@@ -80,11 +80,11 @@ const RequestPage: NextPage = () => {
 
     // Loads all submitted evidence data
     const loadEvidences = async () => {
-        if (requestData) {
+        if (requestData && requestGraphData) {
             const evidences = await listEvidences(
                 requestData.arbitratorId, 
                 requestData.localDisputeId, 
-                requestGraphData?.createBlockNumber || nftpDeployBlockNumber
+                requestGraphData.createBlockNumber
             )
             const promises = evidences.map(async ({evidenceURI, blockNumber, submittedBy}) => {
                 const uri = centralizeIpfsUrl(evidenceURI)
@@ -239,10 +239,16 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    // Load evidences and period
+    // Load evidences
     useEffect(() => {
         if (currentChain) {
             loadEvidences()
+        }
+    }, [requestData, requestGraphData, currentChain])
+
+    // Load period
+    useEffect(() => {
+        if (currentChain) {
             loadPeriod()
         }
     }, [requestData, currentChain])
