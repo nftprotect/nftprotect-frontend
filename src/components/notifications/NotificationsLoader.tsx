@@ -692,8 +692,8 @@ const NotificationsLoader = () => {
                     if (!nft.burned) {
                         const loadedNft = await getPNft(nft)
                         // 0. pNFT received
-                        if (!loadedNft.ownerAddress) {
-                            await loadedNft.loadOwnerAddress()
+                        if (!loadedNft.originalData) {
+                            await loadedNft.loadOriginalNFTData()
                         }
                         addNotification({
                             id: notificationId+'.0',
@@ -849,6 +849,9 @@ const NotificationsLoader = () => {
                                 if (!dispute.appealed) { // First time
                                     if (request.type === ReqType.OwnershipAdjustment) {
                                         const loadedNft = await getPNft(nft)
+                                        if (!loadedNft.originalData) {
+                                            await loadedNft.loadOriginalNFTData()
+                                        }
                                         // 23.2 Original NFT disputed
                                         addNotification({
                                             id: notificationId+'.23.2',
@@ -856,7 +859,10 @@ const NotificationsLoader = () => {
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT. More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
+                                                        <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT.</Trans>
+                                                    }
+                                                    message={
+                                                        <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
                                                     }
                                                 />, 
                                             severity: SeverityLevel.Critical,
