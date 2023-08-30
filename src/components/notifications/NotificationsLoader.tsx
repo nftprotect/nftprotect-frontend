@@ -199,7 +199,7 @@ const NotificationsLoader = () => {
                                     buttonCallback: () => {
                                         const dialog = getDialog('OriginalNftReceivedDialog')
                                         dialog.setNft(originalNft)
-                                        dialog.setPreviousOriginalOwner(nft.ownerAddress)
+                                        dialog.setPreviousOriginalOwner(nft.originalOwnerAddress)
                                         dialog.onOpen()
                                     },
                                     severity: SeverityLevel.Major,
@@ -736,7 +736,7 @@ const NotificationsLoader = () => {
                             buttonCallback: () => {
                                 const dialog = getDialog('OriginalNftReceivedDialog')
                                 dialog.setNft(originalNft)
-                                dialog.setPreviousOriginalOwner(nft.ownerAddress)
+                                dialog.setPreviousOriginalOwner(nft.originalOwnerAddress)
                                 dialog.onOpen()
                             },
                             dateCreated: new Date() // TODO: put burn date
