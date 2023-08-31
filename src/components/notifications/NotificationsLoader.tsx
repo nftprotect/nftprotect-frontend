@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useAppContext } from "../../context/AppContextProvider"
 import { ReqStatus, ReqType, TokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
@@ -22,6 +22,9 @@ import { useCallableDialogContext } from "../../context/CallableDialogContextPro
 import SuedForBurnNFTDialog from "../dialogs/notifications/SuedForBurnNFTDialog"
 import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObtainTheOriginalNFTDialog"
 import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftUnresponsiveDialog"
+import { arbitratorGraphs } from "../../utils/config"
+import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
+import { Contract } from "@ethersproject/contracts"
 
 const CommonNotificationBody = ({
     header,
@@ -49,12 +52,16 @@ const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
+    const { getArbitrableProxy, getArbitrator } = useArbitrableProxy()
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { getNftMetadata } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
     const pNftsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
+    const [ arbitrableProxies, setArbitrableProxies ] = useState<Contract[]>()
+    const [ arbitrators, setArbitrators ] = useState<Contract[]>()
+
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
@@ -121,7 +128,6 @@ const NotificationsLoader = () => {
     }
 
     const loadNotifications = async () => {
-        clearNotifications()
         if (account) {
             // All pNFTs received by account
             const receivedNfts = await listTokensReceived(account)
@@ -846,11 +852,8 @@ const NotificationsLoader = () => {
                                         dateCreated: dispute.startTime
                                     })
                                 }
-                                console.log('ADDING 23.1 - 2')
 
                                 if (!dispute.appealed) { // First time
-                                    console.log('ADDING 23.1 - 3', request.type)
-
                                     if (request.type === ReqType.OwnershipAdjustment) {
                                         const loadedNft = await getPNft(nft)
                                         if (!loadedNft.originalData) {
@@ -881,7 +884,6 @@ const NotificationsLoader = () => {
                                     } else if (request.type === ReqType.OwnershipRestore) {
                                         const loadedNft = await getPNft(nft)
                                         // 23.1 pNFT burn disputed
-                                        console.log('ADDING 23.1 - 1')
                                         addNotification({
                                             id: notificationId+'.23.1',
                                             image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
@@ -1333,7 +1335,139 @@ const NotificationsLoader = () => {
         }
     }
 
-    useEffect(() => { loadNotifications() }, [account, currentChain])
+    const loadArbitrableProxies = async () => {
+        if (account && active && currentChain) {
+            const currentArbitrators = arbitratorGraphs.find(it => it.chainId === currentChain.id)
+            if (currentArbitrators) {
+                const proxyPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrableProxy(arbitratorConfig.arbitratorId))
+                const proxies = await Promise.all(proxyPromises)
+                setArbitrableProxies(proxies)
+            }
+        }
+    }
+
+    const loadArbitrators = async () => {
+        if (account && active && currentChain) {
+            const currentArbitrators = arbitratorGraphs.find(it => it.chainId === currentChain.id)
+            if (currentArbitrators) {
+                const arbPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrator(arbitratorConfig.arbitratorId))
+                const arbitrators = await Promise.all(arbPromises)
+                setArbitrators(arbitrators)
+            }
+        }
+    }
+
+    useEffect(() => {
+        clearNotifications()
+        loadNotifications()
+        loadArbitrableProxies()
+    }, [account, active, currentChain])
+
+    const subscribeNFTProtectEvents = () => {
+        if (account && active) {
+            const fromMe = nftProtectContract.filters.Transfer(account, null)
+            const toMe = nftProtectContract.filters.Transfer(null, account)
+            const ownershipAdjustedNewOwner = nftProtectContract.filters.OwnershipAdjusted(account)
+            const ownershipAdjustedOldOwner = nftProtectContract.filters.OwnershipAdjusted(null, account)
+            const ownershipAdjustmentAskedNewOwner = nftProtectContract.filters.OwnershipAdjustmentAsked(null, account)
+            const ownershipAdjustmentAskedOldOwner = nftProtectContract.filters.OwnershipAdjustmentAsked(null, null, account)
+            const ownershipRestoreAskedNewOwner = nftProtectContract.filters.OwnershipRestoreAsked(null, account)
+            const ownershipRestoreAskedOldOwner = nftProtectContract.filters.OwnershipRestoreAsked(null, null, account)
+            // These events doesn't contain indexed user information, so listen all
+            const ownershipAdjustmentArbitrateAsked = nftProtectContract.filters.OwnershipAdjustmentArbitrateAsked()
+            const burnAnswered = nftProtectContract.filters.BurnAnswered()
+            const ownershipAdjustmentAnswered = nftProtectContract.filters.OwnershipAdjustmentAnswered()
+            const ownershipRestoreAnswered = nftProtectContract.filters.OwnershipRestoreAnswered()
+            // This event contain only one side, but we need both, so listen all
+            const burnArbitrateAsked = nftProtectContract.filters.BurnArbitrateAsked()
+
+            nftProtectContract.on(fromMe, loadNotifications)
+            nftProtectContract.on(toMe, loadNotifications)
+            nftProtectContract.on(ownershipAdjustmentArbitrateAsked, loadNotifications)
+            nftProtectContract.on(ownershipAdjustedNewOwner, loadNotifications)
+            nftProtectContract.on(ownershipAdjustedOldOwner, loadNotifications)
+            nftProtectContract.on(ownershipAdjustmentAskedNewOwner, loadNotifications)
+            nftProtectContract.on(ownershipAdjustmentAskedOldOwner, loadNotifications)
+            nftProtectContract.on(ownershipRestoreAskedNewOwner, loadNotifications)
+            nftProtectContract.on(ownershipRestoreAskedOldOwner, loadNotifications)
+            nftProtectContract.on(burnAnswered, loadNotifications)
+            nftProtectContract.on(ownershipAdjustmentAnswered, loadNotifications)
+            nftProtectContract.on(ownershipRestoreAnswered, loadNotifications)
+            nftProtectContract.on(burnArbitrateAsked, loadNotifications)
+            return () => {
+                nftProtectContract.removeAllListeners(toMe)
+                nftProtectContract.removeAllListeners(fromMe)
+                nftProtectContract.removeAllListeners(ownershipAdjustmentArbitrateAsked)
+                nftProtectContract.removeAllListeners(ownershipAdjustedNewOwner)
+                nftProtectContract.removeAllListeners(ownershipAdjustedOldOwner)
+                nftProtectContract.removeAllListeners(ownershipAdjustmentAskedNewOwner)
+                nftProtectContract.removeAllListeners(ownershipAdjustmentAskedOldOwner)
+                nftProtectContract.removeAllListeners(ownershipRestoreAskedNewOwner)
+                nftProtectContract.removeAllListeners(ownershipRestoreAskedOldOwner)
+                nftProtectContract.removeAllListeners(burnAnswered)
+                nftProtectContract.removeAllListeners(ownershipAdjustmentAnswered)
+                nftProtectContract.removeAllListeners(ownershipRestoreAnswered)
+                nftProtectContract.removeAllListeners(burnArbitrateAsked)
+            }
+        }
+    }
+
+    const subscribeArbitrableProxyEvents = () => {
+        if (arbitrableProxies) {
+            arbitrableProxies.forEach((proxy) => {
+                // No way to filter, listening all
+                const disputeCreated = proxy.filters.Dispute()
+                const evidenceSubmitted = proxy.filters.Evidence()
+                const ruled = proxy.filters.Ruling()
+                proxy.on(disputeCreated, loadNotifications)
+                proxy.on(evidenceSubmitted, loadNotifications)
+                proxy.on(ruled, loadNotifications)
+            })
+            return () => {
+                arbitrableProxies.forEach((proxy) => {
+                    const disputeCreated = proxy.filters.Dispute()
+                    const evidenceSubmitted = proxy.filters.Evidence()
+                    const ruled = proxy.filters.Ruling()
+                    proxy.removeAllListeners(disputeCreated)
+                    proxy.removeAllListeners(evidenceSubmitted)
+                    proxy.removeAllListeners(ruled)
+                })
+            }
+        }
+    }
+
+    const subscribeArbitratorEvents = () => {
+        // The most uneffective thing
+        if (arbitrators && arbitrableProxies) {
+            arbitrators.forEach((arbitrator, idx) => {
+                const proxy = arbitrableProxies[idx]
+                // No way to filter, listening all
+                const appealPossible = arbitrator.filters.AppealPossible()
+                const newPerod = arbitrator.filters.NewPeriod()
+                const appealDecision = arbitrator.filters.AppealDecision(null, proxy.address)
+
+                arbitrator.on(appealPossible, loadNotifications)
+                arbitrator.on(newPerod, loadNotifications)
+                arbitrator.on(appealDecision, loadNotifications)
+            })
+            return () => {
+                arbitrators.forEach((arbitrator, idx) => {
+                    const proxy = arbitrableProxies[idx]
+                    // No way to filter, listening all
+                    const appealPossible = arbitrator.filters.AppealPossible()
+                    const newPerod = arbitrator.filters.NewPeriod()
+                    const appealDecision = arbitrator.filters.AppealDecision(null, proxy.address)    
+                    arbitrator.removeAllListeners(appealPossible)
+                    arbitrator.removeAllListeners(newPerod)
+                    arbitrator.removeAllListeners(appealDecision)
+                })
+            }
+        }
+    }
+
+    useEffect(subscribeNFTProtectEvents, [account, currentChain])
+    useEffect(subscribeArbitrableProxyEvents, [arbitrableProxies])
+    useEffect(subscribeArbitratorEvents, [arbitrators, arbitrableProxies])
 
 
     return (<>
