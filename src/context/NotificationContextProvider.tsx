@@ -1,5 +1,6 @@
 import { Notification } from "@web3uikit/core";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useAppContext, AppContext } from "./AppContextProvider";
 
 export interface NotificationContextInterface {
     getNotification: Function,
@@ -8,6 +9,7 @@ export interface NotificationContextInterface {
     deleteNotification: Function,
     listNotifications: Function,
     clearNotifications: Function,
+    clearOldNotifications: Function,
     notificationsCount: number,
     updateCounter: number,
 }
@@ -46,10 +48,22 @@ export enum SeverityLevel {
 export const NotificationContext = createContext<NotificationContextInterface|null>(null);
 
 export function NotificationContextProvider({ children }:any) {
+    const appContext = useContext(AppContext);
+    if (!appContext) {
+        throw new Error(
+            "NotificationContextProvider has to be initialized within <AppContext.Provider>"
+        );
+    }
 
     const notifications = useRef<Notification[]>([])
     const [ updateCounter, setUpdateCounter ] = useState<number>(0)
     const notificationsCount = notifications.current.length
+    const closedNotifications = useRef(
+        typeof window !== 'undefined'
+            ? JSON.parse(localStorage.getItem('closedNotifications') || '{}')
+            : {}
+    );
+    const { currentChain, currentBlock } = useAppContext()
 
     const getNotification = (id: string): Notification|undefined => {
         return notifications.current.find(it => it.id === id)
@@ -60,6 +74,10 @@ export function NotificationContextProvider({ children }:any) {
     }
 
     const addNotification = (newNotification: NewNotification) => {
+        if (closedNotifications.current[currentChain.id] && closedNotifications.current[currentChain.id][newNotification.id]) {
+            console.log(`Notification with id ${newNotification.id} was previously closed and will not be added.`);
+            return;
+        }
         const existingIdx = notifications.current.findIndex(it => it.id === newNotification.id)
         const newData = {
             id: newNotification.id,
@@ -80,6 +98,27 @@ export function NotificationContextProvider({ children }:any) {
         setUpdateCounter(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
     }
 
+    const onCloseNotification = (id: string) => {
+        if (!closedNotifications.current[currentChain.id]) {
+            closedNotifications.current[currentChain.id] = {};
+        }
+        closedNotifications.current[currentChain.id][id] = currentBlock;
+        localStorage.setItem('closedNotifications', JSON.stringify(closedNotifications.current));
+    }
+
+    const clearOldNotifications = (blockNumber: number, chainId: string) => {
+        const chainNotifications = closedNotifications.current[chainId];
+        if (chainNotifications) {
+            Object.keys(chainNotifications).forEach((id) => {
+                if (chainNotifications[id] <= blockNumber) {
+                    delete chainNotifications[id];
+                }
+            });
+            closedNotifications.current[chainId] = chainNotifications;
+            localStorage.setItem('closedNotifications', JSON.stringify(closedNotifications.current));
+        }
+    }
+
     const deleteNotification = (toDelete: Notification|string) => {
         const notification = (typeof toDelete === 'string') ?
             getNotification(toDelete) :
@@ -91,6 +130,7 @@ export function NotificationContextProvider({ children }:any) {
             notifications.current.splice(idx, 1)
             setUpdateCounter(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
             notification?.onClose && notification.onClose()
+            notification && onCloseNotification(notification.id)
         } else {
             console.error('No such notification:', toDelete)
         }
@@ -124,7 +164,8 @@ export function NotificationContextProvider({ children }:any) {
             listNotifications,
             notificationsCount,
             updateCounter,
-            clearNotifications
+            clearNotifications,
+            clearOldNotifications
         }}>
             {children}
         </NotificationContext.Provider>
