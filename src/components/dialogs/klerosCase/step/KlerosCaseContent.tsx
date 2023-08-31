@@ -155,7 +155,7 @@ const KlerosCaseContent = ({
     const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
         initialStep: 0,
     });
-    const { library, account, active } = useAppContext()
+    const { library, account, active, currentChain } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
 
@@ -386,7 +386,7 @@ const KlerosCaseContent = ({
                     </InputGroup>
                 </FormControl>
 
-                <FormControl w={{base: "186px"}}>
+                <FormControl w={{base: "186px"}} mr={{base: "30px"}}>
                     <FormLabel fontSize="14px" lineHeight="18px">
                         <Trans>Court</Trans>
                     </FormLabel>
@@ -395,6 +395,18 @@ const KlerosCaseContent = ({
                             <Image src="/images/lawBalance.svg" alt="Law balance icon" w="16px" h="16px" />
                         </InputLeftElement>
                         <Input value="Non technical" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                    </InputGroup>
+                </FormControl>
+
+                <FormControl w={{base: "186px"}}>
+                    <FormLabel fontSize="14px" lineHeight="18px">
+                        <Trans>Chain</Trans>
+                    </FormLabel>
+                    <InputGroup >
+                        <InputLeftElement  py={{base: "14px"}} pointerEvents='none'>
+                            <User fontSize="18px" />
+                        </InputLeftElement>
+                        <Input value={ currentChain.name } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
             </Flex>
