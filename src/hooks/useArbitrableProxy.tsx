@@ -164,6 +164,8 @@ export const useArbitrableProxy = () => {
         listEvidences,
         getPeriod,
         submitEvidence,
-        isRuled
+        isRuled,
+        getArbitrableProxy,
+        getArbitrator
     }
 }
