@@ -20,7 +20,7 @@ interface UploaderInitialData {
     fileName?: string
 }
 
-const defaultFileTypes = ["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"];
+const defaultFileTypes = ["JPG", "JPEG", "PNG", "GIF", "PDF", "RTF", "JSON", "DOCX", "DOC", "XLS", "XLSX", "ZIP", "RAR"];
 
 export const IPFSFileUpload = ({
     multiple = true,
