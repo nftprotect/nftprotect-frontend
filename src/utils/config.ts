@@ -131,3 +131,6 @@ export const simpleMinters = [
         }
     }
 ]
+
+// Testnet
+export const switchingManualURI = 'https://docs.nftprotect.app/guides/testnet-guidelines#switching-the-dispute-stage-in-kleros'

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultChain, nftpDeployBlockNumber, supportedChains } from '../../../utils/config'
+import { defaultChain, nftpDeployBlockNumber, supportedChains, switchingManualURI } from '../../../utils/config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAlchemy } from '../../../hooks/useAlchemy'
 import NFT from '../../../classes/NFT'
@@ -12,7 +12,7 @@ import { metaEvidenceTypes } from '../../../utils/metaEvidence'
 import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../../hooks/useNftProtectGraph'
-import { Container } from '@chakra-ui/react'
+import { Box, Container, Link, Text } from '@chakra-ui/react'
 import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
@@ -24,6 +24,7 @@ import { useWeb3React } from '@web3-react/core'
 import LoginForm from '../../../components/loginForm/LoginForm'
 import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 import Head from 'next/head'
+import { WarningTwoIcon } from '@chakra-ui/icons'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -292,19 +293,34 @@ const RequestPage: NextPage = () => {
             { error && <h1>{error}</h1> }
             { !error && !allRequiredLoaded && <h1>Loading...</h1> }
             { !error && allRequiredLoaded && <>
-            { !active && <LoginForm buttonVariant={'primaryLight'} /> }
-            <KlerosCaseContent
-                metaEvidenceId={parseInt(metaEvidenceType.value)}
-                nft={nft}
-                claimantAddress={claimantAddress}
-                defendantAddress={defendantAddress}
-                evidences={evidences}
-                disputeData={disputeData}
-                disputeIsRuled={ isRuled }
-                requestType={requestData.reqtype}
-                requestStatus={requestData.status}
-                pageData={ metaEvidenceType.page }
-            />
+                { !active && <LoginForm buttonVariant={'primaryLight'} /> }
+                <Box 
+                    w="100%" 
+                    h="45px" 
+                    my='1em' 
+                    bgColor='#940000'
+                    color='white'
+                    display='flex'
+                    alignItems='center'
+                    justifyContent={'center'}
+                >
+                    <WarningTwoIcon mx='0.5em'/>
+                    <Text>
+                        <Trans>In testnets, you need to manually <Link href={switchingManualURI} isExternal={true} target='_blank'><u>move the case</u></Link> from one stage to another.</Trans>
+                    </Text>
+                </Box>
+                <KlerosCaseContent
+                    metaEvidenceId={parseInt(metaEvidenceType.value)}
+                    nft={nft}
+                    claimantAddress={claimantAddress}
+                    defendantAddress={defendantAddress}
+                    evidences={evidences}
+                    disputeData={disputeData}
+                    disputeIsRuled={ isRuled }
+                    requestType={requestData.reqtype}
+                    requestStatus={requestData.status}
+                    pageData={ metaEvidenceType.page }
+                />
             </>}
             {/* Dialogs registration flollowing */}
             {/* TODO: Evidences not reloading */}
