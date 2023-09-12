@@ -83,14 +83,15 @@ const FourFour: NextPage = () => {
               // bgSize="auto 100%"
               bgSize="cover"
             >
-              <Box padding={10}>
-                <Heading size="lg">404</Heading>
-                <Heading size="md">page not found</Heading>
-                <Text size="xl">Page doesn&apos;t exist or was removed</Text>
-                <Button background="#1316DD">
-                  <Text size="xl" color="white">
-                    Back to homepage
-                  </Text>
+              <Box padding={[10, 30, 40, 100]}>
+                <Heading fontSize={"100px"}>404</Heading>
+                <Heading fontSize={"44px"}>page not found</Heading>
+                <Text fontSize={"20px"} paddingTop={10} paddingBottom={10}>
+                  Page doesn&apos;t exist or was removed. We suggest you back
+                  home.
+                </Text>
+                <Button background="#1316DD" width="183px">
+                  <Text color="white">Back to homepage</Text>
                 </Button>
               </Box>
               <Box flex={1} />
