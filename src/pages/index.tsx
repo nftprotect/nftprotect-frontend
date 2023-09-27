@@ -11,7 +11,9 @@ import {
     Box,
     Grid,
     GridItem,
+    Link,
     ChakraBaseProvider,
+    CloseButton,
 } from "@chakra-ui/react";
 import { useAppContext } from "../context/AppContextProvider";
 import NFTView from "../components/nftView/NFTView";
@@ -21,7 +23,7 @@ import { useNotifications } from "../hooks/useNotifications";
 import { Trans, t } from "@lingui/macro";
 import { GetStaticProps } from "next";
 import { useIPFSContext } from "../context/IPFSContextProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { loadTranslation } from "../utils/lingui";
 import NotificationsLoader from "../components/notifications/NotificationsLoader";
 import Head from "next/head";
@@ -43,6 +45,7 @@ const Home: NextPage = () => {
     const { active, baseTokenPrice, currentChain } = useAppContext();
     const { notificationsCount } = useNotifications();
     const { setBaseUrl } = useIPFSContext();
+    const [ blackBoxClosed, setBlackBoxClosed ] = useState<Boolean>(false)
 
     useEffect(() => {
         setBaseUrl(window.location.origin);
@@ -65,10 +68,19 @@ const Home: NextPage = () => {
                 <title>{t`NFT Protect • Dapp`}</title>
             </Head>
             <Grid
-                templateAreas={`"nav"
+                templateAreas={blackBoxClosed ? 
+                                `"nav"
                                 "main"
-                                "footer"`}
-                gridTemplateRows={"60px 1fr 60px"}
+                                "footer"` :
+                                `"blackBox"
+                                "nav"
+                                "main"
+                                "footer"`
+                            }
+                gridTemplateRows={blackBoxClosed ?
+                    "60px 1fr 60px" :
+                    "60px 60px 1fr 60px"
+                }
                 gridTemplateColumns={"1fr"}
                 maxW="1920px"
                 minH="100vh"
@@ -77,10 +89,40 @@ const Home: NextPage = () => {
                 flexDirection="column"
                 position="relative"
             >
+                {!blackBoxClosed && <GridItem
+                    area={"blackBox"}
+                    position="sticky"
+                    top="0"
+                    zIndex="1"
+                    bgColor="black"
+                    color="white"
+                    w="100%"
+                    h="60px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Text
+                        // fontFamily={"Euclid Circular A"}
+                        // fontSize={"24px"}
+                    >
+                        <Trans>
+                            This is β-version of NFT Protect. If you encouter some glitch, please <Link href="https://go.nftprotect.app/feedback" target={'blank'}><u>leave your feedback</u></Link>! Thanks!
+                        </Trans>
+                    </Text>
+                    <CloseButton 
+                        onClick={()=>{
+                            setBlackBoxClosed(true)
+                        }}
+                        position="absolute"
+                        right="10px"
+                    />
+                </GridItem>}
+
                 <GridItem
                     area={"nav"}
                     position="sticky"
-                    top="0"
+                    top={blackBoxClosed ? "0px" : "60px"}
                     zIndex="1"
                     bgColor="brand.light"
                     color="#FFF"

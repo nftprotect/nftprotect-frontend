@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-09-13 11:55+0700\n"
+"POT-Creation-Date: 2023-09-27 17:38+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -234,7 +234,7 @@ msgstr "Connect Wallet"
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
 
-#: src/pages/index.tsx:122
+#: src/pages/index.tsx:164
 msgid "Connect your wallet<0/>& get protected"
 msgstr "Connect your wallet<0/>& get protected"
 
@@ -554,7 +554,7 @@ msgstr "Law enforcement reports: If the loss of pNFT has been reported to law en
 msgid "Links"
 msgstr "Links"
 
-#: src/pages/index.tsx:163
+#: src/pages/index.tsx:205
 msgid "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 msgstr "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 
@@ -567,7 +567,7 @@ msgstr "Mint"
 msgid "More details on dispute #{0}."
 msgstr "More details on dispute #{0}."
 
-#: src/pages/index.tsx:63
+#: src/pages/index.tsx:66
 msgid "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft."
 msgstr "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft."
 
@@ -575,7 +575,7 @@ msgstr "NFT Protect is an application that allows you to protect your NFTs and b
 msgid "NFT Protect • Arbitrator Registry"
 msgstr "NFT Protect • Arbitrator Registry"
 
-#: src/pages/index.tsx:65
+#: src/pages/index.tsx:68
 msgid "NFT Protect • Dapp"
 msgstr "NFT Protect • Dapp"
 
@@ -1291,6 +1291,10 @@ msgstr "They explain the situation as follows:"
 msgid "This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."
 msgstr "This is a controversial issue! We recommend you transfer the original if everything is OK or raise a dispute in decentralized court if unsure."
 
+#: src/pages/index.tsx:109
+msgid "This is β-version of NFT Protect. If you encouter some glitch, please <0><1>leave your feedback</1></0>! Thanks!"
+msgstr "This is β-version of NFT Protect. If you encouter some glitch, please <0><1>leave your feedback</1></0>! Thanks!"
+
 #: src/components/nftView/NFTView.tsx:230
 msgid "This section displays all the NFTs and their associated pNFTs that you own"
 msgstr "This section displays all the NFTs and their associated pNFTs that you own"
@@ -1523,7 +1527,7 @@ msgstr "We recommend refuse to give the owner of the pNFT the original NFT and o
 msgid "Website"
 msgstr "Website"
 
-#: src/pages/index.tsx:152
+#: src/pages/index.tsx:194
 msgid "Welcome to NFT Protect <0/>your digital asset guardian"
 msgstr "Welcome to NFT Protect <0/>your digital asset guardian"
 
