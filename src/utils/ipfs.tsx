@@ -21,12 +21,12 @@ export const centralizeIpfsUrl = (url: string) => {
         const splitted = url.replace('ipfs://','').split('/')
         const hash = splitted[0]
         const fileName = (splitted.length > 0) ? splitted[1] : ''
-        return getCentralizedUrl(hash,fileName)
+        return decodeURI(getCentralizedUrl(hash,fileName))
     } else if (url.startsWith('/ipfs/')) {
         const splitted = url.replace('/ipfs/','').split('/')
         const hash = splitted[0]
         const fileName = (splitted.length > 0) ? splitted[1] : ''
-        return getCentralizedUrl(hash,fileName)
+        return decodeURI(getCentralizedUrl(hash,fileName))
     } else {
         return url
     }
