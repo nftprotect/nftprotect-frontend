@@ -163,7 +163,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
 
     // Check request timeout on every block
     useEffect(() => {
-        if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+        if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
             library.getBlock(currentBlock).then((blockData: any) => {
                 if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
                     setRequestTimedOut(true)

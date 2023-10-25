@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import { createContext, useContext, useEffect, useState } from "react";
 import {  
     supportedChains,
@@ -10,16 +9,19 @@ import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import DynamicArbitratorRegistryABI from '../abi/DynamicArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../utils/config";
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider, Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
-import { switchNetwork } from "../utils/helpers";
 import ERC20ABI from "../abi/ERC20ABI";
+import { useAccount, useNetwork, useWalletClient, usePublicClient, useSwitchNetwork, PublicClient, WalletClient } from "wagmi";
+import { clientToProvider } from '../utils/ethers';
 
 export interface AppContextInterface {
     active: boolean,
+    isCorrectChain: boolean,
     account: string | null | undefined,
-    library: any,
+    client: WalletClient|PublicClient,
+    library: BaseProvider,
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
@@ -43,7 +45,8 @@ interface AppState {
     arbRegistryContract: Contract,
     dynamicArbRegistryContract: Contract,
     couponsContract: Contract,
-    library: JsonRpcProvider
+    client: WalletClient|PublicClient,
+    library: BaseProvider
 }
 
 export const AppContext = createContext<AppContextInterface|null>(null);
@@ -51,28 +54,40 @@ export const AppContext = createContext<AppContextInterface|null>(null);
 const nullAddress = '0x0000000000000000000000000000000000000000'
 
 export function AppContextProvider({ children }:any) {
+    const [ chainId, setChainId ] = useState<number>()
+    const publicClient = usePublicClient(chainId ? {chainId} : undefined)
+    const publicProvider = clientToProvider(publicClient)
+    const {
+        data: walletClient,
+        isSuccess: walletClientActive
+    } = useWalletClient()
     const { 
-        active, 
-        account,
-        // If no provider (library) provided, we will set JsonRpcProvider
-        library: providedLibrary
-    } = useWeb3React()
+        address: account,
+        isConnected: active,
+        isDisconnected
+    } = useAccount()
+    const { chain } = useNetwork()
+    const isCorrectChain = !chainId || !chain || (chainId === chain?.id)
+    const currentClient = walletClientActive && walletClient && isCorrectChain ? 
+        walletClient : 
+        publicClient
+    const providedLibrary = clientToProvider(currentClient)
 
     const [appState, setAppState] = useState<AppState>({
         active: false,
         account: undefined,
         currentChain: undefined,
+        client: currentClient,
         library: providedLibrary, // this and next props temporarily not null
-        nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary?.getSigner()),
-        userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary?.getSigner()),
-        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary?.getSigner()),
-        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, providedLibrary?.getSigner()),
-        couponsContract: new Contract(nullAddress, ERC20ABI, providedLibrary?.getSigner())
+        nftProtectContract: new Contract(nullAddress, NFTProtectABI, publicProvider),
+        userRegistryContract: new Contract(nullAddress, UserRegistryABI, publicProvider),
+        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, publicProvider),
+        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, publicProvider),
+        couponsContract: new Contract(nullAddress, ERC20ABI, publicProvider)
     })
 
-    //const [ library, setLibrary ] = useState<JsonRpcProvider>(providedLibrary)
+    const { switchNetwork } = useSwitchNetwork()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
-    const [ chainId, setChainId ] = useState<number>()
     const referrerAddress = nullAddress
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
@@ -131,59 +146,38 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
+    const stateSetter = () => {
+        let currentChain: any
+        const library = providedLibrary
+        const currentChainId = chainId || chain?.id
+        if (currentChainId) {
+            currentChain = supportedChains.find( it => it.id === currentChainId )
+            if (!currentChain) {
+                console.error('Chain not supported:', currentChainId)
+                return
+            }
+        }
+        const signer = library instanceof Web3Provider && 
+            library.getSigner()
+        setAppState({
+            active: active && walletClientActive && isCorrectChain,
+            account,
+            currentChain,
+            library,
+            client: currentClient,
+            nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer || library),
+            userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer || library),
+            arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer || library),
+            dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer || library),
+            couponsContract: new Contract(currentChain.couponsContractAddress, ERC20ABI, signer || library)
+        })
+    }
+
     useEffect(setDidState, [appState.account, appState.library, appState.currentChain])
     useEffect(subscribeBlockUpdates, [appState.account, appState.library, appState.currentChain])
     useEffect(setCurrentFee, [appState.library, appState.currentChain])
     useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
-    useEffect(() => {
-        const stateSetter  = async () => {
-            let library: JsonRpcProvider|undefined = undefined
-            let currentChain: any
-            if (chainId) {
-                if (!providedLibrary) {
-                    currentChain = supportedChains.find( it => it.id === chainId )
-                    if (currentChain) {
-                        library = new JsonRpcProvider(currentChain.nodeUrl, chainId)
-                    } else {
-                        console.error('Chain not supported:', chainId)
-                    }
-                } else {
-                    console.error('You can set chainId only when fallback provider is used')
-                }
-            }
-            if (!library) {
-                library = providedLibrary as JsonRpcProvider
-                const network = await library?.getNetwork()
-                if (network) {
-                    currentChain = supportedChains.find( it => it.id === network?.chainId )
-                    if (!currentChain) {
-                        // It doesn't reach this point actually because of exception in connector (e.g. ConnectMetamask)
-                        await switchNetwork(defaultChainId)
-                        console.error('Chain not supported:', network?.chainId)
-                        return
-                    }
-                } else {
-                    console.error("Provider has no network", library)
-                    return
-                }
-                
-            }
-            // I don't know why, but for web3provider we have to pass signer
-            const signer = active ? library.getSigner() : library
-            setAppState({
-                active,
-                account,
-                currentChain,
-                library, // this and next props temporarily not null
-                nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer),
-                userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer),
-                arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer),
-                dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer),
-                couponsContract: new Contract(currentChain.couponsContractAddress, ERC20ABI, signer)
-            })
-        }
-        stateSetter()
-    }, [providedLibrary, account, active, chainId])
+    useEffect(stateSetter, [walletClient, account, active, walletClientActive, chain, switchNetwork, chainId, isDisconnected])
 
     const couponsBalanceLoader = async () => {
         const balance = await appState.couponsContract.balanceOf(appState.account)
@@ -227,6 +221,7 @@ export function AppContextProvider({ children }:any) {
     return (
         <AppContext.Provider value={{
             ...appState,
+            isCorrectChain,
             defaultChain,
             referrerAddress,
             didRegistered,

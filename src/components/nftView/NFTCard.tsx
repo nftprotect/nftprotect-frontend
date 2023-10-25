@@ -67,7 +67,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
 
     // Check request timeout on every block
     useEffect(() => {
-        if (pendingRequest && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+        if (pendingRequest && currentBlock && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
             library.getBlock(currentBlock).then((blockData: any) => {
                 if (blockData.timestamp >= pendingRequest.timeout) {
                     setRequestTimedOut(true)

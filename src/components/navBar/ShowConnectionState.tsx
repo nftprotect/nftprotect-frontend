@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import { formatEther } from "@ethersproject/units"
 import { formatAddress, copyTextToClipboard } from '../../utils/helpers'
 import {
@@ -23,11 +21,12 @@ import Davatar from '@davatar/react'
 import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useDisconnect } from 'wagmi'
 
 const ShowConnectionState = () => {
 
     const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
-    const { deactivate } = useWeb3React<Web3Provider>()
+    const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
 
     useEffect(() => {
@@ -39,7 +38,7 @@ const ShowConnectionState = () => {
     })
 
     const onClickDisconnect = () => {
-        deactivate()
+        disconnect()
     }
 
     const copyAccountToClipboard = () => {

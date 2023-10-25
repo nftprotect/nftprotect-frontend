@@ -20,11 +20,10 @@ import { timestampToDate } from '../../../utils/helpers'
 import { DisputeGraphData, Period, useArbitratorGraph } from '../../../hooks/useArbitratorGraph'
 import AddEvidencesDialog from '../../../components/dialogs/request/AddEvidencesDialog'
 import { useIPFSContext } from '../../../context/IPFSContextProvider'
-import { useWeb3React } from '@web3-react/core'
-import LoginForm from '../../../components/loginForm/LoginForm'
 import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 import Head from 'next/head'
 import { WarningTwoIcon } from '@chakra-ui/icons'
+import ConnectButton from '../../../components/ConnectButton'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -45,7 +44,6 @@ const defaultChainArbitrator = supportedChains.find(it => it.id === defaultChain
 const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, active, library, currentChain, nftProtectContract } = context
-    const { activate } = useWeb3React()
     const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
     const { query } = useRouter()
     const [ requestId, setRequestId ] = useState<BigNumber>()
@@ -293,7 +291,10 @@ const RequestPage: NextPage = () => {
             { error && <h1>{error}</h1> }
             { !error && !allRequiredLoaded && <h1>Loading...</h1> }
             { !error && allRequiredLoaded && <>
-                { !active && <LoginForm buttonVariant={'primaryLight'} /> }
+                { !active && <ConnectButton
+                    buttonVariant='primaryLight'
+                    chainId={parseInt(query?.chainId?.toString() || '-1')}
+                /> }
                 <Box 
                     w="100%" 
                     h="45px" 

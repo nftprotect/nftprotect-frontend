@@ -1,10 +1,8 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { Web3Provider } from '@ethersproject/providers'
-import { Web3ReactProvider } from '@web3-react/core'
+import { supportedChains } from '../utils/config'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import nftProtectTheme from '../theme/index'
-import { libraryPollingInterval } from '../utils/config'
 import { AppContextProvider } from '../context/AppContextProvider'
 import { NotificationContextProvider } from '../context/NotificationContextProvider'
 import { IPFSContextProvider } from '../context/IPFSContextProvider'
@@ -20,6 +18,8 @@ import '@fontsource/lexend/700.css'
 import { CallableDialogContextProvider } from '../context/CallableDialogContextProvider'
 import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
 import GoogleAnalytics from '../components/GoogleAnalytics'
+import { WagmiConfig, createConfig } from "wagmi";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 function initTranslation(i18n: I18n): void {
     i18n.loadLocaleData({
@@ -31,11 +31,23 @@ function initTranslation(i18n: I18n): void {
 
 initTranslation(i18n);
 
-function getLibrary(provider: any): Web3Provider {
-    const library = new Web3Provider(provider, 'any')
-    library.pollingInterval = libraryPollingInterval
-    return library
-}
+const chains = supportedChains.map(it => it.wagmiId)
+
+const config = createConfig(
+    getDefaultConfig({
+        // Required API Keys
+        infuraId: process.env.INFURA_ID,
+        walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || '',
+        // Required
+        appName: "NFT Protect",
+        // Optional
+        autoConnect: true,
+        chains,
+        appDescription: "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.",
+        appUrl: "https://dev.nftprotect.app", // your app's url
+        appIcon: "https://dev.nftprotect.app/images/logoBlue.svg", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    }),
+);
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter()
@@ -63,24 +75,26 @@ function MyApp({ Component, pageProps }: AppProps) {
     }, [])
     
     return (
-        <Web3ReactProvider getLibrary={getLibrary}>
-            <AppContextProvider>
-                <ChakraProvider theme={nftProtectTheme}>
-                    <TheGraphContextProvider>
-                        <IPFSContextProvider>
-                            <NotificationContextProvider>
-                                <CallableDialogContextProvider>
-                                    <I18nProvider i18n={i18n}>
-                                        <Component {...pageProps} />
-                                        { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
-                                    </I18nProvider>
-                                </CallableDialogContextProvider>
-                            </NotificationContextProvider>
-                        </IPFSContextProvider>
-                    </TheGraphContextProvider>
-                </ChakraProvider>
-            </AppContextProvider>
-        </Web3ReactProvider>
+        <WagmiConfig config={config}>
+            <ConnectKitProvider>
+                <AppContextProvider>
+                    <ChakraProvider theme={nftProtectTheme}>
+                        <TheGraphContextProvider>
+                            <IPFSContextProvider>
+                                <NotificationContextProvider>
+                                    <CallableDialogContextProvider>
+                                        <I18nProvider i18n={i18n}>
+                                            <Component {...pageProps} />
+                                            { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
+                                        </I18nProvider>
+                                    </CallableDialogContextProvider>
+                                </NotificationContextProvider>
+                            </IPFSContextProvider>
+                        </TheGraphContextProvider>
+                    </ChakraProvider>
+                </AppContextProvider>
+            </ConnectKitProvider>
+        </WagmiConfig>
     )
 }
 

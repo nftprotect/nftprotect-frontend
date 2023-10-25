@@ -1,5 +1,4 @@
 import type { NextPage } from 'next'
-import LoginForm from '../components/loginForm/LoginForm'
 import NavBar from '../components/navBar/NavBar'
 import {
     Container,
@@ -40,6 +39,7 @@ import { IPFSFileUpload } from '../components/IPFSFileUpload'
 import IPFSUpload from '../classes/IPFSUpload'
 import { useMinters } from '../hooks/useMinters'
 import Head from 'next/head'
+import ConnectButton from '../components/ConnectButton'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -161,7 +161,7 @@ const MinterPage: NextPage = () => {
                                 <Trans>Please connect your wallet to mint <br></br>an NFT</Trans>
                             </Text>
                             <Box w={{base: "14rem", sm: "16rem"}} >
-                                <LoginForm buttonVariant={'primaryLight'} />
+                                <ConnectButton buttonVariant={'primaryLight'} />
                             </Box>
                         </>
                     }

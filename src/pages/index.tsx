@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import LoginForm from "../components/loginForm/LoginForm";
 import NavBar from "../components/navBar/NavBar";
 import {
     chakra,
@@ -27,6 +26,7 @@ import { useEffect, useState } from "react";
 import { loadTranslation } from "../utils/lingui";
 import NotificationsLoader from "../components/notifications/NotificationsLoader";
 import Head from "next/head";
+import ConnectButton from "../components/ConnectButton";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
                                     </Text>
                                     <Box mt={10}>
                                         <Box w={{ base: "14rem", sm: "16rem" }}>
-                                            <LoginForm buttonVariant={"primaryLight"} />
+                                            <ConnectButton buttonVariant={"primaryLight"} />
                                         </Box>
                                     </Box>
                                 </Flex>

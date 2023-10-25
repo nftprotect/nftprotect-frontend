@@ -36,6 +36,10 @@ export function CallableDialogContextProvider({ children }:any) {
       };
     
     const setDialog = (id: string, dialog: DialogInterface) => {
+        const oldDialog = dialogs.current.find((dialog: Dialog) => dialog.id === id);
+        if (oldDialog) {
+            dialogs.current = dialogs.current.filter((dialog: Dialog) => dialog.id !== id);
+        }
         dialogs.current.push({ id, dialog })
     };
 

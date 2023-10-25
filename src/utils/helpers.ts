@@ -22,26 +22,6 @@ interface ProviderError {
    message: string
 }
 
-export const switchNetwork = async (networkId: any) => {
-   // check if the user is connected through MetaMask
-   if (window.ethereum?.request !== undefined) {
-       try {
-           const accounts = await window.ethereum.request({
-               method: 'wallet_switchEthereumChain',
-               params: [{ chainId: hexValue(BigNumber.from(networkId).toHexString()) }],
-           });
-       } catch (error) {
-           const e = error as ProviderError
-           if (e?.code === 4902) {
-               console.log(error)
-               alert('Add network first!')
-           } else {
-               console.error(error)
-           }
-       }
-   }
-}
-
 export const generateUUID = () => { // Public Domain/MIT
     var d = new Date().getTime();//Timestamp
     var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
