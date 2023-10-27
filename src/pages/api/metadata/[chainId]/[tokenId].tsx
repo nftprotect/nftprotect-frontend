@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { nftProtectGraphs, supportedChains } from '../../../../utils/config'
+import { nftProtectGraphs, supportedChains } from '../../../../config'
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
 import { defaultOptions } from '../../../../context/TheGraphContextProvider'
 import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'

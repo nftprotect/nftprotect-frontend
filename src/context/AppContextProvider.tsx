@@ -2,13 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {  
     supportedChains,
     defaultChain 
-} from "../utils/config";
+} from "../config";
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import DynamicArbitratorRegistryABI from '../abi/DynamicArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
-import { defaultChain as defaultChainId } from "../utils/config";
+import { defaultChain as defaultChainId } from "../config";
 import { BaseProvider, Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";

@@ -3,7 +3,7 @@ import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import SimpleNFTMinter721ABI from "../abi/SimpleNFTMinter721ABI";
 import SimpleNFTMinter1155ABI from "../abi/SimpleNFTMinter1155ABI";
-import { simpleMinters } from "../utils/config";
+import { simpleMinters } from "../config";
 import { Web3Provider } from "@ethersproject/providers";
 
 export const useMinters = () => {

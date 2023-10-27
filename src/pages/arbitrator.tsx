@@ -26,7 +26,7 @@ import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitrato
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 import { loadTranslation } from '../utils/lingui'
 import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
-import { defaultChain } from '../utils/config'
+import { defaultChain } from '../config'
 import Head from 'next/head'
 import ConnectButton from '../components/ConnectButton'
 

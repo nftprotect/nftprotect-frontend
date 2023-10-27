@@ -1,4 +1,4 @@
-import { ipfsUrlMask } from "./config"
+import { ipfsUrlMask } from "../config"
 
 // Returns ipfs url by hash
 export const getIpfsUrl = (hash: string, fileName:string|undefined = undefined) => {

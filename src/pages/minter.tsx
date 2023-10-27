@@ -33,7 +33,7 @@ import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitrato
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 import { loadTranslation } from '../utils/lingui'
 import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
-import { defaultChain } from '../utils/config'
+import { defaultChain } from '../config'
 import { Form, Field, Formik } from 'formik';
 import { IPFSFileUpload } from '../components/IPFSFileUpload'
 import IPFSUpload from '../classes/IPFSUpload'

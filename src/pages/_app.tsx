@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { supportedChains } from '../utils/config'
+import { supportedChains } from '../config'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import nftProtectTheme from '../theme/index'
 import { AppContextProvider } from '../context/AppContextProvider'

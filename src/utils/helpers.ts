@@ -1,6 +1,6 @@
 import { hexValue } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
-import { defaultChain } from './config';
+import { defaultChain } from '../config';
 
 export function formatAddress(value: string, length: number = 4) {
     if (value.length <= length*2+2) return value

@@ -1,4 +1,4 @@
-import { ipfsProviderUrl } from '../../../utils/config'
+import { ipfsProviderUrl } from '../../../config'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import httpProxyMiddleware from 'next-http-proxy-middleware'
 

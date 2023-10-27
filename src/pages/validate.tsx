@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from 'next'
 import { loadTranslation } from '../utils/lingui'
 import { useEffect, useState } from 'react'
-import { supportedChains } from '../utils/config'
+import { supportedChains } from '../config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAlchemy } from '../hooks/useAlchemy'
 import NFT from '../classes/NFT'
