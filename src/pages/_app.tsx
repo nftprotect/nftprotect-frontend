@@ -20,6 +20,7 @@ import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
 import GoogleAnalytics from '../components/GoogleAnalytics'
 import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import ccTheme from '../theme/ck_theme.json';
 
 function initTranslation(i18n: I18n): void {
     i18n.loadLocaleData({
@@ -75,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     
     return (
         <WagmiConfig config={config}>
-            <ConnectKitProvider>
+            <ConnectKitProvider customTheme={ccTheme}>
                 <AppContextProvider>
                     <ChakraProvider theme={nftProtectTheme}>
                         <TheGraphContextProvider>
