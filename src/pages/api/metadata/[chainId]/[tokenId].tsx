@@ -36,7 +36,7 @@ const createGraph = (graphURI: string) => {
     return client
 }
 
-const apiKey = process.env.ALCHEMY_API_KEY
+const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 const alchemys:any = {}
 const createAlchemy = (alchemyChainId: Network): Alchemy => {
     let client = alchemys[alchemyChainId]
