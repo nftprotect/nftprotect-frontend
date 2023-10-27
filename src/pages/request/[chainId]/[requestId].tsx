@@ -165,7 +165,7 @@ const RequestPage: NextPage = () => {
 
     // Load NFT
     useEffect(() => {
-        if (currentChain && requestId && library) {
+        if (currentChain && requestId && (currentChain.id === parseInt(query?.chainId?.toString() || '-1'))) {
             let currentNFT: NFT
             const initialDataLoadedListener = () => {
                 setNft(currentNFT)
@@ -210,7 +210,7 @@ const RequestPage: NextPage = () => {
                 currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
             }
         }
-    }, [requestId, library, currentChain])
+    }, [requestId, currentChain])
 
     // Load original NFT data
     useEffect(() => {
@@ -263,6 +263,12 @@ const RequestPage: NextPage = () => {
             console.log("REQUEST DATA", requestData)
         }
     }, [requestData])
+
+    useEffect(() => {
+        if (requestGraphData) {
+            console.log("REQUEST GRAPH DATA", requestGraphData)
+        }
+    }, [requestGraphData])
 
     useEffect(() => {
         if (nft) {

@@ -18,10 +18,12 @@ export function publicClientToProvider(publicClient: PublicClient) {
         const providers = (transport.transports as ReturnType<HttpTransport>[]).map(
             ({ value }) => new JsonRpcProvider(value?.url, network),
         )
-        if (providers.length === 1) {
-            return providers[0]
-        }
-        return new FallbackProvider(providers)
+        // Commented to prevent using public providers
+        // if (providers.length === 1) {
+        //     return providers[0]
+        // }
+        // return new FallbackProvider(providers)
+        return providers[0]
     }
     return new JsonRpcProvider(transport.url, network)
 }
@@ -34,6 +36,7 @@ export function getPublicProvider({ chainId }: { chainId?: number } = {}) {
 
 export function walletClientToProvider(walletClient: WalletClient) {
     const { account, chain, transport } = walletClient
+    console.log('WALLET TRANSPORT', transport)
     const network = {
       chainId: chain.id,
       name: chain.name,

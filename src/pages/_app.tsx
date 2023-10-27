@@ -32,22 +32,21 @@ function initTranslation(i18n: I18n): void {
 initTranslation(i18n);
 
 const chains = supportedChains.map(it => it.wagmiId)
-
-const config = createConfig(
-    getDefaultConfig({
-        // Required API Keys
-        infuraId: process.env.INFURA_ID,
-        walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || '',
-        // Required
-        appName: "NFT Protect",
-        // Optional
-        autoConnect: true,
-        chains,
-        appDescription: "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.",
-        appUrl: "https://dev.nftprotect.app", // your app's url
-        appIcon: "https://dev.nftprotect.app/images/logoBlue.svg", // your app's icon, no bigger than 1024x1024px (max. 1MB)
-    }),
-);
+const connectKitConfig = getDefaultConfig({
+    // Required API Keys
+    infuraId: process.env.NEXT_PUBLIC_INFURA_ID!,
+    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
+    walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || '',
+    // Required
+    appName: "NFT Protect",
+    // Optional
+    autoConnect: true,
+    chains,
+    appDescription: "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.",
+    appUrl: "https://dev.nftprotect.app", // your app's url
+    appIcon: "https://dev.nftprotect.app/images/logoBlue.svg", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+});
+const config = createConfig(connectKitConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter()

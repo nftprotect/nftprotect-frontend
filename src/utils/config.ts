@@ -55,7 +55,7 @@ export const supportedChains = [
     // }
 ]
 export const defaultChain = 5 // Goerli
-export const maxBlocksPerRequest = 3000
+export const maxBlocksPerRequest = 1000000 // use 3000 for public providers
 
 export const nftpDeployBlockNumber = 9073902
 

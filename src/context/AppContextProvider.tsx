@@ -98,7 +98,7 @@ export function AppContextProvider({ children }:any) {
     const [ couponsBalance, setCouponsBalance ] = useState<number>()
 
     const setDidState = () => {
-        if (active && account && appState.currentChain) {
+        if (appState.active && appState.account && appState.currentChain) {
             console.log('IS REGISTERED', account)
             const { userRegistryContract } = appState
             userRegistryContract.isRegistered(account).then((result: boolean) => {
@@ -111,7 +111,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (active && appState.currentChain) {
+        if (appState.library && appState.currentChain) {
             const { nftProtectContract } = appState
             nftProtectContract.feeWei(0).then((result: number) => {
                 console.log('Fee:', result)
@@ -123,7 +123,7 @@ export function AppContextProvider({ children }:any) {
     }
 
     const subscribeBlockUpdates = () => {
-        const {library, currentChain} = appState
+        const {active, library, currentChain} = appState
         if (library && currentChain) {
             library.getBlockNumber().then(blockNumber => setCurrentBlock(blockNumber))
             library.on('block', (blockNumber: number) => {
@@ -133,6 +133,8 @@ export function AppContextProvider({ children }:any) {
             return () => {
                 library.removeAllListeners('block')
             }
+        } else {
+            setCurrentBlock(undefined)
         }
     }
     
@@ -165,11 +167,11 @@ export function AppContextProvider({ children }:any) {
             currentChain,
             library,
             client: currentClient,
-            nftProtectContract: new Contract(currentChain.nftpContractAddress, NFTProtectABI, signer || library),
-            userRegistryContract: new Contract(currentChain.userRegistryContractAddress, UserRegistryABI, signer || library),
-            arbRegistryContract: new Contract(currentChain.arbRegistryContractAddress, ArbitratorRegistryABI, signer || library),
-            dynamicArbRegistryContract: new Contract(currentChain.dynamicArbRegistryContractAddress, DynamicArbitratorRegistryABI, signer || library),
-            couponsContract: new Contract(currentChain.couponsContractAddress, ERC20ABI, signer || library)
+            nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
+            userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
+            arbRegistryContract: new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, signer || library),
+            dynamicArbRegistryContract: new Contract(currentChain?.dynamicArbRegistryContractAddress || nullAddress, DynamicArbitratorRegistryABI, signer || library),
+            couponsContract: new Contract(currentChain?.couponsContractAddress || nullAddress, ERC20ABI, signer || library)
         })
     }
 
@@ -187,16 +189,16 @@ export function AppContextProvider({ children }:any) {
 
     // Set coupons balance
     useEffect(() => {
-        const { active, account } = appState
-        if (active && account) {
+        const { active, account, currentChain } = appState
+        if (active && account && currentChain) {
             couponsBalanceLoader()
         }
     }, [appState.active, appState.account, appState.currentChain])
 
     // Update coupons balance
     useEffect(() => {
-        const { active, account, couponsContract } = appState
-        if (active && account) {
+        const { active, account, currentChain, couponsContract } = appState
+        if (active && account && currentChain) {
             const fromMe = couponsContract.filters.Transfer(account, null)
             couponsContract.on(fromMe, (from, to, amount, event) => {
                 console.log('Transfer|sent', { from, to, amount, event })
