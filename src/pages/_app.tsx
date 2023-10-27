@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     
     return (
         <WagmiConfig config={config}>
-            <ConnectKitProvider customTheme={ccTheme}>
+             <ConnectKitProvider> {/* customTheme={ccTheme}> */}
                 <AppContextProvider>
                     <ChakraProvider theme={nftProtectTheme}>
                         <TheGraphContextProvider>
