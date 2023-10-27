@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { dynamicArbRegistryGraphs } from "../utils/config";
+import { dynamicArbRegistryGraphs } from "../config";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { useTheGraph } from "./useTheGraph";
 

@@ -2,12 +2,13 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
-import { nftpDeployBlockNumber } from "../utils/config";
-import { maxBlocksPerRequest } from "../utils/config";
+import { nftpDeployBlockNumber } from "../config";
+import { maxBlocksPerRequest } from "../config";
 import { BigNumber } from '@ethersproject/bignumber';
 import KlerosLiquidABI from "../abi/KlerosLiquidABI";
 import { timestampToDate } from "../utils/helpers";
 import { Period } from "./useArbitratorGraph";
+import { Web3Provider } from "@ethersproject/providers";
 
 export interface EvidenceSubmission {
     evidenceURI: string,
@@ -41,7 +42,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitrableProxyAddress,
             ArbitrableProxyABI, 
-            active ? library.getSigner() : library
+            active ? (library as Web3Provider).getSigner() : library
         )
         return contract
     }
@@ -51,7 +52,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitratorAddress, 
             KlerosLiquidABI, 
-            active ? library.getSigner() : library
+            active ? (library as Web3Provider).getSigner() : library
         )
         return contract
     }

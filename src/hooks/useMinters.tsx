@@ -3,7 +3,8 @@ import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import SimpleNFTMinter721ABI from "../abi/SimpleNFTMinter721ABI";
 import SimpleNFTMinter1155ABI from "../abi/SimpleNFTMinter1155ABI";
-import { simpleMinters } from "../utils/config";
+import { simpleMinters } from "../config";
+import { Web3Provider } from "@ethersproject/providers";
 
 export const useMinters = () => {
     const currentContext = useContext(AppContext)
@@ -19,7 +20,7 @@ export const useMinters = () => {
             return new Contract(
                 address,
                 SimpleNFTMinter721ABI, 
-                active ? library.getSigner() : library
+                active ? (library as Web3Provider).getSigner() : library
             )
         } else {
             console.error('Contract for simple minter 721 not found!')
@@ -33,7 +34,7 @@ export const useMinters = () => {
             return new Contract(
                 address,
                 SimpleNFTMinter1155ABI, 
-                active ? library.getSigner() : library
+                active ? (library as Web3Provider).getSigner() : library
             )
         } else {
             console.error('Contract for simple minter 721 not found!')

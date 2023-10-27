@@ -8,8 +8,8 @@ import ShowConnectionState from './ShowConnectionState'
 import NetworkMenu from './NetworkMenu'
 import MainMenu from './MainMenu'
 import { useAppContext } from '../../context/AppContextProvider'
-import LoginForm from '../loginForm/LoginForm'
 import { LocaleMenu } from './LocaleMenu'
+import ConnectButton from '../ConnectButton'
 
 const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
 
@@ -51,7 +51,7 @@ const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
                     <MainMenu />
                 </Box> */}
                 { !active && showConnectButton && <Box ml={{base: "1.25rem"}}>
-                    <LoginForm buttonVariant={'primaryDark'} />
+                    <ConnectButton buttonVariant={'primaryDark'}/>
                 </Box> }
                 { active && <Box ml={{base: "1.25rem"}}>
                    <NetworkMenu />

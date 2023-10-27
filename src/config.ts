@@ -1,4 +1,5 @@
-import { Network } from "alchemy-sdk"
+import { Network } from "alchemy-sdk";
+import { mainnet, goerli, sepolia } from "wagmi/chains";
 
 export const supportedChains = [
     // For MVP will be used only Goerli network, others are commented for now
@@ -13,9 +14,9 @@ export const supportedChains = [
     {
         id: 5,
         alchemyId: Network.ETH_GOERLI,
+        wagmiId: goerli,
         name: "Goerli",
         symbol: "ETH",
-        nodeUrl: "https://goerli.infura.io/v3/c060090dffdd401d8e4e0bc4c6d5e5f0",
         explorerUrl: "https://goerli.etherscan.io",
         nftpContractAddress: '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F',
         userRegistryContractAddress: '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC',
@@ -26,9 +27,9 @@ export const supportedChains = [
     }, {
         id: 11155111,
         alchemyId: Network.ETH_SEPOLIA,
+        wagmiId: sepolia,
         name: "Sepolia",
         symbol: "ETH",
-        nodeUrl: "https://sepolia.infura.io/v3/c060090dffdd401d8e4e0bc4c6d5e5f0",
         explorerUrl: "https://sepolia.etherscan.io",
         nftpContractAddress: '0xB1A382a0946528cAc1Bde3f419B69809CC347613',
         userRegistryContractAddress: '0x49ba52fe9dF9e55BeF56BE7D0F19eF8b645D51F3',
@@ -54,10 +55,8 @@ export const supportedChains = [
     // }
 ]
 export const defaultChain = 5 // Goerli
-export const walletConnectBridgeUrl = 'https://bridge.walletconnect.org'
-export const maxBlocksPerRequest = 3000
+export const maxBlocksPerRequest = 1000000 // use 3000 for public providers
 
-export const libraryPollingInterval = 12000
 export const nftpDeployBlockNumber = 9073902
 
 // IPFS

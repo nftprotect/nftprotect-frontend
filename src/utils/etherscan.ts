@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { supportedChains } from './config'
+import { supportedChains } from '../config'
 
 export const generateBlockURL = (blockNumber: string | number, chainId: number) => {
     const decimalBlockNumber = blockNumber.toString().startsWith('0x') ?

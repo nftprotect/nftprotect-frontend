@@ -22,7 +22,7 @@ import { useCallableDialogContext } from "../../context/CallableDialogContextPro
 import SuedForBurnNFTDialog from "../dialogs/notifications/SuedForBurnNFTDialog"
 import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObtainTheOriginalNFTDialog"
 import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftUnresponsiveDialog"
-import { arbitratorGraphs } from "../../utils/config"
+import { arbitratorGraphs } from "../../config"
 import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
 import { Contract } from "@ethersproject/contracts"
 

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { coinmarketcapUrl } from '../../../utils/config'
+import { coinmarketcapUrl } from '../../../config'
 import axios from 'axios';
 
 const apiKey = process.env.COINMARKETCAP_API_KEY

@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
-import { nftProtectGraphs } from "../utils/config";
+import { nftProtectGraphs } from "../config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { AppContext, useAppContext } from "../context/AppContextProvider";

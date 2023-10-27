@@ -1,5 +1,4 @@
 import type { NextPage } from 'next'
-import LoginForm from '../components/loginForm/LoginForm'
 import NavBar from '../components/navBar/NavBar'
 import {
     Container,
@@ -34,12 +33,13 @@ import ShowArbitratorDialog from '../components/dialogs/arbitrator/ShowArbitrato
 import ShowRequestDialog from '../components/dialogs/arbitrator/ShowRequestDialog'
 import { loadTranslation } from '../utils/lingui'
 import { useDyArbitratorGraph } from '../hooks/useDyArbitratorGraph'
-import { defaultChain } from '../utils/config'
+import { defaultChain } from '../config'
 import { Form, Field, Formik } from 'formik';
 import { IPFSFileUpload } from '../components/IPFSFileUpload'
 import IPFSUpload from '../classes/IPFSUpload'
 import { useMinters } from '../hooks/useMinters'
 import Head from 'next/head'
+import ConnectButton from '../components/ConnectButton'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -161,7 +161,7 @@ const MinterPage: NextPage = () => {
                                 <Trans>Please connect your wallet to mint <br></br>an NFT</Trans>
                             </Text>
                             <Box w={{base: "14rem", sm: "16rem"}} >
-                                <LoginForm buttonVariant={'primaryLight'} />
+                                <ConnectButton buttonVariant={'primaryLight'} />
                             </Box>
                         </>
                     }

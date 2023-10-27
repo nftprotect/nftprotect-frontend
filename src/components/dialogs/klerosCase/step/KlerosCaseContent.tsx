@@ -602,7 +602,7 @@ const KlerosCaseContent = ({
                         <Trans>Wallet{":"}</Trans>
                         {' '}
                         { claimantAddress && <Link 
-                            href={ generateAddressURL(claimantAddress, library.network.chainId) }
+                            href={ generateAddressURL(claimantAddress, currentChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             
@@ -627,7 +627,7 @@ const KlerosCaseContent = ({
                         <Trans>Original{":"}</Trans>
                         {" "}
                         { nft.originalData && <Link 
-                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, library.network.chainId) }
+                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, currentChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -644,7 +644,7 @@ const KlerosCaseContent = ({
                         { pageData.claimantText }
                         {" "}
                         { claimantTx1 && <Link 
-                            href={claimantTx1 ? generateTxURL(claimantTx1, library.network.chainId) : '#'} 
+                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.id) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -662,7 +662,7 @@ const KlerosCaseContent = ({
                             { pageData.claimantText2 }
                             {" "}
                             { claimantTx2 && <Link 
-                                href={claimantTx2 ? generateTxURL(claimantTx2, library.network.chainId) : '#'} 
+                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.id) : '#'} 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
@@ -705,7 +705,7 @@ const KlerosCaseContent = ({
                         }
                         {' '}
                         <Link 
-                            href={ generateAddressURL(contractAddress || defendantAddress, library.network.chainId) }
+                            href={ generateAddressURL(contractAddress || defendantAddress, currentChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -733,7 +733,7 @@ const KlerosCaseContent = ({
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link
-                            href={ generateTokenURL(nft.contract.address, nft.tokenId, library.network.chainId) }
+                            href={ generateTokenURL(nft.contract.address, nft.tokenId, currentChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -750,7 +750,7 @@ const KlerosCaseContent = ({
                         { pageData.defendantText }
                         {" "}
                         <Link 
-                            href={defendantTx1 ? generateTxURL(defendantTx1, library.network.chainId) : '#'} 
+                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 

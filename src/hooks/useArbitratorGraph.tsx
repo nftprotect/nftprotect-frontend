@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
-import { arbitratorGraphs } from "../utils/config";
+import { arbitratorGraphs } from "../config";
 import { useTheGraph } from "./useTheGraph";
 import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { capitalize, timestampToDate } from "../utils/helpers";

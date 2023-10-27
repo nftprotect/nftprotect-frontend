@@ -1,6 +1,6 @@
 import { hexValue } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
-import { defaultChain } from './config';
+import { defaultChain } from '../config';
 
 export function formatAddress(value: string, length: number = 4) {
     if (value.length <= length*2+2) return value
@@ -20,26 +20,6 @@ export async function copyTextToClipboard(text: string, selector: string|null = 
 interface ProviderError {
    code: number,
    message: string
-}
-
-export const switchNetwork = async (networkId: any) => {
-   // check if the user is connected through MetaMask
-   if (window.ethereum?.request !== undefined) {
-       try {
-           const accounts = await window.ethereum.request({
-               method: 'wallet_switchEthereumChain',
-               params: [{ chainId: hexValue(BigNumber.from(networkId).toHexString()) }],
-           });
-       } catch (error) {
-           const e = error as ProviderError
-           if (e?.code === 4902) {
-               console.log(error)
-               alert('Add network first!')
-           } else {
-               console.error(error)
-           }
-       }
-   }
 }
 
 export const generateUUID = () => { // Public Domain/MIT

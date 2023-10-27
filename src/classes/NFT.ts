@@ -12,6 +12,7 @@ import ERC721ABI from "../abi/ERC721ABI";
 import ERC1155ABI from "../abi/ERC1155ABI";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
+import { Web3Provider } from "@ethersproject/providers";
 
 export interface OriginalNFTData {
     ownerAddress: string,
@@ -111,13 +112,13 @@ export default class NFT implements NFTInterface {
                 return new Contract(
                     this.contract.address, 
                     ERC721ABI, 
-                    this.context.active ? this.context.library.getSigner() : this.context.library
+                    this.context.active ? (this.context.library as Web3Provider).getSigner() : this.context.library
                 ) 
             } else {
                 return new Contract(
                     this.contract.address, 
                     ERC1155ABI, 
-                    this.context.active ? this.context.library.getSigner() : this.context.library
+                    this.context.active ? (this.context.library as Web3Provider).getSigner() : this.context.library
                 )
             }
         }
