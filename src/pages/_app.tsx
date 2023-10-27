@@ -34,9 +34,9 @@ initTranslation(i18n);
 const chains = supportedChains.map(it => it.wagmiId)
 const connectKitConfig = getDefaultConfig({
     // Required API Keys
-    infuraId: process.env.NEXT_PUBLIC_INFURA_ID!,
+    infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY!,
     alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
-    walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || '',
+    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
     // Required
     appName: "NFT Protect",
     // Optional
