@@ -38,3 +38,6 @@ next-env.d.ts
 
 # lingui compiled files
 /src/locales/*/messages.js
+
+# yarn config
+yarn.lock
