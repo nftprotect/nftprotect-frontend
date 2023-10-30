@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { formatEther } from "@ethersproject/units"
-import { formatAddress, copyTextToClipboard } from '../../utils/helpers'
+import { copyTextToClipboard } from '../../utils/helpers'
 import {
     Box,
     Button,
@@ -22,6 +22,7 @@ import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
+import AddressDisplay from '../AddressDisplay'
 
 const ShowConnectionState = () => {
 
@@ -59,7 +60,7 @@ const ShowConnectionState = () => {
                 px={[3, 6]}
             >
                 {active && typeof account === 'string' ? (
-                    <p>{ formatAddress(account, 4) }</p>
+                    <p><AddressDisplay address={account}/></p>
                 ) : (
                     <p>Connect Wallet</p>
                 )}
@@ -100,7 +101,7 @@ const ShowConnectionState = () => {
                                 </Box>
 
                                 <Text fontSize={['16px']}>
-                                { formatAddress(account || '', 4) }
+                                { <AddressDisplay address={account||''}/> }
                                 </Text>
                             </Flex>
 

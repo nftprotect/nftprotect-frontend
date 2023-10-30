@@ -45,6 +45,7 @@ import { DisputeGraphData } from '../../../../hooks/useArbitratorGraph';
 import useTimeCounter from '../../../../hooks/useTimeCounter';
 import { ReqType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
+import AddressDisplay from '../../../AddressDisplay';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -609,7 +610,7 @@ const KlerosCaseContent = ({
                             ml={{base: "5px"}}
                         >
                             <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
-                                { formatAddress(claimantAddress, 8) }
+                                <AddressDisplay address={claimantAddress} formatNumber={8} />
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>}
@@ -634,7 +635,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                { formatAddress(nft.originalData?.contractAddress, 4) } (id: {nft.originalData?.tokenId})
+                                <AddressDisplay address={nft.originalData?.contractAddress}/> (id: {nft.originalData?.tokenId})
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link> }
@@ -713,7 +714,7 @@ const KlerosCaseContent = ({
                             ml={{base: "5px"}}
                         >
                             <chakra.span wordBreak="break-all">
-                                { formatAddress(contractAddress || defendantAddress, 8) }
+                                <AddressDisplay address={contractAddress || defendantAddress} formatNumber={8}/>
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
@@ -740,7 +741,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                { formatAddress(nft.contract.address, 4) } (id: { nft.tokenId })
+                                <AddressDisplay address={nft.contract.address}/> (id: { nft.tokenId })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
@@ -815,13 +816,8 @@ const KlerosCaseContent = ({
                             </Text>
                             <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                 <Text textStyle="paragraph">
-                                    <Trans>Submitted by</Trans> {
-                                        // evidence.evidenceJson.evidenceSide === 0 ? 
-                                        //     formatAddress(claimantAddress, 4) : 
-                                        // evidence.evidenceJson.evidenceSide === 1 ?
-                                        //     formatAddress(defendantAddress, 4) :
-                                        formatAddress(evidence.submittedBy, 4)
-                                    }
+                                    <Trans>Submitted by</Trans>
+                                    <AddressDisplay address={evidence.submittedBy}/> 
                                 </Text>
                                 <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
                                     <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>

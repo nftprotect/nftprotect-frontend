@@ -37,8 +37,9 @@ import { Contract } from '@ethersproject/contracts';
 import { handleContractError } from '../../../utils/errorHandling';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon } from '@chakra-ui/icons'
+import AddressDisplay from '../../AddressDisplay';
 
 interface ButtonInitialData {
     nftReFetch: Function, // function to update nft list
@@ -209,7 +210,7 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                                 <Trans>The pNFT is at user</Trans>
                                                 <chakra.span id='pNftOwnerAddressHolder'>
-                                                    { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                                    { " " } <AddressDisplay address={nft?.ownerAddress||''}/>
                                                 </chakra.span>
                                                 <PopoverTrigger>
                                                     <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />

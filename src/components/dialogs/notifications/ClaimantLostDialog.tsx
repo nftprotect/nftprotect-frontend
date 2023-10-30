@@ -23,12 +23,13 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
 import NFTImage from "../../nftView/NFTImage";
+import AddressDisplay from "../../AddressDisplay";
 
 const ClaimantLostDialog = () => {
 
@@ -94,7 +95,7 @@ const ClaimantLostDialog = () => {
                                         {/* TODO add pNFT owner address if the pNFT owner win */}
                                         {/* 
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { " " + formatAddress(pNFTOwner, 4) + " " }
+                                            { " " } <AddressDisplay address={pNFTOwner}/>
                                         </chakra.span>
                                         TODO add condition that claimant lost the court and pNFT remains at pNFT owner
                                         <Trans>is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans> 
@@ -102,7 +103,7 @@ const ClaimantLostDialog = () => {
                                         
                                         {/* TODO add condition original NFT owner win */}
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { originalOwner && (" " + formatAddress(originalOwner, 4) + " ") }
+                                            { " " }{ originalOwner && <AddressDisplay address={originalOwner||''}/> } { " " }
                                         </chakra.span>
                                         <Trans>is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
                                     </Text>

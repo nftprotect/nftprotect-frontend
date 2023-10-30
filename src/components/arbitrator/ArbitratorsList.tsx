@@ -23,7 +23,8 @@ import { Trans, t } from "@lingui/macro"
 import { useCallableDialogContext } from "../../context/CallableDialogContextProvider"
 import { metaEvidenceTypes } from "../../utils/metaEvidence"
 import Davatar from '@davatar/react'
-import { formatAddress, generateUUID, copyTextToClipboard } from "../../utils/helpers"
+import { generateUUID, copyTextToClipboard } from "../../utils/helpers"
+import AddressDisplay from "../AddressDisplay"
 
 export interface Operation {
     id: string,
@@ -62,7 +63,7 @@ export const FormattedAddress = ({
 }) => {
     const uuid = generateUUID()
     return <Flex flexDirection={'row'}>
-        <Text>{ formatAddress(value, 4) }</Text>
+        <Text><AddressDisplay address={value}/></Text>
         {withCopy && <>
             <VisuallyHiddenInput id={uuid} value={value} readOnly/>
             <Link 

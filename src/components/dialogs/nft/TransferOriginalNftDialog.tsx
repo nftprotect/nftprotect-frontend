@@ -31,7 +31,7 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { AlertCircle, Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons';
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro';
 import CancelledStepContent from '../../steps/CancelledStepContent'
@@ -40,6 +40,7 @@ import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import AddressDisplay from "../../AddressDisplay";
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -186,7 +187,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                         </chakra.span>
                                         
                                         <Text id='newOwnerAddressHolder' whiteSpace="nowrap">
-                                            { formatAddress(nft?.ownerAddress || '', 4) }
+                                            <AddressDisplay address={nft?.ownerAddress||''}/>
                                             <Popover placement='top'>
                                                 <PopoverTrigger>
                                                     <CopyIcon onClick={ copyNewOwnerToClipboard } cursor="pointer" mr={{base: "5px"}} fontSize="18px" />

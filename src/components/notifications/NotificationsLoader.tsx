@@ -3,18 +3,13 @@ import { useAppContext } from "../../context/AppContextProvider"
 import { ReqStatus, ReqType, TokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
 import { Heading, Text, Link } from "@chakra-ui/react"
-import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { Trans } from "@lingui/macro"
-import { formatAddress, generateRequestLink, timestampToDate } from "../../utils/helpers"
+import { generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
 import { BigNumber } from '@ethersproject/bignumber'
 import NFT, { ActionRequest } from "../../classes/NFT"
-import { createDisputeLink } from "../../utils/kleros"
 import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
 import { SeverityLevel } from "../../context/NotificationContextProvider"
-import { 
-    Nft as AlchemyNFT, 
-} from "alchemy-sdk";
 import NFTImage from "../nftView/NFTImage"
 import OriginalNftReceivedDialog from "../dialogs/notifications/OriginalNftReceivedDialog"
 import OriginalNftRejectedDialog from "../dialogs/notifications/OriginalNftRejectedDialog"
@@ -25,6 +20,7 @@ import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftU
 import { arbitratorGraphs } from "../../config"
 import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
 import { Contract } from "@ethersproject/contracts"
+import AddressDisplay from "../AddressDisplay"
 
 const CommonNotificationBody = ({
     header,
@@ -196,7 +192,7 @@ const NotificationsLoader = () => {
                                     children: 
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has transferred the original NFT to you.</Trans>
+                                                <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has transferred the original NFT to you.</Trans>
                                             }
                                             message={
                                                 <Trans>We recommend protecting it using NFT Protect.</Trans>
@@ -581,7 +577,7 @@ const NotificationsLoader = () => {
                                         children:
                                             <CommonNotificationBody
                                                 header={
-                                                    <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has not responded.</Trans>
+                                                    <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has not responded.</Trans>
                                                 }
                                                 message={
                                                     <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
@@ -628,7 +624,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
+                                                <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -670,7 +666,7 @@ const NotificationsLoader = () => {
                                     children:
                                         <CommonNotificationBody
                                             header={
-                                                <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has refused to transfer the original NFT to you.</Trans>
+                                                <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has refused to transfer the original NFT to you.</Trans>
                                             }
                                             message={
                                                 <Trans>Would you like to initiate the transfer of the original NFT through the court?</Trans>
@@ -732,7 +728,7 @@ const NotificationsLoader = () => {
                             children: 
                                 <CommonNotificationBody
                                     header={
-                                        <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} transferred the original NFT to you.</Trans>
+                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> transferred the original NFT to you.</Trans>
                                     }
                                     message={
                                         <Trans>We recommend protecting it using NFT Protect</Trans>
@@ -773,7 +769,7 @@ const NotificationsLoader = () => {
                                                 <Trans>The Ruling on dispute #{loadedRequest.externalDisputeId.toString()} is now enforced!</Trans>
                                             }
                                             message={
-                                                <Trans>{`The original NFT has been transferred to a new owner ${formatAddress(nft.ownerAddress, 4)}.`}</Trans>
+                                                <Trans>The original NFT has been transferred to a new owner <AddressDisplay address={nft.ownerAddress}/>.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -866,7 +862,7 @@ const NotificationsLoader = () => {
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User {formatAddress(nft.ownerAddress, 4)} has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT.</Trans>
+                                                        <Trans>User <AddressDisplay address={nft.ownerAddress}/> has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT.</Trans>
                                                     }
                                                     message={
                                                         <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
@@ -883,6 +879,9 @@ const NotificationsLoader = () => {
                                         })
                                     } else if (request.type === ReqType.OwnershipRestore) {
                                         const loadedNft = await getPNft(nft)
+                                        if (!loadedNft.originalData) {
+                                            await loadedNft.loadOriginalNFTData()
+                                        }
                                         // 23.1 pNFT burn disputed
                                         addNotification({
                                             id: notificationId+'.23.1',
@@ -890,7 +889,7 @@ const NotificationsLoader = () => {
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User {formatAddress(nft.originalOwnerAddress, 4)} has filed a claim to burn your pNFT.</Trans>
+                                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has filed a claim to burn your pNFT.</Trans>
                                                     }
                                                     message={
                                                         <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
@@ -1259,7 +1258,7 @@ const NotificationsLoader = () => {
                             children:
                                 <CommonNotificationBody
                                     header={
-                                        <Trans>User {formatAddress(nft.ownerAddress, 4)} is requesting the original NFT.</Trans>
+                                        <Trans>User <AddressDisplay address={nft.ownerAddress}/> is requesting the original NFT.</Trans>
                                     }
                                     message={
                                         <Trans>Do you want to transfer the original NFT to them?</Trans>

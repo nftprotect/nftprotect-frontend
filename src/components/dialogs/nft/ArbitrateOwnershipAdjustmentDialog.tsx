@@ -30,7 +30,7 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { CopyIcon } from '@chakra-ui/icons'
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import { KlerosCourts } from '../../../utils/kleros';
@@ -42,6 +42,7 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import AddressDisplay from '../../AddressDisplay';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -236,7 +237,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         <Popover placement='top'>
                                             <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
                                                 <chakra.span id='originalOwnerAddressHolder'>
-                                                    { " " + formatAddress(nft.originalData?.ownerAddress || '', 4) }
+                                                    { " " }<AddressDisplay address={nft.originalData?.ownerAddress||''}/>
                                                 </chakra.span>
                                                 <PopoverTrigger>
                                                     <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />
