@@ -17,31 +17,20 @@ import {
     CardHeader,
     CardBody,
     CardFooter,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverCloseButton,
-    PopoverArrow,
-    PopoverBody,
     useDisclosure,
 } from '@chakra-ui/react'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { CopyIcon } from '@chakra-ui/icons'
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
-import { RequestStatus, ActionRequest } from '../../../classes/NFT';
+import { RequestStatus } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
-import { KlerosCourts } from '../../../utils/kleros';
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
 import { t } from '@lingui/macro';
-import { parseEther, formatEther } from '@ethersproject/units';
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
-import NFTImage from '../../nftView/NFTImage';
 import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
 
 const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {

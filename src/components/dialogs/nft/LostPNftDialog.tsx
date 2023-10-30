@@ -35,7 +35,7 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
@@ -45,6 +45,7 @@ import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/Kle
 import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import AddressDisplay from '../../AddressDisplay';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -312,7 +313,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                     {"If you've lost access to your pNFT, you should try attempting to resolve the issue with the current owner of the pNFT"}
                                                 </Trans>
                                                 <chakra.span id='pNftOwnerAddressHolder'>
-                                                    { ' ' + formatAddress(nft?.ownerAddress || '', 4)}
+                                                    { ' ' } <AddressDisplay address={nft?.ownerAddress||''}/>
                                                 </chakra.span>
                                                 <PopoverTrigger>
                                                     <CopyIcon onClick={ copyNftOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />

@@ -25,12 +25,13 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
 import NFTImage from "../../nftView/NFTImage";
+import AddressDisplay from "../../AddressDisplay";
 
 const OriginalNftReceivedDialog = () => {
 
@@ -89,7 +90,7 @@ const OriginalNftReceivedDialog = () => {
                                     <br/>
                                     <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "0px"}}>
                                         <chakra.span id='originalOwnerAddressHolder'>
-                                            { previousOriginalOwner && (" " + formatAddress(previousOriginalOwner, 4) + " ") }
+                                            { " " } { previousOriginalOwner && <AddressDisplay address={previousOriginalOwner}/> } { " " }
                                         </chakra.span>
                                         <PopoverTrigger>
                                             <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" ml={{base: "2px"}} fontSize="18px" />

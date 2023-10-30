@@ -47,7 +47,8 @@ import { CheckCircleIcon, ExternalLinkIcon, WarningIcon } from '@chakra-ui/icons
 import { HelpCircle, Info } from '@web3uikit/icons'
 import Footer from '../components/footer/Footer'
 import { generateAddressURL, generateTokenURL } from '../utils/etherscan'
-import { formatAddress, generateRequestLink } from '../utils/helpers'
+import { generateRequestLink } from '../utils/helpers'
+import AddressDisplay from '../components/AddressDisplay'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -325,7 +326,7 @@ const ValidatePage: NextPage = () => {
                                                                 ml={{base: "5px"}}
                                                             >
                                                                 <chakra.span wordBreak="break-all">
-                                                                    { `${formatAddress(nftGraphData.contractAddress, 4) } (id: ${nftGraphData.tokenId})` }
+                                                                    <AddressDisplay address={nftGraphData.contractAddress}/> (id: {nftGraphData.tokenId.toString()})
                                                                 </chakra.span>
                                                                 <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                                                             </Link>
@@ -343,7 +344,7 @@ const ValidatePage: NextPage = () => {
                                                                 ml={{base: "5px"}}
                                                             >
                                                                 <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
-                                                                    { formatAddress(nftGraphData.originalOwnerAddress, 8) }
+                                                                    <AddressDisplay address={nftGraphData.originalOwnerAddress} formatNumber={8}/>
                                                                 </chakra.span>
                                                                 <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                                                             </Link>
@@ -362,7 +363,7 @@ const ValidatePage: NextPage = () => {
                                                                         ml={{base: "5px"}}
                                                                     >
                                                                         <chakra.span wordBreak="break-all" color="#2D7BD6" textDecoration="underline">
-                                                                            { formatAddress(nftGraphData.ownerAddress, 8) }
+                                                                            <AddressDisplay address={nftGraphData.ownerAddress} formatNumber={8}/>
                                                                         </chakra.span>
                                                                         <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                                                                     </Link>

@@ -3,8 +3,6 @@ import { nftProtectGraphs, supportedChains } from '../../../../config'
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
 import { defaultOptions } from '../../../../context/TheGraphContextProvider'
 import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
-import { formatAddress } from '../../../../utils/helpers'
-import { generateTokenURL } from '../../../../utils/etherscan'
 
 type Data = {
     name: string

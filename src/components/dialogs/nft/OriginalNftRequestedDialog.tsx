@@ -25,13 +25,14 @@ import {
     useDisclosure
 } from '@chakra-ui/react'
 import { useAppContext } from '../../../context/AppContextProvider';
-import { formatAddress, copyTextToClipboard } from '../../../utils/helpers';
+import { copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT from "../../../classes/NFT";
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import AddressDisplay from '../../AddressDisplay';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -101,7 +102,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
                                     <Trans>If you transferred the pNFT to user</Trans>
                                     <chakra.span id='pNftOwnerAddressHolder'>
-                                        { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                        { " " }<AddressDisplay address={nft?.ownerAddress||''}/>
                                     </chakra.span>
                                     <PopoverTrigger>
                                         <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
@@ -145,7 +146,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "10px"}}>
                                     <Trans>If you did not transfer the pNFT to</Trans>
                                     <chakra.span id='pNftOwnerAddressHolder'>
-                                        { " " + formatAddress(nft?.ownerAddress || '', 4) }
+                                        { " " }<AddressDisplay address={nft?.ownerAddress||''}/>
                                     </chakra.span>
                                     <PopoverTrigger>
                                         <CopyIcon onClick={ copyPNftOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
