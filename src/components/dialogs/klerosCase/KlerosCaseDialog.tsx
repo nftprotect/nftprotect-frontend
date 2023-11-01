@@ -30,67 +30,38 @@ const KlerosCaseDialog = () => {
         setDialog('KlerosCaseDialog', {...disclosure, setCaseData})
     }, [])
 
-    return (<>{
-        pageData && <>
-            <Modal
-                variant="stepModal"
-                closeOnOverlayClick={false}
-                isOpen={isOpen}
-                onClose={onClose}
-                size="full"
+    return <Modal
+            variant="stepModal"
+            closeOnOverlayClick={false}
+            isOpen={isOpen}
+            onClose={onClose}
+            size="full"
+        >
+            <ModalOverlay />
+            <ModalContent
+                borderRadius="0"
             >
-                <ModalOverlay />
-                <ModalContent
-                    borderRadius="0"
-                    sx={{
-                        "::-webkit-scrollbar": {
-                            w: "5px",
-                        },
-                        "::-webkit-scrollbar-track": {
-                            my: '16px',
-                            // overflowY: "hidden"
-                        },
-                        "::-webkit-scrollbar-thumb": {
-                            bgColor: 'brand.light',
-                        }
-                    }}
-                >
-                    <Box
-                        position="sticky"
-                        top="0"
-                        zIndex="1"
-                        bgColor="brand.light"
-                        color="#FFF"
-                        w="100%"
-                        display="flex"
-                    >
-                        <ModalCloseButton onClick={onClose} color={'grey'}/>
-                    </Box>
+                <ModalCloseButton onClick={onClose} color={'grey'}/>
 
-                    <ModalBody mx={{base: "220px"}}>
-                        <Container 
-                            p={0}
-                            maxW="1920px"
-                            width={"auto"}
-                            h={"auto"}
-                        >
-                            <Flex flexDir="column" width="100%">
-                                { nft && caseData && <KlerosCaseContent
-                                    requestType={
-                                        caseData.metaEvidenceId === 3 ? 
-                                            ReqType.OwnershipAdjustment : 
-                                            ReqType.OwnershipRestore
-                                    }
-                                    pageData={pageData}
-                                    {...caseData}
-                                /> }
-                            </Flex>
-                        </Container>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-        </>
-    }</>)
+                <ModalBody>
+                    <Container 
+                        maxW="1920px"
+                        width={"100%"}
+                        // h={"100%"}
+                    >
+                        { nft && caseData && pageData && <KlerosCaseContent
+                            requestType={
+                                caseData.metaEvidenceId === 3 ? 
+                                    ReqType.OwnershipAdjustment : 
+                                    ReqType.OwnershipRestore
+                            }
+                            pageData={pageData}
+                            {...caseData}
+                        /> }
+                    </Container>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
 }
 
 export default KlerosCaseDialog
