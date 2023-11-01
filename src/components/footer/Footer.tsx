@@ -12,10 +12,8 @@ import { Twitter, Discord2, TelegramFill, Github } from '@web3uikit/icons'
 const Footer = () => {
     return (
         <chakra.footer
-            h="100%"
             w="100%"
             px={[3, 6]}
-            py="1rem"
             bgColor="brand.light"
             color="#FFF"
             display="flex"
@@ -24,7 +22,7 @@ const Footer = () => {
             flexWrap='wrap'
             justifyContent="space-between"
         >
-            <Flex alignItems="center">
+            <Flex alignItems="center" my={'1rem'}>
                 <Link href="https://nftprotect.app/" isExternal rel="noreferrer" textStyle="paragraph" textTransform="uppercase" mr={{base: "20px"}}>
                     <Text>
                         <Trans>Website</Trans>
@@ -42,7 +40,7 @@ const Footer = () => {
                 </Link>
             </Flex>
 
-            <Flex alignItems="center" h={{base: "30px"}}>
+            <Flex alignItems="center" h={{base: "30px"}} my={'1rem'}>
 
                 <Flex h="100%" mr={{base: "20px"}}>
                     <Link href="https://go.nftprotect.app/twitter" isExternal rel="noreferrer">

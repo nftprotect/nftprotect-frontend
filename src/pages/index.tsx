@@ -105,6 +105,7 @@ const Home: NextPage = () => {
                     <Text
                         // fontFamily={"Euclid Circular A"}
                         // fontSize={"24px"}
+                        px={'1rem'}
                     >
                         <Trans>
                             This is β-version of NFT Protect. If you encouter some glitch, please <Link href="https://go.nftprotect.app/feedback" target={'blank'}><u>leave your feedback</u></Link>! Thanks!
