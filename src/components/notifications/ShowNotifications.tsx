@@ -51,7 +51,7 @@ const ShowNotifications = () => {
     return (
         <Box 
             px={['1rem', '3rem']} 
-            py={[4, 8]} 
+            py={[4, 4, 8]} 
         >
             <Accordion defaultIndex={[0]} allowMultiple>
                 <AccordionItem

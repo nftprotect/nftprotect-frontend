@@ -177,29 +177,30 @@ const Home: NextPage = () => {
                         {active && (
                             <>
                                 <Flex
-                                    minH={{ base: "360px" }}
-                                    my={{ base: "40px" }}
-                                    mx={{ base: "48px" }}
+                                    minH={{ base: "auto", md: "360px" }}
+                                    my={{ base: "20px", md: "40px" }}
+                                    mx={{ base: "16px", sm: "48px" }}
                                     bgColor="brand.light"
                                     pl={{ base: "45px" }}
                                     pt={{ base: "50px" }}
                                     borderRadius={{ base: "8px" }}
                                 >
-                                    <Flex flexDir="column" color="#FFF" w={{ base: "60%" }}>
+                                    <Flex flexDir="column" color="#FFF" w={{ md: "60%", base: "100%" }}>
                                         <Text
-                                            fontSize={{ base: "64px" }}
-                                            lineHeight={{ base: "68px" }}
+                                            fontSize={{ md: "48px", base: '24px' }}
+                                            // lineHeight={{ md: "68px", sm: '20px' }}
                                             fontWeight={{ base: "600" }}
+                                            textStyle={{base: "h3", md: "h2", lg: "h2"}}
                                         >
                                             <Trans>
-                                                Welcome to NFT Protect <br />
+                                                Welcome to NFT Protect.<br />
                                                 your digital asset guardian
                                             </Trans>
                                         </Text>
                                         <Text
                                             pt="1.25rem"
                                             pb="2rem"
-                                            textStyle="h3"
+                                            textStyle={{ base: "h4", md: "h3", lg: "h3"}}
                                             fontWeight="500"
                                         >
                                             <Trans>
@@ -212,7 +213,7 @@ const Home: NextPage = () => {
 
                                     <Flex
                                         ml={{ base: "20px" }}
-                                        w={{ base: "40%" }}
+                                        w={{ md: "40%", base: "0%" }}
                                         bgImage="url('/images//mainBannerBackground.png')"
                                         bgRepeat="no-repeat"
                                     ></Flex>
