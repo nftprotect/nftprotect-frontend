@@ -39,6 +39,7 @@ const OriginalNftUnresponsiveDialog = () => {
             onClose={() => {
                 onClose()
             }}
+            blockScrollOnMount={false}
         >
             <ModalOverlay />
             <ModalContent

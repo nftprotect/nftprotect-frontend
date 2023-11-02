@@ -214,6 +214,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
             <ModalOverlay />
             <ModalContent
                 w={{base: "450px"}}
+                overflowX={'hidden'}
                 sx={{
                     "::-webkit-scrollbar": {
                         w: "5px",
@@ -346,7 +347,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardBody>
 
                                 <CardFooter flexDirection="column" alignItems="center">
-                                    <Box w={{base: "60%", sm: "40%"}} mb={{base: "20px"}}>
+                                    <Box w={{base: "40%", sm: "40%"}} mb={{base: "20px"}}>
                                         <Button
                                             variant="darkOutline"
                                             onClick={openCaseInKleros}
@@ -511,7 +512,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardBody>
 
                                 <CardFooter>
-                                    <Box w={{base: "60%", sm: "45%"}}>
+                                    <Box w={{base: "45%", sm: "40%"}}>
                                         <Button
                                             variant="darkOutline"
                                             onClick={() => {
@@ -534,7 +535,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             <Trans>Review the case</Trans>
                                         </Button>
                                     </Box>
-                                    <Box w={{base: "60%", sm: "45%"}}>
+                                    <Box w={{base: "45%", sm: "40%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
                                             variant="darkOutline"

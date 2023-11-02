@@ -183,6 +183,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
             closeOnOverlayClick={false}
             isOpen={isOpen} 
             onClose={dialogClose}
+            blockScrollOnMount={false}
         >
             <ModalOverlay 
                 bg='blackAlpha.700' 
@@ -365,7 +366,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 </CardBody>
 
                                 <CardFooter>
-                                    <Box w={{base: "60%", sm: "45%"}}>
+                                    <Box w={{base: "45%", sm: "40%"}}>
                                         <Button
                                             variant="darkOutline"
                                             onClick={() => {
@@ -387,7 +388,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             <Trans>Review the case</Trans>
                                         </Button>
                                     </Box>
-                                    <Box w={{base: "60%", sm: "45%"}}>
+                                    <Box w={{base: "45%", sm: "40%"}}>
                                         <Button
                                             onClick={ () => setNextStep(StepMapping.payArbitrationFee) }
                                             variant="darkOutline"
