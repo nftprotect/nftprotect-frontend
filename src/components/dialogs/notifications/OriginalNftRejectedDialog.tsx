@@ -39,6 +39,7 @@ const OriginalNftRejectedDialog = () => {
             onClose={() => {
                 onClose()
             }}
+            blockScrollOnMount={false}
         >
             <ModalOverlay />
             <ModalContent

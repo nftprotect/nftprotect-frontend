@@ -184,7 +184,7 @@ const KlerosEvidencesForm = ({
                         </CardBody>
 
                         <CardFooter alignItems="center">
-                            <Box w={{base: "60%", sm: "40%"}}>
+                            <Box w={{base: "45%", sm: "40%"}}>
                                 <Button 
                                     onClick={goBack}
                                     variant="darkOutline"
@@ -192,7 +192,7 @@ const KlerosEvidencesForm = ({
                                     <Trans>Back</Trans>
                                 </Button>
                             </Box>
-                            <Box w={{base: "60%", sm: "40%"}}>
+                            <Box w={{base: "45%", sm: "40%"}}>
                                 
                                 <Button
                                     type="submit"
