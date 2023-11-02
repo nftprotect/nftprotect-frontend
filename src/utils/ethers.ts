@@ -36,7 +36,6 @@ export function getPublicProvider({ chainId }: { chainId?: number } = {}) {
 
 export function walletClientToProvider(walletClient: WalletClient) {
     const { account, chain, transport } = walletClient
-    console.log('WALLET TRANSPORT', transport)
     const network = {
       chainId: chain.id,
       name: chain.name,
