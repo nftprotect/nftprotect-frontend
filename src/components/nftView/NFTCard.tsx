@@ -300,7 +300,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 dialog.onOpen()
                             } }
                         >
-                            <Trans>Open dispute</Trans>
+                            <Trans>TEST: Open dispute</Trans>
                         </Button>
                     </Box>
             }

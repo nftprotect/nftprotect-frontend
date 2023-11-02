@@ -209,6 +209,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
             closeOnOverlayClick={false}
             isOpen={isOpen}
             onClose={dialogClose}
+            blockScrollOnMount={false} // Needed for scroll to work in nested Modal
         >
             <ModalOverlay />
             <ModalContent
