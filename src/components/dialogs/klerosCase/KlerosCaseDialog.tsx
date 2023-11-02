@@ -35,11 +35,22 @@ const KlerosCaseDialog = () => {
             closeOnOverlayClick={false}
             isOpen={isOpen}
             onClose={onClose}
-            size="full"
+            size="full"                    
         >
             <ModalOverlay />
             <ModalContent
                 borderRadius="0"
+                sx={{ // This is needed to override scrollbar which is grey because Modal is called from Modal
+                    "::-webkit-scrollbar": {
+                        w: "4px",
+                    },
+                    "::-webkit-scrollbar-track": {
+                        my: '4px',
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                        bgColor: 'brand.light',
+                    }
+                }}
             >
                 <ModalCloseButton onClick={onClose} color={'grey'}/>
 
