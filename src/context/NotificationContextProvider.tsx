@@ -1,6 +1,7 @@
 import { Notification } from "@web3uikit/core";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useAppContext, AppContext } from "./AppContextProvider";
+import { useBlockNumber } from "wagmi";
 
 export interface NotificationContextInterface {
     getNotification: Function,
@@ -63,7 +64,8 @@ export function NotificationContextProvider({ children }:any) {
             ? JSON.parse(localStorage.getItem('closedNotifications') || '{}')
             : {}
     );
-    const { currentChain, currentBlock } = useAppContext()
+    const { currentChain } = useAppContext()
+    const { data: currentBlock } = useBlockNumber()
 
     const getNotification = (id: string): Notification|undefined => {
         return notifications.current.find(it => it.id === id)
@@ -102,7 +104,7 @@ export function NotificationContextProvider({ children }:any) {
         if (!closedNotifications.current[currentChain.id]) {
             closedNotifications.current[currentChain.id] = {};
         }
-        closedNotifications.current[currentChain.id][id] = currentBlock;
+        closedNotifications.current[currentChain.id][id] = currentBlock?.toString();
         localStorage.setItem('closedNotifications', JSON.stringify(closedNotifications.current));
     }
 

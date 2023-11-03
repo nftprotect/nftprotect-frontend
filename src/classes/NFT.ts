@@ -8,8 +8,8 @@ import {
     NftMetadata
 } from "alchemy-sdk";
 import { Contract } from '@ethersproject/contracts';
-import ERC721ABI from "../abi/ERC721ABI";
-import ERC1155ABI from "../abi/ERC1155ABI";
+import ERC721ABI from "../abi/ERC721ABI.json";
+import ERC1155ABI from "../abi/ERC1155ABI.json";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
 import { Web3Provider } from "@ethersproject/providers";

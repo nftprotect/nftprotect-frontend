@@ -1,14 +1,15 @@
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
-import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
+import ArbitrableProxyABI from "../abi/ArbitrableProxyABI.json";
 import { nftpDeployBlockNumber } from "../config";
 import { maxBlocksPerRequest } from "../config";
 import { BigNumber } from '@ethersproject/bignumber';
-import KlerosLiquidABI from "../abi/KlerosLiquidABI";
+import KlerosLiquidABI from "../abi/KlerosLiquidABI.json";
 import { timestampToDate } from "../utils/helpers";
 import { Period } from "./useArbitratorGraph";
 import { Web3Provider } from "@ethersproject/providers";
+import { useBlockNumber } from 'wagmi';
 
 export interface EvidenceSubmission {
     evidenceURI: string,
@@ -34,8 +35,9 @@ export const useArbitrableProxy = () => {
             "useArbitrable has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, active, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
+    const { currentChain, active, library, nftProtectContract, arbRegistryContract } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
+    const { data: currentBlock } = useBlockNumber()
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
         const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
@@ -96,7 +98,7 @@ export const useArbitrableProxy = () => {
     ): Promise<EvidenceSubmission[]> => {
         const contract = await getArbitrableProxy(arbitratorId)
         const startBlock = blockNumber || nftpDeployBlockNumber
-        const endBlock = currentBlock || await library.getBlockNumber()
+        const endBlock = Number(currentBlock) || await library.getBlockNumber()
         const ranges = []
         let i = startBlock
         do {

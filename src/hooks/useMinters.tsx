@@ -1,8 +1,8 @@
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
-import SimpleNFTMinter721ABI from "../abi/SimpleNFTMinter721ABI";
-import SimpleNFTMinter1155ABI from "../abi/SimpleNFTMinter1155ABI";
+import SimpleNFTMinter721ABI from "../abi/SimpleNFTMinter721ABI.json";
+import SimpleNFTMinter1155ABI from "../abi/SimpleNFTMinter1155ABI.json";
 import { simpleMinters } from "../config";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -13,7 +13,7 @@ export const useMinters = () => {
             "useMinters has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, active, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
+    const { currentChain, active, library } = useAppContext()
     const minter721Contract = useMemo(() => {
         const address = simpleMinters.find(it => it.chainId === currentChain?.id)?.contracts?.ERC721
         if (address) {

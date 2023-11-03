@@ -32,11 +32,13 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
+import { useBlockNumber } from 'wagmi';
 
 const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, fee, currentBlock, currentChain } = useAppContext()
+    const { nftProtectContract, account, library, currentChain } = useAppContext()
+    const { data: currentBlock } = useBlockNumber()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -136,7 +138,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     // Check request timeout on every block
     useEffect(() => {
         if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
+            library.getBlock(Number(currentBlock)).then((blockData: any) => {
                 if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
                     setRequestTimedOut(true)
                 }

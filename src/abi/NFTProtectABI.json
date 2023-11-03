@@ -1,0 +1,789 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "allow",
+				"type": "bool"
+			}
+		],
+		"name": "AllowAnonymousChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "boa",
+				"type": "bool"
+			}
+		],
+		"name": "BurnOnActionChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "Deployed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "EntityOriginalOwnerChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "enum Protection",
+				"name": "pr",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"internalType": "contract IProtector",
+				"name": "protector",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "EntityProtected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			}
+		],
+		"name": "EntityUnprotected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "EntityWrappedOwnerChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "mel",
+				"type": "address"
+			}
+		],
+		"name": "MetaEvidenceLoaderChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "contract IProtectorFactory",
+				"name": "factory",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "contract IProtector",
+				"name": "protector",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "original",
+				"type": "address"
+			}
+		],
+		"name": "ProtectorCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "contract IProtectorFactory",
+				"name": "factory",
+				"type": "address"
+			}
+		],
+		"name": "ProtectorFactoryRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "contract IProtectorFactory",
+				"name": "factory",
+				"type": "address"
+			}
+		],
+		"name": "ProtectorFactoryUnregistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "contract RequestsHub",
+				"name": "rh",
+				"type": "address"
+			}
+		],
+		"name": "RequestHubChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "towner",
+				"type": "address"
+			}
+		],
+		"name": "TechnicalOwnerChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "contract IUserRegistry",
+				"name": "ureg",
+				"type": "address"
+			}
+		],
+		"name": "UserRegistryChanged",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "_allowAnonymous",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_burnOnAction",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "_entities",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "originalOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "wrappedOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "enum Protection",
+				"name": "protection",
+				"type": "uint8"
+			},
+			{
+				"internalType": "contract IProtector",
+				"name": "protector",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_entityCounter",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IProtectorFactory",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "_factories",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_metaEvidenceLoader",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "_originalToProtector",
+		"outputs": [
+			{
+				"internalType": "contract IProtector",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IProtector",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "_protectorToOriginal",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_requestHub",
+		"outputs": [
+			{
+				"internalType": "contract RequestsHub",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_technicalOwner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_userRegistry",
+		"outputs": [
+			{
+				"internalType": "contract IUserRegistry",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			}
+		],
+		"name": "applyBurn",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			}
+		],
+		"name": "applyOwnershipAdjustment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "dst",
+				"type": "address"
+			}
+		],
+		"name": "applyOwnershipRestore",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			}
+		],
+		"name": "entityInfo",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "originalOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "wrappedOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "enum Protection",
+				"name": "protection",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			}
+		],
+		"name": "entityUnderDisupte",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "creator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "referrer",
+				"type": "address"
+			},
+			{
+				"internalType": "enum Protection",
+				"name": "pr",
+				"type": "uint8"
+			}
+		],
+		"name": "onEntityCreated",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entityId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "onEntityWrappedOwnerChanged",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IProtector",
+				"name": "pr",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "original",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "creator",
+				"type": "address"
+			}
+		],
+		"name": "onProtectorCreated",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "original",
+				"type": "address"
+			}
+		],
+		"name": "protector",
+		"outputs": [
+			{
+				"internalType": "contract IProtector",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IProtectorFactory",
+				"name": "factory",
+				"type": "address"
+			}
+		],
+		"name": "registerProtectorFactory",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "c",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			}
+		],
+		"name": "rescueERC20",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "allow",
+				"type": "bool"
+			}
+		],
+		"name": "setAllowAnonymous",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "boa",
+				"type": "bool"
+			}
+		],
+		"name": "setBurnOnAction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "mel",
+				"type": "address"
+			}
+		],
+		"name": "setMetaEvidenceLoader",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract RequestsHub",
+				"name": "requestHub",
+				"type": "address"
+			}
+		],
+		"name": "setRequestHub",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "tOwner",
+				"type": "address"
+			}
+		],
+		"name": "setTechnicalOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IUserRegistry",
+				"name": "userRegistry",
+				"type": "address"
+			}
+		],
+		"name": "setUserRegistry",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "technicalOwner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IProtectorFactory",
+				"name": "factory",
+				"type": "address"
+			}
+		],
+		"name": "unregisterProtectorFactory",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]

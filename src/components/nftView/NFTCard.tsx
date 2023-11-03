@@ -19,6 +19,7 @@ import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { generateRequestLink } from '../../utils/helpers';
+import { useBlockNumber } from 'wagmi';
 
 interface NFTInitialData {
     nft: NFT,
@@ -26,7 +27,8 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { library, currentBlock, currentChain } = useAppContext()
+    const { library, currentChain } = useAppContext()
+    const { data: currentBlock } = useBlockNumber()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -68,7 +70,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     // Check request timeout on every block
     useEffect(() => {
         if (pendingRequest && currentBlock && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
+            library.getBlock(Number(currentBlock)).then((blockData: any) => {
                 if (blockData.timestamp >= pendingRequest.timeout) {
                     setRequestTimedOut(true)
                 }

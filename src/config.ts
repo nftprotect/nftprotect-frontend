@@ -2,7 +2,6 @@ import { Network } from "alchemy-sdk";
 import { mainnet, goerli, sepolia } from "wagmi/chains";
 
 export const supportedChains = [
-    // For MVP will be used only Goerli network, others are commented for now
     // {
     //     id: 1,
     //     alchemyId: Network.ETH_MAINNET,
@@ -11,31 +10,32 @@ export const supportedChains = [
     //     nodeUrl: "https://1rpc.io/eth",
     //     explorerUrl: "https://etherscan.io"
     // },
+    // {
+    //     id: 5,
+    //     alchemyId: Network.ETH_GOERLI,
+    //     wagmiId: goerli,
+    //     name: "Goerli",
+    //     symbol: "ETH",
+    //     explorerUrl: "https://goerli.etherscan.io",
+    //     nftpContractAddress: '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F',
+    //     userRegistryContractAddress: '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC',
+    //     arbRegistryContractAddress: '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04',
+    //     dynamicArbRegistryContractAddress: '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d',
+    //     couponsContractAddress: '0x3D9D532351C473C476b1077D1770f373B5f1AAc4',
+    //     defaultArbitrator: 2
+    // }, 
     {
-        id: 5,
-        alchemyId: Network.ETH_GOERLI,
-        wagmiId: goerli,
-        name: "Goerli",
-        symbol: "ETH",
-        explorerUrl: "https://goerli.etherscan.io",
-        nftpContractAddress: '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F',
-        userRegistryContractAddress: '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC',
-        arbRegistryContractAddress: '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04',
-        dynamicArbRegistryContractAddress: '0x6620883168AD86d3b88E0C1a3eF0b3Ce4284c17d',
-        couponsContractAddress: '0x3D9D532351C473C476b1077D1770f373B5f1AAc4',
-        defaultArbitrator: 2
-    }, {
         id: 11155111,
         alchemyId: Network.ETH_SEPOLIA,
         wagmiId: sepolia,
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0xB1A382a0946528cAc1Bde3f419B69809CC347613',
-        userRegistryContractAddress: '0x49ba52fe9dF9e55BeF56BE7D0F19eF8b645D51F3',
-        arbRegistryContractAddress: '0x0cEC9a8A65A5d9D0e39fa9B26e5F9dE3FDC4D7fb',
-        dynamicArbRegistryContractAddress: '0x0000000000000000000000000000000000000000',
-        couponsContractAddress: '0x8c743B717e960fa00779b7b148D63a59009E9c9d',
+        nftpContractAddress: '0xAcb24C39a77c8888B6f1f4525039A295D4FE8B12',
+        userRegistryContractAddress: '0xF4Af59de41953805D8B6dA8048f9c7f84F5604ae',
+        arbRegistryContractAddress: '0x6b5f8057679F6F35Efd1Ffb9EE90cF71f900bC38',
+        couponsContractAddress: '0x6557a4f0b19FEf7D5B2164cD3004eF41C5f7b16B',
+        requestHubContractAddress: '0x1FA25ed3969478e5e21f74733c2c6f92d17aF940',
         defaultArbitrator: 1
     },
     // {

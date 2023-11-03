@@ -1,0 +1,744 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "areg",
+                "type": "address"
+            },
+            {
+                "internalType": "contract INFTProtect2Core",
+                "name": "core",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "contract ArbitratorRegistry",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "ArbitratorRegistryChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "accept",
+                "type": "bool"
+            }
+        ],
+        "name": "BurnAnswered",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            }
+        ],
+        "name": "BurnArbitrateAsked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [],
+        "name": "Deployed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "disputeId",
+                "type": "uint256"
+            }
+        ],
+        "name": "DisputeCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "entityId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "src",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            }
+        ],
+        "name": "EntityAddedToRequest",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "newowner",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "oldowner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "entityId",
+                "type": "uint256"
+            }
+        ],
+        "name": "OwnershipAdjusted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "accept",
+                "type": "bool"
+            }
+        ],
+        "name": "OwnershipAdjustmentAnswered",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipAdjustmentArbitrateAsked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipAdjustmentAsked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "accept",
+                "type": "bool"
+            }
+        ],
+        "name": "OwnershipRestoreAnswered",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "newowner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipRestoreAsked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "_arbitratorRegistry",
+        "outputs": [
+            {
+                "internalType": "contract ArbitratorRegistry",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "_core",
+        "outputs": [
+            {
+                "internalType": "contract INFTProtect2Core",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "_disputeToRequest",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "_entityToRequest",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "_metaEvidenceLoader",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "enum IRequestHub.MetaEvidenceType",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "name": "_metaEvidences",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "_requests",
+        "outputs": [
+            {
+                "internalType": "enum RequestsHub.ReqType",
+                "name": "reqtype",
+                "type": "uint8"
+            },
+            {
+                "internalType": "address",
+                "name": "newowner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "timeout",
+                "type": "uint256"
+            },
+            {
+                "internalType": "enum RequestsHub.Status",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "localDisputeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "externalDisputeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "enum IRequestHub.MetaEvidenceType",
+                "name": "metaevidence",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "_requestsCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "_userRegistry",
+        "outputs": [
+            {
+                "internalType": "contract IUserRegistry",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "entities",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "adjustOwnership",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "accept",
+                "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "answerOwnershipAdjustment",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "entities",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            }
+        ],
+        "name": "askOwnershipAdjustment",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "askOwnershipAdjustmentArbitrate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "entities",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "enum IRequestHub.MetaEvidenceType",
+                "name": "metaEvidenceType",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "askOwnershipRestoreArbitrate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "entities",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "address",
+                "name": "dst",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "arbitratorId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "burn",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            }
+        ],
+        "name": "fetchRuling",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "entityId",
+                "type": "uint256"
+            }
+        ],
+        "name": "hasRequest",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "c",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "receiver",
+                "type": "address"
+            }
+        ],
+        "name": "rescueERC20",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "areg",
+                "type": "address"
+            }
+        ],
+        "name": "setArbitratorRegistry",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "mel",
+                "type": "address"
+            }
+        ],
+        "name": "setMetaEvidenceLoader",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IUserRegistry",
+                "name": "userRegistry",
+                "type": "address"
+            }
+        ],
+        "name": "setUserRegistry",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "enum IRequestHub.MetaEvidenceType",
+                "name": "evidenceType",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "evidence",
+                "type": "string"
+            }
+        ],
+        "name": "submitMetaEvidence",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

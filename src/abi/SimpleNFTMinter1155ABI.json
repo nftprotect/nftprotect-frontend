@@ -1,4 +1,4 @@
-const SimpleNFTMinter721ABI = [
+[
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -10,32 +10,7 @@ const SimpleNFTMinter721ABI = [
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "approved",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
+				"name": "account",
 				"type": "address"
 			},
 			{
@@ -58,37 +33,11 @@ const SimpleNFTMinter721ABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_fromTokenId",
-				"type": "uint256"
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
 			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_toTokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "BatchMetadataUpdate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "MetadataUpdate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
 			{
 				"indexed": true,
 				"internalType": "address",
@@ -102,39 +51,88 @@ const SimpleNFTMinter721ABI = [
 				"type": "address"
 			},
 			{
+				"indexed": false,
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256[]",
+				"name": "values",
+				"type": "uint256[]"
+			}
+		],
+		"name": "TransferBatch",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
 				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "value",
 				"type": "uint256"
 			}
 		],
-		"name": "Transfer",
+		"name": "TransferSingle",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "value",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "URI",
 		"type": "event"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "to",
+				"name": "account",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "id",
 				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
 			}
 		],
 		"name": "balanceOf",
@@ -151,17 +149,22 @@ const SimpleNFTMinter721ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
+				"internalType": "address[]",
+				"name": "accounts",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
 			}
 		],
-		"name": "getApproved",
+		"name": "balanceOfBatch",
 		"outputs": [
 			{
-				"internalType": "address",
+				"internalType": "uint256[]",
 				"name": "",
-				"type": "address"
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",
@@ -171,7 +174,7 @@ const SimpleNFTMinter721ABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "owner",
+				"name": "account",
 				"type": "address"
 			},
 			{
@@ -194,6 +197,11 @@ const SimpleNFTMinter721ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string",
 				"name": "tokenURI",
 				"type": "string"
@@ -211,38 +219,6 @@ const SimpleNFTMinter721ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ownerOf",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -255,12 +231,22 @@ const SimpleNFTMinter721ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "amounts",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
 			}
 		],
-		"name": "safeTransferFrom",
+		"name": "safeBatchTransferFrom",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -279,7 +265,12 @@ const SimpleNFTMinter721ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
 				"type": "uint256"
 			},
 			{
@@ -332,19 +323,6 @@ const SimpleNFTMinter721ABI = [
 	},
 	{
 		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "tokenCounter",
 		"outputs": [
 			{
@@ -364,7 +342,7 @@ const SimpleNFTMinter721ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "tokenURI",
+		"name": "uri",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -374,30 +352,5 @@ const SimpleNFTMinter721ABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
 ]
-
-export default SimpleNFTMinter721ABI

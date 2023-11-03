@@ -1,4 +1,4 @@
-const ArbitrableProxyABI = [
+[
     {
         "inputs": [
             {
@@ -655,5 +655,3 @@ const ArbitrableProxyABI = [
         "type": "function"
     }
 ]
-
-export default ArbitrableProxyABI

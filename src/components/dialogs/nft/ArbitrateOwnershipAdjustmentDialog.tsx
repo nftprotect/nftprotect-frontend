@@ -43,6 +43,7 @@ import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
+import { useBlockNumber } from 'wagmi';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -51,7 +52,8 @@ interface DialogInitialData {
 const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, baseTokenPrice, currentBlock } = useAppContext()
+    const { nftProtectContract, account, library, baseTokenPrice } = useAppContext()
+    const { data: currentBlock } = useBlockNumber()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -165,7 +167,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
     // Check request timeout on every block
     useEffect(() => {
         if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
+            library.getBlock(Number(currentBlock)).then((blockData: any) => {
                 if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
                     setRequestTimedOut(true)
                 }

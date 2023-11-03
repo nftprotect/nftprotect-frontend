@@ -1,4 +1,4 @@
-const KlerosLiquidABI = [
+[
     {
         "constant": false,
         "inputs": [
@@ -1362,5 +1362,3 @@ const KlerosLiquidABI = [
         "type": "event"
     }
 ]
-
-export default KlerosLiquidABI
