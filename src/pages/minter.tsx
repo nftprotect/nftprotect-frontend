@@ -102,7 +102,7 @@ const MinterPage: NextPage = () => {
 
     useEffect(() => {
         setBaseUrl(window.location.origin)
-    }, [active, account])
+    }, [])
 
 
     return (
