@@ -26,7 +26,7 @@ export const useMinters = () => {
             console.error('Contract for simple minter 721 not found!')
             return undefined
         }
-    }, [currentChain])
+    }, [currentChain, active])
 
     const minter1155Contract = useMemo(() => {
         const address = simpleMinters.find(it => it.chainId === currentChain?.id)?.contracts?.ERC1155
@@ -40,7 +40,7 @@ export const useMinters = () => {
             console.error('Contract for simple minter 721 not found!')
             return undefined
         }
-    }, [currentChain])
+    }, [currentChain, active])
 
     const mint = async ( 
         type: 'ERC721'|'ERC1155',
