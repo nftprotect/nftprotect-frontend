@@ -20,7 +20,6 @@ const linguiConfig = {
             include: [
                 'src/pages', 
                 'src/components',
-                'src/translations/languages.ts'
             ]
         }
     ],
