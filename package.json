@@ -58,5 +58,16 @@
     "@lingui/loader": "^4.6.0",
     "@lingui/macro": "^4.6.0",
     "@lingui/swc-plugin": "^4.0.4"
+  },
+  "peerDependencies": {
+    "@lingui/macro": "4"
+  },
+  "peerDependenciesMeta": {
+    "@swc/core": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    }
   }
 }

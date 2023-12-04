@@ -23,7 +23,7 @@ import { Trans, t } from "@lingui/macro";
 import { GetStaticProps } from "next";
 import { useIPFSContext } from "../context/IPFSContextProvider";
 import { useEffect, useState } from "react";
-import { loadTranslation } from "../utils/lingui";
+import { loadTranslation } from '../utils/lingui';
 import NotificationsLoader from "../components/notifications/NotificationsLoader";
 import Head from "next/head";
 import ConnectButton from "../components/ConnectButton";
