@@ -6,11 +6,7 @@ import nftProtectTheme from '../theme/index'
 import { AppContextProvider } from '../context/AppContextProvider'
 import { NotificationContextProvider } from '../context/NotificationContextProvider'
 import { IPFSContextProvider } from '../context/IPFSContextProvider'
-import type { I18n } from '@lingui/core'
-import { i18n } from '@lingui/core'
-import { en, ru } from 'make-plural/plurals'
-import { useRouter } from 'next/router'
-import { useRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import { I18nProvider } from '@lingui/react'
 import '@fontsource/lexend/400.css'
 import '@fontsource/lexend/600.css'
@@ -20,17 +16,8 @@ import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
 import GoogleAnalytics from '../components/GoogleAnalytics'
 import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { useLinguiInit } from '../utils/lingui';
 import ccTheme from '../theme/ck_theme.json';
-
-function initTranslation(i18n: I18n): void {
-    i18n.loadLocaleData({
-        'en-US': { plurals: en },
-        'ru-RU': { plurals: ru },
-        pseudo: { plurals: en }
-    })
-}
-
-initTranslation(i18n);
 
 const chains = supportedChains.map(it => it.wagmiId)
 const connectKitConfig = getDefaultConfig({
@@ -50,25 +37,8 @@ const connectKitConfig = getDefaultConfig({
 const config = createConfig(connectKitConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const router = useRouter()
-    const locale = router.locale || router.defaultLocale || ''
-    const firstRender = useRef(true)
 
-    if (pageProps.translation && firstRender.current) {
-        //load the translations for the locale
-        i18n.load(locale, pageProps.translation)
-        i18n.activate(locale)
-        // render only once
-        firstRender.current = false
-    }
-
-    // listen for the locale changes
-    useEffect(() => {
-        if (pageProps.translation) {
-            i18n.load(locale, pageProps.translation)
-            i18n.activate(locale)
-        }
-    }, [locale, pageProps.translation])
+    const i18n = useLinguiInit(pageProps.translation);
 
     useEffect(() => {
         console.log('ENVIRONMENT:', process.env.NODE_ENV)
