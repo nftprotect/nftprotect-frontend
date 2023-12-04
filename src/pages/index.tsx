@@ -162,9 +162,7 @@ const Home: NextPage = () => {
                                         letterSpacing={{ base: "0.04em" }}
                                         textAlign="center"
                                     >
-                                        <Trans>
-                                            Connect your wallet<br></br>& get protected
-                                        </Trans>
+                                        <Trans>Connect your wallet<br/>& get protected</Trans>
                                     </Text>
                                     <Box mt={10}>
                                         <Box w={{ base: "14rem", sm: "16rem" }}>
