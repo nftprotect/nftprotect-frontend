@@ -1,18 +1,30 @@
-module.exports = {
-    locales: ['en-US', 'ru-RU', 'pseudo'],
+const { formatter } = require("@lingui/format-po")
+
+const locales = ["en-us", "ru-ru"]
+
+if (process.env.NODE_ENV !== "production") {
+  locales.push("pseudo")
+}
+
+/** @type {import('@lingui/conf').LinguiConfig} */
+const linguiConfig = {
+    locales,
     pseudoLocale: 'pseudo',
-    sourceLocale: 'en-US',
+    sourceLocale: 'en-us',
     fallbackLocales: {
-        default: 'en-US'
+        default: 'en-us'
     },
     catalogs: [
         {
             path: 'src/locales/{locale}/messages',
-            include: ['src/pages', 'src/components']
+            include: [
+                'src/pages', 
+                'src/components',
+                'src/translations/languages.ts'
+            ]
         }
     ],
-    extractBabelOptions: {
-        plugins: ["@lingui/babel-plugin-transform-js", "@lingui/babel-plugin-transform-react"],
-    },
-    format: 'po'
+    format: formatter({ origins: false })
 }
+
+module.exports = linguiConfig

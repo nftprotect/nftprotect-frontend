@@ -17,8 +17,8 @@ export const LocaleMenu = () => {
     )
 
     const languages: { [key: string]: string } = {
-        'en-US': t`English`,
-        'ru-RU': t`Russian`,
+        'en-us': t`English`,
+        'ru-ru': t`Russian`,
     }
 
     // enable 'pseudo' locale only for development environment
@@ -40,18 +40,18 @@ export const LocaleMenu = () => {
             >
                 { languages[locale] }
             </MenuButton>
-                <MenuList>
-                    { Object.keys(languages).map((locale) => {
-                        return (
-                            <MenuItem
-                                key={locale}
-                                value={locale} 
-                                onClick={(e: any) => setLocale(e.target.value)}
-                            >
-                                { languages[locale] }
-                            </MenuItem>
-                    )}) }
-                </MenuList>
+            <MenuList>
+                { Object.keys(languages).map((locale) => {
+                    return (
+                        <MenuItem
+                            key={locale}
+                            value={locale} 
+                            onClick={(e: any) => setLocale(e.target.value)}
+                        >
+                            { languages[locale] }
+                        </MenuItem>
+                )}) }
+            </MenuList>
         </Menu>
     )
 }
