@@ -500,7 +500,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         
                                         <Link href='#' isExternal rel="noreferrer" textDecoration="underline" cursor="pointer">
                                             <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                                <Trans values={{disputeId}}>case {disputeId?.toString()}</Trans>
+                                                <Trans>case {disputeId?.toString()}</Trans>
                                             </Text>
                                         </Link>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
