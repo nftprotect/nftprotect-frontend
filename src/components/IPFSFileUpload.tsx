@@ -10,7 +10,10 @@ import {
 } from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
 import IPFSUpload from '../classes/IPFSUpload';
-import all from 'it-all'
+import all from 'it-all';
+import { unixfs } from '@helia/unixfs';
+import { createHelia } from 'helia';
+
 
 interface UploaderInitialData {
     multiple?: boolean,
@@ -29,7 +32,8 @@ export const IPFSFileUpload = ({
     fileTypes,
     fileName // you can set uploaded file name for single file upload
 } : UploaderInitialData ) => {
-    const { ipfs } = useIPFSContext()
+    // const { ipfs } = useIPFSContext()
+    //const { helia, isOnline } = useIPFSContext()
     const [loading, setLoading] = useState<boolean>(false)
     const [loadedFiles, setLoadedFiles] = useState<File|FileList>()
     const [uploadedFiles, setUploadedFiles] = useState<IPFSUpload>()
@@ -39,37 +43,52 @@ export const IPFSFileUpload = ({
             console.error('No file attached')
             return
         }
-
-        if (ipfs) {
+        const helia = await createHelia()
+    
+        if (helia) {
+            const fs = unixfs(helia)
+            let result
+            let wrappedWithDirectory = false
+    
             if (multiple) {
                 files = files as FileList
-                const result = await all( ipfs.addAll(
-                    Array.from(files).map((file: File) => {
+                const fileEntries = await Promise.all(
+                    Array.from(files).map(async (file: File) => {
+                        const fileContent = await file.arrayBuffer()
                         return {
                             path: file.name,
-                            content: file
+                            content: new Uint8Array(fileContent)
                         }
-                    }
-                ), { wrapWithDirectory: true }))
-                return {
-                    fileNames: Array.from(files).map(file => file.name),
-                    wrappedWithDirectory: true,
-                    uploadResult: result
+                    })
+                )
+                result = []
+                for await (const entry of fs.addAll(fileEntries, { wrapWithDirectory: true })) {
+                    result.push(entry)
                 }
+                wrappedWithDirectory = true
             } else {
                 const file = files as File
-                const result = await ipfs.add({
-                    path: file.name,
-                    content: file
-                }, { wrapWithDirectory: true })
-                return {
-                    fileName: file.name,
-                    wrappedWithDirectory: true,
-                    uploadResult: result
+                const fileContent = await file.arrayBuffer()
+                const cid = await fs.addBytes(new Uint8Array(fileContent))
+                result = {
+                    cid
                 }
             }
+            console.log('UPLOAD RESULT RAW', result)
+            let fileNames: string[];
+            if (files instanceof File) {
+                fileNames = [files.name];
+            } else {
+                fileNames = Array.from(files).map(file => file.name);
+            }
+    
+            return {
+                fileNames,
+                wrappedWithDirectory,
+                uploadResult: result
+            }
         } else {
-            throw Error('IPFS client not configured!')
+            throw Error('Helia client not configured!')
         }
     }
 
@@ -89,6 +108,7 @@ export const IPFSFileUpload = ({
         if (loadedFiles) {
             setLoading(true)
             const result = await uploadFile(loadedFiles)
+            console.log('UPLOAD RESULT', result)
             if (result) {
                 const ipfsUpload = new IPFSUpload(result)
                 setUploadedFiles(ipfsUpload)

@@ -48,14 +48,7 @@ const UploaderPage: NextPage = () => {
     const [imageUpload, setImageUpload] = useState<IPFSUpload>()
     const [ fileName, setFileName ] = useState<string>()
 
-    const { setBaseUrl } = useIPFSContext()
-    const { ipfs } = useIPFSContext()
-
     const handleNameChange: ChangeEventHandler<HTMLInputElement> = (event) => setFileName(event.target.value)
-
-    useEffect(() => {
-        setBaseUrl(window.location.origin)
-    }, [])
 
     return (
         <>
@@ -139,7 +132,7 @@ const UploaderPage: NextPage = () => {
                                         <IPFSFileUpload 
                                             returnUploadedFiles={ setImageUpload }
                                             fileTypes={["JPG", "PNG", "GIF", "PDF", "RTF", "JSON"]}
-                                            multiple={false}
+                                            multiple={true}
                                             fileName={fileName}
                                         />
                                     </Box>

@@ -44,11 +44,11 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Home: NextPage = () => {
     const { active, baseTokenPrice, currentChain } = useAppContext();
     const { notificationsCount } = useNotifications();
-    const { setBaseUrl } = useIPFSContext();
+    // const { setBaseUrl } = useIPFSContext();
     const [ blackBoxClosed, setBlackBoxClosed ] = useState<Boolean>(false)
 
     useEffect(() => {
-        setBaseUrl(window.location.origin);
+        // setBaseUrl(window.location.origin);
         currentChain &&
             console.log(`Current ${currentChain.symbol} price is ${baseTokenPrice}`);
     }, [baseTokenPrice]);
