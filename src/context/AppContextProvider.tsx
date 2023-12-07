@@ -6,7 +6,6 @@ import {
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
-import DynamicArbitratorRegistryABI from '../abi/DynamicArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../config";
 import { BaseProvider, Web3Provider } from '@ethersproject/providers'
@@ -26,7 +25,6 @@ export interface AppContextInterface {
     currentChain: any | undefined,
     nftProtectContract: Contract,
     arbRegistryContract: Contract,
-    dynamicArbRegistryContract: Contract,
     referrerAddress: string,
     didRegistered: boolean | undefined,
     currentBlock: number | undefined,
@@ -43,7 +41,6 @@ interface AppState {
     nftProtectContract: Contract,
     userRegistryContract: Contract,
     arbRegistryContract: Contract,
-    dynamicArbRegistryContract: Contract,
     couponsContract: Contract,
     client: WalletClient|PublicClient,
     library: BaseProvider
@@ -82,7 +79,6 @@ export function AppContextProvider({ children }:any) {
         nftProtectContract: new Contract(nullAddress, NFTProtectABI, publicProvider),
         userRegistryContract: new Contract(nullAddress, UserRegistryABI, publicProvider),
         arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, publicProvider),
-        dynamicArbRegistryContract: new Contract(nullAddress, DynamicArbitratorRegistryABI, publicProvider),
         couponsContract: new Contract(nullAddress, ERC20ABI, publicProvider)
     })
 
@@ -170,7 +166,6 @@ export function AppContextProvider({ children }:any) {
             nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
             userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
             arbRegistryContract: new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, signer || library),
-            dynamicArbRegistryContract: new Contract(currentChain?.dynamicArbRegistryContractAddress || nullAddress, DynamicArbitratorRegistryABI, signer || library),
             couponsContract: new Contract(currentChain?.couponsContractAddress || nullAddress, ERC20ABI, signer || library)
         })
     }

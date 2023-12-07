@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-12-04 16:22+0700\n"
+"POT-Creation-Date: 2023-12-07 16:44+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pseudo\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 msgid "(Paid separately)"
 msgstr ""
@@ -25,36 +19,6 @@ msgstr ""
 msgid "404"
 msgstr ""
 
-msgid "A name of your arbitartor"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Add collections"
-msgstr ""
-
-msgid "Add collections to arbitrator"
-msgstr ""
-
-msgid "Add new arbitrator"
-msgstr ""
-
-msgid "Add operations"
-msgstr ""
-
-msgid "Add operations to arbitrator"
-msgstr ""
-
-msgid "Address"
-msgstr ""
-
-msgid "Address already registered"
-msgstr ""
-
-msgid "All available"
-msgstr ""
-
 msgid "All your NFTs"
 msgstr ""
 
@@ -64,49 +28,16 @@ msgstr ""
 msgid "Always make sure the URL is nftprotect.app"
 msgstr ""
 
-msgid "Amount of minted NFTs"
-msgstr ""
-
-msgid "An address of your arbitrator contract"
-msgstr ""
-
 msgid "Answer request"
 msgstr ""
 
-msgid "Any"
-msgstr ""
-
 msgid "Any other relevant information: Any other information that may be relevant to the dispute, such as information about the platform where the theft occurred or any security breaches that may have led to the theft."
-msgstr ""
-
-msgid "Arbitrator {0}"
-msgstr ""
-
-msgid "Arbitrator deleted successfully!"
-msgstr ""
-
-msgid "Arbitrator management"
-msgstr ""
-
-msgid "Arbitrator name is required"
-msgstr ""
-
-msgid "Arbitrator's contract:"
-msgstr ""
-
-msgid "Arbitrator's name:"
-msgstr ""
-
-msgid "Are you sure to delete arbitrator?"
 msgstr ""
 
 msgid "Are you sure want to transfer original NFT to"
 msgstr ""
 
 msgid "Are you sure?"
-msgstr ""
-
-msgid "At least one extraData must be specified"
 msgstr ""
 
 msgid "Back"
@@ -125,9 +56,6 @@ msgid "Bona fide transfer"
 msgstr ""
 
 msgid "case {0}"
-msgstr ""
-
-msgid "Cases admissible for arbitration"
 msgstr ""
 
 msgid "Chain"
@@ -163,16 +91,7 @@ msgstr ""
 msgid "Connect your wallet<0/>& get protected"
 msgstr ""
 
-msgid "Connect your wallet<0/>& register"
-msgstr ""
-
-msgid "Contract address is required"
-msgstr ""
-
 msgid "Copied!"
-msgstr ""
-
-msgid "Copy"
 msgstr ""
 
 msgid "Court"
@@ -184,19 +103,10 @@ msgstr ""
 msgid "Date of creation"
 msgstr ""
 
-msgid "Delete"
-msgstr ""
-
-msgid "Delete arbitrator"
-msgstr ""
-
 msgid "Describe the file…"
 msgstr ""
 
 msgid "Describe the situation in details…"
-msgstr ""
-
-msgid "Describe your NFT in details…"
 msgstr ""
 
 msgid "Description is required"
@@ -241,12 +151,6 @@ msgstr ""
 msgid "During the voting period, Kleros Jurors make a determination and cast their votes in favor of one of the disputing parties."
 msgstr ""
 
-msgid "Edit"
-msgstr ""
-
-msgid "Edit arbitrator's operations"
-msgstr ""
-
 msgid "Enforce the ruling"
 msgstr ""
 
@@ -260,12 +164,6 @@ msgid "Enter the ID*"
 msgstr ""
 
 msgid "Enter the token smart contract address"
-msgstr ""
-
-msgid "Extra Datas must contain the same number of lines as Operations"
-msgstr ""
-
-msgid "ExtraData not specified"
 msgstr ""
 
 msgid "Fail!"
@@ -304,18 +202,6 @@ msgstr ""
 msgid "Have you lost<0/> access to your pNFT?"
 msgstr ""
 
-msgid "Here you can mint any NFTs for your purposes"
-msgstr ""
-
-msgid "Here you can register new arbitrator or change the parameters of the existing one"
-msgstr ""
-
-msgid "Here you can upload files to IPFS"
-msgstr ""
-
-msgid "Here's a complete description"
-msgstr ""
-
 msgid "If you did not transfer the pNFT to"
 msgstr ""
 
@@ -328,13 +214,7 @@ msgstr ""
 msgid "If you've missed including any evidence, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing."
 msgstr ""
 
-msgid "If you've missed including any evidences, you have up to 48 hours to add additional evidence to your dispute while the evidence collection phase is still ongoing via the provided link"
-msgstr ""
-
 msgid "In testnets, you need to manually <0><1>move the case</1></0> from one stage to another."
-msgstr ""
-
-msgid "Incorrect address"
 msgstr ""
 
 msgid "Incorrect chainId"
@@ -350,9 +230,6 @@ msgid "Invalid"
 msgstr ""
 
 msgid "Invalid network state"
-msgstr ""
-
-msgid "IPFS File Uploader"
 msgstr ""
 
 msgid "is still the owner of the orginal NFT. He can now sue you for Ownership restoration in dispute of loss of the pNFT."
@@ -379,19 +256,7 @@ msgstr ""
 msgid "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 msgstr ""
 
-msgid "Mint"
-msgstr ""
-
 msgid "More details on dispute #{0}."
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Name of your file"
-msgstr ""
-
-msgid "Name of your NFT"
 msgstr ""
 
 msgid "Name:"
@@ -400,28 +265,13 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-msgid "New cases won't be opened with this arbitrator"
-msgstr ""
-
-msgid "New extraData is set"
-msgstr ""
-
 msgid "NFT image"
-msgstr ""
-
-msgid "NFT Protect • Arbitrator Registry"
 msgstr ""
 
 msgid "NFT Protect • Dapp"
 msgstr ""
 
 msgid "NFT Protect • Incorrect requestId"
-msgstr ""
-
-msgid "NFT Protect • IPFS Uploader"
-msgstr ""
-
-msgid "NFT Protect • NFT Minter"
 msgstr ""
 
 msgid "NFT Protect • pNFT Validator"
@@ -454,12 +304,6 @@ msgstr ""
 msgid "Open the court's page in Kleros"
 msgstr ""
 
-msgid "Operations removed successfully!"
-msgstr ""
-
-msgid "Operations updated successfully!"
-msgstr ""
-
 msgid "Original NFT creation date:"
 msgstr ""
 
@@ -487,49 +331,19 @@ msgstr ""
 msgid "Pay the dispute"
 msgstr ""
 
-msgid "Pending Action"
-msgstr ""
-
-msgid "Pending Requests"
-msgstr ""
-
 msgid "Pending..."
 msgstr ""
 
 msgid "Phishing attack"
 msgstr ""
 
-msgid "Please check operations you want to remove"
-msgstr ""
-
-msgid "Please connect your wallet to mint <0/>an NFT"
-msgstr ""
-
-msgid "Please connect your wallet to register <0/>a new arbitrator"
-msgstr ""
-
 msgid "Please fill the description"
-msgstr ""
-
-msgid "Please fill the form to add collections"
-msgstr ""
-
-msgid "Please fill the form to add operations"
-msgstr ""
-
-msgid "Please fill the form to create an NFT"
-msgstr ""
-
-msgid "Please fill the form to register"
 msgstr ""
 
 msgid "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court."
 msgstr ""
 
 msgid "Please note that when you receive the original NFT, pNFT will be burned."
-msgstr ""
-
-msgid "Please specify new extraDatas for operations"
 msgstr ""
 
 msgid "Please, allow access and <0/>transfer of your NFT"
@@ -577,28 +391,7 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-msgid "Register"
-msgstr ""
-
-msgid "Register as arbitrator"
-msgstr ""
-
-msgid "Register new arbitrator"
-msgstr ""
-
-msgid "Registered Arbitrators"
-msgstr ""
-
-msgid "Remove arbitrator's operations"
-msgstr ""
-
-msgid "Remove operations"
-msgstr ""
-
 msgid "Request <0/> the original NFT?"
-msgstr ""
-
-msgid "Request for arbitrator {0}"
 msgstr ""
 
 msgid "Request original"
@@ -611,9 +404,6 @@ msgid "Request sent to the original NFT owner. Please wait for the transfer of r
 msgstr ""
 
 msgid "Request sent!"
-msgstr ""
-
-msgid "Request type:"
 msgstr ""
 
 msgid "Restore original"
@@ -640,16 +430,10 @@ msgstr ""
 msgid "Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited."
 msgstr ""
 
-msgid "Select a file to upload"
-msgstr ""
-
 msgid "Sending to an incorrect address"
 msgstr ""
 
 msgid "Show all"
-msgstr ""
-
-msgid "Simple NFT Minter"
 msgstr ""
 
 msgid "Smart contract:"
@@ -668,15 +452,6 @@ msgid "Submitted by"
 msgstr ""
 
 msgid "Success"
-msgstr ""
-
-msgid "Supported collections:"
-msgstr ""
-
-msgid "Supported contracts"
-msgstr ""
-
-msgid "Supported operations:"
 msgstr ""
 
 msgid "Switch network"
@@ -718,13 +493,7 @@ msgstr ""
 msgid "The final ruling has been rendered and becomes binding."
 msgstr ""
 
-msgid "The final step is to pay for the arbitration fees."
-msgstr ""
-
 msgid "The final step to open a dispute is to pay for the arbitration fees."
-msgstr ""
-
-msgid "The final step to register is to pay for the arbitration fees."
 msgstr ""
 
 msgid "The jurors refused to arbitrate the dispute"
@@ -880,16 +649,10 @@ msgstr ""
 msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
 msgstr ""
 
-msgid "Type of your NFT"
-msgstr ""
-
 msgid "Under dispute"
 msgstr ""
 
 msgid "Unfortunately, you have lost the dispute #{0}"
-msgstr ""
-
-msgid "unknown"
 msgstr ""
 
 msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"
@@ -941,9 +704,6 @@ msgid "Validate"
 msgstr ""
 
 msgid "Verify"
-msgstr ""
-
-msgid "View on Etherscan"
 msgstr ""
 
 msgid "Wait for transaction to confirm..."
@@ -1003,12 +763,6 @@ msgstr ""
 msgid "Write the address of the protocol smart contract"
 msgstr ""
 
-msgid "Write your extraData for every supported operation (each in a new line)"
-msgstr ""
-
-msgid "Write your supported contractAddresses (each in a new line)"
-msgstr ""
-
 msgid "Yes"
 msgstr ""
 
@@ -1030,12 +784,6 @@ msgstr ""
 msgid "You cancelled a transaction"
 msgstr ""
 
-msgid "You did not register any arbitrator yet"
-msgstr ""
-
-msgid "You have no requests yet"
-msgstr ""
-
 msgid "You have received a pNFT!"
 msgstr ""
 
@@ -1043,9 +791,6 @@ msgid "You have special NFT Protect coupon! It allows you to protect of your NFT
 msgstr ""
 
 msgid "You have the option to file an appeal within {hoursLeft} hours"
-msgstr ""
-
-msgid "You have to choose at least one operation"
 msgstr ""
 
 msgid "You may file an appeal within {hoursLeft} hours"
@@ -1070,9 +815,6 @@ msgid "Your pNFT has been burned."
 msgstr ""
 
 msgid "Your pNFT remains unchanged. We suggest contacting the NFT owner to request the original version."
-msgstr ""
-
-msgid "Your submission sent"
 msgstr ""
 
 msgid "Сollection:"

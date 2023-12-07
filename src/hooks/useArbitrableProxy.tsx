@@ -2,7 +2,6 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { Contract } from "@ethersproject/contracts";
 import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
-import { nftpDeployBlockNumber } from "../config";
 import { maxBlocksPerRequest } from "../config";
 import { BigNumber } from '@ethersproject/bignumber';
 import KlerosLiquidABI from "../abi/KlerosLiquidABI";
@@ -92,10 +91,10 @@ export const useArbitrableProxy = () => {
     const listEvidences = async ( 
         arbitratorId: number, 
         internalDisputeId: BigNumber, 
-        blockNumber: number|undefined = undefined 
+        blockNumber: number
     ): Promise<EvidenceSubmission[]> => {
         const contract = await getArbitrableProxy(arbitratorId)
-        const startBlock = blockNumber || nftpDeployBlockNumber
+        const startBlock = blockNumber
         const endBlock = currentBlock || await library.getBlockNumber()
         const ranges = []
         let i = startBlock
