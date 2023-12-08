@@ -322,6 +322,7 @@ const RequestPage: NextPage = () => {
                     claimantAddress={claimantAddress}
                     defendantAddress={defendantAddress}
                     evidences={evidences}
+                    contractAddress={evidences ? evidences[0]?.evidenceJson?.protocolAddress : undefined}
                     disputeData={disputeData}
                     disputeIsRuled={ isRuled }
                     requestType={requestData.reqtype}
