@@ -490,7 +490,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     name: `Evidence of ${klerosCaseFormTitle}`,
                                     description: evidenceData.description,
                                     evidenceSide: 0,
-                                    protocolAddress: (lostReason === 'protocol breach') && evidenceData.protocolAddress
+                                    protocolAddress: (lostReason === 'protocol breach') ? evidenceData.protocolAddress : undefined
                                 }}
                             />}
                         </SwitchableOutside>
