@@ -3,7 +3,6 @@ import {
     Box,
     Flex,
     Text,
-    Textarea,
     Link,
     FormControl,
     FormLabel,
@@ -16,36 +15,29 @@ import {
     PopoverContent,
     PopoverArrow,
     PopoverBody,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    AccordionIcon,
     Button,
-    IconButton,
+    Divider,
 } from '@chakra-ui/react'
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
-import { ExternalLinkIcon, ArrowDownIcon, ArrowUpIcon, MinusIcon, AddIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
 import NFT, { RequestStatus } from '../../../../classes/NFT';
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
-import { addTimestampToDate, formatAddress, timestampToDate } from '../../../../utils/helpers';
+import { formatAddress, timestampToDate } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
-import KlerosCaseLabel from './KlerosCaseLabel';
-import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useAppContext } from '../../../../context/AppContextProvider';
 import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 import { NFTEvents } from '../../../../classes/NFT';
-import { DisputeGraphData } from '../../../../hooks/useArbitratorGraph';
-import useTimeCounter from '../../../../hooks/useTimeCounter';
+import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import { ReqType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 import AddressDisplay from '../../../AddressDisplay';
+import KlerosCaseSteps from './KlerosCaseSteps';
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -145,17 +137,7 @@ const KlerosCaseContent = ({
     const [ acquireTx, setAcquireTx ] = useState<string>()
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
-    // Current step
-    const step = useMemo(() => {
-        return (disputeData?.period !== undefined) ? steps[disputeData.period] : undefined
-    }, [disputeData])
-    const stepKey = useMemo(() => {
-        return step?.key
-    }, [step])
-    // Steps for header
-    const { nextStep, prevStep, reset, activeStep, setStep} = useSteps({
-        initialStep: 0,
-    });
+
     const { library, account, active, currentChain } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
@@ -177,11 +159,6 @@ const KlerosCaseContent = ({
     const defendantTx1 = claimantIsPNftOwner() ? acquireTx : mintTx
     // Description of the first evidence is a case description.
     const caseDescription = evidences && evidences[0] ? evidences[0].evidenceJson.description : ''
-
-    const { formattedTime } = useTimeCounter(
-        disputeData?.lastPeriodChange && step ?
-        addTimestampToDate(disputeData.lastPeriodChange, step.timeDiff) : 
-        new Date())
 
     // Finds pNFT minting TX
     const findPNftMintingTx = () => {
@@ -312,11 +289,6 @@ const KlerosCaseContent = ({
         }
     }, [nft, account, library])
 
-    useEffect(() => {
-        const idx = stepsUnique.findIndex(item => item.key === stepKey)
-        setStep(idx)
-    }, [stepKey])
-
     const mainContent = <>
         <Flex flexDirection="column" flexWrap="nowrap" my={{base: "34px"}}>
             <Text fontSize="30px" lineHeight="38px" fontWeight="600" color="text.base">
@@ -413,10 +385,10 @@ const KlerosCaseContent = ({
             </Flex>
             
             {/* Visible only on step 3 "Apealing period" and step 4 "Decision period" */}
-            { (stepKey === 'Decision period' || stepKey === 'Apealing period') &&
+            { (disputeData?.period === Period.Execution || disputeData?.period === Period.Appeal) &&
                 <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
                     { ((): JSX.Element => {
-                        const isAppealingPeriod: boolean = stepKey === 'Apealing period'
+                        const isAppealingPeriod: boolean = disputeData?.period === Period.Appeal
                         const enforced: boolean = (requestStatus === RequestStatus.Accepted || requestStatus === RequestStatus.Rejected)
                         const appealButton = <Flex w={{base: "200px"}}>
                             <Button variant="primaryLight">
@@ -848,7 +820,8 @@ const KlerosCaseContent = ({
                 </>
             }
             {/* Visible only on step 1 "Evidence period" */}
-            { (stepKey === 'Evidence period') && <Flex mt={{base: "80px"}} alignItems="center" justifyContent="center">
+            { (disputeData?.period === Period.Evidence || disputeData?.period === Period.Commit) && 
+                <Flex mt={{base: "80px"}} alignItems="center" justifyContent="center">
                     <Button 
                         variant="primaryLight" 
                         w={{base: "200px"}} 
@@ -869,48 +842,11 @@ const KlerosCaseContent = ({
     </>
 
     return (<>
-        { stepKey && <Steps
-            borderBottom="1px solid #ADADAD"
-            variant={"circles"} 
-            colorScheme="brand.light"
-            activeStep={activeStep}
-            // onClickStep={(i) => {
-            //     setStep(i);
-            // }}
-            py="30px"
-            sx={{
-                "& .cui-steps__step-icon-container": {
-                    w: "26px",
-                    h: "26px",
-                    bg: "brand.light", 
-                    // {activeStep === 0}
-                },
-                ".cui-steps__step-icon-container span": {
-                    fontFamily: "Open Sans",
-                    fontWeight: "600",
-                    fontSize: "14px",
-                    lineHeight: "19px",
-                    color: "#FFF"
-                },
-                "& .cui-steps__horizontal-step": {
-                    color: "#FFF",
-                    "::after": {
-                        height: "1px",
-                        bg: "#ADADAD"
-                    }
-                },
-
-            }}
-        >
-            
-            {stepsUnique.map(({ key, description, timeDiff }) => (
-                <Step 
-                    key={key}
-                    label={ <KlerosCaseLabel labelKey={key} /> } 
-                    description={ (key === stepKey) ? (timeDiff ? formattedTime : '') : description }
-                />
-            ))}
-        </Steps> }
+        <KlerosCaseSteps
+            period={disputeData?.period}
+            lastPeriodChange={disputeData?.lastPeriodChange}
+        />
+        <Divider pt='1em' borderColor='gray'/>
         { mainContent }
     </>)
 }
