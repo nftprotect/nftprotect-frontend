@@ -87,42 +87,6 @@ const KlerosCaseContent = ({
     disputeIsRuled
 }: CaseContentInitialData) => {
 
-    // Step content mapping
-    // Label refers to name of the step and displayed on steps bar
-    // description is displayed under label. 
-    // TODO replace descriptions with counters!!!
-    const steps = [
-        { 
-            key: "Evidence period", 
-            description:"1d 06h 09m",
-            timeDiff: 3 * 24 * 60 * 60 * 1000 // 3 days
-        }, {
-            key: "Evidence period", // Actually it's a commit period
-            description:"1d 06h 09m",
-            timeDiff: 3 * 24 * 60 * 60 * 1000 // 3 days
-        }, { 
-            key: "Voting period", 
-            description:"3d 18h 00m",
-            timeDiff: 3 * 24 * 60 * 60 * 1000 // 3 days
-        }, { 
-            key: "Apealing period", 
-            description:"3d 12h 00m",
-            timeDiff: 3 * 24 * 60 * 60 * 1000 // 3 days
-        }, { 
-            key: "Decision period",
-            timeDiff: 0
-        }
-    ]
-
-    const stepsUnique = useMemo(() => {
-        const processed: string[] = []
-        return steps.filter((item) => {
-            const counted = processed.includes(item.key)
-            processed.push(item.key)
-            return !counted
-        })
-    }, [steps])
-
     const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction

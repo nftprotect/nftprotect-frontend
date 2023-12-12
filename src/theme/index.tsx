@@ -6,7 +6,6 @@ import { styles } from './styles'
 // Foundational style overrides
 import { colors } from './foundations/colors'
 
-import { StepsTheme as Steps } from 'chakra-ui-steps';
 import { menuTheme } from './components/Menu';
 import { cardTheme } from './components/Card';
 import { buttonTheme } from './components/Button';
@@ -51,7 +50,6 @@ const nftProtectTheme = extendTheme({
 
     // Component style overrides
     components: {
-        Steps,
         Menu: menuTheme,
         Card: cardTheme,
         Button: buttonTheme,
