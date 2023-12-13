@@ -73,7 +73,7 @@ export const IPFSFileUpload = ({
     }
 
     const setLoadedFilesWithFileName = (files: File|FileList) => {
-        if (!multiple && files instanceof File) {
+        if (!multiple && (files instanceof File)) {
             if (fileName) {
                 const blob = files.slice(0, files.size, files.type)
                 const newFile = new File([blob], fileName, {type: files.type})
@@ -81,7 +81,7 @@ export const IPFSFileUpload = ({
             } else {
                 setLoadedFiles([files])
             }
-        } else if (files instanceof FileList) {
+        } else if (multiple && (files instanceof FileList)) {
             setLoadedFiles([...loadedFiles, ...Array.from(files)]);
         }
     }
