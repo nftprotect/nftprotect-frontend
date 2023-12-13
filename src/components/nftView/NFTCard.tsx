@@ -330,17 +330,25 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                     >
                         <Flex
                             position="relative"
+                            width="100%"
                             pb="100%"
                             overflow="hidden"
                             mb={{base: "1.25rem"}}
                             justifyContent="center"
+                            alignItems="center"
                         >
                             <Image
                                 src={ nft.thumbnail }
                                 position="absolute"
+                                top="0"
+                                right="0"
+                                bottom="0"
+                                left="0"
+                                margin="auto"
                                 borderRadius="4px"
-                                h="100%"
-                                w="100%"
+                                maxH={"100%"}
+                                maxW={"100%"}
+                                objectFit="contain"
                             />
                         </Flex>
 
