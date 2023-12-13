@@ -31,10 +31,10 @@ export const IPFSFileUpload = ({
 } : UploaderInitialData ) => {
     const { ipfs } = useIPFSContext()
     const [loading, setLoading] = useState<boolean>(false)
-    const [loadedFiles, setLoadedFiles] = useState<File|FileList>()
+    const [loadedFiles, setLoadedFiles] = useState<File[]>([])
     const [uploadedFiles, setUploadedFiles] = useState<IPFSUpload>()
 
-    const uploadFile = async (files: File|FileList) => {
+    const uploadFile = async (files: File[]) => {
         if (!files) {
             console.error('No file attached')
             return
@@ -42,7 +42,6 @@ export const IPFSFileUpload = ({
 
         if (ipfs) {
             if (multiple) {
-                files = files as FileList
                 const result = await all( ipfs.addAll(
                     Array.from(files).map((file: File) => {
                         return {
@@ -57,7 +56,7 @@ export const IPFSFileUpload = ({
                     uploadResult: result
                 }
             } else {
-                const file = files as File
+                const file = files[0]
                 const result = await ipfs.add({
                     path: file.name,
                     content: file
@@ -78,15 +77,15 @@ export const IPFSFileUpload = ({
             if (files instanceof File) {
                 const blob = files.slice(0, files.size, files.type)
                 const newFile = new File([blob], fileName, {type: files.type})
-                setLoadedFiles(newFile)
+                setLoadedFiles([...loadedFiles, newFile])
             }
-        } else {
-            setLoadedFiles(files)
+        } else if (files instanceof FileList) {
+            setLoadedFiles([...loadedFiles, ...Array.from(files)]);
         }
     }
 
     const returnFileUrl = async () => {
-        if (loadedFiles) {
+        if (loadedFiles.length > 0) {
             setLoading(true)
             const result = await uploadFile(loadedFiles)
             if (result) {
