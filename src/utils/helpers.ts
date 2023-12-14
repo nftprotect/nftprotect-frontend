@@ -1,5 +1,3 @@
-import { hexValue } from '@ethersproject/bytes';
-import { BigNumber } from '@ethersproject/bignumber';
 import { defaultChain } from '../config';
 
 export function formatAddress(value: string, length: number = 4) {

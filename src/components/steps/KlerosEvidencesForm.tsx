@@ -15,10 +15,7 @@ import {
     Input,
 } from '@chakra-ui/react';
 import { Form, Field, Formik } from 'formik';
-import { Info } from '@web3uikit/icons';
 import { Trans, t } from '@lingui/macro';
-import { IPFSFileUpload } from '../IPFSFileUpload';
-import { generateMetaEvidence, KlerosCourts } from '../../utils/kleros';
 import IPFSUpload from '../../classes/IPFSUpload';
 import { useIPFSContext } from '../../context/IPFSContextProvider';
 import Link from 'next/link';
