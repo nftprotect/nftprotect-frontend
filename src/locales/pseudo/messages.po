@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-12-12 17:24+0700\n"
+"POT-Creation-Date: 2023-12-14 14:47+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,6 +73,15 @@ msgstr ""
 msgid "Choose network"
 msgstr ""
 
+msgid "Claimant acquired the pNFT through this transaction:"
+msgstr ""
+
+msgid "Claimant sent pNFT to partner protocol:"
+msgstr ""
+
+msgid "Claimant was the Original Owner of the NFT and insured it through the Protocol:"
+msgstr ""
+
 msgid "Confirm the transaction in the wallet"
 msgstr ""
 
@@ -107,6 +116,12 @@ msgid "Date of creation"
 msgstr ""
 
 msgid "Decision Period"
+msgstr ""
+
+msgid "Defendant acquired the pNFT through this transaction:"
+msgstr ""
+
+msgid "Defendant was the Original Owner of the NFT and insured it through the Protocol:"
 msgstr ""
 
 msgid "Describe the file…"
@@ -226,6 +241,9 @@ msgstr ""
 msgid "In testnets, you need to manually <0><1>move the case</1></0> from one stage to another."
 msgstr ""
 
+msgid "Incorrect address"
+msgstr ""
+
 msgid "Incorrect chainId"
 msgstr ""
 
@@ -313,6 +331,9 @@ msgstr ""
 msgid "Open the court's page in Kleros"
 msgstr ""
 
+msgid "Original NFT"
+msgstr ""
+
 msgid "Original NFT creation date:"
 msgstr ""
 
@@ -329,6 +350,18 @@ msgid "owner refused"
 msgstr ""
 
 msgid "owner unresponsive"
+msgstr ""
+
+msgid "Ownership adjustment in case of bona fide transfer"
+msgstr ""
+
+msgid "Ownership restoration in case of loss of pNFT due to a sending to an incorrect address"
+msgstr ""
+
+msgid "Ownership restoration in case of loss of pNFT in a protocol breach"
+msgstr ""
+
+msgid "Ownership restoration in case of loss of pNFT in phishing attack"
 msgstr ""
 
 msgid "Page doesn't exist or was removed. We suggest you back home."
@@ -382,7 +415,13 @@ msgstr ""
 msgid "Protect NFT"
 msgstr ""
 
+msgid "Protected NFT (pNFT)"
+msgstr ""
+
 msgid "Protecting your asset…"
+msgstr ""
+
+msgid "Protection NFT (pNFT)"
 msgstr ""
 
 msgid "Protocol address is required"
@@ -481,6 +520,24 @@ msgstr ""
 msgid "The Claimant"
 msgstr ""
 
+msgid "The Claimant alleges loss of their pNFT due to a phishing attack."
+msgstr ""
+
+msgid "The Claimant alleges loss of their pNFT due to a protocol breach."
+msgstr ""
+
+msgid "The Claimant alleges loss of their pNFT due to a transaction to an incorrect address."
+msgstr ""
+
+msgid "The Claimant alleges that he purchased the pNFT bona fide but the owner of the original NFT refused to transfer him the original."
+msgstr ""
+
+msgid "The Claimant is the party that has lost the pNFT but retained control of the Original NFT (Original Owner)"
+msgstr ""
+
+msgid "The Claimant is the party that has obtained a pNFT in a bona fide transaction"
+msgstr ""
+
 msgid "The court's decision<0/>is now in effect"
 msgstr ""
 
@@ -488,6 +545,15 @@ msgid "The Defendant"
 msgstr ""
 
 msgid "The defendant is still the owner of the Original NFT.<0/>The pNFT remains intact."
+msgstr ""
+
+msgid "The Defendant is the party that has aquired the pNFT and is challenged."
+msgstr ""
+
+msgid "The Defendant is the party that has insured the Original throught the Protocol (Original Owner)"
+msgstr ""
+
+msgid "The Defendant is the protocol, that lost the pNFT due to breach and is challenged"
 msgstr ""
 
 msgid "The Evidence Period for the dispute #{0} has been started."
@@ -587,6 +653,9 @@ msgid "The pNFT was burned."
 msgstr ""
 
 msgid "The pNFT was burned.<0/>You can protect your NFT<1/>again. We recommend always<2/>keeping you assets<3/>in a secure place."
+msgstr ""
+
+msgid "The pNFT was transfered out of the protocol:"
 msgstr ""
 
 msgid "The pNFT will be burned and the original NFT will be sent to you"

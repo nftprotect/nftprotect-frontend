@@ -20,6 +20,7 @@ const linguiConfig = {
             include: [
                 'src/pages', 
                 'src/components',
+                'src/utils',
             ]
         }
     ],
