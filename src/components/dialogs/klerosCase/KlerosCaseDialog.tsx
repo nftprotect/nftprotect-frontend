@@ -56,6 +56,7 @@ const KlerosCaseDialog = () => {
                     <Container 
                         maxW="1920px"
                         width={"100%"}
+                        mt='2em'
                         // h={"100%"}
                     >
                         { nft && caseData && <KlerosCaseContent
