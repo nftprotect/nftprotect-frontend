@@ -8,7 +8,6 @@ import { useAlchemy } from '../../../hooks/useAlchemy'
 import NFT from '../../../classes/NFT'
 import { useAppContext } from '../../../context/AppContextProvider'
 import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/klerosCase/step/KlerosCaseContent'
-import { metaEvidenceTypes } from '../../../utils/metaEvidence'
 import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../../hooks/useNftProtectGraph'
@@ -54,14 +53,9 @@ const RequestPage: NextPage = () => {
     const [ nft, setNft ] = useState<NFT>()
     const { getNftMetadata } = useAlchemy()
     const { getDispute } = useArbitratorGraph(currentChain?.id || defaultChain, currentChain?.defaultArbitrator || defaultChainArbitrator)
-    //const pageData = metaEvidenceTypes.find(item => item.value === requestData?.)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
     const [ error, setError ] = useState<string>()
-    const metaEvidenceType = useMemo(() => {
-        let meType = requestData?.metaevidence
-        return metaEvidenceTypes.find( item => item.value === meType?.toString() )
-    }, [requestData])
     const { getRequest } = useNftProtectGraph()
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
@@ -276,7 +270,7 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    const allRequiredLoaded = requestData && nft && metaEvidenceType && claimantAddress && defendantAddress
+    const allRequiredLoaded = requestData && nft && claimantAddress && defendantAddress
 
     return (<>
         { currentChain && <Head>
@@ -317,7 +311,7 @@ const RequestPage: NextPage = () => {
                     </Text>
                 </Box>
                 <KlerosCaseContent
-                    metaEvidenceId={parseInt(metaEvidenceType.value)}
+                    metaEvidenceId={requestData.metaevidence}
                     nft={nft}
                     claimantAddress={claimantAddress}
                     defendantAddress={defendantAddress}
@@ -327,7 +321,6 @@ const RequestPage: NextPage = () => {
                     disputeIsRuled={ isRuled }
                     requestType={requestData.reqtype}
                     requestStatus={requestData.status}
-                    pageData={ metaEvidenceType.page }
                 />
             </>}
             {/* Dialogs registration flollowing */}

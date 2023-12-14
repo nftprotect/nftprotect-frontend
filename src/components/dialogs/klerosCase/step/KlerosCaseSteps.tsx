@@ -131,7 +131,7 @@ const KlerosCaseSteps = ({
             passed={ false }
             number={4}
             popoverText={t`The final ruling has been rendered and becomes binding.`}
-            activeText={formattedTime}
+            activeText={''}
             inactiveText={''}
         />
     </Flex>

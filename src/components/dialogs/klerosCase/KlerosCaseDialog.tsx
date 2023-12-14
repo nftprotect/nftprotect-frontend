@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import KlerosCaseContent from './step/KlerosCaseContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
-import { metaEvidenceTypes } from '../../../utils/metaEvidence';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
 import { ReqType } from '../../../hooks/useNftProtectGraph';
 
@@ -24,7 +23,6 @@ const KlerosCaseDialog = () => {
     const { setDialog } = useCallableDialogContext()
     const [ caseData, setCaseData ] = useState<KlerosCaseInitialData>()
     const { nft, metaEvidenceId } = caseData || {}
-    const pageData = metaEvidenceId && metaEvidenceTypes.find((item) => item.value === metaEvidenceId.toString() )?.page
 
     useEffect(() => {
         setDialog('KlerosCaseDialog', {...disclosure, setCaseData})
@@ -60,13 +58,12 @@ const KlerosCaseDialog = () => {
                         width={"100%"}
                         // h={"100%"}
                     >
-                        { nft && caseData && pageData && <KlerosCaseContent
+                        { nft && caseData && <KlerosCaseContent
                             requestType={
                                 caseData.metaEvidenceId === 3 ? 
                                     ReqType.OwnershipAdjustment : 
                                     ReqType.OwnershipRestore
                             }
-                            pageData={pageData}
                             {...caseData}
                         /> }
                     </Container>
