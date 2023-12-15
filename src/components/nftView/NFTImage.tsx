@@ -10,14 +10,16 @@ const NFTImage = ({ nft, setDefaultStyles = true }: { nft: NFT, setDefaultStyles
         my={setDefaultStyles ? {base: "20px"} : undefined}
         justifyContent="center"
         alignItems="center" 
-        h={'100%'}
+        h={setDefaultStyles ? "150px" : '100%'}
+        w={setDefaultStyles ? "150px" : '100%'}
+        maxH='100%'
         >
         <Image 
             src={ nft.thumbnail }
             alt={ nft.title || t`NFT image`}
-            borderRadius="1rem"
-            maxH={setDefaultStyles ? "150px" : '100%'}
-            maxW={setDefaultStyles ? "150px" : '100%'}
+            borderRadius="4px"
+            maxH='100%'
+            maxW='100%'
             objectFit="contain"
         />
     </Flex>
