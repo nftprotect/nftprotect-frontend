@@ -13,7 +13,6 @@ const apiKey = process.env.IPFS_API_KEY
 const auth = apiKey ? ('Basic ' + Buffer.from(apiKey).toString('base64')) : undefined   
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log('CHECK LOG WORKS')
     const proxyConfig:any = {
         target: ipfsProviderUrl,
         changeOrigin: true,
@@ -24,6 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             authorization: auth,
         }    
     }
+    if (!req.headers['x-forwarded-port']) {
+        req.headers['x-forwarded-port'] = '443'
+    }
     console.log('REQUEST:', req.headers, req.body)
-    return req.headers//httpProxyMiddleware(req, res, proxyConfig)
+    return httpProxyMiddleware(req, res, proxyConfig)
 };
