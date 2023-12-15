@@ -23,9 +23,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             authorization: auth,
         }    
     }
+    // Workaround for Vercel
     if (!req.headers['x-forwarded-port']) {
-        req.headers['x-forwarded-port'] = '443'
+        if (req.headers['x-forwarded-proto'] === 'https') {
+            req.headers['x-forwarded-port'] = '443'
+        } else if (req.headers['x-forwarded-proto'] === 'http') {
+            req.headers['x-forwarded-port'] = '80'
+        } else {
+            req.headers['x-forwarded-port'] = ''
+        }
     }
-    console.log('REQUEST:', req.headers, req.body)
     return httpProxyMiddleware(req, res, proxyConfig)
 };
