@@ -25,5 +25,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }    
     }
     console.log('REQUEST:', req.headers, req.body)
-    return httpProxyMiddleware(req, res, proxyConfig)
+    return req.headers//httpProxyMiddleware(req, res, proxyConfig)
 };
