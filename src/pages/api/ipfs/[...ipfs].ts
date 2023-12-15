@@ -13,6 +13,7 @@ const apiKey = process.env.IPFS_API_KEY
 const auth = apiKey ? ('Basic ' + Buffer.from(apiKey).toString('base64')) : undefined   
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    console.log('CHECK LOG WORKS')
     const proxyConfig:any = {
         target: ipfsProviderUrl,
         changeOrigin: true,
