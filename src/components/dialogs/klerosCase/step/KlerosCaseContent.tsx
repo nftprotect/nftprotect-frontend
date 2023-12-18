@@ -157,17 +157,17 @@ const KlerosCaseContent = ({
     const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction
-    const [ mintTx, setMintTx ] = useState<string>()
+    const [ mintTx, setMintTx ] = useState<string|null|undefined>()
     // Holds TX date for pNFT minting transaction
-    const [ mintDate, setMintDate ] = useState<Date>()
+    const [ mintDate, setMintDate ] = useState<Date|null|undefined>()
     // Holds TX hash for original NFT minting transaction
-    const [ mintOriginalTx, setMintOriginalTx ] = useState<string>()
+    const [ mintOriginalTx, setMintOriginalTx ] = useState<string|null|undefined>()
     // Holds TX date for original NFT minting transaction
-    const [ mintOriginalDate, setMintOriginalDate ] = useState<Date>()
+    const [ mintOriginalDate, setMintOriginalDate ] = useState<Date|null|undefined>()
     // Holds TX hash for acquiring pNFT by current owner
-    const [ acquireTx, setAcquireTx ] = useState<string>()
+    const [ acquireTx, setAcquireTx ] = useState<string|null|undefined>()
     // Holds TX hash for acquiring pNFT by current owner
-    const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+    const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string|null|undefined>()
 
     const { library, account, active, currentChain } = useAppContext()
     const { getDialog } = useCallableDialogContext()
@@ -212,8 +212,8 @@ const KlerosCaseContent = ({
                         setMintDate(date)
                     })
                 } else {
-                    setMintTx(undefined)
-                    setMintDate(undefined)
+                    setMintTx(null)
+                    setMintDate(null)
                 }
             })
         }
@@ -240,8 +240,8 @@ const KlerosCaseContent = ({
                         setMintOriginalDate(date)
                     })
                 } else {
-                    setMintOriginalTx(undefined)
-                    setMintOriginalDate(undefined)
+                    setMintOriginalTx(null)
+                    setMintOriginalDate(null)
                 }
             })
         }
@@ -264,7 +264,7 @@ const KlerosCaseContent = ({
                 if (acquireTransfer) {
                     setAcquireTx(acquireTransfer.transactionHash)
                 } else {
-                    setAcquireTx(undefined)
+                    setAcquireTx(null)
                 }
             })
         }
@@ -288,11 +288,11 @@ const KlerosCaseContent = ({
                 if (sentTransfer) {
                     setSentToProtocolTx(sentTransfer.transactionHash)
                 } else {
-                    setSentToProtocolTx(undefined)
+                    setSentToProtocolTx(null)
                 }
             })
         } else {
-            setSentToProtocolTx(undefined)
+            setSentToProtocolTx(null)
         }
     }
 
@@ -572,12 +572,22 @@ const KlerosCaseContent = ({
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT creation date{":"}</Trans></chakra.span>
                         {" "}
-                        { mintOriginalDate && formatDate(mintOriginalDate) }
+                        { mintOriginalDate ? 
+                            formatDate(mintOriginalDate) :
+                            ( mintOriginalDate === null ) ?
+                                t`No information found` :
+                                t`Loading…`
+                        }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT protection date{":"}</Trans></chakra.span>
                         {" "}
-                        { mintDate && formatDate(mintDate) }
+                        { mintDate ? 
+                            formatDate(mintDate) :  
+                            (mintDate === null) ?
+                                t`No information found` :
+                                t`Loading…`
+                        }
                     </Text>
                 </Flex>
             </Flex>
@@ -648,36 +658,42 @@ const KlerosCaseContent = ({
                     <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.claimantText }
                         {" "}
-                        { claimantTx1 && <Link 
-                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.id) : '#'} 
+                        { claimantTx1 ? <Link 
+                            href={ generateTxURL(claimantTx1, currentChain.id) } 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                               { claimantTx1 ? formatAddress(claimantTx1, 10) : '' }
+                               { formatAddress(claimantTx1, 10) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                        </Link>}
+                        </Link> : (claimantTx1 === null) ?
+                            t`No information found` :
+                            t`Loading…`
+                        }
                     </Text>
 
                     { pageData.claimantText2 && 
                         <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                             { pageData.claimantText2 }
                             {" "}
-                            { claimantTx2 && <Link 
-                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.id) : '#'} 
+                            { claimantTx2 ? <Link 
+                                href={ generateTxURL(claimantTx2, currentChain.id) } 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
                                 textDecoration="underline"
                             >
                                 <chakra.span wordBreak="break-all">
-                                { claimantTx2 ? formatAddress(claimantTx2, 10) : '' }
+                                    { formatAddress(claimantTx2, 10) }
                                 </chakra.span>
                                 <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                            </Link>}
+                            </Link> : (claimantTx2 === null) ?
+                                t`No information found` :
+                                t`Loading…`
+                            }
                         </Text> 
                     }
                 </Flex>
@@ -754,18 +770,21 @@ const KlerosCaseContent = ({
                     <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.defendantText }
                         {" "}
-                        <Link 
-                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
+                        { defendantTx1 ? <Link 
+                            href={ defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                               { defendantTx1 ? formatAddress(defendantTx1, 10) : '' }
+                               { formatAddress(defendantTx1, 10) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                        </Link>
+                        </Link> : (defendantTx1 === null) ?
+                            t`No information found` :
+                            t`Loading…`
+                        }
                     </Text>
                 </Flex>
             </Flex>
