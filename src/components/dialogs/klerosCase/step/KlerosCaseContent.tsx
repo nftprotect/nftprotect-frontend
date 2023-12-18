@@ -651,7 +651,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                <AddressDisplay address={nft.originalData?.contractAddress}/> (id: {nft.originalData?.tokenId})
+                                <AddressDisplay address={nft.originalData?.contractAddress}/> (id: { formatAddress(nft.originalData.tokenId, 2) })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link> }
@@ -763,7 +763,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                <AddressDisplay address={nft.contract.address}/> (id: { nft.tokenId })
+                                <AddressDisplay address={nft.contract.address}/> (id: { formatAddress(nft.tokenId, 2) })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
