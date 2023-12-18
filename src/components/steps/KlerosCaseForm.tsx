@@ -33,6 +33,7 @@ import { Info } from '@web3uikit/icons';
 import { Trans, t } from '@lingui/macro';
 import { IPFSFileUpload } from '../IPFSFileUpload';
 import IPFSUpload from '../../classes/IPFSUpload';
+import { isAddress } from 'viem';
 
 interface FormInitialData {
     onSubmit?: Function | undefined,
@@ -83,6 +84,8 @@ const KlerosCaseForm = ({
         let error
         if (!value) {
           error = <Trans>Protocol address is required</Trans>
+        } else if (!isAddress(value)) {
+            error = <Trans>Incorrect address</Trans>
         }
         return error
     }
@@ -128,7 +131,7 @@ const KlerosCaseForm = ({
                                 )}
                             </Field>
 
-                            { requireProtocolAddress && <Field name='protocolAddress' validate={validateProtocolAddress} >
+                            { requireProtocolAddress && <Field name='protocolAddress' validate={validateProtocolAddress} mb={{base: "20px"}} >
                                 {({ field, form }: any) => (
                                     <FormControl isInvalid={form.errors.protocolAddress && form.touched.protocolAddress} mb={{base: "20px"}}>
                                         <Textarea 
@@ -136,7 +139,6 @@ const KlerosCaseForm = ({
                                             {...field} 
                                             placeholder={t`Write the address of the protocol smart contract`}
                                             variant='primary' resize="vertical" 
-                                            mb={{base: "20px"}} 
                                             isRequired 
                                             minH={{base: "38px" }}
                                         />
