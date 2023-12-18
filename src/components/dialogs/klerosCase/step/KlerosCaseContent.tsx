@@ -24,7 +24,7 @@ import { Trans, t } from '@lingui/macro';
 import NFT, { RequestStatus } from '../../../../classes/NFT';
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
-import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
+import { GetTransfersForOwnerTransferType, NftTokenType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
 import { formatAddress, timestampToDate } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
@@ -169,7 +169,7 @@ const KlerosCaseContent = ({
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string|null|undefined>()
 
-    const { library, account, active, currentChain } = useAppContext()
+    const { library, account, active, currentChain, nftProtectContract } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
     const pageData = metaEvidenceTypes.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceTypes[0].page
@@ -224,14 +224,16 @@ const KlerosCaseContent = ({
         if (nft?.originalData) {
             // We have to search for transactions after NFTProtect was deployed
             const startBlockNumber = nft.contract.deployedBlockNumber
-            getTransfersForContract([
-                nft.originalData.contractAddress,
+            getTransfersForOwner([
+                nft.originalData.ownerAddress,
+                GetTransfersForOwnerTransferType.TO,
                 {
-                    fromBlock: startBlockNumber,
+                    contractAddresses: [nftProtectContract.address],
+                    tokenType: NftTokenType.ERC721
                 }
             ]).then((result) => {
                 const mintTransfer = result.nfts.find((transfer) => {
-                    return transfer.tokenId === nft.originalData?.tokenId
+                    return transfer.tokenId === nft.tokenId
                 })
                 if (mintTransfer) {
                     setMintOriginalTx(mintTransfer.transactionHash)
@@ -567,7 +569,7 @@ const KlerosCaseContent = ({
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Creator{":"}</Trans></chakra.span>
                         {" "}
-                        { nft.contract.contractDeployer }
+                        { nft.contract.contractDeployer || t`Unknown` }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT creation date{":"}</Trans></chakra.span>
