@@ -1009,6 +1009,11 @@ const NFTProtectABI = [
 		  "type": "uint8"
 		},
 		{
+		  "internalType": "address",
+		  "name": "user",
+		  "type": "address"
+		},
+		{
 		  "internalType": "address payable",
 		  "name": "referrer",
 		  "type": "address"

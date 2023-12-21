@@ -180,7 +180,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     () => tokenContract.getApproved(nft.tokenId),
                     (result: any) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, 0, referrerAddress, {value: fee})
+                    () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, 0, account, referrerAddress, {value: fee})
                 )
             } else if (nft?.tokenType === NftTokenType.ERC1155) {
                 const tokenContract = nft.getContract()
@@ -189,7 +189,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
                     (result: any) => result,
                     () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, 0, referrerAddress, {value: fee})
+                    () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, 0, account, referrerAddress, {value: fee})
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft?.tokenType}`)
