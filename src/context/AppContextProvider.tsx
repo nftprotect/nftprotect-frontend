@@ -107,9 +107,9 @@ export function AppContextProvider({ children }:any) {
     }
 
     const setCurrentFee = () => {
-        if (appState.library && appState.currentChain) {
-            const { nftProtectContract } = appState
-            nftProtectContract.feeWei(0).then((result: number) => {
+        if (appState.library && appState.currentChain && appState.account) {
+            const { userRegistryContract } = appState
+            userRegistryContract.feeForUser(appState.account, 0).then((result: number) => {
                 console.log('Fee:', result)
                 setFee(result)
             })
@@ -172,7 +172,7 @@ export function AppContextProvider({ children }:any) {
 
     useEffect(setDidState, [appState.account, appState.library, appState.currentChain])
     useEffect(subscribeBlockUpdates, [appState.account, appState.library, appState.currentChain])
-    useEffect(setCurrentFee, [appState.library, appState.currentChain])
+    useEffect(setCurrentFee, [appState.library, appState.currentChain, appState.account])
     useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
     useEffect(stateSetter, [walletClient, account, active, walletClientActive, chain, switchNetwork, chainId, isDisconnected])
 

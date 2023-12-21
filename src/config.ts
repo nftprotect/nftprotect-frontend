@@ -18,11 +18,11 @@ export const supportedChains = [
         name: "Goerli",
         symbol: "ETH",
         explorerUrl: "https://goerli.etherscan.io",
-        nftpContractAddress: '0x5aDf8b955011a09726CbAB8d43622ac1B2fB344F',
-        userRegistryContractAddress: '0x9B80f551E8f416b54EA9d71AF5acE49aA0609aAC',
-        arbRegistryContractAddress: '0x6b61f0a88C4A2CfeF2b9f948093C95531a6B9F04',
-        couponsContractAddress: '0x3D9D532351C473C476b1077D1770f373B5f1AAc4',
-        defaultArbitrator: 2
+        nftpContractAddress: '0x6ae4800040e588c2fa2e96ee68a987013d9afd13',
+        userRegistryContractAddress: '0x35c0d4999655ba4a956889640d7c1a8d11a2925a',
+        arbRegistryContractAddress: '0x094c049f25d6ea178b3262887d37ad9da36b2355',
+        couponsContractAddress: '0x6CbEAE91BCd7B3f5389780564c2ca8FDe2D4E59e',
+        defaultArbitrator: 1
     }, {
         id: 11155111,
         alchemyId: Network.ETH_SEPOLIA,
@@ -30,10 +30,10 @@ export const supportedChains = [
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0xB1A382a0946528cAc1Bde3f419B69809CC347613',
-        userRegistryContractAddress: '0x49ba52fe9dF9e55BeF56BE7D0F19eF8b645D51F3',
-        arbRegistryContractAddress: '0x0cEC9a8A65A5d9D0e39fa9B26e5F9dE3FDC4D7fb',
-        couponsContractAddress: '0x8c743B717e960fa00779b7b148D63a59009E9c9d',
+        nftpContractAddress: '0x5de5be0552e9e87e3b40f1f3e3388ca97f347f1a',
+        userRegistryContractAddress: '0x2d244d1c312db924ecafbe51697b3726851e2bdd',
+        arbRegistryContractAddress: '0x423f42f53f67356e7bc9093410303c68c8478fe7',
+        couponsContractAddress: '0x55b328a60C99E9FCc8878062aBDE5800042a0b5c',
         defaultArbitrator: 1
     },
     // {
@@ -71,10 +71,10 @@ export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe
 export const nftProtectGraphs = [
     {
         chainId: 5,
-        uri: 'https://api.thegraph.com/subgraphs/name/densmirnov/nftprotect'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1-goerli/v0.1'
     }, {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/proxy/17884/nftprotect-sepolia/version/latest'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.1'
     }
 ]
 
