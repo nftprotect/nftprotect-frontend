@@ -18,10 +18,10 @@ export const supportedChains = [
         name: "Goerli",
         symbol: "ETH",
         explorerUrl: "https://goerli.etherscan.io",
-        nftpContractAddress: '0xa4868ab18cf07b25e70d1bd21c7e1416103d8fd7',
-        userRegistryContractAddress: '0x0d009bb504d9bd71dd5f0f1cd99ba2077e23f88e',
+        nftpContractAddress: '0x04e41851820f02066341488e03e38187f3c52702',
+        userRegistryContractAddress: '0x69b34502cc9e31c09b18435f0e01a0f516d3ff3f',
         arbRegistryContractAddress: '0x094c049f25d6ea178b3262887d37ad9da36b2355',
-        couponsContractAddress: '0x717E3407972674C8141969d6393F81975EF14f42',
+        couponsContractAddress: '0x0D33DF38CFdF1Edd499535c79a68245F94778d6a',
         defaultArbitrator: 1
     }, {
         id: 11155111,
@@ -30,10 +30,10 @@ export const supportedChains = [
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0xc8aea4812e3baf160c97782d349525327f171483',
-        userRegistryContractAddress: '0x84439de25faf197929bd3f81de3a650cae6b76ff',
+        nftpContractAddress: '0xca2eb5a3fb5d74aecbb54fc513f678a95bb42bd4',
+        userRegistryContractAddress: '0x771192e571402e4dc96636a72a40863c8daa63c8',
         arbRegistryContractAddress: '0x423f42f53f67356e7bc9093410303c68c8478fe7',
-        couponsContractAddress: '0x0cD0E732b600b282AA5e41dc0Ca7203726608745',
+        couponsContractAddress: '0x46BD8813d9e66b37d99d29241cA58b92C9B0C88f',
         defaultArbitrator: 1
     },
     // {
@@ -71,10 +71,10 @@ export const klerosContractAddress = '0x78ac5F189FC6DAB261437a7B95D11cAcf0234FFe
 export const nftProtectGraphs = [
     {
         chainId: 5,
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1-goerli/v0.3'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1-goerli/v0.4'
     }, {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.3'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.4'
     }
 ]
 
