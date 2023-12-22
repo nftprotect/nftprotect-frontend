@@ -511,6 +511,11 @@ const UserRegistryABI = [
 	  "inputs": [
 		{
 		  "internalType": "address",
+		  "name": "sender",
+		  "type": "address"
+		},
+		{
+		  "internalType": "address",
 		  "name": "user",
 		  "type": "address"
 		},
