@@ -50,9 +50,9 @@ const UserRegistryABI = [
 	  "inputs": [
 		{
 		  "indexed": false,
-		  "internalType": "uint256",
+		  "internalType": "uint8",
 		  "name": "percent",
-		  "type": "uint256"
+		  "type": "uint8"
 		}
 	  ],
 	  "name": "AffiliatePercentChanged",
@@ -161,6 +161,12 @@ const UserRegistryABI = [
 		  "internalType": "uint8",
 		  "name": "discount",
 		  "type": "uint8"
+		},
+		{
+		  "indexed": false,
+		  "internalType": "uint8",
+		  "name": "affiliatePercent",
+		  "type": "uint8"
 		}
 	  ],
 	  "name": "PartnerSet",
@@ -241,9 +247,9 @@ const UserRegistryABI = [
 	  "name": "affiliatePercent",
 	  "outputs": [
 		{
-		  "internalType": "uint256",
+		  "internalType": "uint8",
 		  "name": "",
-		  "type": "uint256"
+		  "type": "uint8"
 		}
 	  ],
 	  "stateMutability": "view",
@@ -489,7 +495,12 @@ const UserRegistryABI = [
 	  "outputs": [
 		{
 		  "internalType": "uint8",
-		  "name": "",
+		  "name": "discount",
+		  "type": "uint8"
+		},
+		{
+		  "internalType": "uint8",
+		  "name": "affiliatePercent",
 		  "type": "uint8"
 		}
 	  ],
@@ -637,9 +648,9 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "uint256",
+		  "internalType": "uint8",
 		  "name": "percent",
-		  "type": "uint256"
+		  "type": "uint8"
 		}
 	  ],
 	  "name": "setAffiliatePercent",
@@ -701,6 +712,11 @@ const UserRegistryABI = [
 		{
 		  "internalType": "uint8",
 		  "name": "discount",
+		  "type": "uint8"
+		},
+		{
+		  "internalType": "uint8",
+		  "name": "affPercent",
 		  "type": "uint8"
 		}
 	  ],
