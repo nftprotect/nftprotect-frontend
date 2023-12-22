@@ -577,8 +577,8 @@ const KlerosCaseContent = ({
                         { mintOriginalDate ? 
                             formatDate(mintOriginalDate) :
                             ( mintOriginalDate === null ) ?
-                                t`No information found` :
-                                t`Loading…`
+                                <Text color={'#C21313'}><Trans>No information found</Trans></Text> :
+                                <Trans>`Loading…`</Trans>
                         }
                     </Text>
                     <Text textStyle="paragraph">
@@ -586,9 +586,9 @@ const KlerosCaseContent = ({
                         {" "}
                         { mintDate ? 
                             formatDate(mintDate) :  
-                            (mintDate === null) ?
-                                t`No information found` :
-                                t`Loading…`
+                                (mintDate === null) ?
+                                <Text color={'#C21313'}><Trans>No information found</Trans></Text> :
+                                <Trans>`Loading…`</Trans>
                         }
                     </Text>
                 </Flex>
@@ -693,8 +693,8 @@ const KlerosCaseContent = ({
                                 </chakra.span>
                                 <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                             </Link> : (claimantTx2 === null) ?
-                                t`No information found` :
-                                t`Loading…`
+                                <Text color={'#C21313'}><Trans>No information found</Trans></Text> :
+                                <Trans>`Loading…`</Trans>
                             }
                         </Text> 
                     }
@@ -784,8 +784,8 @@ const KlerosCaseContent = ({
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link> : (defendantTx1 === null) ?
-                            t`No information found` :
-                            t`Loading…`
+                            <Text color={'#C21313'}><Trans>No information found</Trans></Text> :
+                            <Trans>`Loading…`</Trans>
                         }
                     </Text>
                 </Flex>
