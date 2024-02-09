@@ -15,6 +15,11 @@ const UserRegistryABI = [
 		  "internalType": "address",
 		  "name": "nftprotectaddr",
 		  "type": "address"
+		},
+		{
+		  "internalType": "address",
+		  "name": "nftpCoupons",
+		  "type": "address"
 		}
 	  ],
 	  "stateMutability": "nonpayable",
@@ -367,6 +372,25 @@ const UserRegistryABI = [
 	  "name": "fetchRuling",
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "",
+		  "type": "address"
+		}
+	  ],
+	  "name": "hasPaidProtections",
+	  "outputs": [
+		{
+		  "internalType": "bool",
+		  "name": "",
+		  "type": "bool"
+		}
+	  ],
+	  "stateMutability": "view",
 	  "type": "function"
 	},
 	{

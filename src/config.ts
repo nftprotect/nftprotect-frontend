@@ -31,10 +31,10 @@ export const supportedChains = [
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0x9e652f34a8063de3627574da29c7e9baf5bb8a7d',
-        userRegistryContractAddress: '0xc3dc0e74c92043a2712ce22f385f7b3d390bb695',
-        arbRegistryContractAddress: '0x423f42f53f67356e7bc9093410303c68c8478fe7',
-        couponsContractAddress: '0x142724c5bFcd293C9eFcD27Ee306Bb3Cc8bF15CD',
+        nftpContractAddress: '0xe7807e973f42aea32da71c15a6441760f675d9cc',
+        userRegistryContractAddress: '0x727718859965b1c88c79491721d9b861654f6a73',
+        arbRegistryContractAddress: '0xa8d82ab740b0ba1a1b5784b86ecdc41d53e4ff15',
+        couponsContractAddress: '0x8f1cb013426f591220c51c516ac185a21405afa8',
         defaultArbitrator: 1
     },
     // {
@@ -73,7 +73,7 @@ export const nftProtectGraphs = [
     // }, 
     {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.5'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.7.1'
     }
 ]
 
