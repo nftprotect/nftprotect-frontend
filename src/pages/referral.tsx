@@ -38,6 +38,7 @@ import Head from 'next/head'
 import NavBar from '../components/navBar/NavBar'
 import Footer from '../components/footer/Footer'
 import ReferralLink from '../components/referral/ReferralLink'
+import AffilatePayments from '../components/referral/AffilatePayments'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -119,6 +120,8 @@ const ReferralPage: NextPage = () => {
                         <ReferralLink/>
                         <br/>
                         <Divider/>
+                        <br/>
+                        <AffilatePayments/>
                     </Container>
                 </main>
             </GridItem>

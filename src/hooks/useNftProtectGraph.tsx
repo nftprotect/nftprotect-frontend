@@ -52,6 +52,15 @@ export interface TokenGraphData {
     burned: Boolean
 }
 
+export interface AffiliatePaymentData {
+    id: string,
+    from: string,
+    to: string,
+    amount: BigNumber,
+    date: Date,
+    blockNumber: number
+}
+
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
 
 export const useNftProtectGraph = () => {
@@ -420,6 +429,41 @@ export const useNftProtectGraph = () => {
         }
     }
 
+    // Returns lis of affilate payments made to user's address
+    const listAffiliatePayments = async (toAddress: string): Promise<AffiliatePaymentData[]> => {
+        if (graphURI) {
+            const query = `
+                query listAffiliatePayments($toAddress: Bytes!) {
+                    affiliatePayments(where: { to: $toAddress }) {
+                        id,
+                        from,
+                        to,
+                        amount,
+                        timestamp,
+                        blocknumber
+                    }
+                }
+            `
+            const result = await performQuery(graphURI, query, { toAddress: toAddress.toLowerCase() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data ? data.affiliatePayments.map((payment: any) => ({
+                id: payment.id,
+                from: payment.from,
+                to: payment.to,
+                amount: BigNumber.from(payment.amount),
+                date: timestampToDate(parseInt(payment.timestamp)),
+                blockNumber: parseInt(payment.blocknumber)
+            })) : []
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
+        }
+    }
+
     return {
         getSystem,
         getRequest,
@@ -427,7 +471,8 @@ export const useNftProtectGraph = () => {
         getUser,
         listRequests,
         listTokensTransfered,
-        listTokensReceived
+        listTokensReceived,
+        listAffiliatePayments
     }
         
 }
