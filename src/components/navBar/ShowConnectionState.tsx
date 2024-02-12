@@ -23,14 +23,12 @@ import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
-import { useReferralLink } from '../../hooks/useReferralLink'
 
 const ShowConnectionState = () => {
 
     const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
-    const referralLink = useReferralLink();
 
     useEffect(() => {
         if(active && account){
@@ -163,7 +161,7 @@ const ShowConnectionState = () => {
                                 <Trans>for free protection</Trans>
                             </Text>
                         </Box>
-                        { referralLink && <Text>{referralLink}</Text> }
+                        { }
                     </CardBody>
                 </Card>
             </MenuList>
