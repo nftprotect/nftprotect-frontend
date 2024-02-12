@@ -8,9 +8,10 @@ import { Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { formatEther } from '@ethersproject/units';
 import { Trans } from "@lingui/macro";
+import { generateAddressURL } from '../../utils/etherscan';
 
 const AffilatePayments = () => {
-        const { account } = useAppContext()
+        const { account, currentChain } = useAppContext()
         const { listAffiliatePayments } = useNftProtectGraph();
         const [payments, setPayments] = useState<AffiliatePaymentData[]>([]);
         const [loading, setLoading] = useState(true);
@@ -61,7 +62,11 @@ const AffilatePayments = () => {
                                             address={account || ''}
                                             generatedAvatarType='jazzicon'
                                         />
-                                        <Link href="#" isExternal ml={2}>
+                                        <Link 
+                                            href={generateAddressURL(payment.to, currentChain.id)} 
+                                            isExternal 
+                                            ml={2}
+                                        >
                                             <AddressDisplay address={payment.to}/>
                                             <ExternalLinkIcon ml={1}/>
                                         </Link>
