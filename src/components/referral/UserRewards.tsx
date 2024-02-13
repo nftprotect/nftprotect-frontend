@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Text, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { Box, Text, Table, Thead, Tbody, Tr, Th, Td, Spinner } from '@chakra-ui/react';
 import { useAppContext } from '../../context/AppContextProvider';
 import { UserData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 import { Trans } from "@lingui/macro";
@@ -29,18 +29,15 @@ const UserRewards = () => {
     }, [account, getUser]);
 
     if (loading) {
-        return <Text>Loading...</Text>;
+        return <Spinner/>;
     }
 
     if (!userData) {
-        return <Text>No data available.</Text>;
+        return <Text><Trans>No data available.</Trans></Text>;
     }
 
     return (
         <Box>
-            <Text fontSize="xl" fontWeight="bold" mb={4}>
-                <Trans>Your Rewards</Trans>
-            </Text>
             <Table variant="simple">
                 <Tbody>
                     <Tr>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AffiliateActionData, AffiliateActionType, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Text } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Text, Spinner } from '@chakra-ui/react';
 import { useAppContext } from '../../context/AppContextProvider';
 import AddressDisplay from '../AddressDisplay';
 import Davatar from '@davatar/react';
@@ -36,14 +36,11 @@ const AffilateActions = () => {
         }, [account]);
     
         if (loading) {
-            return <Text>Loading...</Text>;
+            return <Spinner/>;
         }
     
         return (
             <Box>
-                <Text fontSize="xl" fontWeight="bold" mb={4}>
-                    <Trans>Rewards History</Trans>
-                </Text>
                 <Table variant="simple">
                     <Thead>
                         <Tr>

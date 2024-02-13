@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from 'next'
 import { loadTranslation } from '../utils/lingui'
-import { useAppContext } from '../context/AppContextProvider'
 import { Trans, t } from '@lingui/macro'
 import {
     chakra,
@@ -40,6 +39,8 @@ import Footer from '../components/footer/Footer'
 import ReferralLink from '../components/referral/ReferralLink'
 import AffilateActions from '../components/referral/AffilateActions'
 import UserRewards from '../components/referral/UserRewards'
+import LoginScreen from '../components/LoginScreen'
+import { useAppContext } from '../context/AppContextProvider'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -56,8 +57,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const ReferralPage: NextPage = () => {
     const { account, active, currentChain } = useAppContext()
-    
-
 
     return (<>
         <Head>
@@ -87,12 +86,14 @@ const ReferralPage: NextPage = () => {
                 w="100%"
                 display="flex"
             >
-                <NavBar showConnectButton={false}/>
+                <NavBar showConnectButton={true}/>
             </GridItem>
 
             <GridItem area={'main'}>
                 <main>
-                    <Container 
+                    { !active && <LoginScreen/> }
+
+                    { active && <Container 
                         p={0}
                         maxW="1920px"
                         width={"auto"}
@@ -122,10 +123,17 @@ const ReferralPage: NextPage = () => {
                         <br/>
                         <Divider/>
                         <br/>
-                        <AffilateActions/>
-                        <br/>
+                        <Text fontSize="xl" fontWeight="bold" mb={4}>
+                            <Trans>Your Rewards</Trans>
+                        </Text>
                         <UserRewards/>
-                    </Container>
+                        <br/>
+                        <Text fontSize="xl" fontWeight="bold" mb={4}>
+                            <Trans>Rewards History</Trans>
+                        </Text>
+                        <AffilateActions/>
+
+                    </Container> }
                 </main>
             </GridItem>
 
