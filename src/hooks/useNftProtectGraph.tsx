@@ -439,7 +439,11 @@ export const useNftProtectGraph = () => {
         if (graphURI) {
             const query = `
                 query listAffiliateActions($referrerAddress: Bytes!) {
-                    affiliateActions(where: { referrer: $referrerAddress }) {
+                    affiliateActions(
+                        where: { referrer: $referrerAddress },
+                        orderBy: id, 
+                        orderDirection: desc
+                    ) {
                         id,
                         type,
                         referral,
