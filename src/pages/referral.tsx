@@ -39,6 +39,7 @@ import NavBar from '../components/navBar/NavBar'
 import Footer from '../components/footer/Footer'
 import ReferralLink from '../components/referral/ReferralLink'
 import AffilateActions from '../components/referral/AffilateActions'
+import UserRewards from '../components/referral/UserRewards'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -122,6 +123,8 @@ const ReferralPage: NextPage = () => {
                         <Divider/>
                         <br/>
                         <AffilateActions/>
+                        <br/>
+                        <UserRewards/>
                     </Container>
                 </main>
             </GridItem>

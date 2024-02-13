@@ -66,6 +66,15 @@ export interface AffiliateActionData {
     txHash: string,
 }
 
+export interface UserData {
+    id: string,
+    referrer: string,
+    successor: string,
+    coupons: number,
+    totalReferrals: BigNumber,
+    totalRewards: BigNumber
+}
+
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
 
 export const useNftProtectGraph = () => {
@@ -224,26 +233,35 @@ export const useNftProtectGraph = () => {
         }
     }
 
-    const getUser = async (address: string) => {
+    const getUser = async (address: string): Promise<UserData | null> => {
         if (graphURI) {
             const query = `
                 query getUser($address: Bytes!) {
-                    user(id: $address}) {
+                    user(id: $address) {
                         id,
                         referrer,
                         successor,
-                        coupons
+                        coupons,
+                        totalReferrals,
+                        totalRewards
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { address })
+            const result = await performQuery(graphURI, query, { address: address.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
                     throw new Error(error.message)
                 })
             }
-            return data.user
+            return data.user ? {
+                id: data.user.id,
+                referrer: data.user.referrer,
+                successor: data.user.successor,
+                coupons: parseInt(data.user.coupons),
+                totalReferrals: BigNumber.from(data.user.totalReferrals),
+                totalRewards: BigNumber.from(data.user.totalRewards)
+            } : null
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
