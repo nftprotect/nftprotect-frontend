@@ -78,7 +78,7 @@ const AffilateActions = () => {
                                 <Td>{
                                     action.type === AffiliateActionType.Register ?
                                     <Trans>Register</Trans> :
-                                    <Trans>action</Trans>
+                                    <Trans>Payment</Trans>
                                 }</Td>
                                 <Td>{
                                     action.amount.gt(BigNumber.from(0)) ?
