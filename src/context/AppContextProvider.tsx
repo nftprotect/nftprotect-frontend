@@ -20,7 +20,7 @@ import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral"
 export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
-    account: string | null | undefined,
+    account: `0x${string}` | null | undefined,
     client: WalletClient|PublicClient,
     library: BaseProvider,
     defaultChain: any | undefined,

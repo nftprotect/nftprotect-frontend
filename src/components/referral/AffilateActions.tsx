@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AffiliatePaymentData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
+import { AffiliateActionData, AffiliateActionType, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 import { Table, Thead, Tbody, Tr, Th, Td, Box, Text } from '@chakra-ui/react';
 import { useAppContext } from '../../context/AppContextProvider';
 import AddressDisplay from '../AddressDisplay';
@@ -8,22 +8,23 @@ import { Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { formatEther } from '@ethersproject/units';
 import { Trans } from "@lingui/macro";
-import { generateAddressURL } from '../../utils/etherscan';
+import { generateAddressURL, generateTxURL } from '../../utils/etherscan';
+import { BigNumber } from '@ethersproject/bignumber';
 
-const AffilatePayments = () => {
+const AffilateActions = () => {
         const { account, currentChain } = useAppContext()
-        const { listAffiliatePayments } = useNftProtectGraph();
-        const [payments, setPayments] = useState<AffiliatePaymentData[]>([]);
+        const { listAffiliateActions } = useNftProtectGraph();
+        const [actions, setactions] = useState<AffiliateActionData[]>([]);
         const [loading, setLoading] = useState(true);
     
         useEffect(() => {
-            const fetchPayments = async () => {
+            const fetchactions = async () => {
                 if (account) {
                     try {
-                        const paymentsData = await listAffiliatePayments(account);
-                        setPayments(paymentsData);
+                        const actionsData = await listAffiliateActions(account);
+                        setactions(actionsData);
                     } catch (error) {
-                        console.error('Error fetching affiliate payments:', error);
+                        console.error('Error fetching affiliate actions:', error);
                     } finally {
                         setLoading(false);
                     }
@@ -31,7 +32,7 @@ const AffilatePayments = () => {
 
             };
     
-            fetchPayments();
+            fetchactions();
         }, [account]);
     
         if (loading) {
@@ -48,34 +49,42 @@ const AffilatePayments = () => {
                         <Tr>
                             <Th><Trans>Address</Trans></Th>
                             <Th><Trans>Date</Trans></Th>
-                            {/* <Th><Trans>Status</Trans></Th> */}
+                            <Th><Trans>Type</Trans></Th>
                             <Th><Trans>Amount</Trans></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {payments.map((payment) => (
-                            <Tr key={payment.id.toString()}>
+                        {actions.map((action) => (
+                            <Tr key={action.id.toString()}>
                                 <Td>
                                     <Box display="flex" alignItems="center">
                                         <Davatar
-                                            size={36}
-                                            address={account || ''}
+                                            size={ 36 }
+                                            address={ action.referral }
                                             generatedAvatarType='jazzicon'
                                         />
                                         <Link 
-                                            href={generateAddressURL(payment.to, currentChain.id)} 
+                                            href={generateTxURL(action.txHash, currentChain.id)} 
                                             isExternal 
                                             ml={2}
                                         >
-                                            <AddressDisplay address={payment.to}/>
+                                            <AddressDisplay address={action.referral}/>
                                             <ExternalLinkIcon ml={1}/>
                                         </Link>
                                     </Box>
                                 </Td>
                                 
-                                <Td>{payment.date.toLocaleDateString()}</Td>
-                                {/* <Td>Completed</Td> Assuming all payments are completed */}
-                                <Td>{`${formatEther(payment.amount)} ETH`}</Td>
+                                <Td>{action.date.toLocaleDateString()}</Td>
+                                <Td>{
+                                    action.type === AffiliateActionType.Register ?
+                                    <Trans>Register</Trans> :
+                                    <Trans>action</Trans>
+                                }</Td>
+                                <Td>{
+                                    action.amount.gt(BigNumber.from(0)) ?
+                                        `${formatEther(action.amount)} ETH` :
+                                        '-'
+                                }</Td>
                             </Tr>
                         ))}
                     </Tbody>
@@ -84,4 +93,4 @@ const AffilatePayments = () => {
         );
     };
 
-export default AffilatePayments;
+export default AffilateActions;

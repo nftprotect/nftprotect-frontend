@@ -79,7 +79,7 @@ export const nftProtectGraphs = [
     // }, 
     {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.7.1'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.8'
     }
 ]
 

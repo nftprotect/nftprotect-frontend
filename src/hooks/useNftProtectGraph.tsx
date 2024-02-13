@@ -6,19 +6,22 @@ import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { timestampToDate } from "../utils/helpers";
 
-export enum ReqType
-{
+export enum ReqType {
     OwnershipAdjustment,
     OwnershipRestore,
     Burn
 }
 
-export enum ReqStatus
-{
+export enum ReqStatus {
     Initial,
     Accepted,
     Rejected,
     Disputed
+}
+
+export enum AffiliateActionType {
+    Register,
+    Payment
 }
 
 export interface RequestGraphMinimalData {
@@ -52,13 +55,15 @@ export interface TokenGraphData {
     burned: Boolean
 }
 
-export interface AffiliatePaymentData {
+export interface AffiliateActionData {
     id: string,
-    from: string,
-    to: string,
+    type: AffiliateActionType,
+    referral: `0x${string}`,
+    referrer: `0x${string}`,
     amount: BigNumber,
     date: Date,
-    blockNumber: number
+    blockNumber: number,
+    txHash: string,
 }
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
@@ -430,34 +435,38 @@ export const useNftProtectGraph = () => {
     }
 
     // Returns lis of affilate payments made to user's address
-    const listAffiliatePayments = async (toAddress: string): Promise<AffiliatePaymentData[]> => {
+    const listAffiliateActions = async (referrerAddress: `0x${string}`): Promise<AffiliateActionData[]> => {
         if (graphURI) {
             const query = `
-                query listAffiliatePayments($toAddress: Bytes!) {
-                    affiliatePayments(where: { to: $toAddress }) {
+                query listAffiliateActions($referrerAddress: Bytes!) {
+                    affiliateActions(where: { referrer: $referrerAddress }) {
                         id,
-                        from,
-                        to,
+                        type,
+                        referral,
+                        referrer,
                         amount,
                         timestamp,
-                        blocknumber
+                        blocknumber,
+                        txHash
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { toAddress: toAddress.toLowerCase() })
+            const result = await performQuery(graphURI, query, { referrerAddress: referrerAddress.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
                     throw new Error(error.message)
                 })
             }
-            return data ? data.affiliatePayments.map((payment: any) => ({
-                id: payment.id,
-                from: payment.from,
-                to: payment.to,
-                amount: BigNumber.from(payment.amount),
-                date: timestampToDate(parseInt(payment.timestamp)),
-                blockNumber: parseInt(payment.blocknumber)
+            return data ? data.affiliateActions.map((action: any) => ({
+                id: action.id,
+                type: AffiliateActionType[action.type as keyof typeof AffiliateActionType],
+                referral: action.referral,
+                referrer: action.referrer,
+                amount: BigNumber.from(action.amount),
+                date: timestampToDate(parseInt(action.timestamp)),
+                blockNumber: parseInt(action.blocknumber),
+                txHash: action.txHash
             })) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))
@@ -472,7 +481,7 @@ export const useNftProtectGraph = () => {
         listRequests,
         listTokensTransfered,
         listTokensReceived,
-        listAffiliatePayments
+        listAffiliateActions
     }
         
 }
