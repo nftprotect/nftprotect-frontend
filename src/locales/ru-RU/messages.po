@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-12-14 15:40+0700\n"
+"POT-Creation-Date: 2024-02-15 18:41+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,6 +19,12 @@ msgstr ""
 msgid "404"
 msgstr ""
 
+msgid "Action"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
 msgid "All your NFTs"
 msgstr ""
 
@@ -26,6 +32,9 @@ msgid "All your protected assets"
 msgstr ""
 
 msgid "Always make sure the URL is nftprotect.app"
+msgstr ""
+
+msgid "Amount"
 msgstr ""
 
 msgid "Answer request"
@@ -106,10 +115,16 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
+msgid "Copy your unique referral link"
+msgstr ""
+
 msgid "Court"
 msgstr ""
 
 msgid "Creator:"
+msgstr ""
+
+msgid "Date"
 msgstr ""
 
 msgid "Date of creation"
@@ -211,6 +226,9 @@ msgstr ""
 msgid "for free protection"
 msgstr ""
 
+msgid "Get comission every time your referral protects an NFT!"
+msgstr ""
+
 msgid "has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT."
 msgstr ""
 
@@ -224,6 +242,12 @@ msgid "has<0/>transferred the original NFT to you."
 msgstr ""
 
 msgid "Have you lost<0/> access to your pNFT?"
+msgstr ""
+
+msgid "Here is a link to NFT Protect - an dapp that will protect your NFTs from theft"
+msgstr ""
+
+msgid "How it works?"
 msgstr ""
 
 msgid "If you did not transfer the pNFT to"
@@ -280,6 +304,9 @@ msgstr ""
 msgid "Links"
 msgstr ""
 
+msgid "Loading…"
+msgstr ""
+
 msgid "Manage your NFTs and pNFTs, stay updated with notifications, <0/>and rest assured with our advanced secuirity features."
 msgstr ""
 
@@ -304,16 +331,28 @@ msgstr ""
 msgid "NFT Protect • pNFT Validator"
 msgstr ""
 
+msgid "NFT Protect • Referral program"
+msgstr ""
+
 msgid "NFT Protect • Request #{requestId}, {0}"
 msgstr ""
 
 msgid "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft."
 msgstr ""
 
+msgid "NFT Protect registration link"
+msgstr ""
+
 msgid "No"
 msgstr ""
 
 msgid "No changes enforced."
+msgstr ""
+
+msgid "No data available."
+msgstr ""
+
+msgid "No information found"
 msgstr ""
 
 msgid "Not yet"
@@ -329,6 +368,9 @@ msgid "Open dispute in Kleros"
 msgstr ""
 
 msgid "Open the court's page in Kleros"
+msgstr ""
+
+msgid "Or share link via"
 msgstr ""
 
 msgid "Original NFT"
@@ -415,6 +457,9 @@ msgstr ""
 msgid "Protect NFT"
 msgstr ""
 
+msgid "Protected NFT"
+msgstr ""
+
 msgid "Protected NFT (pNFT)"
 msgstr ""
 
@@ -434,6 +479,15 @@ msgid "Read more"
 msgstr ""
 
 msgid "Reason"
+msgstr ""
+
+msgid "Referral program"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "Register with my referral link to get a coupon for free protection!\\n"
 msgstr ""
 
 msgid "Request <0/> the original NFT?"
@@ -460,6 +514,9 @@ msgstr ""
 msgid "Review the case"
 msgstr ""
 
+msgid "Rewards History"
+msgstr ""
+
 msgid "Russian"
 msgstr ""
 
@@ -476,6 +533,9 @@ msgid "Security reports or Protocol Breach Post-mortem: If the loss of pNFT was 
 msgstr ""
 
 msgid "Sending to an incorrect address"
+msgstr ""
+
+msgid "Share your referral link."
 msgstr ""
 
 msgid "Show all"
@@ -664,6 +724,9 @@ msgstr ""
 msgid "The protected NFT (pNFT) owner:"
 msgstr ""
 
+msgid "The referral program page."
+msgstr ""
+
 msgid "The Ruling on dispute #{0} is now enforced!"
 msgstr ""
 
@@ -700,6 +763,12 @@ msgstr ""
 msgid "To obtain the original NFT, send a request to the owner"
 msgstr ""
 
+msgid "Total payouts"
+msgstr ""
+
+msgid "Total referrals"
+msgstr ""
+
 msgid "Transaction failed."
 msgstr ""
 
@@ -728,6 +797,9 @@ msgid "Under dispute"
 msgstr ""
 
 msgid "Unfortunately, you have lost the dispute #{0}"
+msgstr ""
+
+msgid "Unknown"
 msgstr ""
 
 msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"
@@ -862,6 +934,9 @@ msgstr ""
 msgid "You cancelled a transaction"
 msgstr ""
 
+msgid "You get 5% comission for every protection."
+msgstr ""
+
 msgid "You have received a pNFT!"
 msgstr ""
 
@@ -889,10 +964,22 @@ msgstr ""
 msgid "Your dispute <0/> sent to Kleros"
 msgstr ""
 
+msgid "Your friend gets a coupon for one free protection."
+msgstr ""
+
+msgid "Your friend protects an NFT."
+msgstr ""
+
+msgid "Your friend signs up using your link."
+msgstr ""
+
 msgid "Your pNFT has been burned."
 msgstr ""
 
 msgid "Your pNFT remains unchanged. We suggest contacting the NFT owner to request the original version."
+msgstr ""
+
+msgid "Your Rewards"
 msgstr ""
 
 msgid "Сollection:"
