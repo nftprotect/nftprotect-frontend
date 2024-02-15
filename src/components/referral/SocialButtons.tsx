@@ -20,46 +20,56 @@ const SocialButtons = () => {
     const referralLink = useReferralLink() || 'No referral link available';
 
     const title = t`Here is a link to NFT Protect - an dapp that will protect your NFTs from theft`;
+    const spacing = "0.8rem";
 
     return (
-        <Box>
-            <TelegramShareButton
-                url={ referralLink }
-                title={ title }
-            >
-                <TelegramIcon size={48} round />
-            </TelegramShareButton>
-
-            <WhatsappShareButton
-                url={ referralLink }
-                title={ title }
-                separator=":: "
+        <Box display="flex" alignItems="center">
+            <Box mr={spacing}>
+                <TelegramShareButton
+                    url={ referralLink }
+                    title={ title }
                 >
-                <WhatsappIcon size={48} round />
-            </WhatsappShareButton>
+                    <TelegramIcon size={48} round />
+                </TelegramShareButton>
+            </Box>
 
-            <TwitterShareButton
-                url={ referralLink }
-                title={ title }
-            >
-                <TwitterIcon size={48} round />
-            </TwitterShareButton>
-
-            <FacebookMessengerShareButton
-                url={ referralLink }
-                appId={process.env.FACEBOOK_APP_ID || ''}
-            >
-                <FacebookMessengerIcon size={48} round />
-            </FacebookMessengerShareButton>
-
-            <EmailShareButton
-                url={ referralLink }
-                subject={ t`` }
-                body={t`Register with my referral link to get a coupon for free protection!\n`}
+            <Box mr={spacing}>
+                <WhatsappShareButton
+                    url={ referralLink }
+                    title={ title }
+                    separator=":: "
                 >
-                {/* <EmailIcon size={48} round /> */}
-                <Image src='/images/socialMediaIcons/email.svg' w='48px' h='48px'/>
-            </EmailShareButton>
+                    <WhatsappIcon size={48} round />
+                </WhatsappShareButton>
+            </Box>
+
+            <Box mr={spacing}>
+                <TwitterShareButton
+                    url={ referralLink }
+                    title={ title }
+                >
+                    <TwitterIcon size={48} round />
+                </TwitterShareButton>
+            </Box>
+
+            <Box mr={spacing}>
+                <FacebookMessengerShareButton
+                    url={ referralLink }
+                    appId={process.env.FACEBOOK_APP_ID || ''}
+                >
+                    <FacebookMessengerIcon size={48} round />
+                </FacebookMessengerShareButton>
+            </Box>
+
+            <Box>
+                <EmailShareButton
+                    url={ referralLink }
+                    subject={ t`NFT Protect registration link` }
+                    body={t`Register with my referral link to get a coupon for free protection!\n`}
+                >
+                    <Image src='/images/socialMediaIcons/email.svg' w='48px' h='48px'/>
+                </EmailShareButton>
+            </Box>
         </Box>
     );
 };
