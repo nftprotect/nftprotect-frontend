@@ -41,6 +41,7 @@ import AffilateActions from '../components/referral/AffilateActions'
 import UserRewards from '../components/referral/UserRewards'
 import LoginScreen from '../components/LoginScreen'
 import { useAppContext } from '../context/AppContextProvider'
+import SocialButtons from '../components/referral/SocialButtons'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -121,6 +122,8 @@ const ReferralPage: NextPage = () => {
                         </Text>
                         <ReferralLink/>
                         <br/>
+                        <SocialButtons/>
+                        <br/>
                         <Divider/>
                         <br/>
                         <Text fontSize="xl" fontWeight="bold" mb={4}>
@@ -132,7 +135,6 @@ const ReferralPage: NextPage = () => {
                             <Trans>Rewards History</Trans>
                         </Text>
                         <AffilateActions/>
-
                     </Container> }
                 </main>
             </GridItem>
