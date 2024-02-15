@@ -90,14 +90,16 @@ const AffilateActions = () => {
                                             address={ action.referral }
                                             generatedAvatarType='jazzicon'
                                         />
-                                        <Link 
-                                            href={generateTxURL(action.txHash, currentChain.id)} 
-                                            isExternal 
-                                            ml={2}
-                                        >
-                                            <AddressDisplay address={action.referral}/>
-                                            <ExternalLinkIcon ml={1}/>
-                                        </Link>
+                                        <Box as="span" whiteSpace="nowrap">
+                                            <Link 
+                                                href={generateTxURL(action.txHash, currentChain.id)} 
+                                                isExternal 
+                                                ml={2}
+                                            >
+                                                <AddressDisplay address={action.referral}/>
+                                                <ExternalLinkIcon ml={1}/>
+                                            </Link>
+                                        </Box>
                                     </Box>
                                 </Td>
                                 
