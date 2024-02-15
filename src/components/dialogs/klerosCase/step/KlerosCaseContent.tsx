@@ -24,7 +24,7 @@ import { Trans, t } from '@lingui/macro';
 import NFT, { RequestStatus } from '../../../../classes/NFT';
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
-import { GetTransfersForOwnerTransferType } from 'alchemy-sdk';
+import { GetTransfersForOwnerTransferType, NftTokenType } from 'alchemy-sdk';
 import { generateTxURL, generateAddressURL, generateTokenURL } from '../../../../utils/etherscan';
 import { formatAddress, timestampToDate } from '../../../../utils/helpers';
 import { createDisputeLink } from '../../../../utils/kleros';
@@ -157,19 +157,19 @@ const KlerosCaseContent = ({
     const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction
-    const [ mintTx, setMintTx ] = useState<string>()
+    const [ mintTx, setMintTx ] = useState<string|null|undefined>()
     // Holds TX date for pNFT minting transaction
-    const [ mintDate, setMintDate ] = useState<Date>()
+    const [ mintDate, setMintDate ] = useState<Date|null|undefined>()
     // Holds TX hash for original NFT minting transaction
-    const [ mintOriginalTx, setMintOriginalTx ] = useState<string>()
+    const [ mintOriginalTx, setMintOriginalTx ] = useState<string|null|undefined>()
     // Holds TX date for original NFT minting transaction
-    const [ mintOriginalDate, setMintOriginalDate ] = useState<Date>()
+    const [ mintOriginalDate, setMintOriginalDate ] = useState<Date|null|undefined>()
     // Holds TX hash for acquiring pNFT by current owner
-    const [ acquireTx, setAcquireTx ] = useState<string>()
+    const [ acquireTx, setAcquireTx ] = useState<string|null|undefined>()
     // Holds TX hash for acquiring pNFT by current owner
-    const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string>()
+    const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string|null|undefined>()
 
-    const { library, account, active, currentChain } = useAppContext()
+    const { library, account, active, currentChain, nftProtectContract } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
     const pageData = metaEvidenceTypes.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceTypes[0].page
@@ -212,8 +212,8 @@ const KlerosCaseContent = ({
                         setMintDate(date)
                     })
                 } else {
-                    setMintTx(undefined)
-                    setMintDate(undefined)
+                    setMintTx(null)
+                    setMintDate(null)
                 }
             })
         }
@@ -224,14 +224,16 @@ const KlerosCaseContent = ({
         if (nft?.originalData) {
             // We have to search for transactions after NFTProtect was deployed
             const startBlockNumber = nft.contract.deployedBlockNumber
-            getTransfersForContract([
-                nft.originalData.contractAddress,
+            getTransfersForOwner([
+                nft.originalData.ownerAddress,
+                GetTransfersForOwnerTransferType.TO,
                 {
-                    fromBlock: startBlockNumber,
+                    contractAddresses: [nftProtectContract.address],
+                    tokenType: NftTokenType.ERC721
                 }
             ]).then((result) => {
                 const mintTransfer = result.nfts.find((transfer) => {
-                    return transfer.tokenId === nft.originalData?.tokenId
+                    return transfer.tokenId === nft.tokenId
                 })
                 if (mintTransfer) {
                     setMintOriginalTx(mintTransfer.transactionHash)
@@ -240,8 +242,8 @@ const KlerosCaseContent = ({
                         setMintOriginalDate(date)
                     })
                 } else {
-                    setMintOriginalTx(undefined)
-                    setMintOriginalDate(undefined)
+                    setMintOriginalTx(null)
+                    setMintOriginalDate(null)
                 }
             })
         }
@@ -264,7 +266,7 @@ const KlerosCaseContent = ({
                 if (acquireTransfer) {
                     setAcquireTx(acquireTransfer.transactionHash)
                 } else {
-                    setAcquireTx(undefined)
+                    setAcquireTx(null)
                 }
             })
         }
@@ -288,11 +290,11 @@ const KlerosCaseContent = ({
                 if (sentTransfer) {
                     setSentToProtocolTx(sentTransfer.transactionHash)
                 } else {
-                    setSentToProtocolTx(undefined)
+                    setSentToProtocolTx(null)
                 }
             })
         } else {
-            setSentToProtocolTx(undefined)
+            setSentToProtocolTx(null)
         }
     }
 
@@ -567,17 +569,27 @@ const KlerosCaseContent = ({
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Creator{":"}</Trans></chakra.span>
                         {" "}
-                        { nft.contract.contractDeployer }
+                        { nft.contract.contractDeployer || t`Unknown` }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT creation date{":"}</Trans></chakra.span>
                         {" "}
-                        { mintOriginalDate && formatDate(mintOriginalDate) }
+                        { mintOriginalDate ? 
+                            formatDate(mintOriginalDate) :
+                            ( mintOriginalDate === null ) ?
+                                <chakra.span color={'#C21313'}><Trans>No information found</Trans></chakra.span> :
+                                <Trans>Loading…</Trans>
+                        }
                     </Text>
                     <Text textStyle="paragraph">
                         <chakra.span fontWeight="600"><Trans>Original NFT protection date{":"}</Trans></chakra.span>
                         {" "}
-                        { mintDate && formatDate(mintDate) }
+                        { mintDate ? 
+                            formatDate(mintDate) :  
+                                (mintDate === null) ?
+                                <chakra.span color={'#C21313'}><Trans>No information found</Trans></chakra.span> :
+                                <Trans>Loading…</Trans>
+                        }
                     </Text>
                 </Flex>
             </Flex>
@@ -639,7 +651,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                <AddressDisplay address={nft.originalData?.contractAddress}/> (id: {nft.originalData?.tokenId})
+                                <AddressDisplay address={nft.originalData?.contractAddress}/> (id: { formatAddress(nft.originalData.tokenId, 2) })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link> }
@@ -648,36 +660,42 @@ const KlerosCaseContent = ({
                     <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.claimantText }
                         {" "}
-                        { claimantTx1 && <Link 
-                            href={claimantTx1 ? generateTxURL(claimantTx1, currentChain.id) : '#'} 
+                        { claimantTx1 ? <Link 
+                            href={ generateTxURL(claimantTx1, currentChain.id) } 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                               { claimantTx1 ? formatAddress(claimantTx1, 10) : '' }
+                               { formatAddress(claimantTx1, 10) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                        </Link>}
+                        </Link> : (claimantTx1 === null) ?
+                            <chakra.span color={'#C21313'}><Trans>No information found</Trans></chakra.span> :
+                            <Trans>Loading…</Trans>
+                        }
                     </Text>
 
                     { pageData.claimantText2 && 
                         <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                             { pageData.claimantText2 }
                             {" "}
-                            { claimantTx2 && <Link 
-                                href={claimantTx2 ? generateTxURL(claimantTx2, currentChain.id) : '#'} 
+                            { claimantTx2 ? <Link 
+                                href={ generateTxURL(claimantTx2, currentChain.id) } 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
                                 textDecoration="underline"
                             >
                                 <chakra.span wordBreak="break-all">
-                                { claimantTx2 ? formatAddress(claimantTx2, 10) : '' }
+                                    { formatAddress(claimantTx2, 10) }
                                 </chakra.span>
                                 <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                            </Link>}
+                            </Link> : (claimantTx2 === null) ?
+                                <chakra.span color={'#C21313'}><Trans>No information found</Trans></chakra.span> :
+                                <Trans>Loading…</Trans>
+                            }
                         </Text> 
                     }
                 </Flex>
@@ -745,7 +763,7 @@ const KlerosCaseContent = ({
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                                <AddressDisplay address={nft.contract.address}/> (id: { nft.tokenId })
+                                <AddressDisplay address={nft.contract.address}/> (id: { formatAddress(nft.tokenId, 2) })
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
                         </Link>
@@ -754,18 +772,21 @@ const KlerosCaseContent = ({
                     <Text fontWeight="600" textStyle="paragraph" mb={{base: "6px"}}>
                         { pageData.defendantText }
                         {" "}
-                        <Link 
-                            href={defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
+                        { defendantTx1 ? <Link 
+                            href={ defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
                             textDecoration="underline"
                         >
                             <chakra.span wordBreak="break-all">
-                               { defendantTx1 ? formatAddress(defendantTx1, 10) : '' }
+                               { formatAddress(defendantTx1, 10) }
                             </chakra.span>
                             <ExternalLinkIcon mx='5px' fontSize={{base: "14px"}} color="text.muted" />
-                        </Link>
+                        </Link> : (defendantTx1 === null) ?
+                            <chakra.span color={'#C21313'}><Trans>No information found</Trans></chakra.span> :
+                            <Trans>Loading…</Trans>
+                        }
                     </Text>
                 </Flex>
             </Flex>
