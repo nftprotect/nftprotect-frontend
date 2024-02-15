@@ -30,13 +30,13 @@ const CommonNotificationBody = ({
     message?: JSX.Element
 }) => <div>
         <Heading 
-            fontSize={{base: "0.875rem"}}
+            fontSize={{base: "1rem"}}
             mb={{base: "0.625rem"}}
         >
             {header && header}
         </Heading>
         <Text
-            fontSize={{base: "0.625rem"}}
+            fontSize={{base: "0.75rem"}}
         > 
             {message && message}
         </Text>

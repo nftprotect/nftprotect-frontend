@@ -363,7 +363,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                         <Text
                             fontWeight="400"
                             textStyle="tips"
-                            mb={{base: "1.25rem"}}
+                           mb={{base: "1.25rem"}}
                         >
                             { nft.contract.name }
                         </Text>

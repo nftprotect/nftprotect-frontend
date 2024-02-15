@@ -186,26 +186,30 @@ const Home: NextPage = () => {
                                 >
                                     <Flex flexDir="column" color="#FFF" w={{ md: "60%", base: "100%" }}>
                                         <Text
-                                            fontSize={{ md: "48px", base: '24px' }}
+                                            //fontSize="3rem"
+                                        
+                                            // fontSize={{ md: "48px", base: '24px' }}
                                             // lineHeight={{ md: "68px", sm: '20px' }}
+                                            pt="1.25rem"
+                                            pb="1rem"
                                             fontWeight={{ base: "600" }}
-                                            textStyle={{base: "h3", md: "h2", lg: "h2"}}
+                                            textStyle={{base: "h1", md: "h1", lg: "h1"}}
                                         >
                                             <Trans>
-                                                Welcome to NFT Protect.<br />
-                                                your digital asset guardian
+                                                Welcome to NFT Protect<br />
+                                                Your digital asset guardian
                                             </Trans>
                                         </Text>
                                         <Text
-                                            pt="1.25rem"
+                                            //fontSize="1.375rem"
+                                            //pt="1rem"
                                             pb="2rem"
-                                            textStyle={{ base: "h4", md: "h3", lg: "h3"}}
+                                            textStyle={{ base: "h3", md: "h3", lg: "h3"}}
                                             fontWeight="500"
                                         >
                                             <Trans>
                                                 Manage your NFTs and pNFTs, stay updated with
-                                                notifications, <br />
-                                                and rest assured with our advanced secuirity features.
+                                                notifications, and rest assured with our advanced secuirity features.
                                             </Trans>
                                         </Text>
                                     </Flex>
