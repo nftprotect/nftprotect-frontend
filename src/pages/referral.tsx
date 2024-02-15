@@ -42,6 +42,7 @@ import UserRewards from '../components/referral/UserRewards'
 import LoginScreen from '../components/LoginScreen'
 import { useAppContext } from '../context/AppContextProvider'
 import SocialButtons from '../components/referral/SocialButtons'
+import ReferralSteps from '../components/referral/ReferralSteps'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -123,6 +124,8 @@ const ReferralPage: NextPage = () => {
                         <ReferralLink/>
                         <br/>
                         <SocialButtons/>
+                        <br/>
+                        <ReferralSteps/>
                         <br/>
                         <Divider/>
                         <br/>
