@@ -161,6 +161,7 @@ const ShowConnectionState = () => {
                                 <Trans>for free protection</Trans>
                             </Text>
                         </Box>
+                        { }
                     </CardBody>
                 </Card>
             </MenuList>

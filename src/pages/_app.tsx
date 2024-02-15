@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { supportedChains } from '../config'
+import { appDescription, appIcon, appName, appUrl, autoConnect, supportedChains } from '../config'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import nftProtectTheme from '../theme/index'
 import { AppContextProvider } from '../context/AppContextProvider'
@@ -26,13 +26,13 @@ const connectKitConfig = getDefaultConfig({
     alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
     // Required
-    appName: "NFT Protect",
+    appName,
     // Optional
-    autoConnect: true,
+    autoConnect,
     chains,
-    appDescription: "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.",
-    appUrl: "https://dev.nftprotect.app", // your app's url
-    appIcon: "https://dev.nftprotect.app/images/logoBlue.svg", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    appDescription,
+    appUrl, // your app's url
+    appIcon, // your app's icon, no bigger than 1024x1024px (max. 1MB)
 });
 const config = createConfig(connectKitConfig);
 

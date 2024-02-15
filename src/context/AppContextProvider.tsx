@@ -14,18 +14,20 @@ import { useMemo } from "react";
 import ERC20ABI from "../abi/ERC20ABI";
 import { useAccount, useNetwork, useWalletClient, usePublicClient, useSwitchNetwork, PublicClient, WalletClient } from "wagmi";
 import { clientToProvider } from '../utils/ethers';
+import { useRouter } from "next/router";
+import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral";
 
 export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
-    account: string | null | undefined,
+    account: `0x${string}` | null | undefined,
     client: WalletClient|PublicClient,
     library: BaseProvider,
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
     arbRegistryContract: Contract,
-    referrerAddress: string,
+    referrerAddress: `0x${string}`,
     didRegistered: boolean | undefined,
     currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
@@ -36,7 +38,7 @@ export interface AppContextInterface {
 
 interface AppState {
     active: boolean,
-    account: string | null | undefined,
+    account: `0x${string}` | null | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
     userRegistryContract: Contract,
@@ -51,6 +53,7 @@ export const AppContext = createContext<AppContextInterface|null>(null);
 const nullAddress = '0x0000000000000000000000000000000000000000'
 
 export function AppContextProvider({ children }:any) {
+    const router = useRouter()
     const [ chainId, setChainId ] = useState<number>()
     const publicClient = usePublicClient(chainId ? {chainId} : undefined)
     const publicProvider = clientToProvider(publicClient)
@@ -84,7 +87,6 @@ export function AppContextProvider({ children }:any) {
 
     const { switchNetwork } = useSwitchNetwork()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
-    const referrerAddress = nullAddress
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
     const [ didRegistered, setDidRegistered ] = useState<boolean>()
@@ -92,6 +94,7 @@ export function AppContextProvider({ children }:any) {
     const [ fee, setFee ] = useState<number>()
     const [ currentBlock, setCurrentBlock] = useState<number>()
     const [ couponsBalance, setCouponsBalance ] = useState<number>()
+    const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
 
     const setDidState = () => {
         if (appState.active && appState.account && appState.currentChain) {
@@ -214,6 +217,41 @@ export function AppContextProvider({ children }:any) {
         }
         // trigger the effect only on component mount
     }, [appState.active, appState.account, appState.currentChain])
+
+    // Handle referral link
+    useEffect(() => {
+        const refParam = router.query.ref;
+        // If parameter exists and is string
+        if (typeof refParam === 'string') {
+            // Extracts address from referral link and saves to localStorage
+            handleReferralLink(refParam);
+        }
+    }, [router]);
+
+    // Handle referrer address
+    useEffect(() => {
+        const { account, active } = appState
+        if (active && account) {
+            loadReferrer(appState.userRegistryContract, account).then(
+                (refAddr: `0x${string}`) => {
+                    if (refAddr !== nullAddress) {
+                        console.log('Referrer address exists:', refAddr)
+                        setReferrerAddress(refAddr)
+                    } else {
+                        const inviteAddr = loadInvite()
+                        if (inviteAddr?.toLowerCase() === account.toLowerCase()) {
+                            console.error("Referrer address can't match account address")
+                        } else if (inviteAddr) {
+                            console.log('Setting invite address as referrer')
+                            setReferrerAddress(inviteAddr)
+                        } else {
+                            console.log('No referrer or invite found')
+                        }
+                    }
+                }
+            )
+        }        
+    }, [appState.active, appState.account]);
 
     return (
         <AppContext.Provider value={{

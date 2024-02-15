@@ -27,6 +27,7 @@ import { loadTranslation } from '../utils/lingui';
 import NotificationsLoader from "../components/notifications/NotificationsLoader";
 import Head from "next/head";
 import ConnectButton from "../components/ConnectButton";
+import LoginScreen from "../components/LoginScreen";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -135,43 +136,7 @@ const Home: NextPage = () => {
 
                 <GridItem area={"main"}>
                     <chakra.main>
-                        {!active && (
-                            <Flex
-                                w="100%"
-                                h={{ base: "calc(100vh - 120px)" }}
-                                justifyContent="center"
-                                alignItems="center"
-                                bgImage="url('/images/startPageBanner.png')"
-                                bgRepeat="no-repeat"
-                                bgPosition="top center"
-                                // bgSize="auto 100%"
-                                bgSize="cover"
-                            >
-                                <Flex flexDir="column" alignItems="center">
-                                    <Image
-                                        src="/images/logoBlue.svg"
-                                        alt="Logo"
-                                        h={{ base: "75px" }}
-                                        mb={{ base: "40px" }}
-                                    />
-                                    <Text
-                                        fontFamily="Lexend"
-                                        fontSize={{ base: "44px" }}
-                                        lineHeight={{ base: "42px" }}
-                                        fontWeight={{ base: "900" }}
-                                        letterSpacing={{ base: "0.04em" }}
-                                        textAlign="center"
-                                    >
-                                        <Trans>Connect your wallet<br/>& get protected</Trans>
-                                    </Text>
-                                    <Box mt={10}>
-                                        <Box w={{ base: "14rem", sm: "16rem" }}>
-                                            <ConnectButton buttonVariant={"primaryLight"} />
-                                        </Box>
-                                    </Box>
-                                </Flex>
-                            </Flex>
-                        )}
+                        {!active && <LoginScreen/> }
 
                         {active && (
                             <>
