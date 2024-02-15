@@ -105,7 +105,8 @@ const ReferralPage: NextPage = () => {
                         <Heading 
                             pt='1em' 
                             pb='0.4em'
-                            textStyle="h1"
+                            size='2xl'
+                            as="h1"
                             fontWeight="800"
                         >
                             <Trans>Referral program</Trans>
@@ -123,12 +124,27 @@ const ReferralPage: NextPage = () => {
                         </Text>
                         <ReferralLink/>
                         <br/>
+                        <Text 
+                            textStyle={'h3'}
+                        >
+                            <Trans>Or share link via</Trans>
+                        </Text>
                         <SocialButtons/>
-                        <br/>
-                        <ReferralSteps/>
                         <br/>
                         <Divider/>
                         <br/>
+                        <Heading 
+                            pt='1em' 
+                            pb='0.4em'
+                            as="h2"
+                            size="xl"
+                            fontWeight="800"
+                        >
+                            <Trans>How it works?</Trans>
+                        </Heading>
+                        <ReferralSteps/>
+                        <br/>
+                        {/* Здесь страница должна быть разбита вертикально */}
                         <Text fontSize="xl" fontWeight="bold" mb={4}>
                             <Trans>Your Rewards</Trans>
                         </Text>
