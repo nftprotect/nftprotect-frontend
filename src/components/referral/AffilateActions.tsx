@@ -69,10 +69,10 @@ const AffilateActions = () => {
                             <Th borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
                                 <Trans>Address</Trans>
                             </Th>
-                            <Th borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
+                            <Th display={{ base: 'none', md: 'table-cell' }} borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
                                 <Trans>Date</Trans>
                             </Th>
-                            <Th borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
+                            <Th display={{ base: 'none', md: 'table-cell' }} borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
                                 <Trans>Action</Trans>
                             </Th>
                             <Th borderColor="#D9D9D9" fontSize={'16px'} textTransform={'none'}>
@@ -99,14 +99,17 @@ const AffilateActions = () => {
                                                 <AddressDisplay address={action.referral}/>
                                                 <ExternalLinkIcon ml={1}/>
                                             </Link>
+                                            <Text display={{ base: 'block', md: 'none' }} fontSize="xs" color="gray.500" ml={2}>
+                                                {action.date.toLocaleDateString()}
+                                            </Text>
                                         </Box>
                                     </Box>
                                 </Td>
                                 
-                                <Td borderColor="#D9D9D9">
+                                <Td display={{ base: 'none', md: 'table-cell' }} borderColor="#D9D9D9">
                                     {action.date.toLocaleDateString()}
                                 </Td>
-                                <Td borderColor="#D9D9D9">{
+                                <Td display={{ base: 'none', md: 'table-cell' }} borderColor="#D9D9D9">{
                                     action.type === AffiliateActionType.Register ?
                                     <Text color={'green'}><Trans>Register</Trans></Text> :
                                     <Trans>Protected NFT</Trans>
@@ -114,7 +117,12 @@ const AffilateActions = () => {
                                 <Td borderColor="#D9D9D9">{
                                     action.amount.gt(BigNumber.from(0)) ?
                                         `${formatEther(action.amount)} ETH` :
-                                        '-'
+                                        <Box>
+                                            {/* Small screen */}
+                                            <Text display={{ base: 'table-cell', md: 'none' }} color={'green'}><Trans>Register</Trans></Text>
+                                            {/* Big screen */}
+                                            <Text display={{ base: 'none', md: 'table-cell' }}>-</Text>
+                                        </Box>
                                 }</Td>
                             </Tr>
                         ))}

@@ -103,10 +103,9 @@ const ReferralPage: NextPage = () => {
                             maxW="1920px"
                             width={"auto"}
                             h={"auto"}
-                            mx={'3em'}
                         >                            
-                            <Flex direction={{ base: 'column', xl: 'row' }} justify="flex-end" mt={10}>
-                                <VStack spacing={4} align="stretch" mr="4rem" mb="2rem">
+                            <Flex direction={{ base: 'column', xl: 'row' }} justify="flex-end" my={{ base: '1.5rem', md: '3rem' }} mr={{ base: '1.5rem', md: '3rem' }}>
+                                <VStack spacing={4} align="stretch"  mb="2rem" ml={{ base: '1.5rem', md: '3rem' }} flex={1}>
                                     <Heading 
                                         size='2xl'
                                         as="h1"
@@ -114,7 +113,7 @@ const ReferralPage: NextPage = () => {
                                     >
                                         <Trans>Referral program</Trans>
                                     </Heading>
-                                    <Text textStyle={'h3'} mb='1rem'>
+                                    <Text textStyle={'h3'} mb={{ base: '0', md: '1rem' }}>
                                         <Trans>Get comission every time your referral protects an NFT!</Trans>
                                     </Text>
                                     <Text textStyle={'h3'}>
@@ -136,11 +135,10 @@ const ReferralPage: NextPage = () => {
                                     <ReferralSteps/>
                                 </VStack>
                                 {/* Vertical break here */}
-                                <VStack spacing={10} flex="1" align="stretch">
+                                <VStack spacing={10} flex={1} align="stretch" ml={{ base: '1.5rem', md: '3rem' }}>
                                     <UserRewards/>
                                     <AffilateActions/>
                                 </VStack>
-                                <br/>
                             </Flex>
                         </Container> }
                     </main>

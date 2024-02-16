@@ -64,7 +64,7 @@ const UserRewards = () => {
                         <Trans>Your Rewards</Trans>
                     </Heading>
                 </TableCaption>
-                <Tbody fontSize={'20px'}>
+                <Tbody textStyle={'h3'}>
                     <Tr>
                         <Td borderColor="#D9D9D9">
                             <Trans>Total referrals</Trans>

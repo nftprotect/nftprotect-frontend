@@ -16,7 +16,7 @@ const Step = ({ number, text }: StepProps) => (
             color="#1316DD"
         >
             <Text 
-                fontSize="22px"
+                textStyle={'h3'}
                 fontWeight="regular"
             >
                 {number}
@@ -24,7 +24,7 @@ const Step = ({ number, text }: StepProps) => (
         </Circle>
         <Text 
             pl={2}
-            fontSize={'22px'}
+            textStyle={'h3'}
             fontWeight="regular"
         >
             {text}
