@@ -13,10 +13,11 @@ import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
 import { CallableDialogContextProvider } from '../context/CallableDialogContextProvider'
 import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
-import GoogleAnalytics from '../components/GoogleAnalytics'
+//import GoogleAnalytics from '../components/GoogleAnalytics'
 import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { useLinguiInit } from '../utils/lingui';
+import { GoogleAnalytics } from '@next/third-parties/google'
 import ccTheme from '../theme/ck_theme.json';
 
 const chains = supportedChains.map(it => it.wagmiId)
@@ -39,6 +40,7 @@ const config = createConfig(connectKitConfig);
 function MyApp({ Component, pageProps }: AppProps) {
 
     const i18n = useLinguiInit(pageProps.translation);
+    const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
 
     useEffect(() => {
         console.log('ENVIRONMENT:', process.env.NODE_ENV)
@@ -55,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     <CallableDialogContextProvider>
                                         <I18nProvider i18n={i18n}>
                                             <Component {...pageProps} />
-                                            { (process.env.NODE_ENV === 'production') && <GoogleAnalytics/> }
+                                            { (process.env.NODE_ENV === 'production') && googleAnalyticsId && <GoogleAnalytics gaId={googleAnalyticsId}/> }
                                         </I18nProvider>
                                     </CallableDialogContextProvider>
                                 </NotificationContextProvider>

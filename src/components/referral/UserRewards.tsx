@@ -6,27 +6,27 @@ import { Trans } from "@lingui/macro";
 import { formatEther } from '@ethersproject/units';
 
 const UserRewards = () => {
-    const { account } = useAppContext();
+    const { account, active, currentChain } = useAppContext();
     const { getUser } = useNftProtectGraph();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (account) {
-                try {
-                    const data = await getUser(account);
-                    setUserData(data);
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                } finally {
-                    setLoading(false);
-                }
+    const fetchUserData = async () => {
+        if (account && active) {
+            try {
+                const data = await getUser(account);
+                setUserData(data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
             }
-        };
+        }
+    };
 
+    useEffect(() => {
         fetchUserData();
-    }, [account, getUser]);
+    }, [account, active, currentChain]);
 
     if (loading) {
         return <Spinner/>;
