@@ -231,7 +231,7 @@ export function AppContextProvider({ children }:any) {
     // Handle referrer address
     useEffect(() => {
         const { account, active } = appState
-        if (active && account) {
+        if (active && account && (referrerAddress === nullAddress)) {
             loadReferrer(appState.userRegistryContract, account).then(
                 (refAddr: `0x${string}`) => {
                     if (refAddr !== nullAddress) {
@@ -251,7 +251,7 @@ export function AppContextProvider({ children }:any) {
                 }
             )
         }        
-    }, [appState.active, appState.account]);
+    }, [appState.active, appState.account, appState.currentChain]);
 
     return (
         <AppContext.Provider value={{
