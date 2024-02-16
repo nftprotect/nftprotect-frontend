@@ -7,28 +7,38 @@ import {
     Card,
     CardBody,
     Flex,
+    IconButton,
     Image,
     Menu,
     MenuButton,
     MenuList,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverContent,
+    PopoverTrigger,
     Text,
     Tooltip,
-    VisuallyHiddenInput
+    VisuallyHiddenInput,
+    useClipboard
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
-import { Copy, Off } from '@web3uikit/icons'
 import Davatar from '@davatar/react'
 import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const ShowConnectionState = () => {
 
     const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
+    const { hasCopied, onCopy } = useClipboard(account || '');
+    const router = useRouter();
 
     useEffect(() => {
         if(active && account){
@@ -40,10 +50,6 @@ const ShowConnectionState = () => {
 
     const onClickDisconnect = () => {
         disconnect()
-    }
-
-    const copyAccountToClipboard = () => {
-        copyTextToClipboard(account || '', '#addressHolder').then(() => alert('Copied!'))
     }
 
     return (
@@ -106,60 +112,87 @@ const ShowConnectionState = () => {
                             </Flex>
 
                             <Flex>
-                                <Tooltip label="Copy" bg="none" color="#1A202C">
-                                    <Flex
-                                        justifyContent="center"
-                                        alignItems="center"
-                                        w="2em"
-                                        h="2em"
-                                        p={[1]}
-                                        borderRadius="1em"
-                                        bgColor="gray.200"
-                                        cursor="pointer"
-                                        _hover={{
-                                            bg: "brand.light",
-                                            color: "#FFF"
-                                        }}
-                                    >   
-                                        <CopyIcon onClick={ copyAccountToClipboard } />
-                                    </Flex>
+                                <Tooltip label={t`Copy`} bg="white" color="#1A202C">
+                                <Popover isOpen={hasCopied}>
+                                    <PopoverTrigger>
+                                        <IconButton
+                                            boxShadow="0"
+                                            w="2.5rem"
+                                            h="2.5rem"
+                                            aria-label={t`Copy`}
+                                            icon={<Image src='/images/commonIcons/copy.svg'/>}
+                                            variant='ghost'
+                                            onClick={onCopy}
+                                        />
+                                    </PopoverTrigger>
+                                    <PopoverContent w='5.5rem'>
+                                        <PopoverArrow />
+                                        <PopoverBody textAlign={'center'}><Trans>Copied!</Trans></PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
                                 </Tooltip>
-                                <Tooltip label="Disconnect" bg="none" color="#1A202C">
-                                    <Flex
-                                        justifyContent="center"
-                                        alignItems="center"
-                                        w="2em"
-                                        h="2em"
-                                        p={[1]}
-                                        mx={[1]}
-                                        borderRadius="1em"
-                                        bgColor="gray.200"
-                                        cursor="pointer"
-                                        _hover={{
-                                            bg: "brand.light",
-                                            color: "#FFF"
-                                        }}
-                                    >
-                                        <Off onClick={ onClickDisconnect }/>
-                                    </Flex>
+                                <Tooltip label={t`Disconnect`} bg="white" color="#1A202C">
+                                    <IconButton
+                                        boxShadow="0"
+                                        w="2.5rem"
+                                        h="2.5rem"
+                                        aria-label={ t`Disconnect` }
+                                        icon={<Image src='/images/commonIcons/logout.svg'/>}
+                                        variant='ghost'
+                                        onClick={ onClickDisconnect }
+                                    />
                                 </Tooltip>
                             </Flex>
                         </Flex>
-                        <Box textAlign="center">
-                            <Text fontSize={['24px']}>
+                        <Box mb='1rem'>
+                            <Text fontSize={['16px']} fontWeight={600}>
+                                <Trans>Balance</Trans>
+                            </Text>
+                            <Text fontSize={['36px']}>
                                 { ethBalance?.toFixed(4) } ETH
                             </Text>
-                            { baseTokenPrice && ethBalance && <Text fontSize={['14px']} color="text.muted">
+                            { baseTokenPrice && ethBalance && <Text fontSize={['16px']} color="text.muted">
                                 ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
                             </Text> }
                         </Box>
-                        <Box textAlign="center">
-                            <Text fontSize={['24px']}>
+                        <Box>
+                            <Text fontSize={['16px']} fontWeight={600}>
+                                <Trans>Coupons</Trans>
+                            </Text>
+                            <Text fontSize={['36px']}>
                                 { (couponsBalance !== undefined) ? t`${ couponsBalance } coupons` : t`Fetching balance…` }
                             </Text>
-                            <Text fontSize={['14px']} color="text.muted">
-                                <Trans>for free protection</Trans>
+                            <Text fontSize={['16px']} color="text.muted">
+                                <Trans>
+                                    Want a coupon for free NFT protection? Complete the <Link color="blue" href="https://galxe.com/nftprotect" target='_blank'>
+                                        <Text color="#2D7BD6" textDecoration={'underline'}>quest</Text>
+                                    </Link>
+                                </Trans>
                             </Text>
+                        </Box>
+                        <Box mt="1rem">
+                            <Flex justifyContent="space-between" alignItems="center">
+                                <Flex alignItems="center">
+                                    <Image src='/images/commonIcons/referral.svg' mr={2}/>
+                                    <Text fontSize={['16px']}>
+                                        <Trans>Referral program</Trans>
+                                    </Text>
+                                </Flex>
+                                <Tooltip label={t`Referral program`} bg="white" color="#1A202C">
+                                    <IconButton
+                                        boxShadow="0"
+                                        w="2.5rem"
+                                        h="2.5rem"
+                                        aria-label={ t`Referral program` }
+                                        icon={<Image src='/images/commonIcons/filter.svg'/>}
+                                        variant='ghost'
+                                        onClick={ ()=>{
+                                            router.push('/referral');
+                                        } }
+                                    />
+                                </Tooltip>
+                                
+                            </Flex>
                         </Box>
                         { }
                     </CardBody>
