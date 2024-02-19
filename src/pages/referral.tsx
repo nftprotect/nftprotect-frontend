@@ -2,38 +2,14 @@ import type { GetStaticProps, NextPage } from 'next'
 import { loadTranslation } from '../utils/lingui'
 import { Trans, t } from '@lingui/macro'
 import {
-    chakra,
     Container,
     Heading,
-    Image,
     Flex,
     Text,
-    Box,
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    Textarea,
-    Input,
-    Select,
-    Spacer,
     Grid,
     GridItem,
-    Link,
-    Badge,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverBody,
-    Spinner,
     Divider,
-    VStack,
-    SimpleGrid
+    VStack
 } from '@chakra-ui/react'
 import Head from 'next/head'
 import NavBar from '../components/navBar/NavBar'

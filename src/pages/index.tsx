@@ -28,6 +28,7 @@ import NotificationsLoader from "../components/notifications/NotificationsLoader
 import Head from "next/head";
 import ConnectButton from "../components/ConnectButton";
 import LoginScreen from "../components/LoginScreen";
+import { appUrl } from "../config";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -67,6 +68,13 @@ const Home: NextPage = () => {
                     content={t`NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.`}
                 />
                 <title>{t`NFT Protect • Dapp`}</title>
+                {/* Opengraph tags for social networks */}
+                <meta property="og:title" content={t`NFT Protect`} />
+                <meta property="og:description" content={t`A friend is sharing NFT Protect with you!`} />
+                <meta property="og:image" content={`${appUrl}/images/share/referral.png`} />
+                <meta property="og:url" content={ appUrl } />
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="NFT Protect" />
             </Head>
             <Grid
                 templateAreas={blackBoxClosed ? 
