@@ -10,6 +10,7 @@ import MainMenu from './MainMenu'
 import { useAppContext } from '../../context/AppContextProvider'
 import { LocaleMenu } from './LocaleMenu'
 import ConnectButton from '../ConnectButton'
+import { default as NextLink } from 'next/link' 
 
 const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
 
@@ -25,21 +26,23 @@ const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
             px={[3, 6]}
             py={{base: "10px"}}
         >
-            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
-                <Image
-                    src='/images/logomark.svg'
-                    alt='Logo'
-                    mr={[2]}
-                    h='35px'
-                />
-                <Image
-                    src='/images/logotype.svg'
-                    alt='Brand'
-                    display={{base: 'none', md: 'flex'}}
-                    mt={["5px"]}
-                    h='20px'
-                />
-            </Flex>
+            <NextLink href="/">
+                <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                    <Image
+                        src='/images/logomark.svg'
+                        alt='Logo'
+                        mr={[2]}
+                        h='35px'
+                    />
+                    <Image
+                        src='/images/logotype.svg'
+                        alt='Brand'
+                        display={{base: 'none', md: 'flex'}}
+                        mt={["5px"]}
+                        h='20px'
+                    />
+                </Flex>
+            </NextLink>
             
             <Flex flexWrap="wrap">
                 { (process.env.NODE_ENV !== 'production') && 
