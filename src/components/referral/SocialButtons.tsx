@@ -13,7 +13,6 @@ import {
     FacebookMessengerShareButton,
     FacebookMessengerIcon,
     EmailShareButton,
-    EmailIcon,
   } from 'next-share';
 
 const SocialButtons = () => {
@@ -65,7 +64,7 @@ const SocialButtons = () => {
                 <EmailShareButton
                     url={ referralLink }
                     subject={ t`NFT Protect registration link` }
-                    body={t`Register with my referral link to get a coupon for free protection!\n`}
+                    body={t`Register with my referral link to get a coupon for free protection!`}
                 >
                     <Image src='/images/socialMediaIcons/email.svg' w='48px' h='48px'/>
                 </EmailShareButton>
