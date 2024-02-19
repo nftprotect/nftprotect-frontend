@@ -112,9 +112,9 @@ const ShowConnectionState = () => {
                             </Flex>
 
                             <Flex>
-                                <Tooltip label={t`Copy`} bg="white" color="#1A202C">
                                 <Popover isOpen={hasCopied}>
                                     <PopoverTrigger>
+                                        <Tooltip label={t`Copy`} bg="white" color="#1A202C">
                                         <IconButton
                                             boxShadow="0"
                                             w="2.5rem"
@@ -124,13 +124,13 @@ const ShowConnectionState = () => {
                                             variant='ghost'
                                             onClick={onCopy}
                                         />
+                                        </Tooltip>
                                     </PopoverTrigger>
                                     <PopoverContent w='5.5rem'>
                                         <PopoverArrow />
                                         <PopoverBody textAlign={'center'}><Trans>Copied!</Trans></PopoverBody>
                                     </PopoverContent>
                                 </Popover>
-                                </Tooltip>
                                 <Tooltip label={t`Disconnect`} bg="white" color="#1A202C">
                                     <IconButton
                                         boxShadow="0"
