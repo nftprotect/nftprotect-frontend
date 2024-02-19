@@ -20,7 +20,8 @@ import {
     Text,
     Tooltip,
     VisuallyHiddenInput,
-    useClipboard
+    useClipboard,
+    Link
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import Davatar from '@davatar/react'
@@ -30,7 +31,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 
 const ShowConnectionState = () => {
 
@@ -151,8 +151,8 @@ const ShowConnectionState = () => {
                             <Text fontSize={['36px']}>
                                 { ethBalance?.toFixed(4) } ETH
                             </Text>
-                            { baseTokenPrice && ethBalance && <Text fontSize={['16px']} color="text.muted">
-                                ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
+                            { baseTokenPrice && ethBalance && <Text fontSize={['16px']} fontWeight={"100"} color="text.muted" mt='-0.5rem'>
+                                ~ ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
                             </Text> }
                         </Box>
                         <Box>
@@ -162,10 +162,10 @@ const ShowConnectionState = () => {
                             <Text fontSize={['36px']}>
                                 { (couponsBalance !== undefined) ? t`${ couponsBalance } coupons` : t`Fetching balance…` }
                             </Text>
-                            <Text fontSize={['16px']} color="text.muted">
+                            <Text fontSize={['16px']} color="text.muted" lineHeight={"120%"}>
                                 <Trans>
                                     Want a coupon for free NFT protection? Complete the <Link color="blue" href="https://galxe.com/nftprotect" target='_blank'>
-                                        <Text color="#2D7BD6" textDecoration={'underline'}>quest</Text>
+                                        <Text as="span" color="#2D7BD6" textDecoration={'underline'}>quest</Text>
                                     </Link>
                                 </Trans>
                             </Text>
