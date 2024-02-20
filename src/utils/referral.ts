@@ -1,8 +1,13 @@
 import { Contract } from '@ethersproject/contracts';
 import { isAddress } from 'viem';
+import baseX from 'base-x';
+
+// Base58 alphabet
+const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+const bs58 = baseX(BASE58);
 
 export const handleReferralLink = (refParam: string) => {
-    const addr = Buffer.from(refParam, 'base64').toString('utf-8');
+    const addr = decodeAddress(refParam);
     if (isAddress(addr)) {
         console.log('Correct referral link detected. Address:', addr);
         saveInvite(addr);
@@ -32,4 +37,14 @@ export const clearInvite = () => {
 export const loadReferrer = async (userRegistry: Contract, account: `0x${string}`) => {
     const referrerAddress = await userRegistry.referrers(account)
     return referrerAddress;
+}
+
+export function encodeAddress(address: `0x${string}`): string {
+    const buffer = Buffer.from(address.slice(2).toLowerCase(), 'hex');
+    return bs58.encode(buffer);
+}
+
+export function decodeAddress(encoded: string): string {
+    const decodedBuffer = bs58.decode(encoded);
+    return '0x' + decodedBuffer.toString('hex');
 }
