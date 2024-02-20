@@ -399,7 +399,7 @@ const KlerosCaseContent = ({
                     </FormLabel>
                     <InputGroup >
                         <InputLeftElement py={{base: "14px"}} pointerEvents='none'>
-                            <Image src="/images/lawBalance.svg" alt="Law balance icon" w="16px" h="16px" />
+                            <Image src="/images/law-balance.svg" alt="Law balance icon" w="16px" h="16px" />
                         </InputLeftElement>
                         <Input value="Non technical" type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>

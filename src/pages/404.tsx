@@ -71,7 +71,7 @@ const FourFour: NextPage = () => {
                             h={{ base: "calc(100vh - 120px)" }}
                             justifyContent="center"
                             alignItems="center"
-                            bgImage="url('/images/startPageBanner.png')"
+                            bgImage="url('/images/start-page-banner.png')"
                             bgRepeat="no-repeat"
                             bgPosition="top center"
                             // bgSize="auto 100%"

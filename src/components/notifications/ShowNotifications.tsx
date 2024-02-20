@@ -153,7 +153,7 @@ const NotificationAlert = ({
                     h={{base: "70px", sm: "100px", md: "3.375rem"}}
                 >
                     { notification.image ||
-                      <Image src={ "./images/notificationImageExample.png"} alt={ "example" } w="100%"/> }
+                      <Image src={ "./images/notification-example.png"} alt={ "example" } w="100%"/> }
                 </Box>
                 <Box mr={[4]}>
                     <Text fontSize={{base: "0.875rem"}}>

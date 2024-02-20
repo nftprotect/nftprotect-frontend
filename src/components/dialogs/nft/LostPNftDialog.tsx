@@ -638,7 +638,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                     <CardBody>
                                         <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                            <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                            <Image src="/images/icons-status/confirm.png" alt="Success" w="100%">
                                             </Image>
                                         </Box>
                                         <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center">
@@ -664,7 +664,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 <CardBody>
                                     <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        <Image src="/images/icons-status/fail.png" alt="Fail" w="100%">
                                         </Image>
                                     </Box>
                                     <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">
@@ -684,7 +684,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 <CardBody>
                                     <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        <Image src="/images/icons-status/fail.png" alt="Fail" w="100%">
                                         </Image>
                                     </Box>
                                     <Text textStyle="h3" mb={{base: "20px"}} textAlign="center">

@@ -8,7 +8,7 @@ const LoginScreen = () =>
         h={{ base: "calc(100vh - 120px)" }}
         justifyContent="center"
         alignItems="center"
-        bgImage="url('/images/startPageBanner.png')"
+        bgImage="url('/images/start-page-banner.png')"
         bgRepeat="no-repeat"
         bgPosition="top center"
         // bgSize="auto 100%"
@@ -16,7 +16,7 @@ const LoginScreen = () =>
     >
     <Flex flexDir="column" alignItems="center">
         <Image
-            src="/images/logoBlue.svg"
+            src="/images/logo-blue.svg"
             alt="Logo"
             h={{ base: "75px" }}
             mb={{ base: "40px" }}
