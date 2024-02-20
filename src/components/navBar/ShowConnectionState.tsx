@@ -174,7 +174,13 @@ const ShowConnectionState = () => {
                             <Flex justifyContent="space-between" alignItems="center">
                                 <Flex alignItems="center">
                                     <Image src='/images/commonIcons/referral.svg' mr={2}/>
-                                    <Text fontSize={['16px']}>
+                                    <Text 
+                                        fontSize={['16px']}
+                                        cursor={'pointer'}
+                                        onClick={ ()=>{
+                                            router.push('/referral');
+                                        } }
+                                    >
                                         <Trans>Referral program</Trans>
                                     </Text>
                                 </Flex>
