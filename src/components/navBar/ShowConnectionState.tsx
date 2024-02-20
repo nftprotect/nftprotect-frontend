@@ -120,7 +120,7 @@ const ShowConnectionState = () => {
                                             w="2.5rem"
                                             h="2.5rem"
                                             aria-label={t`Copy`}
-                                            icon={<Image src='/images/commonIcons/copy.svg'/>}
+                                            icon={<Image src='/images/icons-common/copy.svg'/>}
                                             variant='ghost'
                                             onClick={onCopy}
                                         />
@@ -137,7 +137,7 @@ const ShowConnectionState = () => {
                                         w="2.5rem"
                                         h="2.5rem"
                                         aria-label={ t`Disconnect` }
-                                        icon={<Image src='/images/commonIcons/logout.svg'/>}
+                                        icon={<Image src='/images/icons-common/logout.svg'/>}
                                         variant='ghost'
                                         onClick={ onClickDisconnect }
                                     />
@@ -173,7 +173,7 @@ const ShowConnectionState = () => {
                         <Box mt="1rem">
                             <Flex justifyContent="space-between" alignItems="center">
                                 <Flex alignItems="center">
-                                    <Image src='/images/commonIcons/referral.svg' mr={2}/>
+                                    <Image src='/images/icons-common/referral.svg' mr={2}/>
                                     <Text 
                                         fontSize={['16px']}
                                         cursor={'pointer'}
@@ -190,7 +190,7 @@ const ShowConnectionState = () => {
                                         w="2.5rem"
                                         h="2.5rem"
                                         aria-label={ t`Referral program` }
-                                        icon={<Image src='/images/commonIcons/filter.svg'/>}
+                                        icon={<Image src='/images/icons-common/filter.svg'/>}
                                         variant='ghost'
                                         onClick={ ()=>{
                                             router.push('/referral');

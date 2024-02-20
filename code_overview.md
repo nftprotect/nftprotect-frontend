@@ -23,7 +23,7 @@ const connectKitConfig = getDefaultConfig({
     chains,
     appDescription: "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.",
     appUrl: "https://dev.nftprotect.app",
-    appIcon: "https://dev.nftprotect.app/images/logoBlue.svg",
+    appIcon: "https://dev.nftprotect.app/images/logo-blue.svg",
 });
 const config = createConfig(connectKitConfig);
 
@@ -143,7 +143,7 @@ constructor(alchemyNFT: NFTInterface, context: AppContextInterface, otherProps?:
     this.rawMetadata = alchemyNFT.rawMetadata;
     this.media = alchemyNFT.media;
     this.spamInfo = alchemyNFT.spamInfo;
-    this.thumbnail = this.media && this.media[0] &&  this.media[0].gateway || '/images/noImage.png'
+    this.thumbnail = this.media && this.media[0] &&  this.media[0].gateway || '/images/no-image.png'
     this.context = context
     this.events = new EventTarget();
 

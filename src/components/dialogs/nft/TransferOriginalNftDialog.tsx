@@ -300,7 +300,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody>
                                     <Box mt={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                        <Image src="/images/statusIcons/confirm.png" alt="Success" w="100%">
+                                        <Image src="/images/icons-status/confirm.png" alt="Success" w="100%">
                                         </Image>
                                     </Box>
                                 </CardBody>
@@ -317,7 +317,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardHeader>
                                 <CardBody>
                                     <Box my={{base: "20px"}} w={{base: "110px"}} h={{base: "110px"}}>
-                                        <Image src="/images/statusIcons/fail.png" alt="Fail" w="100%">
+                                        <Image src="/images/icons-status/fail.png" alt="Fail" w="100%">
                                         </Image>
                                     </Box>
                                     <Text textStyle="h3" textAlign="center">

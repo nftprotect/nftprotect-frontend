@@ -162,7 +162,7 @@ const KlerosEvidencesForm = ({
                                                     backgroundColor="#EEFFEF"
                                                     mb={{base: "24px"}}
                                                 >
-                                                    <Image src="/images/statusIcons/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
+                                                    <Image src="/images/icons-status/confirm.png" alt="Success" w={'3em'} pr={'1em'} />
                                                     <Flex flexDirection="column">
                                                         <Text textStyle="paragraph" color="text.muted">
                                                             <Link

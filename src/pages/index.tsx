@@ -186,7 +186,7 @@ const Home: NextPage = () => {
                                     <Flex
                                         ml={{ base: "20px" }}
                                         w={{ md: "40%", base: "0%" }}
-                                        bgImage="url('/images//mainBannerBackground.png')"
+                                        bgImage="url('/images//main-banner-bg.png')"
                                         bgRepeat="no-repeat"
                                     ></Flex>
                                 </Flex>

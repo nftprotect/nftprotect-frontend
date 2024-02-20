@@ -66,7 +66,7 @@ const SocialButtons = () => {
                     subject={ t`NFT Protect registration link` }
                     body={t`Register with my referral link to get a coupon for free protection!`}
                 >
-                    <Image src='/images/socialMediaIcons/email.svg' w='48px' h='48px'/>
+                    <Image src='/images/icons-social/email.svg' w='48px' h='48px'/>
                 </EmailShareButton>
             </Box>
         </Box>

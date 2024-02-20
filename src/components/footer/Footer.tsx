@@ -56,7 +56,7 @@ const Footer = () => {
 
                 <Flex h="100%" mr={{base: "20px"}}>
                     <Link href="https://go.nftprotect.app/discord?_gl=1*10vv0fo*_ga*NzU4OTEwMzk1LjE2NzkwNzQ3OTA.*_ga_0WT85RBVE8*MTY4NjUwNjIyNi4xLjAuMTY4NjUwNjIzMS41NS4wLjA." isExternal rel="noreferrer">
-                        <Image src="./images/socialMediaIcons/discord.svg" alt="Discord icon" h="100%" />
+                        <Image src="./images/icons-social/discord.svg" alt="Discord icon" h="100%" />
                     </Link>
                 </Flex>
 

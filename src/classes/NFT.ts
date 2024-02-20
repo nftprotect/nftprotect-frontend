@@ -302,7 +302,7 @@ export default class NFT implements NFTInterface {
         this.rawMetadata = alchemyNFT.rawMetadata;
         this.media = alchemyNFT.media;
         this.spamInfo = alchemyNFT.spamInfo;
-        this.thumbnail = this.media && this.media[0] &&  centralizeIpfsUrl(this.media[0].raw) || '/images/noImage.png'
+        this.thumbnail = this.media && this.media[0] &&  centralizeIpfsUrl(this.media[0].raw) || '/images/no-image.png'
         this.context = context
         this.events = new EventTarget();
 
