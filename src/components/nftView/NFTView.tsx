@@ -1,12 +1,9 @@
 import {
     Grid,
-    Heading,
     Text,
-    InputGroup,
-    Input,
-    IconButton,
     Flex,
-    useDisclosure
+    Image,
+    Link
 } from '@chakra-ui/react'
 import NFTCard from './NFTCard'
 import { useAppContext } from '../../context/AppContextProvider';
@@ -28,8 +25,18 @@ import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershi
 const NFTView = () => {
     const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
     const appContext = useAppContext()
-    const { currentChain, account, active, library, nftProtectContract } = appContext
-    const { isOpen, onToggle } = useDisclosure()
+    const { currentChain, account, active, nftProtectContract } = appContext
+
+    const marketplaces = currentChain?.wagmiId?.testnet ?
+        {
+            opensea: "https://testnets.opensea.io/",
+            rarible: "https://testnet.rarible.com/",
+            blur: "https://blur.io/"
+        } : {
+            opensea: "https://opensea.io/",
+            rarible: "https://rarible.com/",
+            blur: "https://blur.io/"
+        }
 
     const renderNFT = (nft: NFT) => {
         console.log('NFT: ', nft.title, nft)
@@ -168,17 +175,17 @@ const NFTView = () => {
 
     return (
         <>
-            { myOwnNfts && (myOwnNfts.length > 0) &&
-                <Flex px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>
-                    <Flex flexDirection="column" alignItems="flex-start" mb={{base: "20px"}}>
-                        <Text textStyle="h2">
-                            <Trans>All your NFTs</Trans> 
-                        </Text>
-                        <Text textStyle="h3">
-                            <Trans>{"It's all not protected yet"}</Trans>
-                        </Text>
-                    </Flex>
+            <Flex px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>
+                <Flex flexDirection="column" alignItems="flex-start" mb={{base: "20px"}}>
+                    <Text textStyle="h2">
+                        <Trans>All your NFTs</Trans> 
+                    </Text>
+                    <Text textStyle="h3">
+                        <Trans>{"It's all not protected yet"}</Trans>
+                    </Text>
+                </Flex>
 
+                { myOwnNfts && (myOwnNfts.length > 0) ? 
                     <Grid
                         templateColumns={{
                             base: "repeat(auto-fill, 8rem)",
@@ -190,9 +197,34 @@ const NFTView = () => {
                         pb={{base: "20px"}}
                     >
                         { myOwnNfts.map(nft => renderNFT(nft)) }
-                    </Grid>
-                </Flex>
-            }
+                    </Grid> :
+                    <Flex w="100%" textAlign={'center'} alignItems={'center'} flexDirection="column">
+                        <Image w='120' h='120' py="1.5rem" src="/images/no-results.png"/>
+                        <Text
+                            fontSize={'lg'}
+                            fontWeight={800}
+                        >
+                            <Trans>{"You don't have any NFTs"}</Trans>
+                        </Text>
+                        <Text
+                            fontSize={'lg'}
+                        ><Trans>
+                            Go get some on 
+                            <Link color="#2D7BD6" href={marketplaces['opensea']} target='_blank'>
+                                <Text as="span">OpenSea</Text>
+                            </Link>, 
+                            <Link color="#2D7BD6" href={marketplaces['rarible']} target='_blank'>
+                                <Text as="span">Rarible</Text>
+                            </Link> or 
+                            <Link color="#2D7BD6" href={marketplaces['blur']} target='_blank'>
+                                <Text as="span">Blur</Text>
+                            </Link>
+                                    
+                        </Trans></Text>
+
+                    </Flex>
+                }
+            </Flex>
 
             { givenPNfts && (givenPNfts.length > 0) &&
                 <Flex  px={['1rem', '3rem']} flexDirection="column" mb={{base: "20px"}}>

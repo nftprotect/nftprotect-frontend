@@ -36,7 +36,7 @@ const SocialButtons = () => {
                 <WhatsappShareButton
                     url={ referralLink }
                     title={ title }
-                    separator=":: "
+                    separator=": "
                 >
                     <WhatsappIcon size={48} round />
                 </WhatsappShareButton>
