@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { appUrl } from "../config";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
+import { encodeAddress } from "../utils/referral";
 
 // Generates referral link
 export const useReferralLink = () => {
@@ -13,6 +14,6 @@ export const useReferralLink = () => {
     
     const { account } = useAppContext();
     if (!account) return null;
-    const encodedAccount = Buffer.from(account).toString('base64');
+    const encodedAccount = encodeAddress(account);
     return `${appUrl}?ref=${encodedAccount}`;
 }
