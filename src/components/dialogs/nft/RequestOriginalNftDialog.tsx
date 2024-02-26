@@ -262,7 +262,7 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 </CardBody>
                                 <CardFooter flexDirection="column" alignItems="center">
                                     <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="brand.light" borderRadius="16px">
-                                        <Image src="./images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
+                                        <Image src="/images/kleros_logo.png" alt="Kleros logo" w="24px" mr={{base: "20px"}} />
                                         <Flex flexDirection="column">
                                             <Text textStyle="paragraph" color="text.muted">
                                                 <Trans>Kleros is an open source online dispute resolution protocol that uses blockchain and crowdsourcing 

@@ -3,7 +3,8 @@ import {
     Text,
     Flex,
     Image,
-    Link
+    Link,
+    Spinner
 } from '@chakra-ui/react'
 import NFTCard from './NFTCard'
 import { useAppContext } from '../../context/AppContextProvider';
@@ -198,7 +199,7 @@ const NFTView = () => {
                     >
                         { myOwnNfts.map(nft => renderNFT(nft)) }
                     </Grid> :
-                    <Flex w="100%" textAlign={'center'} alignItems={'center'} flexDirection="column">
+                    myOwnNfts ? <Flex w="100%" textAlign={'center'} alignItems={'center'} flexDirection="column">
                         <Image w='120' h='120' py="1.5rem" src="/images/no-results.png"/>
                         <Text
                             fontSize={'lg'}
@@ -222,7 +223,8 @@ const NFTView = () => {
                                     
                         </Trans></Text>
 
-                    </Flex>
+                    </Flex> :
+                    <Spinner/>
                 }
             </Flex>
 
