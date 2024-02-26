@@ -156,6 +156,14 @@ export const useArbitrableProxy = () => {
         return contract.submitEvidence(localDisputeId, evidenceURI)
     }
 
+    const executeRuling = async ( 
+        arbitratorId: number, 
+        externalDisputeId: BigNumber,
+    ): Promise<any> => {
+        const contract = await getArbitrator(arbitratorId)
+        return contract.executeRuling(externalDisputeId)
+    }
+
     useEffect(() => {
         contracts.current = []
     }, [active, currentChain])
@@ -166,6 +174,7 @@ export const useArbitrableProxy = () => {
         submitEvidence,
         isRuled,
         getArbitrableProxy,
-        getArbitrator
+        getArbitrator,
+        executeRuling
     }
 }
