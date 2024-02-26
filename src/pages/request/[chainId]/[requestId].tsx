@@ -11,7 +11,7 @@ import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/k
 import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
 import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../../hooks/useNftProtectGraph'
-import { Box, Container, Link, Text } from '@chakra-ui/react'
+import { chakra, Box, Container, Grid, GridItem, Link, Text } from '@chakra-ui/react'
 import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
@@ -22,7 +22,8 @@ import { useIPFSContext } from '../../../context/IPFSContextProvider'
 import EnforceRulingDialog from '../../../components/dialogs/request/EnforceRulingDialog'
 import Head from 'next/head'
 import { WarningTwoIcon } from '@chakra-ui/icons'
-import ConnectButton from '../../../components/ConnectButton'
+import NavBar from '../../../components/navBar/NavBar'
+import Footer from '../../../components/footer/Footer'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -281,56 +282,81 @@ const RequestPage: NextPage = () => {
                 <title>{t`NFT Protect • Request #${requestId}, ${currentChain.name}`}</title> :
                 <title>{t`NFT Protect • Incorrect requestId`}</title> }
         </Head> }
-        <Container 
-            p={0}
+        <Grid
+            templateAreas={
+                            `"nav"
+                            "main"
+                            "footer"`
+                        }
+            gridTemplateRows={ "60px 1fr 60px" }
+            gridTemplateColumns={"1fr"}
             maxW="1920px"
-            width={"auto"}
-            h={"auto"}
-            mx={'2em'}
+            minH="100vh"
+            p={0}
+            mx="auto"
+            flexDirection="column"
+            position="relative"
         >
-            { error && <h1>{error}</h1> }
-            { !error && !allRequiredLoaded && <h1>Loading...</h1> }
-            { !error && allRequiredLoaded && <>
-                { !active && <ConnectButton
-                    buttonVariant='primaryLight'
-                    chainId={parseInt(query?.chainId?.toString() || '-1')}
-                /> }
-                <Box 
-                    w="100%" 
-                    h="45px" 
-                    my='1em' 
-                    bgColor='#940000'
-                    color='white'
-                    display='flex'
-                    alignItems='center'
-                    justifyContent={'center'}
-                >
-                    <WarningTwoIcon mx='0.5em'/>
-                    <Text>
-                        <Trans>In testnets, you need to manually <Link href={switchingManualURI} isExternal={true} target='_blank'><u>move the case</u></Link> from one stage to another.</Trans>
-                    </Text>
-                </Box>
-                <KlerosCaseContent
-                    metaEvidenceId={requestData.metaevidence}
-                    nft={nft}
-                    claimantAddress={claimantAddress}
-                    defendantAddress={defendantAddress}
-                    evidences={evidences}
-                    contractAddress={evidences ? evidences[0]?.evidenceJson?.protocolAddress : undefined}
-                    disputeData={disputeData}
-                    disputeIsRuled={ isRuled }
-                    requestType={requestData.reqtype}
-                    requestStatus={requestData.status}
-                />
-            </>}
-            {/* Dialogs registration flollowing */}
-            {/* TODO: Evidences not reloading */}
-            <AddEvidencesDialog onSubmitted={loadEvidences} />
-            <EnforceRulingDialog onSubmitted={async () => {
-                const request = await nft?.loadPendingRequest()
-                request && setRequestData(request)
-            }} />
-        </Container>
+            <GridItem
+                area={"nav"}
+                position="sticky"
+                top="0"
+                zIndex="1"
+                bgColor="brand.light"
+                color="#FFF"
+                w="100%"
+                display="flex"
+            >
+                <NavBar />
+            </GridItem>
+            <GridItem area={"main"}  w={'100vw'} >
+                <chakra.main>
+                    { error && <h1>{error}</h1> }
+                    { !error && !allRequiredLoaded && <h1>Loading...</h1> }
+                    { !error && allRequiredLoaded && <>
+                        <Box 
+                            w="100%" 
+                            h="45px" 
+                            mb='2rem' 
+                            bgColor='#940000'
+                            color='white'
+                            display='flex'
+                            alignItems='center'
+                            justifyContent={'center'}
+                        >
+                            <WarningTwoIcon mx='0.5em'/>
+                            <Text>
+                                <Trans>In testnets, you need to manually <Link href={switchingManualURI} isExternal={true} target='_blank'><u>move the case</u></Link> from one stage to another.</Trans>
+                            </Text>
+                        </Box>
+                        <Box mx={{base: "1rem", md: "2rem"}}>
+                            <KlerosCaseContent
+                                metaEvidenceId={requestData.metaevidence}
+                                nft={nft}
+                                claimantAddress={claimantAddress}
+                                defendantAddress={defendantAddress}
+                                evidences={evidences}
+                                contractAddress={evidences ? evidences[0]?.evidenceJson?.protocolAddress : undefined}
+                                disputeData={disputeData}
+                                disputeIsRuled={ isRuled }
+                                requestType={requestData.reqtype}
+                                requestStatus={requestData.status}
+                            />
+                        </Box>
+                    </>}
+                    {/* Dialogs registration flollowing */}
+                    {/* TODO: Evidences not reloading */}
+                    <AddEvidencesDialog onSubmitted={loadEvidences} />
+                    <EnforceRulingDialog onSubmitted={async () => {
+                        const request = await nft?.loadPendingRequest()
+                        request && setRequestData(request)
+                    }} />
+                </chakra.main>
+            </GridItem>
+            <GridItem area={"footer"}>
+                <Footer />
+            </GridItem>
+        </Grid>
     </>)
 }
 

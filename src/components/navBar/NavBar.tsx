@@ -11,10 +11,15 @@ import { useAppContext } from '../../context/AppContextProvider'
 import { LocaleMenu } from './LocaleMenu'
 import ConnectButton from '../ConnectButton'
 import { default as NextLink } from 'next/link' 
+import { useRouter } from 'next/router'
 
 const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
 
     const { active } = useAppContext()
+    const { query } = useRouter()
+    const chainIdParam = query.chainId ? 
+        parseInt(query.chainId.toString()) :
+        undefined
 
     return (
         <chakra.nav
@@ -54,7 +59,10 @@ const NavBar = ({showConnectButton = true}: {showConnectButton?: boolean}) => {
                     <MainMenu />
                 </Box> */}
                 { !active && showConnectButton && <Box ml={{base: "1.25rem"}}>
-                    <ConnectButton buttonVariant={'primaryDark'}/>
+                    <ConnectButton 
+                        buttonVariant={'primaryDark'}
+                        chainId={chainIdParam}
+                    />
                 </Box> }
                 { active && <Box ml={{base: "1.25rem"}}>
                    <NetworkMenu />
