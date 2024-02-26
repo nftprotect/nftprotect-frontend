@@ -27,8 +27,9 @@ export const LocaleMenu = () => {
     }
 
     useEffect(() => {
-        router.push(router.pathname, router.pathname, { locale })
-    }, [locale])
+        const { pathname, query } = router;
+        router.push({ pathname, query }, undefined, { locale });
+    }, [locale]);
 
     return (
         <Menu>

@@ -311,8 +311,12 @@ const RequestPage: NextPage = () => {
             </GridItem>
             <GridItem area={"main"}  w={'100vw'} >
                 <chakra.main>
-                    { error && <h1>{error}</h1> }
-                    { !error && !allRequiredLoaded && <h1>Loading...</h1> }
+                    { error && <Text textStyle={"h3"} m={{base: "1rem", md: "2rem"}} >
+                        {error}
+                    </Text> }
+                    { !error && !allRequiredLoaded && <Text textStyle={"h3"} m={{base: "1rem", md: "2rem"}}>
+                        <Trans>Loading...</Trans>
+                    </Text> }
                     { !error && allRequiredLoaded && <>
                         <Box 
                             w="100%" 
