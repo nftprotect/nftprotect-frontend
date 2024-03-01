@@ -33,6 +33,7 @@
     "@types/react-dom": "^18.2.17",
     "@web3uikit/core": "^0.2.38",
     "alchemy-sdk": "^2.7.0",
+    "base-x": "^4.0.0",
     "connectkit": "^1.7.2",
     "crypto-convert": "^2.1.5",
     "eslint": "8.31.0",

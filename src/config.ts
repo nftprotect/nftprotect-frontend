@@ -86,6 +86,7 @@ export const nftProtectGraphs = [
     // }, 
     {
         chainId: 11155111,
+        //uri: `https://gateway-arbitrum.network.thegraph.com/api/${process.env.NEXT_PUBLIC_THEGRAPH_API_KEY}/subgraphs/id/Gfk3waJGQWZkYSjXEEzrRGxBKHD8s7SJ9UrkUtPQ2Qcv`
         uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.8.2'
     }
 ]
