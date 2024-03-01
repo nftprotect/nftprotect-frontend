@@ -113,13 +113,17 @@ export default class NFT implements NFTInterface {
                 return new Contract(
                     this.contract.address, 
                     ERC721ABI, 
-                    this.context.active ? (this.context.library as Web3Provider).getSigner() : this.context.library
+                    this.context.active && this.context.account ? 
+                        this.context.library.getSigner(this.context.account) : 
+                        this.context.library
                 ) 
             } else {
                 return new Contract(
                     this.contract.address, 
                     ERC1155ABI, 
-                    this.context.active ? (this.context.library as Web3Provider).getSigner() : this.context.library
+                    this.context.active && this.context.account ? 
+                        this.context.library.getSigner(this.context.account) : 
+                        this.context.library
                 )
             }
         }

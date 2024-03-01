@@ -8,11 +8,12 @@ import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { defaultChain as defaultChainId } from "../config";
-import { BaseProvider, Web3Provider } from '@ethersproject/providers'
+import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
 import ERC20ABI from "../abi/ERC20ABI";
-import { useAccount, useNetwork, useWalletClient, usePublicClient, useSwitchNetwork, PublicClient, WalletClient } from "wagmi";
+import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient } from "wagmi";
+import { Client, PublicClient, WalletClient } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral";
@@ -21,8 +22,8 @@ export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
     account: `0x${string}` | null | undefined,
-    client: WalletClient|PublicClient,
-    library: BaseProvider,
+    client: Client,
+    library: Web3Provider,
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
@@ -44,8 +45,8 @@ interface AppState {
     userRegistryContract: Contract,
     arbRegistryContract: Contract,
     couponsContract: Contract,
-    client: WalletClient|PublicClient,
-    library: BaseProvider
+    client: Client|undefined,
+    library: Web3Provider|undefined
 }
 
 export const AppContext = createContext<AppContextInterface|null>(null);
@@ -55,23 +56,18 @@ const nullAddress = '0x0000000000000000000000000000000000000000'
 export function AppContextProvider({ children }:any) {
     const router = useRouter()
     const [ chainId, setChainId ] = useState<number>()
-    const publicClient = usePublicClient(chainId ? {chainId} : undefined)
-    const publicProvider = clientToProvider(publicClient)
-    const {
-        data: walletClient,
-        isSuccess: walletClientActive
-    } = useWalletClient()
+
     const { 
         address: account,
         isConnected: active,
-        isDisconnected
+        isDisconnected,
+        chain
     } = useAccount()
-    const { chain } = useNetwork()
     const isCorrectChain = !chainId || !chain || (chainId === chain?.id)
-    const currentClient = walletClientActive && walletClient && isCorrectChain ? 
-        walletClient : 
-        publicClient
-    const providedLibrary = clientToProvider(currentClient)
+    const client  = useClient(chainId ? {chainId} : undefined)
+    const {data: connectorClient} = useConnectorClient()
+    const currentClient = connectorClient || client
+    const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
 
     const [appState, setAppState] = useState<AppState>({
         active: false,
@@ -79,13 +75,13 @@ export function AppContextProvider({ children }:any) {
         currentChain: undefined,
         client: currentClient,
         library: providedLibrary, // this and next props temporarily not null
-        nftProtectContract: new Contract(nullAddress, NFTProtectABI, publicProvider),
-        userRegistryContract: new Contract(nullAddress, UserRegistryABI, publicProvider),
-        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, publicProvider),
-        couponsContract: new Contract(nullAddress, ERC20ABI, publicProvider)
+        nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary),
+        userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary),
+        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
+        couponsContract: new Contract(nullAddress, ERC20ABI, providedLibrary)
     })
 
-    const { switchNetwork } = useSwitchNetwork()
+    const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Marks if user has DID registered
@@ -158,10 +154,9 @@ export function AppContextProvider({ children }:any) {
                 return
             }
         }
-        const signer = library instanceof Web3Provider && 
-            library.getSigner()
+        const signer =  account && library?.getSigner(account)
         setAppState({
-            active: active && walletClientActive && isCorrectChain,
+            active: active && isCorrectChain,
             account,
             currentChain,
             library,
@@ -177,7 +172,7 @@ export function AppContextProvider({ children }:any) {
     useEffect(subscribeBlockUpdates, [appState.account, appState.library, appState.currentChain])
     useEffect(setCurrentFee, [appState.library, appState.currentChain, appState.account])
     useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
-    useEffect(stateSetter, [walletClient, account, active, walletClientActive, chain, switchNetwork, chainId, isDisconnected])
+    useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
 
     const couponsBalanceLoader = async () => {
         const balance = await appState.couponsContract.balanceOf(appState.account)
@@ -254,8 +249,10 @@ export function AppContextProvider({ children }:any) {
     }, [appState.active, appState.account, appState.currentChain]);
 
     return (
-        <AppContext.Provider value={{
+        appState.library && appState.client && <AppContext.Provider value={{
             ...appState,
+            library: appState.library,
+            client: appState.client,
             isCorrectChain,
             defaultChain,
             referrerAddress,
