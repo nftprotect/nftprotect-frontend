@@ -144,9 +144,9 @@ const Home: NextPage = () => {
 
                 <GridItem area={"main"}>
                     <chakra.main>
-                        {!active && <LoginScreen/> }
+                        {(!active || !currentChain) && <LoginScreen/> }
 
-                        {active && (
+                        {(active && currentChain) && (
                             <>
                                 <Flex
                                     minH={{ base: "auto", md: "360px" }}
@@ -194,7 +194,7 @@ const Home: NextPage = () => {
                                 {innerPart}
                                 <NFTView />
                                 {/* Load all notifications */}
-                                <NotificationsLoader />
+                                { currentChain && <NotificationsLoader /> }
                             </>
                         )}
                     </chakra.main>
