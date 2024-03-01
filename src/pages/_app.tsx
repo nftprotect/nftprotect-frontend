@@ -5,7 +5,6 @@ import {
     appIcon, 
     appName, 
     appUrl, 
-    autoConnect, 
     supportedChains
 } from '../config'
 import { ChakraProvider, theme } from '@chakra-ui/react'
