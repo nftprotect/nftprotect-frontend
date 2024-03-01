@@ -46,5 +46,5 @@ export function encodeAddress(address: `0x${string}`): string {
 
 export function decodeAddress(encoded: string): string {
     const decodedBuffer = bs58.decode(encoded);
-    return '0x' + decodedBuffer.toString('hex');
+    return '0x' + decodedBuffer.toString();
 }
