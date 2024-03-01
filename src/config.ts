@@ -4,7 +4,6 @@ import { mainnet, sepolia } from "wagmi/chains";
 
 export const appName = "NFT Protect";
 export const appDescription = "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.";
-export const autoConnect = true;
 export const appUrl = "https://dev.nftprotect.app";
 export const appIcon = "https://dev.nftprotect.app/images/logo-blue.svg";
 
