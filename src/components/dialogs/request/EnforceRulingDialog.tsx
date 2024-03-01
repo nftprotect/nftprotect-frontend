@@ -22,15 +22,24 @@ import { handleContractError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro'
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
+import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
+
+interface EnforceRulingData {
+    nft: NFT,
+    isRuled: boolean,
+}
 
 const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
-    const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract } = useAppContext()
+    const [ data, setData ] = useState<EnforceRulingData>()
+    const { nft, isRuled } = data || {}
+    const { nftProtectContract, currentChain } = useAppContext()
+    const isTestnet: boolean = currentChain?.wagmiId?.testnet;
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const { executeRuling } = useArbitrableProxy()
 
     const disputeId = nft?.pendingRequest?.externalDisputeId
 
@@ -59,34 +68,57 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = () => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitingForTransaction);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.rulingEnforced)
-                    console.log("Transaction successful", tx.hash);
-                    onSubmitted && onSubmitted()
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (tx: any) => {
+        setNextStep(StepMapping.waitingForTransaction);
+        try {
+            const receipt = await nftProtectContract.provider.waitForTransaction(tx.hash);
+            if (receipt.status === 1) {
+                setNextStep(StepMapping.rulingEnforced);
+                console.log("Transaction successful", tx.hash);
+                onSubmitted && onSubmitted();
+                return true;
+            } else {
+                handleTransactionFailed(tx);
+            }
+        } catch (error) {
+            handleUnknownError(error);
         }
+        return false;
     }
 
-    const enforceRuling = () => {
+    const arbitratorTransactionSent = async (tx: any) => {
+        setNextStep(StepMapping.waitingForTransaction);
         try {
-            nft?.pendingRequest && 
-                nftProtectContract.fetchRuling(nft.pendingRequest.id)
-                .then( finalTransactionSent() )
-                .catch( 
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    }) 
-                )
-        } catch (err: any) {
-            handleUnknownError(err)
+            const receipt = await nftProtectContract.provider.waitForTransaction(tx.hash);
+            if (receipt.status === 1) {
+                setNextStep(StepMapping.confirmTransaction);
+                console.log("Transaction successful", tx.hash);
+                return true;
+            } else {
+                handleTransactionFailed(tx);
+            }
+        } catch (error) {
+            handleUnknownError(error);
+        }
+        return false;
+    }
+
+    const enforceRuling = async () => {
+        try {
+            if (nft?.pendingRequest) {
+                // In testnet we have to call executeRuling on arbitrator contract
+                if (isTestnet && !isRuled && disputeId) {
+                    const tx = await executeRuling(currentChain.defaultArbitrator, disputeId);
+                    await arbitratorTransactionSent(tx);
+                }
+                const tx = await nftProtectContract.fetchRuling(nft.pendingRequest.id);
+                finalTransactionSent(tx);
+            }
+        } catch (error: any) {
+            handleContractError({
+                'ACTION_REJECTED': handleRejected,
+                default: handleUnknownError
+            })(error);
         }
     }
 
@@ -103,7 +135,7 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
     }, [isOpen])
 
     useEffect(() => {
-        setDialog('EnforceRulingDialog', {...disclosure, setNft})
+        setDialog('EnforceRulingDialog', {...disclosure, setData})
     }, [])
 
     return (<>

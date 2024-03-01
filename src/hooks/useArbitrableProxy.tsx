@@ -33,7 +33,7 @@ export const useArbitrableProxy = () => {
             "useArbitrable has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, active, library, nftProtectContract, arbRegistryContract, currentBlock } = useAppContext()
+    const { currentChain, active, library, account, arbRegistryContract, currentBlock } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
@@ -41,7 +41,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitrableProxyAddress,
             ArbitrableProxyABI, 
-            active ? (library as Web3Provider).getSigner() : library
+            account && active ? library.getSigner(account) : library
         )
         return contract
     }
@@ -51,7 +51,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitratorAddress, 
             KlerosLiquidABI, 
-            active ? (library as Web3Provider).getSigner() : library
+            account && active ? library.getSigner(account) : library
         )
         return contract
     }
@@ -156,6 +156,14 @@ export const useArbitrableProxy = () => {
         return contract.submitEvidence(localDisputeId, evidenceURI)
     }
 
+    const executeRuling = async ( 
+        arbitratorId: number, 
+        externalDisputeId: BigNumber,
+    ): Promise<any> => {
+        const contract = await getArbitrator(arbitratorId)
+        return contract.executeRuling(externalDisputeId)
+    }
+
     useEffect(() => {
         contracts.current = []
     }, [active, currentChain])
@@ -166,6 +174,7 @@ export const useArbitrableProxy = () => {
         submitEvidence,
         isRuled,
         getArbitrableProxy,
-        getArbitrator
+        getArbitrator,
+        executeRuling
     }
 }

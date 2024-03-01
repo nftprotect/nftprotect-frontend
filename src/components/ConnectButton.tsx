@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { Trans, t } from '@lingui/macro'
-import { switchNetwork } from "@wagmi/core";
 import { Wallet, Swap } from '@web3uikit/icons';
-import { useSwitchNetwork } from 'wagmi';
+import { useSwitchChain } from 'wagmi';
 import { ConnectKitButton } from 'connectkit';
 import { useAppContext } from "../context/AppContextProvider";
 
@@ -17,6 +16,7 @@ const ConnectButton = ({
 }: ConnectButtonInterface) => {
 
     const { active, isCorrectChain } = useAppContext() 
+    const { switchChain } = useSwitchChain()
 
     if (active) {
         return (
@@ -42,12 +42,12 @@ const ConnectButton = ({
                     );
                 }}
             </ConnectKitButton.Custom>
-        } else if (chainId && switchNetwork) {
+        } else if (chainId && switchChain) {
             return <Button
                 variant={buttonVariant}
                 leftIcon={<Swap fontSize="1.375rem" />}
                 onClick={() => {
-                    switchNetwork({chainId})
+                    switchChain({chainId})
                 }}
             >
                 <Trans>Switch network</Trans>

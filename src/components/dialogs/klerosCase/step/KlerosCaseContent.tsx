@@ -425,16 +425,22 @@ const KlerosCaseContent = ({
                         const isAppealingPeriod: boolean = disputeData?.period === Period.Appeal
                         const enforced: boolean = (requestStatus === RequestStatus.Accepted || requestStatus === RequestStatus.Rejected)
                         const appealButton = <Flex w={{base: "200px"}}>
-                            <Button variant="primaryLight">
+                            <Button 
+                                variant="primaryLight"
+                                onClick={() => {
+                                    const disputeLink = createDisputeLink(disputeData.id);
+                                    window.open(disputeLink, '_blank');
+                                }}
+                            >
                                 <Trans>File an appeal</Trans>
                             </Button>
                         </Flex>
-                        const enforceButton = (!enforced && !disputeIsRuled) ? <Flex w={{base: "200px"}}>
+                        const enforceButton = (!enforced) ? <Flex w={{base: "200px"}}>
                             <Button 
                                 variant="primaryLight"
                                 onClick={() => {
                                     const dialog = getDialog('EnforceRulingDialog')
-                                    dialog.setNft(nft)
+                                    dialog.setData({nft, isRuled: disputeIsRuled})
                                     dialog.onOpen()
                                 }}
                                 isDisabled={!active}

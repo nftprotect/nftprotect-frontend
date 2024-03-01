@@ -6,19 +6,18 @@ import {
     Button
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { t } from '@lingui/macro';
 
 const NetworkMenu = () => {
-    const { chain, chains } = useNetwork()
-    const { switchNetwork } = useSwitchNetwork()
-    const canSwitchNetwork = switchNetwork ? true : false
+    const { chain } = useAccount()
+    const { switchChain, chains } = useSwitchChain()
 
     const handleChange = (e: any) => {
-        const networkId = e.target.value
-        switchNetwork?.(networkId)
+        const chainId = e.target.value
+        switchChain?.({chainId})
     }
-    const icon = canSwitchNetwork ? <ChevronDownIcon /> : undefined
+    const icon =  <ChevronDownIcon />
 
     return (
         <Menu>
@@ -30,7 +29,7 @@ const NetworkMenu = () => {
             >
                 { (chain) ? chain?.name : t`Choose network` }
             </MenuButton>
-            { canSwitchNetwork && <MenuList>
+            { <MenuList>
                     { chains.map(({ name, id }) => (
                             <MenuItem
                                 key={id}

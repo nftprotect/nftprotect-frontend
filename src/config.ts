@@ -1,5 +1,6 @@
 import { Network } from "alchemy-sdk";
-import { mainnet, goerli, sepolia } from "wagmi/chains";
+import { fallback, http } from "wagmi";
+import { mainnet, sepolia } from "wagmi/chains";
 
 export const appName = "NFT Protect";
 export const appDescription = "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.";
@@ -41,7 +42,12 @@ export const supportedChains = [
         userRegistryContractAddress: '0x727718859965b1c88c79491721d9b861654f6a73',
         arbRegistryContractAddress: '0xa8d82ab740b0ba1a1b5784b86ecdc41d53e4ff15',
         couponsContractAddress: '0x8f1cb013426f591220c51c516ac185a21405afa8',
-        defaultArbitrator: 1
+        defaultArbitrator: 1,
+        transport: fallback([
+            http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
+            http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+            http(), // public fallback
+        ]),
     },
     // {
     //     id: 137,
@@ -59,6 +65,7 @@ export const supportedChains = [
     //     explorerUrl: "https://arbiscan.io"
     // }
 ]
+
 export const defaultChain = 11155111 // Sepolia
 export const maxBlocksPerRequest = 1000000 // use 3000 for public providers
 

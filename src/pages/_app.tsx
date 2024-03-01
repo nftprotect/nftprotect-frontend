@@ -1,6 +1,13 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { appDescription, appIcon, appName, appUrl, autoConnect, supportedChains } from '../config'
+import { 
+    appDescription, 
+    appIcon, 
+    appName, 
+    appUrl, 
+    autoConnect, 
+    supportedChains
+} from '../config'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import nftProtectTheme from '../theme/index'
 import { AppContextProvider } from '../context/AppContextProvider'
@@ -13,29 +20,33 @@ import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
 import { CallableDialogContextProvider } from '../context/CallableDialogContextProvider'
 import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
-//import GoogleAnalytics from '../components/GoogleAnalytics'
-import { WagmiConfig, createConfig } from "wagmi";
+import { WagmiProvider, createConfig } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { useLinguiInit } from '../utils/lingui';
 import { GoogleAnalytics } from '@next/third-parties/google'
 import ccTheme from '../theme/ck_theme.json';
+import { Transport } from 'viem'
 
 const chains = supportedChains.map(it => it.wagmiId)
+const transports = supportedChains.reduce((acc, it) => {
+    acc[it.id] = it.transport;
+    return acc;
+  }, {} as Record<number, Transport>);
+
 const connectKitConfig = getDefaultConfig({
-    // Required API Keys
-    infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY!,
-    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
+    transports,
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-    // Required
     appName,
     // Optional
-    autoConnect,
-    chains,
+  //  autoConnect,
+    chains: [chains[0], ...chains.slice(1)], // Workaround to make it a tuple
     appDescription,
     appUrl, // your app's url
     appIcon, // your app's icon, no bigger than 1024x1024px (max. 1MB)
 });
 const config = createConfig(connectKitConfig);
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
 
@@ -47,26 +58,28 @@ function MyApp({ Component, pageProps }: AppProps) {
     }, [])
     
     return (
-        <WagmiConfig config={config}>
-             <ConnectKitProvider> {/* customTheme={ccTheme}> */}
-                <AppContextProvider>
-                    <ChakraProvider theme={nftProtectTheme}>
-                        <TheGraphContextProvider>
-                            <IPFSContextProvider>
-                                <NotificationContextProvider>
-                                    <CallableDialogContextProvider>
-                                        <I18nProvider i18n={i18n}>
-                                            <Component {...pageProps} />
-                                            { (process.env.NODE_ENV === 'production') && googleAnalyticsId && <GoogleAnalytics gaId={googleAnalyticsId}/> }
-                                        </I18nProvider>
-                                    </CallableDialogContextProvider>
-                                </NotificationContextProvider>
-                            </IPFSContextProvider>
-                        </TheGraphContextProvider>
-                    </ChakraProvider>
-                </AppContextProvider>
-            </ConnectKitProvider>
-        </WagmiConfig>
+        <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+                <ConnectKitProvider> {/* customTheme={ccTheme}> */}
+                    <AppContextProvider>
+                        <ChakraProvider theme={nftProtectTheme}>
+                            <TheGraphContextProvider>
+                                <IPFSContextProvider>
+                                    <NotificationContextProvider>
+                                        <CallableDialogContextProvider>
+                                            <I18nProvider i18n={i18n}>
+                                                <Component {...pageProps} />
+                                                { (process.env.NODE_ENV === 'production') && googleAnalyticsId && <GoogleAnalytics gaId={googleAnalyticsId}/> }
+                                            </I18nProvider>
+                                        </CallableDialogContextProvider>
+                                    </NotificationContextProvider>
+                                </IPFSContextProvider>
+                            </TheGraphContextProvider>
+                        </ChakraProvider>
+                    </AppContextProvider>
+                </ConnectKitProvider>
+            </QueryClientProvider>
+        </WagmiProvider>
     )
 }
 
