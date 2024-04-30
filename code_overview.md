@@ -75,9 +75,7 @@ The `providedLibrary` object is then used in other application components still 
 Also inside this provider, network switching is implemented through the `setChainId(chainId: number)` method. If a `chainId` different from the current network is passed, the public client for the specified network will be used as the client until the user switches the network to the correct one. This functionality is used, for example, on requestId pages, as we need to display data from a specific known network in advance.
 
 The `AppContextProvider` still contains methods implemented through ethers.js and requiring rework using [wagmi hooks](https://wagmi.sh/react/hooks/useContractWrite) / [wagmi core](https://wagmi.sh/core/actions/writeContract):
-- `setDidState`
 - `setCurrentFee`
-- `couponsBalanceLoader`
 
 The full list of parameters returned by the `useAppContext` hook is described by the interface:
 
@@ -92,13 +90,10 @@ export interface AppContextInterface {
     currentChain: any | undefined,  // Current network (object from config)
     nftProtectContract: Contract,   // Various contracts used follow
     arbRegistryContract: Contract,
-    dynamicArbRegistryContract: Contract,
     referrerAddress: string,        // Referrer address, currently set to null as it is not used
-    didRegistered: boolean | undefined, // User has a registered DID (gitcoin passport, proof of humanity etc.)
     currentBlock: number | undefined, // Current block. Should be removed as it is provided by wagmi
     baseTokenPrice: number | undefined, // Price of the main token in dollars
     fee: number | undefined,    // Cost of NFT protection
-    couponsBalance: number | undefined, // Coupons balance
     setChainId: Function    // Function to set the current network
 }
 ```

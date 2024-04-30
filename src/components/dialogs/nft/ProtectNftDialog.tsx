@@ -1,5 +1,4 @@
 import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../DidRequiredDialog';
 import { useEffect, useState } from 'react';
 import {
     Button,
@@ -51,18 +50,16 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const [ nft, setNft ] = useState<NFT>()
     const {
         account, 
-        didRegistered, 
         nftProtectContract, 
         referrerAddress, 
         fee, 
         baseTokenPrice, 
-        couponsBalance
     } = useAppContext()
     const { setDialog } = useCallableDialogContext()
-    const didDialogDisclosure = useDisclosure()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const couponsBalance = 0; // This version has no coupons
 
     enum StepMapping {
         start,
@@ -115,16 +112,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
-        if (!didRegistered) {
-            didDialogDisclosure.onOpen();
-            return
-        }
         setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
             .then((result: any) => {
                 const wrapErrorMapping = {
-                    'user must be registered': didDialogDisclosure.onOpen,
                     'invalid referrer': handleUnknownError,
                     'ACTION_REJECTED': handleRejected,
                     default: handleUnknownError

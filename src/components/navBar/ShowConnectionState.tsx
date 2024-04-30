@@ -34,7 +34,7 @@ import { useRouter } from 'next/router'
 
 const ShowConnectionState = () => {
 
-    const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
+    const { account, active, library, baseTokenPrice } = useAppContext()
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
     const { hasCopied, onCopy } = useClipboard(account || '');
@@ -158,9 +158,6 @@ const ShowConnectionState = () => {
                         <Box>
                             <Text fontSize={['16px']} fontWeight={600}>
                                 <Trans>Coupons</Trans>
-                            </Text>
-                            <Text fontSize={['36px']}>
-                                { (couponsBalance !== undefined) ? t`${ couponsBalance } coupons` : t`Fetching balance…` }
                             </Text>
                             <Text fontSize={['16px']} color="text.muted" lineHeight={"120%"}>
                                 <Trans>
