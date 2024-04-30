@@ -87,20 +87,9 @@ const KlerosCaseContent = ({
 }: CaseContentInitialData) => {
 
     const metaEvidenceTypes = [
-        // Ultra
-        // {
-        //     label: 'burn',
-        //     value: '0'
-        // }, {
-        //     label: 'adjustOwnership',
-        //     value: '1'
-        // }, {
-        //     label: 'answerOwnershipAdjustment',
-        //     value: '2'
-        // }, 
         {
             label: t`Bona fide transfer`,
-            id: 3,
+            id: 0,
             page: {
                 title: t`Ownership adjustment in case of bona fide transfer`,
                 summary: t`The Claimant alleges that he purchased the pNFT bona fide but the owner of the original NFT refused to transfer him the original.`,
@@ -113,7 +102,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Incorrect address`,
-            id: 4,
+            id: 1,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT due to a sending to an incorrect address`,
                 summary: t`The Claimant alleges loss of their pNFT due to a transaction to an incorrect address.`,
@@ -126,7 +115,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Phishing attack`,
-            id: 5,
+            id: 2,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT in phishing attack`,
                 summary: t`The Claimant alleges loss of their pNFT due to a phishing attack.`,
@@ -139,7 +128,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Protocol breach`,
-            id: 6,
+            id: 3,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT in a protocol breach`,
                 summary: t`The Claimant alleges loss of their pNFT due to a protocol breach.`,
