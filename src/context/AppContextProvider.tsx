@@ -185,7 +185,6 @@ export function AppContextProvider({ children }:any) {
                 try {
                     const partnerData = await getPartner(appState.account);
                     if (partnerData) {
-                        // Предполагаем, что скидка представлена в процентах и применяется к feeEntry
                         const discount = partnerData.discount;
                         finalFee = finalFee.mul(100 - discount).div(100);
                     }
