@@ -80,6 +80,13 @@ export interface AffiliateActionData {
     txHash: string,
 }
 
+export interface PartnerData {
+    id: string,
+    discount: number,
+    affiliatePercent: number,
+    totalProtected: BigNumber
+}
+
 export interface UserData {
     id: string,
     referrer: string,
@@ -290,6 +297,39 @@ export const useNftProtectGraph = () => {
                 totalReferrals: BigNumber.from(data.user.totalReferrals),
                 totalRewards: BigNumber.from(data.user.totalRewards)
             } : null
+        } else {
+            throw Error(MissingUriError(currentChain.chainId))
+        }
+    }
+
+    const getPartner = async (address: string): Promise<PartnerData|null> => {
+        if (graphURI) {
+            const query = `
+                query getUserWithOptionalPartner($address: Bytes!) {
+                    partner(id: $address) {
+                        id,
+                        discount,
+                        affiliatePercent,
+                        totalProtected
+                    }
+                }
+            `
+            const result = await performQuery(graphURI, query, { address: address.toLowerCase() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            if (data.partner) {
+                return {
+                    id: data.partner.id,
+                    discount: data.partner.discount,
+                    affiliatePercent: data.partner.affiliatePercent,
+                    totalProtected: BigNumber.from(data.partner.totalProtected)
+                }
+            }
+            return null;
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -527,6 +567,7 @@ export const useNftProtectGraph = () => {
         getRequest,
         getToken,
         getUser,
+        getPartner,
         listRequests,
         listTokensTransfered,
         listTokensReceived,
