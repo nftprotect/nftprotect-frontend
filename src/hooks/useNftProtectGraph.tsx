@@ -1,10 +1,9 @@
 import { useContext, useMemo } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftProtectGraphs } from "../config";
-import { useTheGraph } from "./useTheGraph";
-import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { timestampToDate } from "../utils/helpers";
+import { graphManager } from "../utils/thegraph";
 
 export enum ReqType {
     OwnershipAdjustment,
@@ -100,14 +99,12 @@ const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: 
 
 export const useNftProtectGraph = () => {
     const appContext = useContext(AppContext)
-    const graphContext = useContext(TheGraphContext)
 
-    if (!graphContext && !appContext) {
+    if (!appContext) {
         throw new Error(
-            "useNftProtectGraph has to be used within <TheGraphContext.Provider> and <AppContextProvider.Provider>"
+            "useNftProtectGraph has to be used within <AppContextProvider.Provider>"
         );
     }
-    const { performQuery } = useTheGraph()
     const { currentChain } = useAppContext()
     const { uri: graphURI } = useMemo(() => { 
         return nftProtectGraphs.find( it => it.chainId === currentChain?.id ) || { uri: undefined }
@@ -133,7 +130,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query)
+            const result = await graphManager.performQuery(graphURI, query, {});
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -183,7 +180,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { requestId: requestId.toString() })
+            const result = await graphManager.performQuery(graphURI, query, { requestId: requestId.toString() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -237,7 +234,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { tokenId: tokenId.toString() })
+            const result = await graphManager.performQuery(graphURI, query, { tokenId: tokenId.toString() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -282,7 +279,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { address: address.toLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { address: address.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -314,7 +311,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { address: address.toLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { address: address.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -371,7 +368,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, params)
+            const result = await graphManager.performQuery(graphURI, query, params)
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -421,7 +418,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -488,7 +485,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { owner: owner.toLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { owner: owner.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -540,7 +537,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await performQuery(graphURI, query, { referrerAddress: referrerAddress.toLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { referrerAddress: referrerAddress.toLowerCase() })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {

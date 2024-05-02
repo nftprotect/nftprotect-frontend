@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
 import { arbitratorGraphs } from "../config";
-import { useTheGraph } from "./useTheGraph";
-import { TheGraphContext } from "../context/TheGraphContextProvider";
 import { capitalize, timestampToDate } from "../utils/helpers";
+import { graphManager } from "../utils/thegraph";
+import { AppContext } from "../context/AppContextProvider";
 
 export enum Period {
     Evidence,
@@ -41,13 +41,12 @@ export interface DisputeGraphData {
 }
 
 export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
-    const currentContext = useContext(TheGraphContext);
+    const currentContext = useContext(AppContext);
     if (!currentContext) {
         throw new Error(
-            "useArbitratorGraph has to be used within <TheGraphContext.Provider>"
+            "useArbitratorGraph has to be used within <AppContext.Provider>"
         );
     }
-    const { performQuery } = useTheGraph()
     const { arbitrators } = arbitratorGraphs.find( it => it.chainId === chainId ) || { arbitrators: [] }
     const { uri: graphURI } = arbitrators.find( it => it.arbitratorId === arbitratorId ) || { uri: undefined }
 
@@ -93,7 +92,7 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const { data, errors } = await performQuery(graphURI, query, { disputeId: disputeId.toString() })
+            const { data, errors } = await graphManager.performQuery(graphURI, query, { disputeId: disputeId.toString() })
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
                     throw new Error(error.message)
@@ -150,7 +149,7 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     }
                 }
             `
-            const { data, errors } = await performQuery(graphURI, query, { creator })
+            const { data, errors } = await graphManager.performQuery(graphURI, query, { creator })
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
                     throw new Error(error.message)
