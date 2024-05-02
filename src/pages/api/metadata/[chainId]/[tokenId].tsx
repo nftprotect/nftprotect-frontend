@@ -48,12 +48,12 @@ Check the validity of this pNFT on https://dev.nftprotect.app/validate
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) => {
     const { tokenId, chainId } = req.query
-    const { getToken } = useNftProtectGraph();
     const currentChain = supportedChains.find(it => it.id.toString() === chainId)
     if (!currentChain) {
         res.status(400).json({ message: 'Wrong chainId' })
         return
     }
+    const { getToken } = useNftProtectGraph(currentChain.id);
 
     // Trying to get from cache
     const cacheId = `${chainId}:${tokenId}`

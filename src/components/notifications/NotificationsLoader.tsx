@@ -47,7 +47,7 @@ const klerosAppealPeriod = 84
 const NotificationsLoader = () => {
     const context = useAppContext()
     const { account, active, currentChain, nftProtectContract } = context
-    const { listTokensReceived, listTokensTransfered } = useNftProtectGraph()
+    const { listTokensReceived, listTokensTransfered } = useNftProtectGraph(currentChain.id)
     const { getArbitrableProxy, getArbitrator } = useArbitrableProxy()
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()

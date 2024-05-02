@@ -18,6 +18,7 @@ import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral";
 import SignatureVerifierABI from "../abi/SignatureVerifierABI";
+import { useNftProtectGraph } from "../hooks/useNftProtectGraph";
 
 export interface AppContextInterface {
     active: boolean,
@@ -34,7 +35,7 @@ export interface AppContextInterface {
     currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
     fee: number | undefined,
-    setChainId: Function
+    setChainId: Function,
 }
 
 interface AppState {
@@ -89,20 +90,8 @@ export function AppContextProvider({ children }:any) {
     const {data: currentBlockBigInt} = useBlockNumber({chainId: appState.currentChain?.id || defaultChain})
     const currentBlock = Number(currentBlockBigInt); // TODO: use bigint instead
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
+    const { getSystem, getPartner, getUser } = useNftProtectGraph(appState.currentChain?.id || defaultChainId);
 
-    const setCurrentFee = () => {
-        // TODO: check it uses correct chain in all cases
-        if (appState.library && appState.currentChain && appState.account) {
-            const { userRegistryContract } = appState
-            userRegistryContract.feeForUser(appState.account, 0).then((result: number) => { // TODO: add 2 different fee types
-                console.log('Fee:', result)
-                setFee(result)
-            })
-        } else {
-            setFee(undefined)
-        }
-    }
-    
     // Loads and sets current base token price in USD
     const updateBaseTokenPrice = () => {
         const { currentChain } = appState 
@@ -138,7 +127,6 @@ export function AppContextProvider({ children }:any) {
         })
     }
 
-    useEffect(setCurrentFee, [appState.library, appState.currentChain, appState.account])
     useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
     useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
 
@@ -154,28 +142,67 @@ export function AppContextProvider({ children }:any) {
 
     // Handle referrer address
     useEffect(() => {
-        const { account, active } = appState
-        if (active && account && (referrerAddress === nullAddress)) {
-            loadReferrer(appState.userRegistryContract, account).then(
-                (refAddr: `0x${string}`) => {
-                    if (refAddr !== nullAddress) {
-                        console.log('Referrer address exists:', refAddr)
-                        setReferrerAddress(refAddr)
+        const fetchReferrerData = async () => {
+            const { account, active } = appState;
+            if (active && account && (referrerAddress === nullAddress)) {
+                try {
+                    const userData = await getUser(account);
+                    if (userData && userData.referrer !== nullAddress) {
+                        console.log('Referrer address exists:', userData.referrer);
+                        setReferrerAddress(userData.referrer as `0x${string}`);
                     } else {
-                        const inviteAddr = loadInvite()
+                        const inviteAddr = loadInvite();
                         if (inviteAddr?.toLowerCase() === account.toLowerCase()) {
-                            console.error("Referrer address can't match account address")
+                            console.error("Referrer address can't match account address");
                         } else if (inviteAddr) {
-                            console.log('Setting invite address as referrer')
-                            setReferrerAddress(inviteAddr)
+                            console.log('Setting invite address as referrer');
+                            setReferrerAddress(inviteAddr);
                         } else {
-                            console.log('No referrer or invite found')
+                            console.log('No referrer or invite found');
                         }
                     }
+                } catch (error) {
+                    console.error("Error fetching referrer data:", error);
                 }
-            )
-        }        
-    }, [appState.active, appState.account, appState.currentChain]);
+            }
+        };
+    
+        fetchReferrerData();
+    }, [appState.account, appState.currentChain]);
+
+    // Load fee from graph
+    useEffect(() => {
+        const updateFeeBasedOnSystemAndPartner = async () => {
+            if (!appState.currentChain || !appState.account) {
+                setFee(undefined);
+                return;
+            }
+
+            try {
+                const systemData = await getSystem();
+                let finalFee = systemData.feeEntry;
+
+                try {
+                    const partnerData = await getPartner(appState.account);
+                    if (partnerData) {
+                        // Предполагаем, что скидка представлена в процентах и применяется к feeEntry
+                        const discount = partnerData.discount;
+                        finalFee = finalFee.mul(100 - discount).div(100);
+                    }
+                } catch (error) {
+                    console.warn("Partner data not found or error fetching:", error);
+                }
+
+                setFee(finalFee.toNumber()); // TODO: use BigNumber / bigint
+            } catch (error) {
+                console.error("Failed to fetch system or partner data:", error);
+                setFee(undefined);
+            }
+        };
+
+        updateFeeBasedOnSystemAndPartner();
+    }, [appState.currentChain, appState.account]);
+
 
     return (
         appState.library && appState.client && <AppContext.Provider value={{

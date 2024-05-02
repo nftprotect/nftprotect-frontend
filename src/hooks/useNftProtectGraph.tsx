@@ -1,7 +1,6 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
 import { nftProtectGraphs } from "../config";
-import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
 
@@ -97,24 +96,16 @@ export interface UserData {
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
 
-export const useNftProtectGraph = () => {
-    const appContext = useContext(AppContext)
-
-    if (!appContext) {
-        throw new Error(
-            "useNftProtectGraph has to be used within <AppContextProvider.Provider>"
-        );
-    }
-    const { currentChain } = useAppContext()
+export const useNftProtectGraph = (chainId: number) => {
     const { uri: graphURI } = useMemo(() => { 
-        return nftProtectGraphs.find( it => it.chainId === currentChain?.id ) || { uri: undefined }
-    }, [currentChain])
+        return nftProtectGraphs.find( it => it.chainId === chainId ) || { uri: undefined }
+    }, [chainId])
     
     const getSystem = async (): Promise<SystemData> => {
         if (graphURI) {
             const query = `
-                query getSystem {
-                    system {
+                query getSystem($id: Int) {
+                    system(id: $id) {
                         id,
                         arbitratorregistry,
                         nftprotect,
@@ -130,7 +121,7 @@ export const useNftProtectGraph = () => {
                     }
                 }
             `
-            const result = await graphManager.performQuery(graphURI, query, {});
+            const result = await graphManager.performQuery(graphURI, query, {id: 0});
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -152,7 +143,7 @@ export const useNftProtectGraph = () => {
                 affiliatePercent: data.system.affiliatePercent
             }
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -201,7 +192,7 @@ export const useNftProtectGraph = () => {
                 updateBlockNumber: parseInt(request.blocknumberChange),
             } : null
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -261,7 +252,7 @@ export const useNftProtectGraph = () => {
                 nonce: BigNumber.from(data.token.nonce),
             } : undefined
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -295,7 +286,7 @@ export const useNftProtectGraph = () => {
                 totalRewards: BigNumber.from(data.user.totalRewards)
             } : null
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -328,7 +319,7 @@ export const useNftProtectGraph = () => {
             }
             return null;
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -377,7 +368,7 @@ export const useNftProtectGraph = () => {
             }
             return data.requests
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -445,7 +436,7 @@ export const useNftProtectGraph = () => {
                 nonce: BigNumber.from(it.nonce),
             }}) : []
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -512,7 +503,7 @@ export const useNftProtectGraph = () => {
                 nonce: BigNumber.from(it.nonce),
             }}) : []
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 
@@ -555,7 +546,7 @@ export const useNftProtectGraph = () => {
                 txHash: action.txHash
             })) : []
         } else {
-            throw Error(MissingUriError(currentChain.chainId))
+            throw Error(MissingUriError(chainId))
         }
     }
 

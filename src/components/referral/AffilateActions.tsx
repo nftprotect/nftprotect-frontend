@@ -13,7 +13,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 
 const AffilateActions = () => {
         const { account, currentChain } = useAppContext()
-        const { listAffiliateActions } = useNftProtectGraph();
+        const { listAffiliateActions } = useNftProtectGraph(currentChain.id);
         const [actions, setactions] = useState<AffiliateActionData[]>([]);
         const [loading, setLoading] = useState(true);
     

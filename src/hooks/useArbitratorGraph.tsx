@@ -1,9 +1,7 @@
-import { useContext } from "react";
 import { BigNumber } from '@ethersproject/bignumber'
 import { arbitratorGraphs } from "../config";
 import { capitalize, timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
-import { AppContext } from "../context/AppContextProvider";
 
 export enum Period {
     Evidence,
@@ -41,12 +39,6 @@ export interface DisputeGraphData {
 }
 
 export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
-    const currentContext = useContext(AppContext);
-    if (!currentContext) {
-        throw new Error(
-            "useArbitratorGraph has to be used within <AppContext.Provider>"
-        );
-    }
     const { arbitrators } = arbitratorGraphs.find( it => it.chainId === chainId ) || { arbitrators: [] }
     const { uri: graphURI } = arbitrators.find( it => it.arbitratorId === arbitratorId ) || { uri: undefined }
 

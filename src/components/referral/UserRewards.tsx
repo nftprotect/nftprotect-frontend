@@ -7,7 +7,7 @@ import { formatEther } from '@ethersproject/units';
 
 const UserRewards = () => {
     const { account, active, currentChain } = useAppContext();
-    const { getUser } = useNftProtectGraph();
+    const { getUser } = useNftProtectGraph(currentChain.id);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
