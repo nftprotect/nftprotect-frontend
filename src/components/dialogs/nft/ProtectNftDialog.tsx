@@ -43,8 +43,6 @@ enum NFTPTokenStandard
     ERC20
 }
 
-const svgBackground = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='red' stroke-width='2'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='2'/></svg>")`;
-
 const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
@@ -59,7 +57,6 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const couponsBalance = 0; // This version has no coupons
 
     enum StepMapping {
         start,
@@ -225,9 +222,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody mb={{base: "20px"}} >
                                     { nft && <NFTImage nft={nft} /> }
-                                    <Box
-                                        backgroundImage={(couponsBalance !== undefined) && (couponsBalance > 0) ? svgBackground : undefined }
-                                    >
+                                    <Box>
                                         <Text textStyle="paragraph" mb={{base: "1em"}} letterSpacing="0.04em" fontWeight={'bold'}>
                                             <Trans>Fee for Protection your NFT:</Trans>
                                         </Text>
@@ -241,11 +236,6 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             </Text> }
                                         </Flex>
                                     </Box>
-                                    { (couponsBalance !== undefined) && (couponsBalance > 0) &&
-                                        <Text textStyle="paragraph" mt={'1em'} textAlign="center" letterSpacing="0.04em" fontWeight={'bold'}>
-                                            <Trans>You have special NFT Protect coupon! It allows you to protect of your NFT for FREE!</Trans>
-                                        </Text>
-                                    }
                                 </CardBody>
 
                                 <CardFooter w="100%" justifySelf="flex-start">

@@ -155,18 +155,6 @@ const ShowConnectionState = () => {
                                 ~ ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
                             </Text> }
                         </Box>
-                        <Box>
-                            <Text fontSize={['16px']} fontWeight={600}>
-                                <Trans>Coupons</Trans>
-                            </Text>
-                            <Text fontSize={['16px']} color="text.muted" lineHeight={"120%"}>
-                                <Trans>
-                                    Want a coupon for free NFT protection? Complete the <Link color="blue" href="https://galxe.com/nftprotect" target='_blank'>
-                                        <Text as="span" color="#2D7BD6" textDecoration={'underline'}>quest</Text>
-                                    </Link>
-                                </Trans>
-                            </Text>
-                        </Box>
                         <Box mt="1rem">
                             <Flex justifyContent="space-between" alignItems="center">
                                 <Flex alignItems="center">

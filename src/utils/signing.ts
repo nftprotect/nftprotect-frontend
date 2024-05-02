@@ -1,20 +1,16 @@
-import { type UseSignTypedDataParameters } from 'wagmi';
+import { signingText } from "../config";
 
 /**
- * Формирует подпись для транзакции NFT Protect.
+ * Returns EIP-712 data for signing
  * 
- * @param tokenId ID токена NFT.
- * @param newOwner Адрес нового владельца.
- * @param nonce Уникальный номер для каждой транзакции.
- * @param signer Подписывающий объект Wallet из ethers.js.
- * @param contractAddress Адрес контракта SignatureVerifier.
- * @returns Подпись в виде строки.
+ * @param chainId The blockchain network ID.
+ * @param tokenId The NFT token ID.
+ * @param newOwner The new owner's address.
+ * @param nonce A unique number for each operation.
+ * @param contractAddress The address of the SignatureVerifier contract.
+ * @returns An object containing the domain, types, primaryType, and message for signing.
  */
 export function getSigningData(chainId: Number, tokenId: string, newOwner: string, nonce: string, contractAddress: string) {
-    // Сообщение, которое будет подписано
-    const messageText = `WARNING! READ CAREFULLY!\nBy signing this message, you agree to withdraw your original NFT from the NFT Protect protocol. Access to it will no longer be recoverable through NFT Protect!\n`;
-
-    // Создание хэша сообщения с использованием EIP-712
     const domain = {
         name: 'NFTProtect',
         version: '1',
@@ -35,7 +31,7 @@ export function getSigningData(chainId: Number, tokenId: string, newOwner: strin
         tokenId,
         newOwner: newOwner as `0x${string}`,
         nonce,
-        messageText,
+        messageText: signingText,
     };
 
     return {

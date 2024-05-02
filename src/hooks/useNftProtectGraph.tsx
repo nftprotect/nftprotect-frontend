@@ -24,6 +24,20 @@ export enum AffiliateActionType {
     Payment
 }
 
+export interface SystemData {
+    id: string,
+    arbitratorregistry: string,
+    nftprotect: string,
+    userregistry: string,
+    sigatureVerifier: string,
+    feeEntry: BigNumber,
+    feeOpenCase: BigNumber,
+    feeFetchRuling: BigNumber,
+    burnOnAction: boolean,
+    allowThirdPartyTransfers: boolean,
+    base: string,
+    affiliatePercent: number
+}
 export interface RequestGraphMinimalData {
     id: BigNumber,
     status: ReqStatus,
@@ -69,10 +83,10 @@ export interface AffiliateActionData {
 export interface UserData {
     id: string,
     referrer: string,
-    successor: string,
-    coupons: number,
     totalReferrals: BigNumber,
-    totalRewards: BigNumber
+    totalRewards: BigNumber,
+    totalProtected: BigNumber,
+    totalOwnedProtected: BigNumber,
 }
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
@@ -91,22 +105,23 @@ export const useNftProtectGraph = () => {
     const { uri: graphURI } = useMemo(() => { 
         return nftProtectGraphs.find( it => it.chainId === currentChain?.id ) || { uri: undefined }
     }, [currentChain])
-
-    const getSystem = async () => {
+    
+    const getSystem = async (): Promise<SystemData> => {
         if (graphURI) {
             const query = `
-                query getSystem() {
+                query getSystem {
                     system {
                         id,
                         arbitratorregistry,
-                        nftpcoupons,
                         nftprotect,
                         userregistry,
-                        feeBasic,
-                        feeUltra,
+                        sigatureVerifier,
+                        feeEntry,
+                        feeOpenCase,
+                        feeFetchRuling,
                         burnOnAction,
+                        allowThirdPartyTransfers,
                         base,
-                        scoreThreshold,
                         affiliatePercent
                     }
                 }
@@ -118,7 +133,20 @@ export const useNftProtectGraph = () => {
                     throw new Error(error.message)
                 })
             }
-            return data.system
+            return {
+                id: data.system.id,
+                arbitratorregistry: data.system.arbitratorregistry,
+                nftprotect: data.system.nftprotect,
+                userregistry: data.system.userregistry,
+                sigatureVerifier: data.system.sigatureVerifier,
+                feeEntry: BigNumber.from(data.system.feeEntry),
+                feeOpenCase: BigNumber.from(data.system.feeOpenCase),
+                feeFetchRuling: BigNumber.from(data.system.feeFetchRuling),
+                burnOnAction: data.system.burnOnAction,
+                allowThirdPartyTransfers: data.system.allowThirdPartyTransfers,
+                base: data.system.base,
+                affiliatePercent: data.system.affiliatePercent
+            }
         } else {
             throw Error(MissingUriError(currentChain.chainId))
         }
@@ -240,10 +268,10 @@ export const useNftProtectGraph = () => {
                     user(id: $address) {
                         id,
                         referrer,
-                        successor,
-                        coupons,
                         totalReferrals,
-                        totalRewards
+                        totalRewards,
+                        totalProtected,
+                        totalOwnedProtected
                     }
                 }
             `
@@ -257,8 +285,8 @@ export const useNftProtectGraph = () => {
             return data.user ? {
                 id: data.user.id,
                 referrer: data.user.referrer,
-                successor: data.user.successor,
-                coupons: parseInt(data.user.coupons),
+                totalProtected: BigNumber.from(data.user.totalProtected),
+                totalOwnedProtected: BigNumber.from(data.user.totalOwnedProtected),
                 totalReferrals: BigNumber.from(data.user.totalReferrals),
                 totalRewards: BigNumber.from(data.user.totalRewards)
             } : null

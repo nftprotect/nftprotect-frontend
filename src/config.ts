@@ -6,6 +6,8 @@ export const appName = "NFT Protect";
 export const appDescription = "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.";
 export const appUrl = "https://dev.nftprotect.app";
 export const appIcon = "https://dev.nftprotect.app/images/logo-blue.svg";
+// This text must match the text in SignatureVerifier.sol
+export const signingText = `WARNING! READ CAREFULLY!\nBy signing this message, you agree to withdraw your original NFT from the NFT Protect protocol. Access to it will no longer be recoverable through NFT Protect!\n`;
 
 export const supportedChains = [
     // For MVP will be used only Goerli network, others are commented for now
@@ -27,7 +29,6 @@ export const supportedChains = [
     //     nftpContractAddress: '0x8732b75a23fefab3be8825ae87dffcb38760121f',
     //     userRegistryContractAddress: '0x68deab39fb68a7c24d67d16b1f133809c41c008f',
     //     arbRegistryContractAddress: '0x094c049f25d6ea178b3262887d37ad9da36b2355',
-    //     couponsContractAddress: '0x6a204dDA156dafA6198A51241B21340627747402',
     //     defaultArbitrator: 1
     // }, 
     {
