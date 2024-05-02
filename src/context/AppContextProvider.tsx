@@ -17,6 +17,7 @@ import { Client, PublicClient, WalletClient } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral";
+import SignatureVerifierABI from "../abi/SignatureVerifierABI";
 
 export interface AppContextInterface {
     active: boolean,
@@ -28,6 +29,7 @@ export interface AppContextInterface {
     currentChain: any | undefined,
     nftProtectContract: Contract,
     arbRegistryContract: Contract,
+    signatureVerifierContract: Contract,
     referrerAddress: `0x${string}`,
     currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
@@ -42,6 +44,7 @@ interface AppState {
     nftProtectContract: Contract,
     userRegistryContract: Contract,
     arbRegistryContract: Contract,
+    signatureVerifierContract: Contract,
     client: Client|undefined,
     library: Web3Provider|undefined
 }
@@ -74,7 +77,8 @@ export function AppContextProvider({ children }:any) {
         library: providedLibrary, // this and next props temporarily not null
         nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary),
         userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary),
-        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary)
+        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
+        signatureVerifierContract: new Contract(nullAddress, SignatureVerifierABI, providedLibrary)
     })
 
     const { switchChain } = useSwitchChain()
@@ -130,6 +134,7 @@ export function AppContextProvider({ children }:any) {
             nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
             userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
             arbRegistryContract: new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, signer || library),
+            signatureVerifierContract: new Contract(currentChain?.signatureVerifierContractAddress || nullAddress, SignatureVerifierABI, signer || library)
         })
     }
 

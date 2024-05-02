@@ -40,9 +40,10 @@ export const supportedChains = [
         nftpContractAddress: '0x954edfce24448c3500b635b05dfcc051ca69d4de',
         userRegistryContractAddress: '0x8a3b109da314dde8eee77e7cb5be6e0922126ec2',
         arbRegistryContractAddress: '0x25bf41c8f7ea92091260c9e50bb44566a0719bd7',
+        signatureVerifierContractAddress: '0x023dc7bfb3d840003b39f676bc4f1cc06d78ab49',
         defaultArbitrator: 1,
         transport: fallback([
-            http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
+            // http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
             http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
             http(), // public fallback
         ]),
@@ -85,7 +86,7 @@ export const nftProtectGraphs = [
     {
         chainId: 11155111,
         //uri: `https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/Gfk3waJGQWZkYSjXEEzrRGxBKHD8s7SJ9UrkUtPQ2Qcv`
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.1'
     }
 ]
 

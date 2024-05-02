@@ -54,7 +54,6 @@ const getNft = async (tokenId: string, client: ApolloClient<InMemoryCache>): Pro
         query getToken($tokenId: Bytes!) {
             token(id: $tokenId) {
                 id,
-                securityLevel,
                 ownerProtected {
                     id
                 },
@@ -66,7 +65,8 @@ const getNft = async (tokenId: string, client: ApolloClient<InMemoryCache>): Pro
                 tokenId,
                 amount,
                 timestamp,
-                blocknumber
+                blocknumber,
+                nonce
             }
         }
     `

@@ -43,7 +43,6 @@ export interface RequestGraphData extends RequestGraphMinimalData {
 export interface TokenGraphData {
     id: BigNumber,
     tokenId: BigNumber,
-    securityLevel: number,
     ownerAddress: string,
     originalOwnerAddress: string,
     assetType: number,
@@ -52,7 +51,8 @@ export interface TokenGraphData {
     mintDate: Date,
     mintBlockNumber: number,
     latestRequest: RequestGraphMinimalData | null,
-    burned: Boolean
+    burned: Boolean,
+    nonce: BigNumber
 }
 
 export interface AffiliateActionData {
@@ -179,7 +179,6 @@ export const useNftProtectGraph = () => {
                 query getToken($tokenId: Bytes!) {
                     token(id: $tokenId) {
                         id,
-                        securityLevel,
                         ownerProtected {
                             id
                         },
@@ -198,7 +197,8 @@ export const useNftProtectGraph = () => {
                         amount,
                         timestamp,
                         blocknumber,
-                        burned
+                        burned,
+                        nonce
                     }
                 }
             `
@@ -212,7 +212,6 @@ export const useNftProtectGraph = () => {
             return data.token ? {
                 id: BigNumber.from(data.token.id),
                 tokenId: BigNumber.from(data.token.tokenId),
-                securityLevel: parseInt(data.token.securityLevel),
                 ownerAddress: data.token.ownerProtected.id,
                 originalOwnerAddress: data.token.ownerOriginal.id,
                 assetType: parseInt(data.token.assetType),
@@ -226,7 +225,8 @@ export const useNftProtectGraph = () => {
                     type: ReqType[data.token.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(data.token.latestRequest.timestampChange))
                 } : null,
-                burned: data.token.burned
+                burned: data.token.burned,
+                nonce: BigNumber.from(data.token.nonce),
             } : undefined
         } else {
             throw Error(MissingUriError(currentChain.chainId))
@@ -330,7 +330,6 @@ export const useNftProtectGraph = () => {
                         } 
                     }) {
                         id
-                        securityLevel
                         ownerProtected {
                           id
                         }
@@ -350,6 +349,7 @@ export const useNftProtectGraph = () => {
                             timestampChange
                         }
                         burned
+                        nonce
                     }
                 }
             `
@@ -363,7 +363,6 @@ export const useNftProtectGraph = () => {
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
                 tokenId: BigNumber.from(it.tokenId),
-                securityLevel: parseInt(it.securityLevel),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
                 assetType: parseInt(it.assetType),
@@ -377,7 +376,8 @@ export const useNftProtectGraph = () => {
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
                 } : null,
-                burned: it.burned
+                burned: it.burned, 
+                nonce: BigNumber.from(it.nonce),
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))
@@ -398,7 +398,6 @@ export const useNftProtectGraph = () => {
                         } 
                     }) {
                         id
-                        securityLevel
                         ownerProtected {
                           id
                         }
@@ -431,7 +430,6 @@ export const useNftProtectGraph = () => {
             return data ? data.tokens.map((it: any) => { return {
                 id: BigNumber.from(it.id),
                 tokenId: BigNumber.from(it.tokenId),
-                securityLevel: parseInt(it.securityLevel),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
                 assetType: parseInt(it.assetType),
@@ -445,7 +443,8 @@ export const useNftProtectGraph = () => {
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
                 } : null,
-                burned: it.burned
+                burned: it.burned,
+                nonce: BigNumber.from(it.nonce),
             }}) : []
         } else {
             throw Error(MissingUriError(currentChain.chainId))

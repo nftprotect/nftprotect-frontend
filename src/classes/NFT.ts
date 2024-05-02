@@ -21,7 +21,7 @@ export interface OriginalNFTData {
     contractAddress: string,
     tokenType: NftTokenType
     amount: number,
-    securityLevel: number
+    nonce: number     //** Holds nonce for signing purposes */
 }
 
 export interface ActionRequest {
@@ -224,7 +224,7 @@ export default class NFT implements NFTInterface {
             tokenId, 
             amount, 
             owner, 
-            securityLevel
+            nonce
         ] = await this.context.nftProtectContract.tokens(this.tokenId)
         // Create an object with the retrieved data
         const nftData:any = {
@@ -232,7 +232,7 @@ export default class NFT implements NFTInterface {
             amount,
             contractAddress,
             ownerAddress: owner,
-            securityLevel,
+            nonce,
         };
         
         // Determine the NFT token type based on the standard ID
