@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { formatEther } from "@ethersproject/units"
-import { copyTextToClipboard } from '../../utils/helpers'
+import { copyTextToClipboard, formatAddress } from '../../utils/helpers'
 import {
     Box,
     Button,
@@ -24,13 +24,14 @@ import {
     Link
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
-import Davatar from '@davatar/react'
 import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
 import { useRouter } from 'next/router'
+import useEnsName from '../../hooks/useEnsName'
+import Avatar from './Avatar'
 
 const ShowConnectionState = () => {
 
@@ -38,6 +39,7 @@ const ShowConnectionState = () => {
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
     const { hasCopied, onCopy } = useClipboard(account || '');
+    const ensName = useEnsName(account as `0x${string}`);
     const router = useRouter();
 
     useEffect(() => {
@@ -66,7 +68,7 @@ const ShowConnectionState = () => {
                 px={[3, 6]}
             >
                 {active && typeof account === 'string' ? (
-                    <p><AddressDisplay address={account}/></p>
+                    <p>{ ensName || formatAddress(account, 4) }</p>
                 ) : (
                     <p>Connect Wallet</p>
                 )}
@@ -97,13 +99,7 @@ const ShowConnectionState = () => {
                                     borderColor="#BC9CFF"
                                     borderRadius={['2em']}
                                 >
-                                    { active && <Davatar
-                                        size={42}
-                                        address={account || ''}
-                                        // provider={library?.provider}
-                                        // graphApiKey={apiKey}
-                                        generatedAvatarType='jazzicon' // 'jazzicon' or 'blockies'
-                                    /> }
+                                    { active && <Avatar address={account!} name={ensName} size={42} /> }
                                 </Box>
 
                                 <Text fontSize={['16px']}>

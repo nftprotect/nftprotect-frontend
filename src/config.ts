@@ -9,6 +9,9 @@ export const appIcon = "https://dev.nftprotect.app/images/logo-blue.svg";
 // This text must match the text in SignatureVerifier.sol
 export const signingText = `WARNING! READ CAREFULLY!\nBy signing this message, you agree to withdraw your original NFT from the NFT Protect protocol. Access to it will no longer be recoverable through NFT Protect!\n`;
 
+// IPFS gateways to use with Wagmi (e.g. ENS avatar resolving)
+export const wagmiGatewayUrls = ['https://cloudflare-ipfs.com']
+
 export const supportedChains = [
     // For MVP will be used only Goerli network, others are commented for now
     // {
