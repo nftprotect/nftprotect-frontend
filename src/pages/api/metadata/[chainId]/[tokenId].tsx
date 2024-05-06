@@ -1,8 +1,77 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supportedChains } from '../../../../config'
 import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
-import { useNftProtectGraph } from '../../../../hooks/useNftProtectGraph'
 import { BigNumber } from '@ethersproject/bignumber'
+
+import { graphManager } from '../../../../utils/thegraph'
+import { nftProtectGraphs } from '../../../../config'
+
+const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
+// Can't use hook here
+const getToken = async (chainId: number, tokenId: BigNumber) => {
+    const graphConfig = nftProtectGraphs.find(it => it.chainId === chainId);
+    if (!graphConfig || !graphConfig.uri) {
+        throw new Error(MissingUriError(chainId));
+    }
+    const graphURI = graphConfig.uri;
+
+    const query = `
+        query getToken($tokenId: Bytes!) {
+            token(id: $tokenId) {
+                id,
+                ownerProtected {
+                    id
+                },
+                ownerOriginal {
+                    id
+                },
+                latestRequest {
+                    id
+                    status
+                    type
+                    timestampChange
+                },
+                assetType,
+                contract,
+                tokenId,
+                amount,
+                timestamp,
+                blocknumber,
+                burned,
+                nonce
+            }
+        }
+    `;
+    const result = await graphManager.performQuery(graphURI, query, { tokenId: tokenId.toString() });
+    const { data, errors } = result;
+    if (errors && errors.length > 0) {
+        errors.forEach((error: any) => {
+            throw new Error(error.message);
+        });
+    }
+    if (!data.token) {
+        return undefined;
+    }
+    return {
+        id: BigNumber.from(data.token.id),
+        tokenId: BigNumber.from(data.token.tokenId),
+        ownerAddress: data.token.ownerProtected.id,
+        originalOwnerAddress: data.token.ownerOriginal.id,
+        assetType: parseInt(data.token.assetType),
+        contractAddress: data.token.contract,
+        amount: BigNumber.from(data.token.amount),
+        mintDate: new Date(parseInt(data.token.timestamp) * 1000),
+        mintBlockNumber: parseInt(data.token.blocknumber),
+        latestRequest: data.token.latestRequest ? {
+            id: BigNumber.from(data.token.latestRequest.id),
+            status: data.token.latestRequest.status,
+            type: data.token.latestRequest.type,
+            updateDate: new Date(parseInt(data.token.latestRequest.timestampChange) * 1000)
+        } : null,
+        burned: data.token.burned,
+        nonce: BigNumber.from(data.token.nonce),
+    };
+};
 
 type Data = {
     name: string
@@ -53,7 +122,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
         res.status(400).json({ message: 'Wrong chainId' })
         return
     }
-    const { getToken } = useNftProtectGraph(currentChain.id);
 
     // Trying to get from cache
     const cacheId = `${chainId}:${tokenId}`
@@ -67,7 +135,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
     let data: Data | null = null
 
     try {
-        const nftGraphData = await getToken(BigNumber.from(tokenId))
+        const nftGraphData = await getToken(currentChain.id, BigNumber.from(tokenId))
         if (nftGraphData) {
             const alchemy = createAlchemy(currentChain.alchemyId)
             const tokenType = nftGraphData.assetType === NFTPTokenStandard.ERC1155 ?
