@@ -1,5 +1,5 @@
 import { Network } from "alchemy-sdk";
-import { fallback, http } from "wagmi";
+import { fallback, http, webSocket } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 export const appName = "NFT Protect";
@@ -44,9 +44,12 @@ export const supportedChains = [
         signatureVerifierContractAddress: '0x023dc7bfb3d840003b39f676bc4f1cc06d78ab49',
         defaultArbitrator: 1,
         transport: fallback([
+            webSocket(`wss://sepolia.infura.io/ws/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
+            webSocket(`wss://eth-sepolia.ws.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+            webSocket(), // public fallback
             // http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
-            http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
-            http(), // public fallback
+            // http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+            // http(), // public fallback
         ]),
     },
     // {
@@ -87,7 +90,7 @@ export const nftProtectGraphs = [
     {
         chainId: 11155111,
         //uri: `https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/Gfk3waJGQWZkYSjXEEzrRGxBKHD8s7SJ9UrkUtPQ2Qcv`
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.1'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.3'
     }
 ]
 
