@@ -255,6 +255,12 @@ export default class NFT implements NFTInterface {
         return this.originalData
     }
 
+    //** Sets original NFT data and dispatches an event */
+    setOriginalNFTData(originalNFTData: OriginalNFTData) {
+        this.originalData = originalNFTData;
+        this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
+    }
+
     //** Loads a pending request if exists */
     async loadPendingRequest():Promise<ActionRequest|undefined> {
         if (this.isPNFT()) {
@@ -312,6 +318,10 @@ export default class NFT implements NFTInterface {
 
         if (otherProps) {
             Object.assign(this, otherProps);
+            if (otherProps.originalData) { // TODO: THIS WON'T WORK!
+                this.originalData = otherProps.originalData;
+                this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
+            }
         }
 
     }

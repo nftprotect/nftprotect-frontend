@@ -373,17 +373,18 @@ export const useNftProtectGraph = (chainId: number) => {
     }
 
     // Returns list of pNFTs that are not owned by original owner
-    const listTokensTransfered = async (originalOwner: string): Promise<TokenGraphData[]> => {
+    const listTokensTransfered = async (originalOwner: string, aliveOnly: boolean = true): Promise<TokenGraphData[]> => {
         if (graphURI) {
             const query = `
-                query listTokensTransfered($originalOwner: Bytes!) {
+                query listTokensTransfered($originalOwner: Bytes!, $burned: Boolean) {
                     tokens(where: { 
                         ownerOriginal_: { 
                             id: $originalOwner 
                         },
                         ownerProtected_: { 
                             id_not: $originalOwner 
-                        } 
+                        },
+                        ${aliveOnly ? 'burned: $burned' : ''}
                     }) {
                         id
                         ownerProtected {
@@ -409,7 +410,7 @@ export const useNftProtectGraph = (chainId: number) => {
                     }
                 }
             `
-            const result = await graphManager.performQuery(graphURI, query, { originalOwner: originalOwner.toLocaleLowerCase() })
+            const result = await graphManager.performQuery(graphURI, query, { originalOwner: originalOwner.toLowerCase(), burned: false })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -473,10 +474,77 @@ export const useNftProtectGraph = (chainId: number) => {
                             timestampChange
                         }
                         burned
+                        nonce
                     }
                 }
             `
             const result = await graphManager.performQuery(graphURI, query, { owner: owner.toLowerCase() })
+            const { data, errors } = result
+            if (errors && errors.length > 0) {
+                errors.forEach((error: any) => {
+                    throw new Error(error.message)
+                })
+            }
+            return data ? data.tokens.map((it: any) => { return {
+                id: BigNumber.from(it.id),
+                tokenId: BigNumber.from(it.tokenId),
+                ownerAddress: it.ownerProtected.id,
+                originalOwnerAddress: it.ownerOriginal.id,
+                assetType: parseInt(it.assetType),
+                contractAddress: it.contract,
+                amount: BigNumber.from(it.amount),
+                mintDate: timestampToDate(parseInt(it.timestamp)),
+                mintBlockNumber: parseInt(it.blocknumber),
+                latestRequest: it.latestRequest ? {
+                    id: BigNumber.from(it.latestRequest.id),
+                    status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
+                    type: ReqType[it.latestRequest.type as keyof typeof ReqType],
+                    updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
+                } : null,
+                burned: it.burned,
+                nonce: BigNumber.from(it.nonce),
+            }}) : []
+        } else {
+            throw Error(MissingUriError(chainId))
+        }
+    }
+
+    // Returns list of all pNFTs owned by owner (own and received)
+    const listTokensOwned = async (owner: string, aliveOnly: boolean = true): Promise<TokenGraphData[]> => {
+        if (graphURI) {
+            const query = `
+                query listTokensOwned($owner: Bytes!, $burned: Boolean) {
+                    tokens(where: { 
+                        ownerProtected_: { 
+                            id: $owner 
+                        },
+                        ${aliveOnly ? 'burned: $burned' : ''}
+                    }) {
+                        id
+                        ownerProtected {
+                            id
+                        }
+                        ownerOriginal {
+                            id
+                        }
+                        assetType
+                        contract
+                        tokenId
+                        amount
+                        timestamp
+                        blocknumber
+                        latestRequest {
+                            id
+                            status
+                            type
+                            timestampChange
+                        }
+                        burned
+                        nonce
+                    }
+                }
+            `
+            const result = await graphManager.performQuery(graphURI, query, { owner: owner.toLowerCase(), burned: false })
             const { data, errors } = result
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
@@ -558,6 +626,7 @@ export const useNftProtectGraph = (chainId: number) => {
         getPartner,
         listRequests,
         listTokensTransfered,
+        listTokensOwned,
         listTokensReceived,
         listAffiliateActions
     }

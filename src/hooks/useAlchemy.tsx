@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Alchemy, GetTransfersForContractOptions, GetTransfersForOwnerOptions, GetTransfersForOwnerTransferType, TransfersNftResponse } from "alchemy-sdk";
+import { Alchemy, GetTransfersForContractOptions, GetTransfersForOwnerOptions, GetTransfersForOwnerTransferType, NftMetadataBatchOptions, NftMetadataBatchToken, TransfersNftResponse } from "alchemy-sdk";
 import { AppContext, useAppContext } from "../context/AppContextProvider";
 import { NftTokenType, BigNumberish, Nft } from "alchemy-sdk";
 
@@ -55,11 +55,14 @@ export function useAlchemy(alchemyChainId?: string) {
             tokenId: BigNumberish, 
             tokenType?: NftTokenType | undefined, 
             tokenUriTimeoutInMs?: number | undefined
-        ]) : Promise<Nft> => {
+        ]): Promise<Nft> => {
             checkChain();
             return await alchemyFetch(chainId, 'nft.getNftMetadata', params)
         },
-        getNftMetadataBatch: async (params: any) => {
+        getNftMetadataBatch: async (params: [
+            tokens: NftMetadataBatchToken[],
+            options?: NftMetadataBatchOptions
+        ]): Promise<Nft[]> => {
             checkChain();
             return await alchemyFetch(chainId, 'nft.getNftMetadataBatch', params)
         },

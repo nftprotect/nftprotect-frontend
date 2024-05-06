@@ -11,8 +11,8 @@ import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
 import { useAlchemy } from '../../hooks/useAlchemy';
-import { Nft as NFTInterface, NftFilters } from 'alchemy-sdk';
-import NFT from '../../classes/NFT';
+import { Nft as NFTInterface, NftFilters, NftMetadataBatchToken, NftTokenType } from 'alchemy-sdk';
+import NFT, { OriginalNFTData } from '../../classes/NFT';
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
 import ProtectNftDialog from '../dialogs/nft/ProtectNftDialog';
 import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
@@ -22,11 +22,13 @@ import OriginalNftRequestedDialog from '../dialogs/nft/OriginalNftRequestedDialo
 import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog';
 import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
 import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
+import { TokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 
 const NFTView = () => {
-    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft } = useAlchemy()
+    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft, getNftMetadataBatch } = useAlchemy()
     const appContext = useAppContext()
     const { currentChain, account, active, nftProtectContract } = appContext
+    const { listTokensTransfered, listTokensOwned } = useNftProtectGraph(currentChain?.id);
 
     const marketplaces = currentChain?.wagmiId?.testnet ?
         {
@@ -61,15 +63,10 @@ const NFTView = () => {
             nftProtectContract.on(toMe, nftEventReceived)
         }
         return () => {
-            fromMe && nftProtectContract.removeAllListeners(toMe)
-            toMe && nftProtectContract.removeAllListeners(fromMe)
+            toMe && nftProtectContract.removeAllListeners(toMe)
+            fromMe && nftProtectContract.removeAllListeners(fromMe)
         }
     }
-
-    // Stores all NFTs owned by account (with pNFTS)
-    const [ownedNfts, setOwnedNfts] = useState<NFT[]>()
-    // Stores all pNFTs minted by account (owned and given)
-    const [mintedNfts, setMintedNfts] = useState<NFT[]>()
 
     // Stores original NFTs (not protected) owned by account
     const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
@@ -78,7 +75,7 @@ const NFTView = () => {
     // Stores pNFTs given to another accounts
     const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
 
-    // Loads all the NFTs and pNFTs owned by user
+    // Loads all the NFTs (and NO pNFTs) owned by user
     const fetchOwnedNfts = () => {
         if (currentChain && account) {
             // Own NFTs
@@ -86,6 +83,10 @@ const NFTView = () => {
                 account
             ]).then(({blockHash, ownedNfts, totalCount}) => {
                 const nftObjects = ownedNfts
+                    // Remove all the pNFTs
+                    .filter((item: NFTInterface) => {
+                        return item.contract.address.toLowerCase() !== nftProtectContract.address.toLowerCase()
+                    })
                     .map((item: NFTInterface) => {
                         return new NFT(item, appContext, {ownerAddress: account})
                     })
@@ -93,78 +94,104 @@ const NFTView = () => {
                     return nft.loadInitialData()
                 })).then(() => {
                     console.log('ALCHEMY ALL MY NFTS:', nftObjects)
-                    setOwnedNfts(nftObjects);
+                    setMyOwnNfts(nftObjects);
                 })
             }).catch((error) => {
                 console.error(error)
-                setOwnedNfts([])
+                setMyOwnNfts([])
             })
         }
     }
 
-    // Loads all the pNFTs minted by user
-    const fetchMintedNfts = () => {
-        if (currentChain && account) {
-            // pNFTs
-            getMintedNfts([
-                account,
-                {
-                    contractAddresses: [currentChain.nftpContractAddress]
-                }
-            ]).then(({blockHash, nfts, totalCount}) => {
-                const nftObjects = nfts
-                    .map((item: NFTInterface) => {
-                        return new NFT(item, appContext)
-                    })
-                
-                Promise.all(nftObjects.map((nft: NFT) => {
-                    return nft.loadInitialData()
-                })).then(() => {
-                    console.log('ALCHEMY ALL pNFTS:', nftObjects)
-                    setMintedNfts(nftObjects)
-                })
-            }).catch((error) => {
-                console.error(error)
-                setMintedNfts([])
-            })
+    const convertTokenGraphData = (tokenData: TokenGraphData): Partial<NFT> => {
+        let assetType: NftTokenType;
+        if (tokenData.assetType === 0) {
+            assetType = NftTokenType.ERC721
+        } else if (tokenData.assetType === 1) {
+            assetType = NftTokenType.ERC1155
+        } else {
+            assetType = NftTokenType.UNKNOWN
         }
-    }
+        return {
+            ownerAddress: tokenData.ownerAddress,
+            originalData: {
+                ownerAddress: tokenData.originalOwnerAddress,
+                tokenId: tokenData.tokenId.toString(),
+                contractAddress: tokenData.contractAddress,
+                tokenType: assetType,
+                amount: tokenData.amount.toNumber(), 
+                nonce: tokenData.nonce.toNumber()
+            }
+        };
+    };
 
+    const fetchNftDetailsInBatches = async (tokensData: TokenGraphData[]) => {
+        const batchSize = 100;
+        let batchedNfts: NFT[] = [];
+
+        for (let i = 0; i < tokensData.length; i += batchSize) {
+            const currentBatch = tokensData.slice(i, i + batchSize);
+            const batchTokens: NftMetadataBatchToken[] = currentBatch.map(({id}: TokenGraphData) => ({
+                contractAddress: currentChain.nftpContractAddress,
+                tokenId: id.toString(),
+                tokenType: NftTokenType.ERC721
+            }));
+
+            // Fetch every 100 items
+            const batchDetails: NFTInterface[] = await getNftMetadataBatch([batchTokens]);
+            // Create nfts
+            const nfts: NFT[] = batchDetails.map(details => {
+                // Find corresponding TokenGraphData
+                const originalData = currentBatch.find(({id}) => id.toString() === details.tokenId);
+                return new NFT(details, appContext, convertTokenGraphData(originalData!));
+            });
+            batchedNfts = batchedNfts.concat(nfts);
+        }
+
+        return batchedNfts;
+    };
+
+    const fetchOwnedAndGivenPNfts = async () => {
+        if (account && currentChain) {
+            try {
+                const ownedTokensData = await listTokensOwned(account);
+                const givenTokensData = await listTokensTransfered(account);
+    
+                // Concat data for batch request
+                const allTokensData = ownedTokensData.concat(givenTokensData);
+    
+                const allNfts = await fetchNftDetailsInBatches(allTokensData);
+    
+                const ownedNfts: NFT[] = [];
+                const givenNfts: NFT[] = [];
+    
+                // Grouping using indexes
+                allNfts.forEach((nft, index) => {
+                    if (index < ownedTokensData.length) {
+                        ownedNfts.push(nft);
+                    } else {
+                        givenNfts.push(nft);
+                    }
+                });
+
+                // const ownedNfts = allNfts.filter(nft => ownedTokensData.some(token => token.id.toString() === nft.tokenId));
+                // const givenNfts = allNfts.filter(nft => givenTokensData.some(token => token.id.toString() === nft.tokenId));
+    
+                setOwnedPNfts(ownedNfts);
+                setGivenPNfts(givenNfts);
+            } catch (error) {
+                console.error("Error loading NFTs:", error);
+            }
+        }
+    };
+    
     const fetchAllNfts = () => {
-        fetchOwnedNfts()
-        fetchMintedNfts()
+        fetchOwnedNfts();
+        fetchOwnedAndGivenPNfts();
     }
-
-
 
     // Reload NFTs when chain or account changed
     useEffect(fetchAllNfts, [currentChain, account])
-
-    useEffect(() => {
-        // non-protected NFTs owned by account
-        setMyOwnNfts(
-            ownedNfts?.filter((item: NFT) => {
-                return !item.isMintedBy(currentChain.nftpContractAddress)
-            })
-        )
-
-        // all pNFTs owned by account (minted by him or another account)
-        setOwnedPNfts(
-            ownedNfts?.filter((item: NFT) => {
-                return item.isMintedBy(currentChain.nftpContractAddress)
-            })
-        )
-    }, [ownedNfts])
-
-    useEffect(() => {
-        if (account) {
-            setGivenPNfts(
-                mintedNfts?.filter((item: NFT) => {
-                    return !item.isBurned() && !item.isOwnedBy(account)
-                })
-            )
-        }
-    }, [mintedNfts])
 
     useEffect(() => {
         console.log('MY OWN NFTS', myOwnNfts)
