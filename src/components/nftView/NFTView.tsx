@@ -25,7 +25,7 @@ import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershi
 import { TokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 
 const NFTView = () => {
-    const { getNftsForOwner, getNftMetadata, getNftsForContract, getMintedNfts, getOwnersForNft, getNftMetadataBatch } = useAlchemy()
+    const { nft: nftApi } = useAlchemy()
     const appContext = useAppContext()
     const { currentChain, account, active, nftProtectContract } = appContext
     const { listTokensTransfered, listTokensOwned } = useNftProtectGraph(currentChain?.id);
@@ -79,9 +79,9 @@ const NFTView = () => {
     const fetchOwnedNfts = () => {
         if (currentChain && account) {
             // Own NFTs
-            getNftsForOwner([
+            nftApi.getNftsForOwner(
                 account
-            ]).then(({blockHash, ownedNfts, totalCount}) => {
+            ).then(({blockHash, ownedNfts, totalCount}) => {
                 const nftObjects = ownedNfts
                     // Remove all the pNFTs
                     .filter((item: NFTInterface) => {
@@ -138,7 +138,7 @@ const NFTView = () => {
             }));
 
             // Fetch every 100 items
-            const batchDetails: NFTInterface[] = await getNftMetadataBatch([batchTokens]);
+            const batchDetails: NFTInterface[] = await nftApi.getNftMetadataBatch(batchTokens);
             // Create nfts
             const nfts: NFT[] = batchDetails.map(details => {
                 // Find corresponding TokenGraphData

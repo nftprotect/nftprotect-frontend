@@ -71,15 +71,15 @@ const ValidatePage: NextPage = () => {
     const [ validationResult, setValidationResult ] = useState<boolean>()
     const [ loadingPending, setLoadingPending ] = useState<boolean>(false)
     const [ nftLoadingPending, setNftLoadingPending ] = useState<boolean>(false)
-    const { getNftMetadata } = useAlchemy()
+    const { nft: nftApi } = useAlchemy()
     const { getToken, getRequest } = useNftProtectGraph(currentChain.id)
     const [ request, setRequest ] = useState<RequestGraphData|null>()
 
     const loadNft = async (tokenId: BigNumber) => {
-        const alchemyNft = await getNftMetadata([
+        const alchemyNft = await nftApi.getNftMetadata(
             nftProtectContract.address,
             tokenId
-        ])
+        )
         return new NFT(alchemyNft, context)
     }
 

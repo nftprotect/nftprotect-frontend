@@ -143,7 +143,7 @@ const KlerosCaseContent = ({
         }
     ]
 
-    const { getTransfersForContract, getTransfersForOwner } = useAlchemy()
+    const { nft: nftApi } = useAlchemy()
 
     // Holds TX hash for pNFT minting transaction
     const [ mintTx, setMintTx ] = useState<string|null|undefined>()
@@ -184,13 +184,13 @@ const KlerosCaseContent = ({
     // Finds pNFT minting TX
     const findPNftMintingTx = () => {
         if (nft.originalData) {
-            getTransfersForOwner([
+            nftApi.getTransfersForOwner(
                 nft.originalData.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
                     contractAddresses: [nft.contract.address]
                 }
-            ]).then((result) => {
+            ).then((result) => {
                 const mintTransfer = result.nfts.find((transfer) => {
                     return transfer.tokenId === nft.tokenId
                 })
@@ -213,14 +213,14 @@ const KlerosCaseContent = ({
         if (nft?.originalData) {
             // We have to search for transactions after NFTProtect was deployed
             const startBlockNumber = nft.contract.deployedBlockNumber
-            getTransfersForOwner([
+            nftApi.getTransfersForOwner(
                 nft.originalData.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
                     contractAddresses: [nftProtectContract.address],
                     tokenType: NftTokenType.ERC721
                 }
-            ]).then((result) => {
+            ).then((result) => {
                 const mintTransfer = result.nfts.find((transfer) => {
                     return transfer.tokenId === nft.tokenId
                 })
@@ -242,13 +242,13 @@ const KlerosCaseContent = ({
     const findAcquiringPNftTx = () => {
         if (nft?.ownerAddress) {
             // It's the last pNFT moving transaction
-            getTransfersForOwner([
+            nftApi.getTransfersForOwner(
                 nft.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
                     contractAddresses: [nft.contract.address]
                 }
-            ]).then((result) => {
+            ).then((result) => {
                 const acquireTransfer = result.nfts.reverse().find((transfer) => {
                     return transfer.tokenId === nft.tokenId
                 })
@@ -266,13 +266,13 @@ const KlerosCaseContent = ({
         if (nft?.ownerAddress && contractAddress) {
             // Find transaction of sending token to a hacked protocol
             // It's the last transaction of original owner to sent this pNFT
-            getTransfersForOwner([
+            nftApi.getTransfersForOwner(
                 nft.ownerAddress,
                 GetTransfersForOwnerTransferType.FROM,
                 {
                     contractAddresses: [nft.contract.address]
                 }
-            ]).then((result) => {
+            ).then((result) => {
                 const sentTransfer = result.nfts.reverse().find((transfer) => {
                     return transfer.tokenId === nft.tokenId
                 })

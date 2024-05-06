@@ -43,7 +43,7 @@ export const addTimestampToDate = (date: Date, timestamp: number) => {
     return new Date(newTimestamp)
 }
 
-export const generateRequestLink = (requestId: any, chainId: number = defaultChain) => {
+export const generateRequestLink = (requestId: any, chainId: number) => {
     return `/request/${chainId}/${requestId.toString()}`
 }
 

@@ -51,7 +51,7 @@ const NotificationsLoader = () => {
     const { getArbitrableProxy, getArbitrator } = useArbitrableProxy()
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
-    const { getNftMetadata } = useAlchemy()
+    const { nft: nftApi } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
     const pNftsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
@@ -72,12 +72,12 @@ const NotificationsLoader = () => {
     }
 
     const loadOriginalNFT = async (nft: TokenGraphData): Promise<NFT> => {
-        const result = await getNftMetadata([nft.contractAddress, nft.tokenId])
+        const result = await nftApi.getNftMetadata(nft.contractAddress, nft.tokenId)
         return new NFT(result, context)
     }
 
     const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
-        const result = await getNftMetadata([nftProtectContract.address, nft.id])
+        const result = await nftApi.getNftMetadata(nftProtectContract.address, nft.id)
         return new NFT(result, context)
     }
 

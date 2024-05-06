@@ -52,12 +52,12 @@ const RequestPage: NextPage = () => {
     const [ disputeData, setDisputeData ] = useState<DisputeGraphData>()
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
-    const { getNftMetadata } = useAlchemy()
+    const { nft: nftApi } = useAlchemy()
     const { getDispute } = useArbitratorGraph(currentChain?.id || defaultChain, currentChain?.defaultArbitrator || defaultChainArbitrator)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
     const [ error, setError ] = useState<string>()
-    const { getRequest } = useNftProtectGraph()
+    const { getRequest } = useNftProtectGraph(currentChain.id)
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
@@ -132,7 +132,7 @@ const RequestPage: NextPage = () => {
                 setError(t`Incorrect chainId`)
             }
         } else {
-            chainId = defaultChain
+            console.error('No chainId provided')
         }
         if (chainId > -1) {
             const currentChain = supportedChains.find(it => it.id === chainId)
@@ -151,10 +151,10 @@ const RequestPage: NextPage = () => {
     }, [query])
 
     const loadNft = async (tokenId: BigNumber) => {
-        const alchemyNft = await getNftMetadata([
+        const alchemyNft = await nftApi.getNftMetadata(
             nftProtectContract.address,
             tokenId
-        ])
+        )
         return new NFT(alchemyNft, context)
     }
 
