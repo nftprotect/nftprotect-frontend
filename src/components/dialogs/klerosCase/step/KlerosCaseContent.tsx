@@ -296,20 +296,8 @@ const KlerosCaseContent = ({
             findAcquiringPNftTx()
             findOriginalMintingTx()
         }
-        if (nft.ownerAddress) {
-            loadDependingOnInitial()
-        } else {
-            nft.addEventListener(NFTEvents.InitialNFTDataLoaded, loadDependingOnInitial)
-        }
-        if (nft.originalData) {
-            loadDependingOnOriginal()
-        } else {
-            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, loadDependingOnOriginal)
-        }
-        return () => {
-            nft.removeEventListener(NFTEvents.InitialNFTDataLoaded, loadDependingOnInitial)
-            nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, loadDependingOnOriginal)
-        }
+        loadDependingOnInitial()
+        loadDependingOnOriginal()
     }, [nft, account, library])
 
     const mainContent = <>

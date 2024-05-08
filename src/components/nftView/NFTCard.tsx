@@ -34,8 +34,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     // In case of external metadata fetching it marks if fetch is ended
     //const [ fetchEnded, setFetchEnded ] = useState(false)
     const [ nft, setNft ] = useState<NFT>(_nft)
-    // If our NFT is pNFT it stores the info about original NFT
-    const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
+    const originalNFTData = nft.originalData
     // Stores pending request data if available
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
     // Marks if request is timed out (if exists)
@@ -43,26 +42,12 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const { getDialog } = useCallableDialogContext()
 
     useEffect(() => {
-        // Load all secondary NFT data
-        nft.loadAnotherData()
-        const originalNFTDataLoadedListener = () => {
-            console.log('ORIGINAL NFT DATA:', nft.originalData)
-            setOriginalNFTData(nft.originalData)
+        const load = async () => {
+            // Load request if exists
+            const request = await nft.loadPendingRequest()
+            setPendingRequest(request)
         }
-        const pendingRequestLoadedListener = () => {
-            console.log('PENDING REQUEST:', nft.tokenId, nft.pendingRequest)
-            setPendingRequest(nft.pendingRequest)
-        }
-        if (nft.isPNFT()) {
-            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
-            nft.addEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
-        }
-        return () => {
-            if (nft.isPNFT()) {
-                nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
-                nft.removeEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
-            }
-        }
+        load()
     }, [])
 
     // Check request timeout on every block
