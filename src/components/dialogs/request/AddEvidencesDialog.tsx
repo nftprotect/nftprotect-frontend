@@ -47,7 +47,6 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
-    const [ requestTimedOut, setRequestTimedOut ] = useState(false)
     const { submitEvidence } = useArbitrableProxy()
 
     // Naming of wizard step numbers
@@ -132,17 +131,6 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
         setEvidenceData(undefined)
         setEvidence(undefined)
     }
-
-    // Check request timeout on every block
-    useEffect(() => {
-        if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
-                if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
-                    setRequestTimedOut(true)
-                }
-            })
-        }
-    }, [currentBlock])
 
     useEffect(() => {
         evidence && submitPreparedEvidence()
