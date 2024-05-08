@@ -10,7 +10,7 @@ import { useAppContext } from '../../../context/AppContextProvider'
 import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/klerosCase/step/KlerosCaseContent'
 import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
-import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData } from '../../../hooks/useNftProtectGraph'
+import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData, convertTokenGraphData } from '../../../hooks/useNftProtectGraph'
 import { chakra, Box, Container, Grid, GridItem, Link, Text } from '@chakra-ui/react'
 import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
@@ -57,7 +57,7 @@ const RequestPage: NextPage = () => {
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
     const [ error, setError ] = useState<string>()
-    const { getRequest } = useNftProtectGraph(currentChain.id)
+    const { getToken, getRequest } = useNftProtectGraph(currentChain.id)
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
@@ -150,88 +150,71 @@ const RequestPage: NextPage = () => {
         console.log('INITIAL', chainId, requestId)
     }, [query])
 
-    const loadNft = async (tokenId: BigNumber) => {
+    const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
         const alchemyNft = await nftApi.getNftMetadata(
             nftProtectContract.address,
             tokenId
         )
-        return new NFT(alchemyNft, context)
+        return alchemyNft ?
+            new NFT(alchemyNft, context, params) :
+            undefined
     }
 
-    // Load NFT
+    // Load Request and NFT
     useEffect(() => {
-        if (currentChain && requestId && (currentChain.id === parseInt(query?.chainId?.toString() || '-1'))) {
-            let currentNFT: NFT
-            const initialDataLoadedListener = () => {
-                setNft(currentNFT)
-            }
-            let loadNftStarted = false
-            // Fetch request data from The Graph
-            getRequest(requestId).then((result: RequestGraphData|null) => {
-                if (result === null) {
-                    setError(t`Incorrect requestId`)
-                } else {
-                    setRequestGraphData(result)
-                    if (!loadNftStarted) {
-                        loadNft(result.tokenId).then((result) => {
-                            currentNFT = result
-                            currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
-                            currentNFT.loadInitialData()
-                            currentNFT.loadPendingRequest() // TODO: remove because loading twice
-                        })
-                    }
-                }
-                loadNftStarted = true
-            })
-            nftProtectContract.requests(requestId.toString()).then((result: any) => {
-                const resultRequest: ActionRequest = { id: requestId, ...result }
-                setRequestData(resultRequest)
-                if (!loadNftStarted) {
-                    loadNft(resultRequest.tokenId).then((result) => {
-                        currentNFT = result
-                        currentNFT.addEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
-                        currentNFT.loadInitialData()
-                        currentNFT.pendingRequest = resultRequest
-                    })
-                }
-                loadNftStarted = true
-                if (resultRequest.externalDisputeId) {
-                    getDispute(resultRequest.externalDisputeId).then((disputeData) => {
+        const fetchData = async () => {
+            if (currentChain && requestId && query.chainId && (currentChain.id === parseInt(query.chainId.toString()))) {
+                let currentNFT: NFT|undefined
+                // Fetch request data from The Graph
+                const graphRequest: RequestGraphData|null = await getRequest(requestId)
+                
+                const contractRequest: ActionRequest = await nftProtectContract.requests(requestId.toString())
+                setRequestData(contractRequest)
+
+                // If there's a dispute, load it
+                if (contractRequest.externalDisputeId) {
+                    getDispute(contractRequest.externalDisputeId).then((disputeData) => {
                         setDisputeData(disputeData)
                     })
                 }
-            })
-            return () => {
-                currentNFT && currentNFT.removeEventListener(NFTEvents.InitialNFTDataLoaded, initialDataLoadedListener)
-            }
-        }
-    }, [requestId, currentChain])
 
-    // Load original NFT data
-    useEffect(() => {
-        if (nft) {
-            nft.loadOriginalNFTData()
-            const originalNFTDataLoadedListener = () => {
-                console.log('ORIGINAL NFT DATA:', nft.originalData)
-                const claimantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                            nft.ownerAddress :
-                                        (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                            nft.originalData?.ownerAddress :
-                                        undefined
-                const defendantAddress = (requestData?.reqtype === ReqType.OwnershipAdjustment) ?
-                                            nft.originalData?.ownerAddress :
-                                        (requestData?.reqtype === ReqType.OwnershipRestore) ?
-                                            nft.ownerAddress :
-                                        undefined
-                setClaimaintAddress(claimantAddress)
-                setDefendantAddress(defendantAddress)
-            }
-            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
-            return () => {
-                nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
+                if (!graphRequest && !contractRequest) {
+                    setError(t`Incorrect requestId`)
+                } else if (!graphRequest || !contractRequest) {
+                    setError(t`Error loading request`)
+                } else {
+                    setRequestGraphData(graphRequest)
+                    const nftData = await getToken(graphRequest.tokenId)
+                    if (!nftData) {
+                        setError(t`Error loading token data`)
+                        return
+                    }
+                    const tokenData = convertTokenGraphData(nftData)
+                    currentNFT = await loadNft(graphRequest.tokenId, {...tokenData, pendingRequest: contractRequest})
+                    if (!currentNFT) {
+                        setError(t`Error loading token data`)
+                        return
+                    }
+                    setNft(currentNFT)
+
+                    // Set claimant and defendant addresses
+                    const claimantAddress = (contractRequest.reqtype === ReqType.OwnershipAdjustment) ?
+                                    currentNFT.ownerAddress :
+                                    (contractRequest.reqtype === ReqType.OwnershipRestore) ?
+                                        currentNFT.originalData!.ownerAddress :
+                                    undefined
+                    const defendantAddress = (contractRequest.reqtype === ReqType.OwnershipAdjustment) ?
+                                    currentNFT.originalData!.ownerAddress :
+                                    (contractRequest.reqtype === ReqType.OwnershipRestore) ?
+                                        currentNFT.ownerAddress :
+                                    undefined
+                    setClaimaintAddress(claimantAddress)
+                    setDefendantAddress(defendantAddress)
+                }
             }
         }
-    }, [nft])
+        fetchData()
+    }, [requestId, currentChain])
 
     // Load evidences
     useEffect(() => {

@@ -83,10 +83,10 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
         timeout
     }
 
-    const evidenceTypes: any = {
-        'protocol breach': 6,
-        'phishing attack': 5,
-        'sending to an incorrect address': 4
+    const evidenceTypes:{ [key: string]: number } = {
+        'protocol breach': 2,
+        'phishing attack': 1,
+        'sending to an incorrect address': 0
     }
 
     const handleUnknownError = (error: any) => {
@@ -187,11 +187,11 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 undefined
 
     const metaEvidenceId = (lostReason === 'protocol breach') ?
-                                6 :
+                                2 :
                             (lostReason === 'phishing attack') ?
-                                5 :
+                                1 :
                             (lostReason === 'sending to an incorrect address') ?
-                                4 :
+                                0 :
                             undefined
 
     const dialogClose = () => {

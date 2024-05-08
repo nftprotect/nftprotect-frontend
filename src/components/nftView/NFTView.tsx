@@ -22,7 +22,7 @@ import OriginalNftRequestedDialog from '../dialogs/nft/OriginalNftRequestedDialo
 import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog';
 import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
 import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
-import { TokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
+import { TokenGraphData, convertTokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 
 const NFTView = () => {
     const { nft: nftApi } = useAlchemy()
@@ -102,28 +102,6 @@ const NFTView = () => {
             })
         }
     }
-
-    const convertTokenGraphData = (tokenData: TokenGraphData): Partial<NFT> => {
-        let assetType: NftTokenType;
-        if (tokenData.assetType === 0) {
-            assetType = NftTokenType.ERC721
-        } else if (tokenData.assetType === 1) {
-            assetType = NftTokenType.ERC1155
-        } else {
-            assetType = NftTokenType.UNKNOWN
-        }
-        return {
-            ownerAddress: tokenData.ownerAddress,
-            originalData: {
-                ownerAddress: tokenData.originalOwnerAddress,
-                tokenId: tokenData.tokenId.toString(),
-                contractAddress: tokenData.contractAddress,
-                tokenType: assetType,
-                amount: tokenData.amount.toNumber(), 
-                nonce: tokenData.nonce.toNumber()
-            }
-        };
-    };
 
     const fetchNftDetailsInBatches = async (tokensData: TokenGraphData[]) => {
         const batchSize = 100;

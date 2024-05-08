@@ -3,6 +3,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { nftProtectGraphs } from "../config";
 import { timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
+import { NftTokenType } from "alchemy-sdk";
+import NFT from "../classes/NFT";
 
 export enum ReqType {
     OwnershipAdjustment,
@@ -632,3 +634,26 @@ export const useNftProtectGraph = (chainId: number) => {
     }
         
 }
+
+// Function to convert graph data to partial NFT interface object
+export const convertTokenGraphData = (tokenData: TokenGraphData): Partial<NFT> => {
+    let assetType: NftTokenType;
+    if (tokenData.assetType === 0) {
+        assetType = NftTokenType.ERC721
+    } else if (tokenData.assetType === 1) {
+        assetType = NftTokenType.ERC1155
+    } else {
+        assetType = NftTokenType.UNKNOWN
+    }
+    return {
+        ownerAddress: tokenData.ownerAddress,
+        originalData: {
+            ownerAddress: tokenData.originalOwnerAddress,
+            tokenId: tokenData.tokenId.toString(),
+            contractAddress: tokenData.contractAddress,
+            tokenType: assetType,
+            amount: tokenData.amount.toNumber(), 
+            nonce: tokenData.nonce.toNumber()
+        }
+    };
+};

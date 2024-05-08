@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { useAppContext } from "../../context/AppContextProvider"
-import { ReqStatus, ReqType, TokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
+import { ReqStatus, ReqType, TokenGraphData, convertTokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
-import { Heading, Text, Link } from "@chakra-ui/react"
+import { Heading, Text, Link, getToken } from "@chakra-ui/react"
 import { Trans } from "@lingui/macro"
 import { generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
@@ -78,7 +78,7 @@ const NotificationsLoader = () => {
 
     const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
         const result = await nftApi.getNftMetadata(nftProtectContract.address, nft.id)
-        return new NFT(result, context)
+        return new NFT(result, context, convertTokenGraphData(nft))
     }
 
     const getOriginalNft = async (nft: TokenGraphData): Promise<NFT> => {
@@ -694,9 +694,6 @@ const NotificationsLoader = () => {
                     if (!nft.burned) {
                         const loadedNft = await getPNft(nft)
                         // 0. pNFT received
-                        if (!loadedNft.originalData) {
-                            await loadedNft.loadOriginalNFTData()
-                        }
                         addNotification({
                             id: notificationId+'.0',
                             image: <NFTImage nft={ loadedNft} setDefaultStyles={false} />, 
@@ -852,9 +849,6 @@ const NotificationsLoader = () => {
                                 if (!dispute.appealed) { // First time
                                     if (request.type === ReqType.OwnershipAdjustment) {
                                         const loadedNft = await getPNft(nft)
-                                        if (!loadedNft.originalData) {
-                                            await loadedNft.loadOriginalNFTData()
-                                        }
                                         // 23.2 Original NFT disputed
                                         addNotification({
                                             id: notificationId+'.23.2',
@@ -879,9 +873,6 @@ const NotificationsLoader = () => {
                                         })
                                     } else if (request.type === ReqType.OwnershipRestore) {
                                         const loadedNft = await getPNft(nft)
-                                        if (!loadedNft.originalData) {
-                                            await loadedNft.loadOriginalNFTData()
-                                        }
                                         // 23.1 pNFT burn disputed
                                         addNotification({
                                             id: notificationId+'.23.1',
