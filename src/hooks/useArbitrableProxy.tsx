@@ -35,6 +35,7 @@ export const useArbitrableProxy = () => {
     }
     const { currentChain, active, library, account, arbRegistryContract } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
+    const {data: currentBlock} = useBlockNumber({chainId: currentChain!.id })
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
         const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
@@ -95,7 +96,6 @@ export const useArbitrableProxy = () => {
     ): Promise<EvidenceSubmission[]> => {
         const contract = await getArbitrableProxy(arbitratorId)
         const startBlock = blockNumber
-        const {data: currentBlock} = useBlockNumber({chainId: currentChain!.id })
 
         const endBlock = Number(currentBlock) || startBlock
         const ranges = []
