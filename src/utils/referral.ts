@@ -1,4 +1,3 @@
-import { Contract } from '@ethersproject/contracts';
 import { isAddress } from 'viem';
 import baseX from 'base-x';
 
@@ -32,11 +31,6 @@ export const loadInvite = () => {
 
 export const clearInvite = () => {
     localStorage.removeItem('followedInvitation');
-}
-
-export const loadReferrer = async (userRegistry: Contract, account: `0x${string}`) => {
-    const referrerAddress = await userRegistry.referrers(account)
-    return referrerAddress;
 }
 
 export function encodeAddress(address: `0x${string}`): string {

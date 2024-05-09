@@ -11,12 +11,11 @@ import { defaultChain as defaultChainId } from "../config";
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
-import ERC20ABI from "../abi/ERC20ABI";
 import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient, useBlockNumber} from "wagmi";
 import { Client, PublicClient, WalletClient } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
-import { handleReferralLink, loadInvite, loadReferrer } from "../utils/referral";
+import { handleReferralLink, loadInvite } from "../utils/referral";
 import SignatureVerifierABI from "../abi/SignatureVerifierABI";
 import { useNftProtectGraph } from "../hooks/useNftProtectGraph";
 
