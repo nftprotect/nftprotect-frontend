@@ -12,7 +12,6 @@ import ERC721ABI from "../abi/ERC721ABI";
 import ERC1155ABI from "../abi/ERC1155ABI";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
-import { Web3Provider } from "@ethersproject/providers";
 import { centralizeIpfsUrl } from '../utils/ipfs';
 
 export interface OriginalNFTData {
@@ -214,9 +213,6 @@ export default class NFT implements NFTInterface {
           return;
         }
       
-        // Function to check if an address is not null
-        const isNotNullAddress = (address: string): boolean => address !== nullAddress;
-      
         // Get NFT data from the contract
         const [ 
             standardId, 
@@ -253,12 +249,6 @@ export default class NFT implements NFTInterface {
         this.originalData = { ...nftData };
         this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
         return this.originalData
-    }
-
-    //** Sets original NFT data and dispatches an event */
-    setOriginalNFTData(originalNFTData: OriginalNFTData) {
-        this.originalData = originalNFTData;
-        this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
     }
 
     //** Loads a pending request if exists */
@@ -318,9 +308,8 @@ export default class NFT implements NFTInterface {
 
         if (otherProps) {
             Object.assign(this, otherProps);
-            if (otherProps.originalData) { // TODO: THIS WON'T WORK!
+            if (otherProps.originalData) {
                 this.originalData = otherProps.originalData;
-                this.dispatchEvent(new Event(NFTEvents.OriginalNFTDataLoaded));
             }
         }
 
