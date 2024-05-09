@@ -202,7 +202,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
                                 evidenceData={{
                                     name: `Additional evidence`,
                                     description: evidenceData.description,
-                                    evidenceSide: 0, // TODO: Add logic or remove completely because untrusted
+                                    evidenceSide: 0, // TODO: Maybe better remove completely because untrusted
                                 }}
                             />}
                         </SwitchableOutside>

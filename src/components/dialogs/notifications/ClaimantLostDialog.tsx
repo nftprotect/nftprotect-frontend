@@ -92,16 +92,6 @@ const ClaimantLostDialog = () => {
                                         <PopoverTrigger>
                                             <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" />
                                         </PopoverTrigger>
-                                        {/* TODO add pNFT owner address if the pNFT owner win */}
-                                        {/* 
-                                        <chakra.span id='originalOwnerAddressHolder'>
-                                            { " " } <AddressDisplay address={pNFTOwner}/>
-                                        </chakra.span>
-                                        TODO add condition that claimant lost the court and pNFT remains at pNFT owner
-                                        <Trans>is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans> 
-                                        */}
-                                        
-                                        {/* TODO add condition original NFT owner win */}
                                         <chakra.span id='originalOwnerAddressHolder'>
                                             { " " }{ originalOwner && <AddressDisplay address={originalOwner||''}/> } { " " }
                                         </chakra.span>
