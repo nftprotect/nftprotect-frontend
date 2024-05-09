@@ -1365,11 +1365,8 @@ const NotificationsLoader = () => {
             const ownershipRestoreAskedOldOwner = nftProtectContract.filters.OwnershipRestoreAsked(null, null, account)
             // These events doesn't contain indexed user information, so listen all
             const ownershipAdjustmentArbitrateAsked = nftProtectContract.filters.OwnershipAdjustmentArbitrateAsked()
-            // const burnAnswered = nftProtectContract.filters.BurnAnswered() // TODO: Check what's broken
             const ownershipAdjustmentAnswered = nftProtectContract.filters.OwnershipAdjustmentAnswered()
             const ownershipRestoreAnswered = nftProtectContract.filters.OwnershipRestoreAnswered()
-            // This event contain only one side, but we need both, so listen all
-            // const burnArbitrateAsked = nftProtectContract.filters.BurnArbitrateAsked() // TODO: Check what's broken
 
             nftProtectContract.on(fromMe, loadNotifications)
             nftProtectContract.on(toMe, loadNotifications)
@@ -1380,10 +1377,8 @@ const NotificationsLoader = () => {
             nftProtectContract.on(ownershipAdjustmentAskedOldOwner, loadNotifications)
             nftProtectContract.on(ownershipRestoreAskedNewOwner, loadNotifications)
             nftProtectContract.on(ownershipRestoreAskedOldOwner, loadNotifications)
-            // nftProtectContract.on(burnAnswered, loadNotifications)
             nftProtectContract.on(ownershipAdjustmentAnswered, loadNotifications)
             nftProtectContract.on(ownershipRestoreAnswered, loadNotifications)
-            // nftProtectContract.on(burnArbitrateAsked, loadNotifications)
             return () => {
                 nftProtectContract.removeAllListeners(toMe)
                 nftProtectContract.removeAllListeners(fromMe)
@@ -1394,10 +1389,8 @@ const NotificationsLoader = () => {
                 nftProtectContract.removeAllListeners(ownershipAdjustmentAskedOldOwner)
                 nftProtectContract.removeAllListeners(ownershipRestoreAskedNewOwner)
                 nftProtectContract.removeAllListeners(ownershipRestoreAskedOldOwner)
-                // nftProtectContract.removeAllListeners(burnAnswered)
                 nftProtectContract.removeAllListeners(ownershipAdjustmentAnswered)
                 nftProtectContract.removeAllListeners(ownershipRestoreAnswered)
-                // nftProtectContract.removeAllListeners(burnArbitrateAsked)
             }
         }
     }
