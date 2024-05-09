@@ -26,7 +26,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { library, currentBlock, currentChain } = useAppContext()
+    const { currentChain } = useAppContext()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -50,16 +50,21 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
         load()
     }, [])
 
-    // Check request timeout on every block
+    // Set timer for request timeout
     useEffect(() => {
-        if (pendingRequest && currentBlock && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
-                if (blockData.timestamp >= pendingRequest.timeout) {
-                    setRequestTimedOut(true)
-                }
-            })
+        if (pendingRequest && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+            const timeUntilTimeout = pendingRequest.timeout.toNumber() - Date.now();
+            console.log('Time until request timeout:', timeUntilTimeout)
+            if (timeUntilTimeout > 0) {
+                const timeoutId = setTimeout(() => {
+                    setRequestTimedOut(true);
+                }, timeUntilTimeout);
+                return () => clearTimeout(timeoutId);
+            } else {
+                setRequestTimedOut(true);
+            }
         }
-    }, [currentBlock])
+    }, [pendingRequest]);
 
     let buttons = <div />
     if (nft.isPNFT()) {

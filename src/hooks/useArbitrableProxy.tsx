@@ -7,7 +7,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import KlerosLiquidABI from "../abi/KlerosLiquidABI";
 import { timestampToDate } from "../utils/helpers";
 import { Period } from "./useArbitratorGraph";
-import { Web3Provider } from "@ethersproject/providers";
+import { useBlockNumber } from "wagmi";
 
 export interface EvidenceSubmission {
     evidenceURI: string,
@@ -33,7 +33,7 @@ export const useArbitrableProxy = () => {
             "useArbitrable has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, active, library, account, arbRegistryContract, currentBlock } = useAppContext()
+    const { currentChain, active, library, account, arbRegistryContract } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
@@ -95,7 +95,9 @@ export const useArbitrableProxy = () => {
     ): Promise<EvidenceSubmission[]> => {
         const contract = await getArbitrableProxy(arbitratorId)
         const startBlock = blockNumber
-        const endBlock = currentBlock || await library.getBlockNumber()
+        const {data: currentBlock} = useBlockNumber({chainId: currentChain!.id })
+
+        const endBlock = Number(currentBlock) || startBlock
         const ranges = []
         let i = startBlock
         do {

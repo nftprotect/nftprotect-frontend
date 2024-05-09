@@ -23,7 +23,6 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { RequestStatus } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
@@ -36,7 +35,7 @@ import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
 const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, fee, currentBlock, currentChain } = useAppContext()
+    const { nftProtectContract, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()

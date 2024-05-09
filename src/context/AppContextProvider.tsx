@@ -32,7 +32,6 @@ export interface AppContextInterface {
     arbRegistryContract: Contract,
     signatureVerifierContract: Contract,
     referrerAddress: `0x${string}`,
-    currentBlock: number | undefined,
     baseTokenPrice: number | undefined,
     fee: number | undefined,
     setChainId: Function,
@@ -87,8 +86,6 @@ export function AppContextProvider({ children }:any) {
     const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Current fee for protecting
     const [ fee, setFee ] = useState<number>()
-    const {data: currentBlockBigInt} = useBlockNumber({chainId: appState.currentChain?.id || defaultChain})
-    const currentBlock = Number(currentBlockBigInt); // TODO: use bigint instead
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
     const { getSystem, getPartner, getUser } = useNftProtectGraph(appState.currentChain?.id || defaultChainId);
 
@@ -211,7 +208,6 @@ export function AppContextProvider({ children }:any) {
             isCorrectChain,
             defaultChain,
             referrerAddress,
-            currentBlock,
             fee,
             setChainId,
             baseTokenPrice,
