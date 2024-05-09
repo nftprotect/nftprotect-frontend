@@ -112,7 +112,7 @@ export const arbitratorGraphs = [
         arbitrators: [
             {
                 arbitratorId: 1,
-                uri: 'https://api.studio.thegraph.com/proxy/17884/kleros-sepolia/version/latest/'
+                uri: 'https://api.studio.thegraph.com/query/50822/kleros-v1/v1.0'
             }
         ]
     }
