@@ -161,7 +161,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     }
 
     const startButtonOnClick = () => {
-        try {
+        try {debugger;
             if (nft?.tokenType === NftTokenType.ERC721) {
                 const tokenContract = nft.getContract()
                 secureNFT(
@@ -231,8 +231,8 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 {"Ξ"}{ formatEther(fee || 0) } 
                                             </Text>
                                             &nbsp;
-                                            { fee && baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
-                                                ~${ Math.round(parseFloat(formatEther(fee)) * baseTokenPrice) }
+                                            { baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
+                                                ~${ Math.round(parseFloat(formatEther(fee || 0)) * baseTokenPrice) }
                                             </Text> }
                                         </Flex>
                                     </Box>
