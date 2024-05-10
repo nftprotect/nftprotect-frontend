@@ -32,16 +32,22 @@ import { useAppContext } from '../../../../context/AppContextProvider';
 import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
-import { NFTEvents } from '../../../../classes/NFT';
 import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
 import { ReqType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 import AddressDisplay from '../../../AddressDisplay';
 import KlerosCaseSteps from './KlerosCaseSteps';
 
+export enum MetaEvidenceType {
+    Adjustment, // used in askOwnershipAdjustmentArbitrate()
+    Mistake, // used in askOwnershipRestoreArbitrate()
+    Phishing, // used in askOwnershipRestoreArbitrate()
+    ProtocolBreach // used in askOwnershipRestoreArbitrate()
+}
+
 export interface KlerosCaseInitialData {
     nft: NFT,
-    metaEvidenceId: number,
+    metaEvidenceId: MetaEvidenceType,
     claimantAddress: string,
     defendantAddress: string,
     contractAddress?: string,
@@ -61,18 +67,6 @@ interface CaseContentInitialData extends KlerosCaseInitialData {
     disputeIsRuled?: boolean
 }
 
-interface PageData {
-    title: string,
-    summary: string,
-    policyURL: string,
-    claimantText: string,
-    claimantText2?: string,
-    claimantTooltip: string,
-    defendantText: string,
-    defendantTooltip: string,
-    caseSubject: string
-}
-
 const KlerosCaseContent = ({
     nft,
     metaEvidenceId,
@@ -86,10 +80,10 @@ const KlerosCaseContent = ({
     disputeIsRuled
 }: CaseContentInitialData) => {
 
-    const metaEvidenceTypes = [
+    const metaEvidenceDescriptions = [
         {
             label: t`Bona fide transfer`,
-            id: 0,
+            id: MetaEvidenceType.Adjustment,
             page: {
                 title: t`Ownership adjustment in case of bona fide transfer`,
                 summary: t`The Claimant alleges that he purchased the pNFT bona fide but the owner of the original NFT refused to transfer him the original.`,
@@ -102,7 +96,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Incorrect address`,
-            id: 1,
+            id: MetaEvidenceType.Mistake,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT due to a sending to an incorrect address`,
                 summary: t`The Claimant alleges loss of their pNFT due to a transaction to an incorrect address.`,
@@ -115,7 +109,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Phishing attack`,
-            id: 2,
+            id: MetaEvidenceType.Phishing,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT in phishing attack`,
                 summary: t`The Claimant alleges loss of their pNFT due to a phishing attack.`,
@@ -128,7 +122,7 @@ const KlerosCaseContent = ({
             }
         }, {
             label: t`Protocol breach`,
-            id: 3,
+            id: MetaEvidenceType.ProtocolBreach,
             page: {
                 title: t`Ownership restoration in case of loss of pNFT in a protocol breach`,
                 summary: t`The Claimant alleges loss of their pNFT due to a protocol breach.`,
@@ -161,7 +155,7 @@ const KlerosCaseContent = ({
     const { library, account, active, currentChain, nftProtectContract } = useAppContext()
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
-    const pageData = metaEvidenceTypes.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceTypes[0].page
+    const pageData = metaEvidenceDescriptions.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceDescriptions[0].page
 
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
@@ -825,7 +819,9 @@ const KlerosCaseContent = ({
                             <Flex flexDirection="column" bgColor="#F8F8F8" px={{base: "24px"}} pt={{base: "11px"}} pb={{base: "14px"}}>
                                 <Text textStyle="paragraph">
                                     <Trans>Submitted by</Trans>
-                                    <AddressDisplay address={evidence.submittedBy}/> 
+                                    <Box as="span" ml={"0.3rem"}>
+                                        <AddressDisplay address={evidence.submittedBy}/>
+                                    </Box>
                                 </Text>
                                 <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
                                     <Text color="#818181" fontSize={{base: "12px"}} lineHeight={{base: "18px"}}>

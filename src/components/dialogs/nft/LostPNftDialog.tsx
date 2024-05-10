@@ -46,6 +46,7 @@ import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
+import { MetaEvidenceType } from '../klerosCase/step/KlerosCaseContent';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -59,7 +60,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const [lostReason, setLostReason ] = useState<string>()
+    const [lostReason, setLostReason ] = useState<MetaEvidenceType>()
     //* Stores evidence initial data and result json */
     const [ evidenceData, setEvidenceData ] = useState<any>()
     //* Stores evidence files uploaded by user */
@@ -83,10 +84,10 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
         timeout
     }
 
-    const evidenceTypes:{ [key: string]: number } = {
-        'protocol breach': 3,
-        'phishing attack': 2,
-        'sending to an incorrect address': 1
+    const caseTitles:{ [key: number]: string } = {
+        3: t`protocol breach`,
+        2: t`phishing attack`,
+        1: t`sending to an incorrect address`
     }
 
     const handleUnknownError = (error: any) => {
@@ -122,7 +123,9 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
     }
 
     const handleLostReasonSelection = (event: any) => {
-        let lostReason = event.target.getAttribute('data-reason')
+        const selected: string = event.target.getAttribute('data-reason')
+        const lostReason: MetaEvidenceType = parseInt(selected) as MetaEvidenceType
+        console.log("SELECTED:", lostReason)
         setLostReason(lostReason)
         setNextStep(StepMapping.lostReason)
     }
@@ -156,7 +159,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     nft.tokenId,
                     account, // TODO: Must be replaced by new address
                     currentChain.defaultArbitrator,
-                    lostReason && evidenceTypes[lostReason],
+                    lostReason,
                     evidenceJSONUrl,
                     {
                         value: parseEther(DISPUTE_PRICE),
@@ -178,21 +181,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
-    const klerosCaseFormTitle = (lostReason === 'protocol breach') ?
-                                    t`Protocol breach` :
-                                (lostReason === 'phishing attack') ?
-                                    t`Phishing attack` :
-                                (lostReason === 'sending to an incorrect address') ?
-                                    t`Sending to an incorrect address` :
-                                undefined
-
-    const metaEvidenceId = (lostReason === 'protocol breach') ?
-                                3 :
-                            (lostReason === 'phishing attack') ?
-                                2 :
-                            (lostReason === 'sending to an incorrect address') ?
-                                1 :
-                            undefined
+    const klerosCaseFormTitle = caseTitles[lostReason || 0]
 
     const dialogClose = () => {
         setNextStep(StepMapping.start)
@@ -281,13 +270,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             <Trans>Reason</Trans>
                                         </MenuButton>
                                         <MenuList border="1px solid black" borderRadius="4px" textStyle="paragraph" color="#FFF">
-                                            <MenuItem data-reason="phishing attack" onClick={ handleLostReasonSelection }>
+                                            <MenuItem data-reason={MetaEvidenceType.Phishing} onClick={ handleLostReasonSelection }>
                                                 <Trans>Phishing attack</Trans>
                                             </MenuItem>
-                                            <MenuItem data-reason="protocol breach" onClick={ handleLostReasonSelection }>
+                                            <MenuItem data-reason={MetaEvidenceType.ProtocolBreach} onClick={ handleLostReasonSelection }>
                                                 <Trans>Protocol breach</Trans>
                                             </MenuItem>
-                                            <MenuItem data-reason="sending to an incorrect address" onClick={ handleLostReasonSelection }>
+                                            <MenuItem data-reason={MetaEvidenceType.Mistake} onClick={ handleLostReasonSelection }>
                                                 <Trans>Sending to an incorrect address</Trans>
                                             </MenuItem>
                                         </MenuList>
@@ -301,7 +290,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                             <Card variant="stepContent">
                                 <CardHeader>
                                     <Text as="h3" textStyle="h3" textTransform="capitalize">
-                                        { lostReason }
+                                        { caseTitles[lostReason || 0] }
                                     </Text>
                                 </CardHeader>
                                 
@@ -383,7 +372,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                 header={t`Open dispute in Kleros`}
                                 title={ klerosCaseFormTitle }
                                 buttonText={t`Open dispute`}
-                                requireProtocolAddress={(lostReason === 'protocol breach')}
+                                requireProtocolAddress={(lostReason === MetaEvidenceType.ProtocolBreach)}
                             >
                                     <Flex mb={{base: "20px"}} flexDirection="column" textStyle="paragraph" >
                                         <Text mb={{base: "8px"}}>
@@ -420,7 +409,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                         <PopoverCloseButton />
                                                         <PopoverBody color="#000">
 
-                                                        {(lostReason == 'phishing attack') &&
+                                                        {(lostReason === MetaEvidenceType.Phishing) && 
                                                             <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
                                                                 <Text letterSpacing="0.04em" mb={{base: "8px"}}>
                                                                     <Trans>Chat logs or emails: If the loss of pNFT resulted from a phishing attack or social engineering, chat logs or emails with the attacker could be used to establish their identity and intent.</Trans>
@@ -437,7 +426,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                             </Box>
                                                         }
 
-                                                        {(lostReason == 'protocol breach') &&
+                                                        {(lostReason === MetaEvidenceType.ProtocolBreach) &&
                                                             <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
                                                                 <Text mb={{base: "8px"}} letterSpacing="0.04em">
                                                                     <Trans>Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited.</Trans>
@@ -451,7 +440,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                             </Box>
                                                         }
 
-                                                        {(lostReason == 'sending to an incorrect address') &&
+                                                        {(lostReason === MetaEvidenceType.Mistake) &&
                                                             <Box py={{md: "10px"}} px={{md: "20px"}} textStyle="paragraph">
                                                                 <Text mb={{base: "8px"}} letterSpacing="0.04em">
                                                                     <Trans>Screen recordings: If the loss of pNFT resulted from a scam, a screen recording of the interaction with the scammer could be used as evidence.</Trans>
@@ -490,7 +479,8 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                     name: `Evidence of ${klerosCaseFormTitle}`,
                                     description: evidenceData.description,
                                     evidenceSide: 0,
-                                    protocolAddress: (lostReason === 'protocol breach') ? evidenceData.protocolAddress : undefined
+                                    protocolAddress: (lostReason === MetaEvidenceType.ProtocolBreach) ? 
+                                        evidenceData.protocolAddress : undefined
                                 }}
                             />}
                         </SwitchableOutside>
@@ -519,7 +509,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
                                                     nft,
-                                                    metaEvidenceId,
+                                                    metaEvidenceId: lostReason,
                                                     claimantAddress: account,
                                                     defendantAddress: nft?.ownerAddress,
                                                     contractAddress: evidenceData.protocolAddress,
