@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-15 18:41+0700\n"
+"POT-Creation-Date: 2024-05-10 15:37+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,10 +13,10 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-msgid "{couponsBalance} coupons"
+msgid "404"
 msgstr ""
 
-msgid "404"
+msgid "A friend is sharing NFT Protect with you!"
 msgstr ""
 
 msgid "Action"
@@ -56,6 +56,9 @@ msgid "Back"
 msgstr ""
 
 msgid "Back to homepage"
+msgstr ""
+
+msgid "Balance"
 msgstr ""
 
 msgid "before resorting to legal action."
@@ -115,6 +118,9 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
+msgid "Copy"
+msgstr ""
+
 msgid "Copy your unique referral link"
 msgstr ""
 
@@ -149,6 +155,9 @@ msgid "Description is required"
 msgstr ""
 
 msgid "Detailed"
+msgstr ""
+
+msgid "Disconnect"
 msgstr ""
 
 msgid "Dispute"
@@ -202,6 +211,12 @@ msgstr ""
 msgid "Enter the token smart contract address"
 msgstr ""
 
+msgid "Error loading request"
+msgstr ""
+
+msgid "Error loading token data"
+msgstr ""
+
 msgid "Evidence Period"
 msgstr ""
 
@@ -209,9 +224,6 @@ msgid "Fail!"
 msgstr ""
 
 msgid "Fee for Protection your NFT:"
-msgstr ""
-
-msgid "Fetching balance…"
 msgstr ""
 
 msgid "File an appeal"
@@ -223,16 +235,16 @@ msgstr ""
 msgid "Follow the status of the dispute through our app or on the website Kleros."
 msgstr ""
 
-msgid "for free protection"
-msgstr ""
-
 msgid "Get comission every time your referral protects an NFT!"
 msgstr ""
 
-msgid "has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT."
+msgid "Go get some on <0><1>OpenSea</1></0>, <2><3>Rarible</3></2> or <4><5>Blur</5></4>"
 msgstr ""
 
 msgid "has initiated a dispute in the Kleros decentralized court, in order to obtain"
+msgstr ""
+
+msgid "has initiated a dispute in the Kleros decentralized court, in order to return your pNFT."
 msgstr ""
 
 msgid "has transferred the original NFT to you"
@@ -304,6 +316,9 @@ msgstr ""
 msgid "Links"
 msgstr ""
 
+msgid "Loading..."
+msgstr ""
+
 msgid "Loading…"
 msgstr ""
 
@@ -320,6 +335,9 @@ msgid "Network"
 msgstr ""
 
 msgid "NFT image"
+msgstr ""
+
+msgid "NFT Protect"
 msgstr ""
 
 msgid "NFT Protect • Dapp"
@@ -418,6 +436,9 @@ msgstr ""
 msgid "Pending..."
 msgstr ""
 
+msgid "phishing attack"
+msgstr ""
+
 msgid "Phishing attack"
 msgstr ""
 
@@ -427,13 +448,13 @@ msgstr ""
 msgid "Please note that refusing to hand over the original NFT to its rightful owner may result in legal action against you in the Kleros decentralized court."
 msgstr ""
 
-msgid "Please note that when you receive the original NFT, pNFT will be burned."
-msgstr ""
-
 msgid "Please, allow access and <0/>transfer of your NFT"
 msgstr ""
 
 msgid "Please, allow access and <0/>transfer of your NFTs"
+msgstr ""
+
+msgid "pNFT has been returned to original owner."
 msgstr ""
 
 msgid "pNFT:"
@@ -446,9 +467,6 @@ msgid "Press the button to enforce the ruling…"
 msgstr ""
 
 msgid "Privacy policy"
-msgstr ""
-
-msgid "Proceed to DID"
 msgstr ""
 
 msgid "Proceed to payment"
@@ -469,6 +487,9 @@ msgstr ""
 msgid "Protocol address is required"
 msgstr ""
 
+msgid "protocol breach"
+msgstr ""
+
 msgid "Protocol breach"
 msgstr ""
 
@@ -487,7 +508,7 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-msgid "Register with my referral link to get a coupon for free protection!\\n"
+msgid "Register with my referral link to get a coupon for free protection!"
 msgstr ""
 
 msgid "Request <0/> the original NFT?"
@@ -530,6 +551,9 @@ msgid "Security audits"
 msgstr ""
 
 msgid "Security reports or Protocol Breach Post-mortem: If the loss of pNFT was the result of a protocol breach or hack, security reports (a detailed description of the vulnerability exploited to perform the hack, available in a publicly accessible format, such as a PDF or HTML document, and signed by the responsible parties, such as the NFT Protect team or the compromised partner) could be used to establish the details of the breach and how it was exploited."
+msgstr ""
+
+msgid "sending to an incorrect address"
 msgstr ""
 
 msgid "Sending to an incorrect address"
@@ -661,13 +685,13 @@ msgstr ""
 msgid "The original NFT has been restored to your wallet."
 msgstr ""
 
-msgid "The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once."
-msgstr ""
-
 msgid "The original NFT has been transfered to the Claimant's wallet. The pNFT was burned."
 msgstr ""
 
 msgid "The original NFT has been transferred to a new owner <0/>."
+msgstr ""
+
+msgid "The original NFT is now yours. We recommend to keep it protected."
 msgstr ""
 
 msgid "The Original NFT owner refused!"
@@ -703,13 +727,13 @@ msgstr ""
 msgid "The page where you can verify the authenticity of pNFTs and find out who owns the original NFT."
 msgstr ""
 
+msgid "The pNFT has been returned to your wallet. We recommend to keep it protected."
+msgstr ""
+
 msgid "The pNFT is at user"
 msgstr ""
 
 msgid "The pNFT was burned."
-msgstr ""
-
-msgid "The pNFT was burned.<0/>You can protect your NFT<1/>again. We recommend always<2/>keeping you assets<3/>in a secure place."
 msgstr ""
 
 msgid "The pNFT was transfered out of the protocol:"
@@ -790,7 +814,7 @@ msgstr ""
 msgid "Transfered pNFT"
 msgstr ""
 
-msgid "Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!"
+msgid "Transferring the original NFT to a new owner is irreversible! You will lose control of the NFT and will no longer be able to manage or access it. Please ensure that you intend to transfer ownership before proceeding."
 msgstr ""
 
 msgid "Under dispute"
@@ -800,9 +824,6 @@ msgid "Unfortunately, you have lost the dispute #{0}"
 msgstr ""
 
 msgid "Unknown"
-msgstr ""
-
-msgid "Unless DID verification is done the only option available is to <0>request original NFT</0>"
 msgstr ""
 
 msgid "Unsupported chain"
@@ -817,13 +838,13 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-msgid "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer."
+msgid "User {0} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in case of Bona Fide Transfer."
 msgstr ""
 
 msgid "User <0/> has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT."
 msgstr ""
 
-msgid "User <0/> has filed a claim to burn your pNFT."
+msgid "User <0/> has filed a claim to return your pNFT."
 msgstr ""
 
 msgid "User <0/> has not responded."
@@ -886,7 +907,7 @@ msgstr ""
 msgid "We recommend protecting<0/>your nft at once"
 msgstr ""
 
-msgid "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker's wallet."
+msgid "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court return the pNFT."
 msgstr ""
 
 msgid "Website"
@@ -916,7 +937,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT."
+msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to return the pNFT."
 msgstr ""
 
 msgid "You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing."
@@ -934,13 +955,13 @@ msgstr ""
 msgid "You cancelled a transaction"
 msgstr ""
 
+msgid "You don't have any NFTs"
+msgstr ""
+
 msgid "You get 5% comission for every protection."
 msgstr ""
 
 msgid "You have received a pNFT!"
-msgstr ""
-
-msgid "You have special NFT Protect coupon! It allows you to protect of your NFT for FREE!"
 msgstr ""
 
 msgid "You have the option to file an appeal within {hoursLeft} hours"
@@ -971,9 +992,6 @@ msgid "Your friend protects an NFT."
 msgstr ""
 
 msgid "Your friend signs up using your link."
-msgstr ""
-
-msgid "Your pNFT has been burned."
 msgstr ""
 
 msgid "Your pNFT remains unchanged. We suggest contacting the NFT owner to request the original version."
