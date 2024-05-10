@@ -84,11 +84,12 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
         timeout
     }
 
-    const caseTitles:{ [key: number]: string } = {
-        3: t`protocol breach`,
-        2: t`phishing attack`,
-        1: t`sending to an incorrect address`
-    }
+    const caseTitles: string[] = [
+        "",
+        t`sending to an incorrect address`,
+        t`phishing attack`,
+        t`protocol breach`,
+    ]
 
     const handleUnknownError = (error: any) => {
         console.error(error)
