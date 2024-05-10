@@ -245,7 +245,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 <Trans>Warning!</Trans>
                                             </Text>
                                             <Text textStyle="paragraph">
-                                                <Trans>Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!</Trans>
+                                                <Trans>Transferring the original NFT to a new owner is irreversible! You will lose control of the NFT and will no longer be able to manage or access it. Please ensure that you intend to transfer ownership before proceeding.</Trans>
                                             </Text>
                                         </Flex>
                                     </Flex>

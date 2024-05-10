@@ -222,7 +222,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody mb={{base: "20px"}} >
                                     { nft && <NFTImage nft={nft} /> }
-                                    <Box>
+                                    { fee ? <Box>
                                         <Text textStyle="paragraph" mb={{base: "1em"}} letterSpacing="0.04em" fontWeight={'bold'}>
                                             <Trans>Fee for Protection your NFT:</Trans>
                                         </Text>
@@ -232,10 +232,10 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             </Text>
                                             &nbsp;
                                             { baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
-                                                ~${ Math.round(parseFloat(formatEther(fee || 0)) * baseTokenPrice) }
+                                                ~${ Math.round(parseFloat(formatEther(fee)) * baseTokenPrice) }
                                             </Text> }
                                         </Flex>
-                                    </Box>
+                                    </Box> : '' }
                                 </CardBody>
 
                                 <CardFooter w="100%" justifySelf="flex-start">

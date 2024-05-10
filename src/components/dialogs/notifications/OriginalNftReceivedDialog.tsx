@@ -108,9 +108,6 @@ const OriginalNftReceivedDialog = () => {
                                 </Popover>
                             </Text>
                             { nft && <NFTImage nft={nft} /> }
-                            <Text textStyle="paragraph" mb={{base: "20px"}} textAlign="center" letterSpacing="0.04em">
-                                <Trans>The pNFT was burned.<br/>You can protect your NFT<br/>again. We recommend always<br/>keeping you assets<br/>in a secure place.</Trans>
-                            </Text>
                         </CardBody>
 
                         <CardFooter w="100%" flexDirection="column" alignItems="center">

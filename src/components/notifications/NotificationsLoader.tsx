@@ -109,7 +109,7 @@ const NotificationsLoader = () => {
         defendant: string
     } => {
         switch(requestType) {
-            case ReqType.Burn:
+            case ReqType.Burn: // never really used
             case ReqType.OwnershipRestore: // actually defendant probably is not nft.ownerAddress
                 return {
                     claimant: nft.originalOwnerAddress,
@@ -150,7 +150,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once.</Trans>
+                                                <Trans>The original NFT is now yours. We recommend to keep it protected.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -160,8 +160,8 @@ const NotificationsLoader = () => {
                                     },
                                     dateCreated: request.updateDate
                                 })
-                            } else if (request.type === ReqType.Burn) {
-                                // 30.2 pNFT burn accepted with dispute (original owner)
+                            } else if (request.type === ReqType.OwnershipRestore) {
+                                // 30.2 pNFT restore accepted with dispute (original owner)
                                 addNotification({
                                     id: notificationId+'.30.2',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
@@ -171,7 +171,7 @@ const NotificationsLoader = () => {
                                                 <Trans>The Ruling on dispute #{loadedRequest.externalDisputeId.toString()} is now enforced!</Trans>
                                             }
                                             message={
-                                                <Trans>Your pNFT has been burned.</Trans>
+                                                <Trans>pNFT has been returned to original owner.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -634,8 +634,8 @@ const NotificationsLoader = () => {
                                     },
                                     dateCreated: request.updateDate
                                 })
-                            } else if (request.type === ReqType.Burn) {
-                                // 31.2 Burn pNFT rejected by request with dispute
+                            } else if (request.type === ReqType.OwnershipRestore) {
+                                // 31.2 pNFT restore rejected by request with dispute
                                 addNotification({
                                     id: notificationId+'.31.2',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
@@ -776,8 +776,8 @@ const NotificationsLoader = () => {
                                     },
                                     dateCreated: request.updateDate
                                 })
-                            } else if (request.type === ReqType.Burn) {
-                                // 19.1 pNFT burned by request with dispute
+                            } else if (request.type === ReqType.OwnershipRestore) {
+                                // 19.1 pNFT restored by request with dispute
                                 addNotification({
                                     id: notificationId+'.19.1',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />,
@@ -787,7 +787,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>The original NFT has been restored to your wallet. The pNFT was burned. We recommend protecting your NFT at once.</Trans>
+                                                <Trans>The pNFT has been returned to your wallet. We recommend to keep it protected.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -873,14 +873,14 @@ const NotificationsLoader = () => {
                                         })
                                     } else if (request.type === ReqType.OwnershipRestore) {
                                         const loadedNft = await getPNft(nft)
-                                        // 23.1 pNFT burn disputed
+                                        // 23.1 pNFT restore disputed
                                         addNotification({
                                             id: notificationId+'.23.1',
                                             image: <NFTImage nft={ loadedNft } setDefaultStyles={false} />,
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has filed a claim to burn your pNFT.</Trans>
+                                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has filed a claim to return your pNFT.</Trans>
                                                     }
                                                     message={
                                                         <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
@@ -1265,8 +1265,8 @@ const NotificationsLoader = () => {
                         })
                     } else if (request.status === ReqStatus.Rejected) {
                         if (loadedRequest.externalDisputeId.toString() !== '0') {
-                            if (request.type === ReqType.Burn) {
-                                // 20.1 Burn rejected by request with dispute
+                            if (request.type === ReqType.OwnershipRestore) {
+                                // 20.1 Restore rejected by request with dispute
                                 addNotification({
                                     id: notificationId+'.20.1',
                                     image: <NFTImage nft={ await getOriginalNft(nft) } setDefaultStyles={false} />, 
@@ -1276,7 +1276,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>User {nft.originalOwnerAddress} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in dispute of Bona Fide Transfer.</Trans>
+                                                <Trans>User {nft.originalOwnerAddress} is still the owner of the pNFT. He can now sue you for Ownership Adjustment in case of Bona Fide Transfer.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -1297,7 +1297,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to burn the pNFT.</Trans>
+                                                <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to return the pNFT.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
