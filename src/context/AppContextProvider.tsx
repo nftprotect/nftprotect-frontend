@@ -143,7 +143,7 @@ export function AppContextProvider({ children }:any) {
             if (active && account && (referrerAddress === nullAddress)) {
                 try {
                     const userData = await getUser(account);
-                    if (userData && userData.referrer !== nullAddress) {
+                    if (userData?.referrer && userData.referrer !== nullAddress) {
                         console.log('Referrer address exists:', userData.referrer);
                         setReferrerAddress(userData.referrer as `0x${string}`);
                     } else {
@@ -154,6 +154,7 @@ export function AppContextProvider({ children }:any) {
                             console.log('Setting invite address as referrer');
                             setReferrerAddress(inviteAddr);
                         } else {
+                            setReferrerAddress(nullAddress)
                             console.log('No referrer or invite found');
                         }
                     }

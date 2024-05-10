@@ -186,7 +186,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 data,
                 timestamp: new Date()
             }
-            // TODO: add local cache expiry
+            // TODO: add local cache expiry - not nessessary because all json fields are static
             res.status(200).json(data)
         } else {
             res.status(404).json({ message: 'Token not found' })
