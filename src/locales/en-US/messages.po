@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-05-10 15:37+0700\n"
+"POT-Creation-Date: 2024-05-14 14:27+0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -691,8 +691,8 @@ msgstr "The original NFT has been transfered to the Claimant's wallet. The pNFT 
 msgid "The original NFT has been transferred to a new owner <0/>."
 msgstr "The original NFT has been transferred to a new owner <0/>."
 
-msgid "The original NFT is now yours. We recommend to keep it protected."
-msgstr "The original NFT is now yours. We recommend to keep it protected."
+msgid "The original NFT is now yours. Keep using pNFT as a secure substitute."
+msgstr "The original NFT is now yours. Keep using pNFT as a secure substitute."
 
 msgid "The Original NFT owner refused!"
 msgstr "The Original NFT owner refused!"
@@ -844,9 +844,6 @@ msgstr "User {0} is still the owner of the pNFT. He can now sue you for Ownershi
 msgid "User <0/> has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT."
 msgstr "User <0/> has filed a claim for Ownership Adjustment and wants to obtain the rights of the original NFT."
 
-msgid "User <0/> has filed a claim to return your pNFT."
-msgstr "User <0/> has filed a claim to return your pNFT."
-
 msgid "User <0/> has not responded."
 msgstr "User <0/> has not responded."
 
@@ -855,6 +852,9 @@ msgstr "User <0/> has refused to transfer the original NFT to you."
 
 msgid "User <0/> has transferred the original NFT to you."
 msgstr "User <0/> has transferred the original NFT to you."
+
+msgid "User <0/> initiated a dispute to reclaim the pNFT you hold."
+msgstr "User <0/> initiated a dispute to reclaim the pNFT you hold."
 
 msgid "User <0/> is requesting the original NFT."
 msgstr "User <0/> is requesting the original NFT."
@@ -907,8 +907,8 @@ msgstr "We recommend protecting it using NFT Protect."
 msgid "We recommend protecting<0/>your nft at once"
 msgstr "We recommend protecting<0/>your nft at once"
 
-msgid "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court return the pNFT."
-msgstr "We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court return the pNFT."
+msgid "We recommend that you refuse to give the pNFT owner the original NFT and open a dispute in the Kleros court to get it back."
+msgstr "We recommend that you refuse to give the pNFT owner the original NFT and open a dispute in the Kleros court to get it back."
 
 msgid "Website"
 msgstr "Website"
@@ -937,8 +937,8 @@ msgstr "Write the address of the protocol smart contract"
 msgid "Yes"
 msgstr "Yes"
 
-msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court to return the pNFT."
-msgstr "You are still the owner of the Original NFT. We recommend that you appeal to the court to return the pNFT."
+msgid "You are still the owner of the Original NFT. We recommend that you appeal to the court get the pNFT back."
+msgstr "You are still the owner of the Original NFT. We recommend that you appeal to the court get the pNFT back."
 
 msgid "You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing."
 msgstr "You can add more evidence to your dispute using the provided link while the evidence collection phase is still ongoing."
@@ -972,6 +972,9 @@ msgstr "You may file an appeal within {hoursLeft} hours"
 
 msgid "You may file an appeal."
 msgstr "You may file an appeal."
+
+msgid "You now own both the original and pNFT.<0/>Keep using pNFT as a secure substitute."
+msgstr "You now own both the original and pNFT.<0/>Keep using pNFT as a secure substitute."
 
 msgid "You're being sued"
 msgstr "You're being sued"
