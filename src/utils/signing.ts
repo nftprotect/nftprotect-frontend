@@ -20,18 +20,18 @@ export function getSigningData(chainId: Number, tokenId: string, newOwner: strin
 
     const types = {
         Message: [
+            { name: 'text', type: 'string' },
             { name: 'tokenId', type: 'uint256' },
             { name: 'newOwner', type: 'address' },
             { name: 'nonce', type: 'uint256' },
-            { name: 'messageText', type: 'string' },
         ],
     };
 
     const message = {
+        text: signingText,
         tokenId,
         newOwner: newOwner as `0x${string}`,
         nonce,
-        messageText: signingText,
     };
 
     return {
