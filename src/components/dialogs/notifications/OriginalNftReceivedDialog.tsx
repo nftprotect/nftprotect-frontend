@@ -108,6 +108,9 @@ const OriginalNftReceivedDialog = () => {
                                 </Popover>
                             </Text>
                             { nft && <NFTImage nft={nft} /> }
+                            <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" my={{base: "20px"}}>
+                                <Trans>You now own both the original and pNFT.<br/>Keep using pNFT as a secure substitute.</Trans>
+                            </Text>
                         </CardBody>
 
                         <CardFooter w="100%" flexDirection="column" alignItems="center">

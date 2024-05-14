@@ -150,7 +150,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>The original NFT is now yours. We recommend to keep it protected.</Trans>
+                                                <Trans>The original NFT is now yours. Keep using pNFT as a secure substitute.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
@@ -880,7 +880,7 @@ const NotificationsLoader = () => {
                                             children: 
                                                 <CommonNotificationBody
                                                     header={
-                                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> has filed a claim to return your pNFT.</Trans>
+                                                        <Trans>User <AddressDisplay address={nft.originalOwnerAddress}/> initiated a dispute to reclaim the pNFT you hold.</Trans>
                                                     }
                                                     message={
                                                         <Trans>More details on dispute #{loadedRequest.externalDisputeId.toString()}.</Trans>
@@ -1297,7 +1297,7 @@ const NotificationsLoader = () => {
                                                 <Trans>{`The Ruling on dispute #${loadedRequest.externalDisputeId.toString()} is now enforced!`}</Trans>
                                             }
                                             message={
-                                                <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court to return the pNFT.</Trans>
+                                                <Trans>You are still the owner of the Original NFT. We recommend that you appeal to the court get the pNFT back.</Trans>
                                             }
                                         />, 
                                     severity: SeverityLevel.Major,
