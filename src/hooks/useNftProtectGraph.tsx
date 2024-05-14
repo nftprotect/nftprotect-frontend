@@ -24,6 +24,13 @@ export enum AffiliateActionType {
     Payment
 }
 
+export enum MetaEvidenceType {
+    Adjustment, // used in askOwnershipAdjustmentArbitrate()
+    Mistake, // used in askOwnershipRestoreArbitrate()
+    Phishing, // used in askOwnershipRestoreArbitrate()
+    ProtocolBreach // used in askOwnershipRestoreArbitrate()
+}
+
 export interface SystemData {
     id: string,
     arbitratorregistry: string,
@@ -51,7 +58,8 @@ export interface RequestGraphData extends RequestGraphMinimalData {
     newOwnerAddress: string,
     createDate: Date,
     createBlockNumber: number,
-    updateBlockNumber: number
+    updateBlockNumber: number,
+    metaEvidenceId: MetaEvidenceType
 }
 
 export interface TokenGraphData {
@@ -166,6 +174,7 @@ export const useNftProtectGraph = (chainId: number) => {
                         newowner {
                             id
                         },
+                        metaEvidenceId,
                         timestamp,
                         blocknumber,
                         timestampChange,
@@ -188,6 +197,7 @@ export const useNftProtectGraph = (chainId: number) => {
                 tokenId: BigNumber.from(request.token.id),
                 oldOwnerAddress: request.oldowner.id,
                 newOwnerAddress: request.newowner.id,
+                metaEvidenceId: parseInt(request.metaEvidenceId) as MetaEvidenceType,
                 createDate: timestampToDate(parseInt(request.timestamp)),
                 createBlockNumber: parseInt(request.blocknumber),
                 updateDate: timestampToDate(parseInt(request.timestampChange)),
@@ -329,50 +339,63 @@ export const useNftProtectGraph = (chainId: number) => {
         status: ReqStatus,
         oldOwner?: string,
         newOwner?: string,
-    }) => {
-        const { oldOwner, newOwner } = params
+    }): Promise<RequestGraphData[]> => {
+        const { oldOwner, newOwner } = params;
         if (!oldOwner && !newOwner) {
-            throw Error('oldOwner or newOwner must be specified')
+            throw Error('oldOwner or newOwner must be specified');
         }
         if (graphURI) {
             const query = `
-                query listRequests(${oldOwner && '$oldOwner: Bytes!, '}${newOwner && '$newOwner: Bytes!, '}$status: ReqStatus!) {
+                query listRequests(${oldOwner ? '$oldOwner: Bytes!, ' : ''}${newOwner ? '$newOwner: Bytes!, ' : ''}$status: ReqStatus!) {
                     requests(where: {
-                        ${oldOwner && 'oldowner: {id: $oldOwner},'}
-                        ${newOwner && 'newowner: {id: $newOwner},'}
+                        ${oldOwner ? 'oldowner: {id: $oldOwner},' : ''}
+                        ${newOwner ? 'newowner: {id: $newOwner},' : ''}
                         status: $status
                     }) {
                         id,
                         type,
                         status,
-                        token: {
+                        token {
                             id
                         },
-                        oldowner: {
+                        oldowner {
                             id
                         },
-                        newowner: {
+                        newowner {
                             id
                         },
+                        metaEvidenceId,
                         timestamp,
                         blocknumber,
                         timestampChange,
                         blocknumberChange
                     }
                 }
-            `
-            const result = await graphManager.performQuery(graphURI, query, params)
-            const { data, errors } = result
+            `;
+            const result = await graphManager.performQuery(graphURI, query, params);
+            const { data, errors } = result;
             if (errors && errors.length > 0) {
                 errors.forEach((error: any) => {
-                    throw new Error(error.message)
-                })
+                    throw new Error(error.message);
+                });
             }
-            return data.requests
+            return data.requests.map((request: any) => ({
+                id: BigNumber.from(request.id),
+                type: ReqType[request.type as keyof typeof ReqType],
+                status: ReqStatus[request.status as keyof typeof ReqStatus],
+                tokenId: BigNumber.from(request.token.id),
+                oldOwnerAddress: request.oldowner.id,
+                newOwnerAddress: request.newowner.id,
+                metaEvidenceId: parseInt(request.metaEvidenceId) as MetaEvidenceType,
+                createDate: timestampToDate(parseInt(request.timestamp)),
+                createBlockNumber: parseInt(request.blocknumber),
+                updateDate: timestampToDate(parseInt(request.timestampChange)),
+                updateBlockNumber: parseInt(request.blocknumberChange),
+            }));
         } else {
-            throw Error(MissingUriError(chainId))
+            throw Error(MissingUriError(chainId));
         }
-    }
+    };
 
     // Returns list of pNFTs that are not owned by original owner
     const listTokensTransfered = async (originalOwner: string, aliveOnly: boolean = true): Promise<TokenGraphData[]> => {

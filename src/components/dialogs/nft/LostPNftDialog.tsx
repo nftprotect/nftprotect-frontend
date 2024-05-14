@@ -46,7 +46,7 @@ import { parseEther } from '@ethersproject/units';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
-import { MetaEvidenceType } from '../klerosCase/step/KlerosCaseContent';
+import { MetaEvidenceType } from '../../../hooks/useNftProtectGraph';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
