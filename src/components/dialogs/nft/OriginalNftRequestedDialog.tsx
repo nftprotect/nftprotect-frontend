@@ -164,7 +164,7 @@ const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
                                 <Trans>YOUR ASSET MAY HAVE BEEN STOLEN!</Trans>
                             </Text>
                             <Text textStyle="paragraph" textAlign="center" letterSpacing="0.04em" mb={{base: "20px"}}>
-                                <Trans>We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court to burn the pNFT in the attacker{'\u0027'}s wallet.</Trans>
+                                <Trans>We recommend refuse to give the owner of the pNFT the original NFT and on next step opening a dispute in the Kleros decentralized court return the pNFT.</Trans>
                             </Text>
                         </CardBody>
                         <CardFooter flexDirection="column" alignItems="center">

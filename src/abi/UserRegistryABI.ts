@@ -7,18 +7,8 @@ const UserRegistryABI = [
 		  "type": "address"
 		},
 		{
-		  "internalType": "contract IUserDID",
-		  "name": "did",
-		  "type": "address"
-		},
-		{
 		  "internalType": "address",
 		  "name": "nftprotectaddr",
-		  "type": "address"
-		},
-		{
-		  "internalType": "address",
-		  "name": "nftpCoupons",
 		  "type": "address"
 		}
 	  ],
@@ -78,38 +68,6 @@ const UserRegistryABI = [
 	},
 	{
 	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "address",
-		  "name": "did",
-		  "type": "address"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "provider",
-		  "type": "string"
-		}
-	  ],
-	  "name": "DIDRegistered",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "address",
-		  "name": "did",
-		  "type": "address"
-		}
-	  ],
-	  "name": "DIDUnregistered",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
 	  "inputs": [],
 	  "name": "Deployed",
 	  "type": "event"
@@ -119,8 +77,8 @@ const UserRegistryABI = [
 	  "inputs": [
 		{
 		  "indexed": true,
-		  "internalType": "enum IUserRegistry.Security",
-		  "name": "level",
+		  "internalType": "enum IUserRegistry.FeeType",
+		  "name": "feeType",
 		  "type": "uint8"
 		},
 		{
@@ -150,6 +108,19 @@ const UserRegistryABI = [
 		}
 	  ],
 	  "name": "OwnershipTransferred",
+	  "type": "event"
+	},
+	{
+	  "anonymous": false,
+	  "inputs": [
+		{
+		  "indexed": true,
+		  "internalType": "address",
+		  "name": "partner",
+		  "type": "address"
+		}
+	  ],
+	  "name": "PartnerDeleted",
 	  "type": "event"
 	},
 	{
@@ -197,57 +168,6 @@ const UserRegistryABI = [
 	  "type": "event"
 	},
 	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "uint256",
-		  "name": "requestId",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "SuccessorApproved",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "uint256",
-		  "name": "requestId",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "SuccessorRejected",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "uint256",
-		  "name": "requestId",
-		  "type": "uint256"
-		},
-		{
-		  "indexed": true,
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		},
-		{
-		  "indexed": true,
-		  "internalType": "address",
-		  "name": "successor",
-		  "type": "address"
-		}
-	  ],
-	  "name": "SuccessorRequested",
-	  "type": "event"
-	},
-	{
 	  "inputs": [],
 	  "name": "affiliatePercent",
 	  "outputs": [
@@ -274,19 +194,6 @@ const UserRegistryABI = [
 	  "type": "function"
 	},
 	{
-	  "inputs": [],
-	  "name": "coupons",
-	  "outputs": [
-		{
-		  "internalType": "contract NFTPCoupons",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
 	  "inputs": [
 		{
 		  "internalType": "address",
@@ -302,32 +209,13 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "dids",
-	  "outputs": [
-		{
-		  "internalType": "contract IUserDID",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
 		  "internalType": "address",
 		  "name": "user",
 		  "type": "address"
 		},
 		{
-		  "internalType": "enum IUserRegistry.Security",
-		  "name": "level",
+		  "internalType": "enum IUserRegistry.FeeType",
+		  "name": "feeType",
 		  "type": "uint8"
 		}
 	  ],
@@ -345,12 +233,12 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "enum IUserRegistry.Security",
+		  "internalType": "uint256",
 		  "name": "",
-		  "type": "uint8"
+		  "type": "uint256"
 		}
 	  ],
-	  "name": "feeWei",
+	  "name": "fees",
 	  "outputs": [
 		{
 		  "internalType": "uint256",
@@ -364,118 +252,17 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "uint256",
-		  "name": "requestId",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "fetchRuling",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
 		  "internalType": "address",
 		  "name": "",
 		  "type": "address"
 		}
 	  ],
-	  "name": "hasPaidProtections",
+	  "name": "hasProtections",
 	  "outputs": [
 		{
 		  "internalType": "bool",
 		  "name": "",
 		  "type": "bool"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		}
-	  ],
-	  "name": "hasSuccessor",
-	  "outputs": [
-		{
-		  "internalType": "bool",
-		  "name": "",
-		  "type": "bool"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		}
-	  ],
-	  "name": "isRegistered",
-	  "outputs": [
-		{
-		  "internalType": "bool",
-		  "name": "",
-		  "type": "bool"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		},
-		{
-		  "internalType": "address",
-		  "name": "successor",
-		  "type": "address"
-		}
-	  ],
-	  "name": "isSuccessor",
-	  "outputs": [
-		{
-		  "internalType": "bool",
-		  "name": "",
-		  "type": "bool"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [],
-	  "name": "metaEvidenceLoader",
-	  "outputs": [
-		{
-		  "internalType": "address",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [],
-	  "name": "metaEvidenceURI",
-	  "outputs": [
-		{
-		  "internalType": "string",
-		  "name": "",
-		  "type": "string"
 		}
 	  ],
 	  "stateMutability": "view",
@@ -518,6 +305,11 @@ const UserRegistryABI = [
 	  "name": "partners",
 	  "outputs": [
 		{
+		  "internalType": "bool",
+		  "name": "isRegistered",
+		  "type": "bool"
+		},
+		{
 		  "internalType": "uint8",
 		  "name": "discount",
 		  "type": "uint8"
@@ -549,13 +341,8 @@ const UserRegistryABI = [
 		  "type": "address"
 		},
 		{
-		  "internalType": "bool",
-		  "name": "canUseCoupons",
-		  "type": "bool"
-		},
-		{
-		  "internalType": "enum IUserRegistry.Security",
-		  "name": "level",
+		  "internalType": "enum IUserRegistry.FeeType",
+		  "name": "feeType",
 		  "type": "uint8"
 		}
 	  ],
@@ -584,94 +371,10 @@ const UserRegistryABI = [
 	  "type": "function"
 	},
 	{
-	  "inputs": [
-		{
-		  "internalType": "contract IUserDID",
-		  "name": "did",
-		  "type": "address"
-		}
-	  ],
-	  "name": "registerDID",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
 	  "inputs": [],
 	  "name": "renounceOwnership",
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "requests",
-	  "outputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		},
-		{
-		  "internalType": "address",
-		  "name": "successor",
-		  "type": "address"
-		},
-		{
-		  "internalType": "contract IArbitrableProxy",
-		  "name": "arbitrator",
-		  "type": "address"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "externalDisputeId",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "localDisputeId",
-		  "type": "uint256"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [],
-	  "name": "requestsCounter",
-	  "outputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		}
-	  ],
-	  "name": "scores",
-	  "outputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
-		}
-	  ],
-	  "stateMutability": "view",
 	  "type": "function"
 	},
 	{
@@ -703,8 +406,8 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "enum IUserRegistry.Security",
-		  "name": "level",
+		  "internalType": "enum IUserRegistry.FeeType",
+		  "name": "feeType",
 		  "type": "uint8"
 		},
 		{
@@ -714,19 +417,6 @@ const UserRegistryABI = [
 		}
 	  ],
 	  "name": "setFee",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "mel",
-		  "type": "address"
-		}
-	  ],
-	  "name": "setMetaEvidenceLoader",
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
 	  "type": "function"
@@ -757,86 +447,6 @@ const UserRegistryABI = [
 	{
 	  "inputs": [
 		{
-		  "internalType": "string",
-		  "name": "evidence",
-		  "type": "string"
-		}
-	  ],
-	  "name": "submitMetaEvidence",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		}
-	  ],
-	  "name": "successorOf",
-	  "outputs": [
-		{
-		  "internalType": "address",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "user",
-		  "type": "address"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "arbitratorId",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "string",
-		  "name": "evidence",
-		  "type": "string"
-		}
-	  ],
-	  "name": "successorRequest",
-	  "outputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
-		}
-	  ],
-	  "stateMutability": "payable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "name": "successors",
-	  "outputs": [
-		{
-		  "internalType": "address",
-		  "name": "",
-		  "type": "address"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
 		  "internalType": "address",
 		  "name": "newOwner",
 		  "type": "address"
@@ -846,20 +456,7 @@ const UserRegistryABI = [
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
 	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "contract IUserDID",
-		  "name": "did",
-		  "type": "address"
-		}
-	  ],
-	  "name": "unregisterDID",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
 	}
-]  
+] 
 
 export default UserRegistryABI

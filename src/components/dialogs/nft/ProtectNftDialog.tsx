@@ -1,5 +1,4 @@
 import { Contract } from "@ethersproject/contracts";
-import DidRequiredDialog from '../DidRequiredDialog';
 import { useEffect, useState } from 'react';
 import {
     Button,
@@ -44,22 +43,17 @@ enum NFTPTokenStandard
     ERC20
 }
 
-const svgBackground = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='red' stroke-width='2'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='2'/></svg>")`;
-
 const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
     const {
         account, 
-        didRegistered, 
         nftProtectContract, 
         referrerAddress, 
         fee, 
         baseTokenPrice, 
-        couponsBalance
     } = useAppContext()
     const { setDialog } = useCallableDialogContext()
-    const didDialogDisclosure = useDisclosure()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
@@ -115,16 +109,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
-        if (!didRegistered) {
-            didDialogDisclosure.onOpen();
-            return
-        }
         setNextStep(StepMapping.checkPermission);
         onOpen()
         checkApprovedMethodCall()
             .then((result: any) => {
                 const wrapErrorMapping = {
-                    'user must be registered': didDialogDisclosure.onOpen,
                     'invalid referrer': handleUnknownError,
                     'ACTION_REJECTED': handleRejected,
                     default: handleUnknownError
@@ -178,18 +167,18 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 secureNFT(
                     tokenContract,
                     () => tokenContract.getApproved(nft.tokenId),
-                    (result: any) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
+                    (result: string) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
                     () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, 0, account, referrerAddress, {value: fee})
+                    () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, account, referrerAddress, {value: fee})
                 )
             } else if (nft?.tokenType === NftTokenType.ERC1155) {
                 const tokenContract = nft.getContract()
                 secureNFT(
                     tokenContract,
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
-                    (result: any) => result,
+                    (result: boolean) => result,
                     () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, 0, account, referrerAddress, {value: fee})
+                    () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, account, referrerAddress, {value: fee})
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft?.tokenType}`)
@@ -233,9 +222,7 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
                                 <CardBody mb={{base: "20px"}} >
                                     { nft && <NFTImage nft={nft} /> }
-                                    <Box
-                                        backgroundImage={(couponsBalance !== undefined) && (couponsBalance > 0) ? svgBackground : undefined }
-                                    >
+                                    { fee ? <Box>
                                         <Text textStyle="paragraph" mb={{base: "1em"}} letterSpacing="0.04em" fontWeight={'bold'}>
                                             <Trans>Fee for Protection your NFT:</Trans>
                                         </Text>
@@ -244,16 +231,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 {"Ξ"}{ formatEther(fee || 0) } 
                                             </Text>
                                             &nbsp;
-                                            { fee && baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
+                                            { baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
                                                 ~${ Math.round(parseFloat(formatEther(fee)) * baseTokenPrice) }
                                             </Text> }
                                         </Flex>
-                                    </Box>
-                                    { (couponsBalance !== undefined) && (couponsBalance > 0) &&
-                                        <Text textStyle="paragraph" mt={'1em'} textAlign="center" letterSpacing="0.04em" fontWeight={'bold'}>
-                                            <Trans>You have special NFT Protect coupon! It allows you to protect of your NFT for FREE!</Trans>
-                                        </Text>
-                                    }
+                                    </Box> : '' }
                                 </CardBody>
 
                                 <CardFooter w="100%" justifySelf="flex-start">

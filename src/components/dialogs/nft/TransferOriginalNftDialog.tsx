@@ -41,6 +41,8 @@ import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from "../../AddressDisplay";
+import { useSignTypedData } from "wagmi";
+import { getSigningData } from "../../../utils/signing";
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -49,12 +51,13 @@ interface DialogInitialData {
 const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, currentChain } = useAppContext()
+    const { account, nftProtectContract, signatureVerifierContract, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ startWithDialog, setStartWithDialog ] = useState<boolean>(true)
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const { signTypedDataAsync } = useSignTypedData()
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -99,16 +102,19 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
-    const startTransaction = () => {
+    const startTransaction = async () => {
         try {
             if (nft) {
                 console.log('Choosed to transfer an original NFT.', nft, nft.pendingRequest)
                 setNextStep(StepMapping.confirmTransaction)
+                const signingData = getSigningData(currentChain.id, nft.tokenId, nft.ownerAddress!, nft.originalData!.nonce!.toString(), signatureVerifierContract.address );
+                const signature = await signTypedDataAsync(signingData as any);
+                console.log('SIGNATURE', signingData, signature);
                 const performAnswer = () => {
                     if (nft.pendingRequest) {
-                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, true, '')
+                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, true, signature)
                     } else {
-                        return nftProtectContract.adjustOwnership(nft.tokenId, currentChain.defaultArbitrator, '')
+                        return nftProtectContract.adjustOwnership(nft.tokenId, signature)
                     }
                 }
                 performAnswer().then( finalTransactionSent(
@@ -239,7 +245,7 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                                 <Trans>Warning!</Trans>
                                             </Text>
                                             <Text textStyle="paragraph">
-                                                <Trans>Transferring the original NFT to a new owner will burn the pNFT, and you will lose control of the NFT. This action is irreversible!</Trans>
+                                                <Trans>Transferring the original NFT to a new owner is irreversible! You will lose control of the NFT and will no longer be able to manage or access it. Please ensure that you intend to transfer ownership before proceeding.</Trans>
                                             </Text>
                                         </Flex>
                                     </Flex>

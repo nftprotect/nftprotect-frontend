@@ -27,6 +27,8 @@ import { Trans } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
+import { getSigningData } from "../../../utils/signing";
+import { useSignTypedData } from 'wagmi'
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -35,11 +37,12 @@ interface DialogInitialData {
 const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, currentChain } = useAppContext()
+    const { nftProtectContract, signatureVerifierContract ,account, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
     const { getDialog, setDialog } = useCallableDialogContext()
+    const { signTypedDataAsync } = useSignTypedData()
 
     const name = nft?.title
 
@@ -84,12 +87,15 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
         }
     }
 
-    const startButtonOnClick = () => {
+    const startButtonOnClick = async () => {
         if (nft) {
             try {
                 setNextStep(StepMapping.confirmTransaction);
                 onOpen()
-                nftProtectContract.burn(nft.tokenId, account, currentChain.defaultArbitrator, '') // account used temporary: will be changed to a new wallet address
+                const signingData = getSigningData(currentChain.id, nft.tokenId, account!, nft.originalData!.nonce!.toString(), signatureVerifierContract.address );
+                const signature = await signTypedDataAsync(signingData as any);
+                console.log('SIGNATURE', signingData, signature);
+                nftProtectContract.burn(nft.tokenId, account, signature) // TODO: allow to choose where to extract
                     .then( finalTransactionSent(nftProtectContract) )
                     .catch(
                         handleContractError({

@@ -18,7 +18,6 @@ import '@fontsource/lexend/400.css'
 import '@fontsource/lexend/600.css'
 import '@fontsource/lexend/700.css'
 import { CallableDialogContextProvider } from '../context/CallableDialogContextProvider'
-import { TheGraphContextProvider } from '../context/TheGraphContextProvider'
 import { WagmiProvider, createConfig } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
@@ -62,18 +61,16 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <ConnectKitProvider> {/* customTheme={ccTheme}> */}
                     <AppContextProvider>
                         <ChakraProvider theme={nftProtectTheme}>
-                            <TheGraphContextProvider>
-                                <IPFSContextProvider>
-                                    <NotificationContextProvider>
-                                        <CallableDialogContextProvider>
-                                            <I18nProvider i18n={i18n}>
-                                                <Component {...pageProps} />
-                                                { (process.env.NODE_ENV === 'production') && googleAnalyticsId && <GoogleAnalytics gaId={googleAnalyticsId}/> }
-                                            </I18nProvider>
-                                        </CallableDialogContextProvider>
-                                    </NotificationContextProvider>
-                                </IPFSContextProvider>
-                            </TheGraphContextProvider>
+                            <IPFSContextProvider>
+                                <NotificationContextProvider>
+                                    <CallableDialogContextProvider>
+                                        <I18nProvider i18n={i18n}>
+                                            <Component {...pageProps} />
+                                            { (process.env.NODE_ENV === 'production') && googleAnalyticsId && <GoogleAnalytics gaId={googleAnalyticsId}/> }
+                                        </I18nProvider>
+                                    </CallableDialogContextProvider>
+                                </NotificationContextProvider>
+                            </IPFSContextProvider>
                         </ChakraProvider>
                     </AppContextProvider>
                 </ConnectKitProvider>

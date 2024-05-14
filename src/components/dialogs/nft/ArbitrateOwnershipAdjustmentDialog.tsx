@@ -51,7 +51,7 @@ interface DialogInitialData {
 const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, baseTokenPrice, currentBlock } = useAppContext()
+    const { nftProtectContract, account, library, baseTokenPrice } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -162,16 +162,21 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
         onClose()
     }
 
-    // Check request timeout on every block
+    // Set timer for request timeout
     useEffect(() => {
-        if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
-                if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
-                    setRequestTimedOut(true)
-                }
-            })
+        if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+            const timeUntilTimeout = nft.pendingRequest.timeout.toNumber() - Date.now();
+            console.log('Time until request timeout:', timeUntilTimeout)
+            if (timeUntilTimeout > 0) {
+                const timeoutId = setTimeout(() => {
+                    setRequestTimedOut(true);
+                }, timeUntilTimeout);
+                return () => clearTimeout(timeoutId);
+            } else {
+                setRequestTimedOut(true);
+            }
         }
-    }, [currentBlock])
+    }, [nft]);
 
     useEffect(() => {
         setDialog('ArbitrateOwnershipAdjustmentDialog', {...disclosure, setNft})

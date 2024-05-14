@@ -3,17 +3,51 @@ import { AffiliateActionData, AffiliateActionType, useNftProtectGraph } from '..
 import { Table, Thead, Tbody, Tr, Th, Td, Box, Text, Spinner, TableCaption, Heading } from '@chakra-ui/react';
 import { useAppContext } from '../../context/AppContextProvider';
 import AddressDisplay from '../AddressDisplay';
-import Davatar from '@davatar/react';
 import { Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { formatEther } from '@ethersproject/units';
 import { Trans } from "@lingui/macro";
 import { generateAddressURL, generateTxURL } from '../../utils/etherscan';
 import { BigNumber } from '@ethersproject/bignumber';
+import Avatar from '../navBar/Avatar';
+import useEnsName from '../../hooks/useEnsName';
+import { formatAddress } from '../../utils/helpers';
+
+interface PersonInterface {
+    address: `0x${string}`,
+    link: string,
+    text: string
+}
+
+const Person = ({address, link, text}: PersonInterface) => {
+
+    const name = useEnsName(address);
+
+    return <Box display="flex" alignItems="center">
+        <Avatar
+            size={ 36 }
+            address={ address }
+            name={ name }
+        />
+        <Box as="span" whiteSpace="nowrap">
+            <Link 
+                href={link} 
+                isExternal 
+                ml={2}
+            >
+                <AddressDisplay address={ name || formatAddress(address, 4) }/>
+                <ExternalLinkIcon ml={1}/>
+            </Link>
+            <Text display={{ base: 'block', md: 'none' }} fontSize="xs" color="gray.500" ml={2}>
+                { text }
+            </Text>
+        </Box>
+    </Box>
+}
 
 const AffilateActions = () => {
         const { account, currentChain } = useAppContext()
-        const { listAffiliateActions } = useNftProtectGraph();
+        const { listAffiliateActions } = useNftProtectGraph(currentChain.id);
         const [actions, setactions] = useState<AffiliateActionData[]>([]);
         const [loading, setLoading] = useState(true);
     
@@ -84,26 +118,11 @@ const AffilateActions = () => {
                         {actions.map((action) => (
                             <Tr key={action.id.toString()} fontSize={'14px'}>
                                 <Td borderColor="#D9D9D9">
-                                    <Box display="flex" alignItems="center">
-                                        <Davatar
-                                            size={ 36 }
-                                            address={ action.referral }
-                                            generatedAvatarType='jazzicon'
-                                        />
-                                        <Box as="span" whiteSpace="nowrap">
-                                            <Link 
-                                                href={generateTxURL(action.txHash, currentChain.id)} 
-                                                isExternal 
-                                                ml={2}
-                                            >
-                                                <AddressDisplay address={action.referral}/>
-                                                <ExternalLinkIcon ml={1}/>
-                                            </Link>
-                                            <Text display={{ base: 'block', md: 'none' }} fontSize="xs" color="gray.500" ml={2}>
-                                                {action.date.toLocaleDateString()}
-                                            </Text>
-                                        </Box>
-                                    </Box>
+                                    <Person 
+                                        address={account!} 
+                                        link={generateTxURL(action.txHash, currentChain.id)}
+                                        text={action.date.toLocaleDateString()}
+                                    />
                                 </Td>
                                 
                                 <Td display={{ base: 'none', md: 'table-cell' }} borderColor="#D9D9D9">

@@ -1,8 +1,77 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { nftProtectGraphs, supportedChains } from '../../../../config'
-import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
-import { defaultOptions } from '../../../../context/TheGraphContextProvider'
+import { supportedChains } from '../../../../config'
 import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
+import { BigNumber } from '@ethersproject/bignumber'
+
+import { graphManager } from '../../../../utils/thegraph'
+import { nftProtectGraphs } from '../../../../config'
+
+const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
+// Can't use hook here
+const getToken = async (chainId: number, tokenId: BigNumber) => {
+    const graphConfig = nftProtectGraphs.find(it => it.chainId === chainId);
+    if (!graphConfig || !graphConfig.uri) {
+        throw new Error(MissingUriError(chainId));
+    }
+    const graphURI = graphConfig.uri;
+
+    const query = `
+        query getToken($tokenId: Bytes!) {
+            token(id: $tokenId) {
+                id,
+                ownerProtected {
+                    id
+                },
+                ownerOriginal {
+                    id
+                },
+                latestRequest {
+                    id
+                    status
+                    type
+                    timestampChange
+                },
+                assetType,
+                contract,
+                tokenId,
+                amount,
+                timestamp,
+                blocknumber,
+                burned,
+                nonce
+            }
+        }
+    `;
+    const result = await graphManager.performQuery(graphURI, query, { tokenId: tokenId.toString() });
+    const { data, errors } = result;
+    if (errors && errors.length > 0) {
+        errors.forEach((error: any) => {
+            throw new Error(error.message);
+        });
+    }
+    if (!data.token) {
+        return undefined;
+    }
+    return {
+        id: BigNumber.from(data.token.id),
+        tokenId: BigNumber.from(data.token.tokenId),
+        ownerAddress: data.token.ownerProtected.id,
+        originalOwnerAddress: data.token.ownerOriginal.id,
+        assetType: parseInt(data.token.assetType),
+        contractAddress: data.token.contract,
+        amount: BigNumber.from(data.token.amount),
+        mintDate: new Date(parseInt(data.token.timestamp) * 1000),
+        mintBlockNumber: parseInt(data.token.blocknumber),
+        latestRequest: data.token.latestRequest ? {
+            id: BigNumber.from(data.token.latestRequest.id),
+            status: data.token.latestRequest.status,
+            type: data.token.latestRequest.type,
+            updateDate: new Date(parseInt(data.token.latestRequest.timestampChange) * 1000)
+        } : null,
+        burned: data.token.burned,
+        nonce: BigNumber.from(data.token.nonce),
+    };
+};
 
 type Data = {
     name: string
@@ -20,20 +89,6 @@ enum NFTPTokenStandard {
     ERC20
 }
 
-const graphs:any = {}
-const createGraph = (graphURI: string) => {
-    let client = graphs[graphURI]
-    if (!client) {
-        client = new ApolloClient({
-            uri: graphURI,
-            cache: new InMemoryCache(),
-            defaultOptions: defaultOptions
-        })
-        graphs[graphURI] = client
-    }
-    return client
-}
-
 const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 const alchemys:any = {}
 const createAlchemy = (alchemyChainId: Network): Alchemy => {
@@ -47,34 +102,6 @@ const createAlchemy = (alchemyChainId: Network): Alchemy => {
         alchemys[alchemyChainId] = client
     }
     return client
-}
-
-const getNft = async (tokenId: string, client: ApolloClient<InMemoryCache>): Promise<any> => {
-    const query = `
-        query getToken($tokenId: Bytes!) {
-            token(id: $tokenId) {
-                id,
-                securityLevel,
-                ownerProtected {
-                    id
-                },
-                ownerOriginal {
-                    id
-                },
-                assetType,
-                contract,
-                tokenId,
-                amount,
-                timestamp,
-                blocknumber
-            }
-        }
-    `
-    const { data } = await client.query({
-        query: gql(query),
-        variables: {tokenId}
-    })
-    return data?.token
 }
 
 const tokenCache:any = {}
@@ -105,16 +132,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
         return
     }
 
-    const graphConfig = nftProtectGraphs.find(it => it.chainId === currentChain.id)
-    if (!graphConfig) {
-        res.status(500).json({ message: 'Internal error' })
-        return
-    }
     let data: Data | null = null
 
     try {
-        const graphClient = createGraph(graphConfig.uri)
-        const nftGraphData = await getNft(tokenId as string, graphClient)
+        const nftGraphData = await getToken(currentChain.id, BigNumber.from(tokenId))
         if (nftGraphData) {
             const alchemy = createAlchemy(currentChain.alchemyId)
             const tokenType = nftGraphData.assetType === NFTPTokenStandard.ERC1155 ?
@@ -123,7 +144,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 NftTokenType.ERC721 :
                 NftTokenType.NO_SUPPORTED_NFT_STANDARD
             const originalMetadata = await alchemy.nft.getNftMetadata(
-                nftGraphData.contract, 
+                nftGraphData.contractAddress, 
                 nftGraphData.tokenId,
                 {
                     tokenType
@@ -135,12 +156,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 name: `🛡️Protected • ${originalMetadata.title}`,
                 description: `${protectionText}${originalMetadata.description ? ` • ${originalMetadata.description}` : ''}`,
                 originalToken: {
-                    standard: NFTPTokenStandard[parseInt(nftGraphData.assetType)].toString(),
-                    address: nftGraphData.contract,
+                    standard: NFTPTokenStandard[nftGraphData.assetType].toString(),
+                    address: nftGraphData.contractAddress,
                     id: nftGraphData.tokenId,
                     amount: nftGraphData.amount.toString(),
                     uri: originalMetadata.tokenUri?.raw,
-                    owner: nftGraphData.ownerOriginal.idS
+                    owner: nftGraphData.originalOwnerAddress
                 }
             }
             const additionalProperties = {
@@ -165,7 +186,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 data,
                 timestamp: new Date()
             }
-            // TODO: add local cache expiry
+            // TODO: add local cache expiry - not nessessary because all json fields are static
             res.status(200).json(data)
         } else {
             res.status(404).json({ message: 'Token not found' })

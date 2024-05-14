@@ -187,16 +187,6 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             <Trans>Request original</Trans>
                                         </Button>
                                     </Box>
-                                    <Flex flexWrap="nowrap" alignItems="center" py={{base: "15px"}} px={{base: "20px"}} border="1px solid" borderColor="brand.light" borderRadius="16px">
-                                        <Flex color="brand.light" mr={{base: "20px"}} bg="#FFF" >
-                                            <AlertCircle fontSize="36px" />
-                                        </Flex>
-                                        <Flex flexDirection="column">
-                                            <Text textStyle="paragraph" color="text.muted">
-                                                <Trans>Please note that when you receive the original NFT, pNFT will be burned.</Trans>
-                                            </Text>
-                                        </Flex>
-                                    </Flex>
                                 </CardFooter>
                             </Card>
                         </SwitchableOutside> 

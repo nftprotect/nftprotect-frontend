@@ -11,7 +11,7 @@ import {
     ModalCloseButton,
     useDisclosure
 } from '@chakra-ui/react'
-import KlerosCaseContent from './step/KlerosCaseContent';
+import KlerosCaseContent, { MetaEvidenceType } from './step/KlerosCaseContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
 import { ReqType } from '../../../hooks/useNftProtectGraph';
@@ -22,7 +22,6 @@ const KlerosCaseDialog = () => {
     const { isOpen, onOpen, onClose } = disclosure
     const { setDialog } = useCallableDialogContext()
     const [ caseData, setCaseData ] = useState<KlerosCaseInitialData>()
-    const { nft, metaEvidenceId } = caseData || {}
 
     useEffect(() => {
         setDialog('KlerosCaseDialog', {...disclosure, setCaseData})
@@ -59,9 +58,9 @@ const KlerosCaseDialog = () => {
                         mt='2em'
                         // h={"100%"}
                     >
-                        { nft && caseData && <KlerosCaseContent
+                        { caseData && <KlerosCaseContent
                             requestType={
-                                caseData.metaEvidenceId === 3 ? 
+                                caseData.metaEvidenceId === MetaEvidenceType.Adjustment ? 
                                     ReqType.OwnershipAdjustment : 
                                     ReqType.OwnershipRestore
                             }

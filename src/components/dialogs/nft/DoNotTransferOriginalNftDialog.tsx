@@ -33,7 +33,6 @@ import CancelledStepContent from '../../steps/CancelledStepContent'
 import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import ErrorStepContent from '../../steps/ErrorStepContent'
 import NFT from "../../../classes/NFT";
-import { Contract } from '@ethersproject/contracts';
 import { handleContractError } from '../../../utils/errorHandling';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
@@ -48,12 +47,11 @@ interface ButtonInitialData {
 const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const {account, didRegistered, nftProtectContract, referrerAddress, fee} = useAppContext()
+    const { nftProtectContract } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const [lostReason, setLostReason ] = useState<string>()
 
     enum StepMapping {
         confirmTransaction,

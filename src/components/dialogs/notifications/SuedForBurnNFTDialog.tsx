@@ -101,7 +101,7 @@ const SuedForBurnNFTDialog = () => {
                                             <CopyIcon onClick={ copyOriginalOwnerToClipboard } cursor="pointer" fontSize="18px" ml={{base: "2px"}} />
                                         </PopoverTrigger>
                                         
-                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to burn your pNFT.</Trans>
+                                        <Trans>has initiated a dispute in the Kleros decentralized court, in order to return your pNFT.</Trans>
                                     </Text>
                                     <PopoverContent w="150px">
                                         <PopoverArrow />

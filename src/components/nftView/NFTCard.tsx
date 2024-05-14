@@ -26,7 +26,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { library, currentBlock, currentChain } = useAppContext()
+    const { currentChain } = useAppContext()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -34,8 +34,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     // In case of external metadata fetching it marks if fetch is ended
     //const [ fetchEnded, setFetchEnded ] = useState(false)
     const [ nft, setNft ] = useState<NFT>(_nft)
-    // If our NFT is pNFT it stores the info about original NFT
-    const [ originalNFTData, setOriginalNFTData ] = useState<OriginalNFTData>()
+    const originalNFTData = nft.originalData
     // Stores pending request data if available
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
     // Marks if request is timed out (if exists)
@@ -43,38 +42,29 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     const { getDialog } = useCallableDialogContext()
 
     useEffect(() => {
-        // Load all secondary NFT data
-        nft.loadAnotherData()
-        const originalNFTDataLoadedListener = () => {
-            console.log('ORIGINAL NFT DATA:', nft.originalData)
-            setOriginalNFTData(nft.originalData)
+        const load = async () => {
+            // Load request if exists
+            const request = await nft.loadPendingRequest()
+            setPendingRequest(request)
         }
-        const pendingRequestLoadedListener = () => {
-            console.log('PENDING REQUEST:', nft.tokenId, nft.pendingRequest)
-            setPendingRequest(nft.pendingRequest)
-        }
-        if (nft.isPNFT()) {
-            nft.addEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
-            nft.addEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
-        }
-        return () => {
-            if (nft.isPNFT()) {
-                nft.removeEventListener(NFTEvents.OriginalNFTDataLoaded, originalNFTDataLoadedListener)
-                nft.removeEventListener(NFTEvents.PendingRequestLoaded, pendingRequestLoadedListener)
-            }
-        }
+        load()
     }, [])
 
-    // Check request timeout on every block
+    // Set timer for request timeout
     useEffect(() => {
-        if (pendingRequest && currentBlock && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
-                if (blockData.timestamp >= pendingRequest.timeout) {
-                    setRequestTimedOut(true)
-                }
-            })
+        if (pendingRequest && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+            const timeUntilTimeout = pendingRequest.timeout.toNumber() - Date.now();
+            console.log('Time until request timeout:', timeUntilTimeout)
+            if (timeUntilTimeout > 0) {
+                const timeoutId = setTimeout(() => {
+                    setRequestTimedOut(true);
+                }, timeUntilTimeout);
+                return () => clearTimeout(timeoutId);
+            } else {
+                setRequestTimedOut(true);
+            }
         }
-    }, [currentBlock])
+    }, [pendingRequest]);
 
     let buttons = <div />
     if (nft.isPNFT()) {

@@ -12,7 +12,6 @@ import ERC721ABI from "../abi/ERC721ABI";
 import ERC1155ABI from "../abi/ERC1155ABI";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
-import { Web3Provider } from "@ethersproject/providers";
 import { centralizeIpfsUrl } from '../utils/ipfs';
 
 export interface OriginalNFTData {
@@ -21,7 +20,7 @@ export interface OriginalNFTData {
     contractAddress: string,
     tokenType: NftTokenType
     amount: number,
-    securityLevel: number
+    nonce: number     //** Holds nonce for signing purposes */
 }
 
 export interface ActionRequest {
@@ -214,9 +213,6 @@ export default class NFT implements NFTInterface {
           return;
         }
       
-        // Function to check if an address is not null
-        const isNotNullAddress = (address: string): boolean => address !== nullAddress;
-      
         // Get NFT data from the contract
         const [ 
             standardId, 
@@ -224,7 +220,7 @@ export default class NFT implements NFTInterface {
             tokenId, 
             amount, 
             owner, 
-            securityLevel
+            nonce
         ] = await this.context.nftProtectContract.tokens(this.tokenId)
         // Create an object with the retrieved data
         const nftData:any = {
@@ -232,7 +228,7 @@ export default class NFT implements NFTInterface {
             amount,
             contractAddress,
             ownerAddress: owner,
-            securityLevel,
+            nonce,
         };
         
         // Determine the NFT token type based on the standard ID
@@ -312,6 +308,9 @@ export default class NFT implements NFTInterface {
 
         if (otherProps) {
             Object.assign(this, otherProps);
+            if (otherProps.originalData) {
+                this.originalData = otherProps.originalData;
+            }
         }
 
     }

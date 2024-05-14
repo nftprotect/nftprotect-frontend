@@ -1,11 +1,16 @@
 import { Network } from "alchemy-sdk";
-import { fallback, http } from "wagmi";
+import { fallback, http, webSocket } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 export const appName = "NFT Protect";
 export const appDescription = "NFT Protect is an application that allows you to protect your NFTs and be sure of their safety without fear of theft.";
 export const appUrl = "https://dev.nftprotect.app";
 export const appIcon = "https://dev.nftprotect.app/images/logo-blue.svg";
+// This text must match the text in SignatureVerifier.sol
+export const signingText = `WARNING! READ CAREFULLY!\nBy signing this message, you agree to withdraw your original NFT from the NFT Protect protocol. Access to it will no longer be recoverable through NFT Protect!\n`;
+
+// IPFS gateways to use with Wagmi (e.g. ENS avatar resolving)
+export const wagmiGatewayUrls = ['https://cloudflare-ipfs.com']
 
 export const supportedChains = [
     // For MVP will be used only Goerli network, others are commented for now
@@ -27,7 +32,6 @@ export const supportedChains = [
     //     nftpContractAddress: '0x8732b75a23fefab3be8825ae87dffcb38760121f',
     //     userRegistryContractAddress: '0x68deab39fb68a7c24d67d16b1f133809c41c008f',
     //     arbRegistryContractAddress: '0x094c049f25d6ea178b3262887d37ad9da36b2355',
-    //     couponsContractAddress: '0x6a204dDA156dafA6198A51241B21340627747402',
     //     defaultArbitrator: 1
     // }, 
     {
@@ -37,15 +41,18 @@ export const supportedChains = [
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0xe7807e973f42aea32da71c15a6441760f675d9cc',
-        userRegistryContractAddress: '0x727718859965b1c88c79491721d9b861654f6a73',
-        arbRegistryContractAddress: '0xa8d82ab740b0ba1a1b5784b86ecdc41d53e4ff15',
-        couponsContractAddress: '0x8f1cb013426f591220c51c516ac185a21405afa8',
+        nftpContractAddress: '0x2227b944f06304c0f6b42ae18067af6dee148573',
+        userRegistryContractAddress: '0xc4f9fc0f8fe6a2dc9f66b387be0c741750f196cf',
+        arbRegistryContractAddress: '0x25bf41c8f7ea92091260c9e50bb44566a0719bd7',
+        signatureVerifierContractAddress: '0xffcf59f89debd62c5821bcdea945382657ca3760',
         defaultArbitrator: 1,
         transport: fallback([
-            http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
-            http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
-            http(), // public fallback
+            webSocket(`wss://sepolia.infura.io/ws/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
+            webSocket(`wss://eth-sepolia.ws.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+            webSocket(), // public fallback
+            // http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
+            // http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+            // http(), // public fallback
         ]),
     },
     // {
@@ -85,8 +92,8 @@ export const nftProtectGraphs = [
     // }, 
     {
         chainId: 11155111,
-        //uri: `https://gateway-arbitrum.network.thegraph.com/api/${process.env.NEXT_PUBLIC_THEGRAPH_API_KEY}/subgraphs/id/Gfk3waJGQWZkYSjXEEzrRGxBKHD8s7SJ9UrkUtPQ2Qcv`
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.8.2'
+        //uri: `https://gateway-arbitrum.network.thegraph.com/api/[api-key]/subgraphs/id/Gfk3waJGQWZkYSjXEEzrRGxBKHD8s7SJ9UrkUtPQ2Qcv`
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.5'
     }
 ]
 
@@ -105,7 +112,7 @@ export const arbitratorGraphs = [
         arbitrators: [
             {
                 arbitratorId: 1,
-                uri: 'https://api.studio.thegraph.com/proxy/17884/kleros-sepolia/version/latest/'
+                uri: 'https://api.studio.thegraph.com/query/50822/kleros-v1/v1.0'
             }
         ]
     }

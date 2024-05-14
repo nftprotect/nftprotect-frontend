@@ -23,7 +23,6 @@ import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
-import { RequestStatus } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
@@ -36,7 +35,7 @@ import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
 const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, fee, currentBlock, currentChain } = useAppContext()
+    const { nftProtectContract, currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -47,7 +46,6 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
-    const [ requestTimedOut, setRequestTimedOut ] = useState(false)
     const { submitEvidence } = useArbitrableProxy()
 
     // Naming of wizard step numbers
@@ -133,17 +131,6 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
         setEvidence(undefined)
     }
 
-    // Check request timeout on every block
-    useEffect(() => {
-        if (nft?.pendingRequest && currentBlock && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
-            library.getBlock(currentBlock).then((blockData: any) => {
-                if (nft?.pendingRequest && (blockData.timestamp >= nft.pendingRequest.timeout)) {
-                    setRequestTimedOut(true)
-                }
-            })
-        }
-    }, [currentBlock])
-
     useEffect(() => {
         evidence && submitPreparedEvidence()
     }, [evidenceData, evidence])
@@ -215,7 +202,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
                                 evidenceData={{
                                     name: `Additional evidence`,
                                     description: evidenceData.description,
-                                    evidenceSide: 0, // TODO: Add logic or remove completely because untrusted
+                                    evidenceSide: 0, // TODO: Maybe better remove completely because untrusted
                                 }}
                             />}
                         </SwitchableOutside>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { formatEther } from "@ethersproject/units"
-import { copyTextToClipboard } from '../../utils/helpers'
+import { copyTextToClipboard, formatAddress } from '../../utils/helpers'
 import {
     Box,
     Button,
@@ -24,20 +24,22 @@ import {
     Link
 } from '@chakra-ui/react'
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
-import Davatar from '@davatar/react'
 import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useDisconnect } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
 import { useRouter } from 'next/router'
+import useEnsName from '../../hooks/useEnsName'
+import Avatar from './Avatar'
 
 const ShowConnectionState = () => {
 
-    const { account, active, library, couponsBalance, baseTokenPrice } = useAppContext()
+    const { account, active, library, baseTokenPrice } = useAppContext()
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
     const { hasCopied, onCopy } = useClipboard(account || '');
+    const ensName = useEnsName(account as `0x${string}`);
     const router = useRouter();
 
     useEffect(() => {
@@ -66,7 +68,7 @@ const ShowConnectionState = () => {
                 px={[3, 6]}
             >
                 {active && typeof account === 'string' ? (
-                    <p><AddressDisplay address={account}/></p>
+                    <p>{ ensName || formatAddress(account, 4) }</p>
                 ) : (
                     <p>Connect Wallet</p>
                 )}
@@ -97,13 +99,7 @@ const ShowConnectionState = () => {
                                     borderColor="#BC9CFF"
                                     borderRadius={['2em']}
                                 >
-                                    { active && <Davatar
-                                        size={42}
-                                        address={account || ''}
-                                        // provider={library?.provider}
-                                        // graphApiKey={apiKey}
-                                        generatedAvatarType='jazzicon' // 'jazzicon' or 'blockies'
-                                    /> }
+                                    { active && <Avatar address={account!} name={ensName} size={42} /> }
                                 </Box>
 
                                 <Text fontSize={['16px']}>
@@ -154,21 +150,6 @@ const ShowConnectionState = () => {
                             { baseTokenPrice && ethBalance && <Text fontSize={['16px']} fontWeight={"100"} color="text.muted" mt='-0.5rem'>
                                 ~ ${ (ethBalance * baseTokenPrice).toFixed(2) } USD
                             </Text> }
-                        </Box>
-                        <Box>
-                            <Text fontSize={['16px']} fontWeight={600}>
-                                <Trans>Coupons</Trans>
-                            </Text>
-                            <Text fontSize={['36px']}>
-                                { (couponsBalance !== undefined) ? t`${ couponsBalance } coupons` : t`Fetching balance…` }
-                            </Text>
-                            <Text fontSize={['16px']} color="text.muted" lineHeight={"120%"}>
-                                <Trans>
-                                    Want a coupon for free NFT protection? Complete the <Link color="blue" href="https://galxe.com/nftprotect" target='_blank'>
-                                        <Text as="span" color="#2D7BD6" textDecoration={'underline'}>quest</Text>
-                                    </Link>
-                                </Trans>
-                            </Text>
                         </Box>
                         <Box mt="1rem">
                             <Flex justifyContent="space-between" alignItems="center">
