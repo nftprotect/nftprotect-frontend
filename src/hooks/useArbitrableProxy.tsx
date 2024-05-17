@@ -33,9 +33,9 @@ export const useArbitrableProxy = () => {
             "useArbitrable has to be used within <AppContext.Provider>"
         );
     }
-    const { currentChain, active, library, account, arbRegistryContract } = useAppContext()
+    const { currentChain, defaultChain, active, library, account, arbRegistryContract } = useAppContext()
     const contracts = useRef<ContractsHolder[]>([])
-    const {data: currentBlock} = useBlockNumber({chainId: currentChain!.id })
+    const {data: currentBlock} = useBlockNumber({chainId: currentChain?.id || defaultChain.id})
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
         const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)

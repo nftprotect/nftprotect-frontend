@@ -1,13 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {  
     supportedChains,
-    defaultChain 
+    defaultChain as defaultChainId
 } from "../config";
 import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
-import { defaultChain as defaultChainId } from "../config";
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useMemo } from "react";
@@ -51,6 +50,7 @@ interface AppState {
 export const AppContext = createContext<AppContextInterface|null>(null);
 
 const nullAddress = '0x0000000000000000000000000000000000000000'
+const defaultChain = supportedChains.find( it => it.id === defaultChainId )
 
 export function AppContextProvider({ children }:any) {
     const router = useRouter()
@@ -82,7 +82,6 @@ export function AppContextProvider({ children }:any) {
 
     const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
-    const defaultChain = useMemo(() => defaultChainId ? supportedChains.find( it => it.id === defaultChainId ) : undefined, [defaultChainId])
     // Current fee for protecting
     const [ fee, setFee ] = useState<number>()
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
