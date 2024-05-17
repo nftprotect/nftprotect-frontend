@@ -20,7 +20,7 @@ export function useAlchemy(alchemyChainId?: string) {
 
     const alchemy = useMemo(() => {
         return new Alchemy({network: chainId, apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY });
-    }, chainId)
+    }, [chainId])
 
     return alchemy;
 

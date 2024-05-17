@@ -64,8 +64,8 @@ export function NotificationContextProvider({ children }:any) {
             ? JSON.parse(localStorage.getItem('closedNotifications') || '{}')
             : {}
     );
-    const { currentChain } = useAppContext()
-    const {data: currentBlock} = useBlockNumber({chainId: currentChain!.id })
+    const { currentChain, defaultChain } = useAppContext()
+    const {data: currentBlock} = useBlockNumber({chainId: currentChain?.id || defaultChain.id  })
 
     const getNotification = (id: string): Notification|undefined => {
         return notifications.current.find(it => it.id === id)
