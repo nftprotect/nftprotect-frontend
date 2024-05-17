@@ -13,6 +13,7 @@ import ERC1155ABI from "../abi/ERC1155ABI";
 import { BigNumber } from '@ethersproject/bignumber'
 import { AppContextInterface } from "../context/AppContextProvider";
 import { centralizeIpfsUrl } from '../utils/ipfs';
+import { ReqStatus } from "../hooks/useNftProtectGraph";
 
 export interface OriginalNFTData {
     ownerAddress: string,
@@ -29,18 +30,11 @@ export interface ActionRequest {
     tokenId: BigNumber,
     newowner: string,
     timeout: BigNumber,
-    status: RequestStatus,
+    status: ReqStatus,
     arbitratorId: number,
     localDisputeId: BigNumber,
     externalDisputeId: BigNumber,
     metaevidence: number
-}
-
-export enum RequestStatus {
-    Initial,
-    Accepted,
-    Rejected,
-    Disputed
 }
 
 export enum NFTEvents {
@@ -113,7 +107,7 @@ export default class NFT implements NFTInterface {
                     this.contract.address, 
                     ERC721ABI, 
                     this.context.active && this.context.account ? 
-                        this.context.library.getSigner(this.context.account) : 
+                        this.context.library!.getSigner(this.context.account) : 
                         this.context.library
                 ) 
             } else {
@@ -121,7 +115,7 @@ export default class NFT implements NFTInterface {
                     this.contract.address, 
                     ERC1155ABI, 
                     this.context.active && this.context.account ? 
-                        this.context.library.getSigner(this.context.account) : 
+                        this.context.library!.getSigner(this.context.account) : 
                         this.context.library
                 )
             }

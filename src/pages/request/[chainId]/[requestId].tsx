@@ -24,6 +24,7 @@ import Head from 'next/head'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
+import LoginScreen from '../../../components/LoginScreen'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const requestId = params?.requestId
@@ -39,13 +40,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
     }
 }
 
-const defaultChainArbitrator = supportedChains.find(it => it.id === defaultChain)?.defaultArbitrator
-
 const RequestPage: NextPage = () => {
     const context = useAppContext()
-    const { account, active, library, currentChain, nftProtectContract } = context
+    const { account, active, library, currentChain, defaultChain, isCorrectChain, nftProtectContract } = context
     const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
     const { query } = useRouter()
+    const [ selectedChain, setSelectedChain ] = useState<any>()
     const [ requestId, setRequestId ] = useState<BigNumber>()
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
@@ -53,11 +53,11 @@ const RequestPage: NextPage = () => {
     const [ evidences, setEvidences ] = useState<EvidenceUpload[]>()
     const [ nft, setNft ] = useState<NFT>()
     const { nft: nftApi } = useAlchemy()
-    const { getDispute } = useArbitratorGraph(currentChain?.id || defaultChain, currentChain?.defaultArbitrator || defaultChainArbitrator)
+    const { getDispute } = useArbitratorGraph(selectedChain?.id || defaultChain.id, selectedChain?.defaultArbitrator || defaultChain.defaultArbitrator)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
     const [ error, setError ] = useState<string>()
-    const { getToken, getRequest } = useNftProtectGraph(currentChain.id)
+    const { getToken, getRequest } = useNftProtectGraph(selectedChain?.id || defaultChain.id)
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
@@ -68,7 +68,7 @@ const RequestPage: NextPage = () => {
     }, [])
 
     const getBlockDate = async (blockNumber: number) => {
-        const block = await library.getBlock(blockNumber)
+        const block = await library!.getBlock(blockNumber)
         return timestampToDate(block.timestamp)
     }
 
@@ -135,8 +135,9 @@ const RequestPage: NextPage = () => {
             console.error('No chainId provided')
         }
         if (chainId > -1) {
-            const currentChain = supportedChains.find(it => it.id === chainId)
-            if (currentChain) {
+            const selectedChain = supportedChains.find(it => it.id === chainId)
+            if (selectedChain) {
+                setSelectedChain(selectedChain)
                 context.setChainId(chainId)
             } else {
                 console.error('Unsupported chain', chainId)
@@ -152,7 +153,7 @@ const RequestPage: NextPage = () => {
 
     const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
         const alchemyNft = await nftApi.getNftMetadata(
-            nftProtectContract.address,
+            selectedChain.nftpContractAddress,
             tokenId
         )
         return alchemyNft ?
@@ -163,7 +164,7 @@ const RequestPage: NextPage = () => {
     // Load Request and NFT
     useEffect(() => {
         const fetchData = async () => {
-            if (currentChain && requestId && query.chainId && (currentChain.id === parseInt(query.chainId.toString()))) {
+            if (currentChain && requestId && selectedChain && isCorrectChain) {
                 let currentNFT: NFT|undefined
                 // Fetch request data from The Graph
                 const graphRequest: RequestGraphData|null = await getRequest(requestId)
@@ -214,21 +215,21 @@ const RequestPage: NextPage = () => {
             }
         }
         fetchData()
-    }, [requestId, currentChain])
+    }, [requestId, currentChain, selectedChain, isCorrectChain])
 
     // Load evidences
     useEffect(() => {
-        if (currentChain) {
+        if (currentChain && selectedChain && isCorrectChain) {
             loadEvidences()
         }
-    }, [requestData, requestGraphData, currentChain])
+    }, [requestData, requestGraphData, currentChain, selectedChain, isCorrectChain])
 
     // Load period
     useEffect(() => {
-        if (currentChain) {
+        if (currentChain && selectedChain && isCorrectChain) {
             loadPeriod()
         }
-    }, [requestData, currentChain])
+    }, [requestData, currentChain, selectedChain, isCorrectChain])
 
     useEffect(() => {
         if (period?.period === Period.Execution) {
@@ -257,12 +258,12 @@ const RequestPage: NextPage = () => {
     const allRequiredLoaded = requestData && nft && claimantAddress && defendantAddress
 
     return (<>
-        { currentChain && <Head>
+        { selectedChain && <Head>
             { requestId &&
                 <meta name="description" content={t`The page of the court session in the Kleros decentralized court for the NFT Protect request #${requestId}.`} /> 
             }
             { requestId ? 
-                <title>{t`NFT Protect • Request #${requestId}, ${currentChain.name}`}</title> :
+                <title>{t`NFT Protect • Request #${requestId}, ${selectedChain.name}`}</title> :
                 <title>{t`NFT Protect • Incorrect requestId`}</title> }
         </Head> }
         <Grid
@@ -298,6 +299,7 @@ const RequestPage: NextPage = () => {
                         {error}
                     </Text> }
                     { !error && !allRequiredLoaded && <Text textStyle={"h3"} m={{base: "1rem", md: "2rem"}}>
+                        {/* TODO: We have loading always when not logged in! */}
                         <Trans>Loading...</Trans>
                     </Text> }
                     { !error && allRequiredLoaded && <>

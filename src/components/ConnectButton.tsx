@@ -16,7 +16,7 @@ const ConnectButton = ({
 }: ConnectButtonInterface) => {
 
     const { active, isCorrectChain } = useAppContext() 
-    const { switchChain } = useSwitchChain()
+    const { switchChain } = useSwitchChain()    
 
     if (active) {
         return (
@@ -28,7 +28,19 @@ const ConnectButton = ({
             </Button>
         );
     } else {
-        if (isCorrectChain) {
+        // isCorrectChain here handles only case with requested chainId
+        // Unsupported chain behavior is handled by ConnectKit 
+        if (chainId && switchChain && !isCorrectChain) {
+            return <Button
+                variant={buttonVariant}
+                leftIcon={<Swap fontSize="1.375rem" />}
+                onClick={() => {
+                    switchChain({chainId})
+                }}
+            >
+                <Trans>Switch network</Trans>
+            </Button>
+        } else {
             return <ConnectKitButton.Custom>
                 {({ show }) => {
                     return (
@@ -42,18 +54,6 @@ const ConnectButton = ({
                     );
                 }}
             </ConnectKitButton.Custom>
-        } else if (chainId && switchChain) {
-            return <Button
-                variant={buttonVariant}
-                leftIcon={<Swap fontSize="1.375rem" />}
-                onClick={() => {
-                    switchChain({chainId})
-                }}
-            >
-                <Trans>Switch network</Trans>
-            </Button>
-        } else {
-            return <Trans>Invalid network state</Trans>
         }
     }
 }
