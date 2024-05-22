@@ -11,10 +11,10 @@ import {
     ModalCloseButton,
     useDisclosure
 } from '@chakra-ui/react'
-import KlerosCaseContent, { MetaEvidenceType } from './step/KlerosCaseContent';
+import KlerosCaseContent from './step/KlerosCaseContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
-import { ReqType } from '../../../hooks/useNftProtectGraph';
+import { MetaEvidenceType, ReqType } from '../../../hooks/useNftProtectGraph';
 
 const KlerosCaseDialog = () => {
 
