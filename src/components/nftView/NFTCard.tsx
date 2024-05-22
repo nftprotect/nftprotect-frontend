@@ -15,10 +15,11 @@ import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
-import { OriginalNFTData, ActionRequest, NFTEvents, RequestStatus } from '../../classes/NFT';
+import { ActionRequest } from '../../classes/NFT';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { generateRequestLink } from '../../utils/helpers';
+import { ReqStatus } from '../../hooks/useNftProtectGraph';
 
 interface NFTInitialData {
     nft: NFT,
@@ -52,7 +53,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
 
     // Set timer for request timeout
     useEffect(() => {
-        if (pendingRequest && (pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+        if (pendingRequest && (pendingRequest.status === ReqStatus.Initial) && !requestTimedOut) {
             const timeUntilTimeout = pendingRequest.timeout.toNumber() - Date.now();
             console.log('Time until request timeout:', timeUntilTimeout)
             if (timeUntilTimeout > 0) {
@@ -104,7 +105,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                         </Box>
                 } else {
                     // If request is timed out or rejected we can create a court
-                    if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
+                    if (requestTimedOut || pendingRequest.status === ReqStatus.Rejected) {
                         buttons = 
                             <Box mt={[2]}>
                                 <Button
@@ -119,7 +120,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                 </Button>
                             </Box>
                     // Otherwise we can only wait
-                    } else if (pendingRequest.status === RequestStatus.Initial) {
+                    } else if (pendingRequest.status === ReqStatus.Initial) {
                         buttons =   <Flex 
                                         mt={[2]} 
                                         alignItems="center" 
@@ -135,7 +136,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                                         </Text>
                                     </Flex>
                         
-                    } else if (pendingRequest.status === RequestStatus.Disputed) {
+                    } else if (pendingRequest.status === ReqStatus.Disputed) {
                         buttons =   <Flex 
                                         mt={[2]} 
                                         alignItems="center" 
@@ -192,7 +193,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             </Button>
                         </Box>
                     </>)
-                } else if (pendingRequest.status === RequestStatus.Initial) {
+                } else if (pendingRequest.status === ReqStatus.Initial) {
                     // If there's an initial request then we can only answer this request
                     buttons = (<>
                         <Box mt={[2]}>
@@ -208,7 +209,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             </Button>
                         </Box>
                     </>)
-                } else if (requestTimedOut || pendingRequest.status === RequestStatus.Rejected) {
+                } else if (requestTimedOut || pendingRequest.status === ReqStatus.Rejected) {
                     // If there's an rejected request then we can only dispute this request
                     buttons = (<>
                         <Box mt={[2]}>
@@ -237,7 +238,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             </Button>
                         </Box>
                     </>)
-                } else if (pendingRequest.status === RequestStatus.Disputed) {
+                } else if (pendingRequest.status === ReqStatus.Disputed) {
                     buttons =   <Flex 
                                     mt={[2]} 
                                     alignItems="center" 

@@ -31,7 +31,6 @@ import { useAppContext } from '../../../context/AppContextProvider';
 import { handleContractError } from '../../../utils/errorHandling';
 import { CopyIcon } from '@chakra-ui/icons'
 import { copyTextToClipboard } from '../../../utils/helpers';
-import { RequestStatus, ActionRequest } from '../../../classes/NFT';
 import { Trans } from '@lingui/macro'
 import { KlerosCourts } from '../../../utils/kleros';
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
@@ -43,6 +42,7 @@ import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
+import { ReqStatus } from '../../../hooks/useNftProtectGraph';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -164,7 +164,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
 
     // Set timer for request timeout
     useEffect(() => {
-        if (nft?.pendingRequest && (nft.pendingRequest.status === RequestStatus.Initial) && !requestTimedOut) {
+        if (nft?.pendingRequest && (nft.pendingRequest.status === ReqStatus.Initial) && !requestTimedOut) {
             const timeUntilTimeout = nft.pendingRequest.timeout.toNumber() - Date.now();
             console.log('Time until request timeout:', timeUntilTimeout)
             if (timeUntilTimeout > 0) {
@@ -217,14 +217,14 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                             <Card variant="stepContent">
                                 <CardHeader mb={{base: "20px"}}>
                                     {/* NFT owner confirmed transfer */}
-                                    { nft?.pendingRequest?.status == RequestStatus.Accepted &&
+                                    { nft?.pendingRequest?.status == ReqStatus.Accepted &&
                                         <Text as="h3" textStyle="h3">
                                             {t`Congrats`}{"!"}
                                         </Text>
                                     } 
                                     
                                     {/* NFT owner refused transfer */}
-                                    { nft?.pendingRequest?.status == RequestStatus.Rejected &&
+                                    { nft?.pendingRequest?.status == ReqStatus.Rejected &&
                                         <Text as="h3" textStyle="h3" >
                                             {t`The original NFT`}<br/>{t`owner refused`}
                                         </Text>
@@ -239,7 +239,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                 </CardHeader>
                                 <CardBody mb={{base: "20px"}}>
                                     {/* NFT owner confirmed transfer */}
-                                    { nft?.pendingRequest?.status == RequestStatus.Accepted &&
+                                    { nft?.pendingRequest?.status == ReqStatus.Accepted &&
                                         <Popover placement='top'>
                                             <Text textStyle="paragraph" letterSpacing="0.04em" textAlign="center" mb={{base: "8px"}}>
                                                 <chakra.span id='originalOwnerAddressHolder'>
@@ -265,7 +265,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
 
                                     { nft && <NFTImage nft={nft} /> }
                                     {/* NFT owner rejected transfer */}
-                                    { nft?.pendingRequest?.status == RequestStatus.Rejected &&
+                                    { nft?.pendingRequest?.status == ReqStatus.Rejected &&
                                         <Text textStyle="paragraph" mb={{base: "10px"}} textAlign="center" letterSpacing="0.04em">
                                             { t`Don't agree? Initiate a dispute in the Kleros decentralized court.`}
                                         </Text>
@@ -279,7 +279,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     }
 
                                     {/* NFT owner rejected transfer or unresponsive*/}
-                                    { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                    { (nft?.pendingRequest?.status == ReqStatus.Rejected || requestTimedOut) && 
                                         <Text textStyle="paragraph"  textAlign="center" letterSpacing="0.04em">
                                                 {t`(Paid separately)`}
                                         </Text>
@@ -289,7 +289,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                     
                                     <Box w={{base: "60%", sm: "50%"}} mb={{base: "20px"}}>
                                         {/* NFT owner rejected transfer or unresponsive*/}
-                                        { (nft?.pendingRequest?.status == RequestStatus.Rejected || requestTimedOut) && 
+                                        { (nft?.pendingRequest?.status == ReqStatus.Rejected || requestTimedOut) && 
                                             <Button
                                                 variant="darkOutline"
                                                 onClick={ () => setNextStep(StepMapping.klerosForm) }
@@ -298,7 +298,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                         }
 
                                         {/* NFT owner accepted transfer */}
-                                        { nft?.pendingRequest?.status == RequestStatus.Accepted &&
+                                        { nft?.pendingRequest?.status == ReqStatus.Accepted &&
                                             <Button
                                                 variant={"darkOutline"}
                                                 onClick={ () => {

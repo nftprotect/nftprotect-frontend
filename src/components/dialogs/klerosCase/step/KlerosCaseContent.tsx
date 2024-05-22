@@ -21,7 +21,7 @@ import {
 import { HelpCircle, ExternalLink, Calendar, User, Info } from '@web3uikit/icons'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
-import NFT, { RequestStatus } from '../../../../classes/NFT';
+import NFT from '../../../../classes/NFT';
 import { useEffect, useMemo, useState } from 'react';
 import { useAlchemy } from '../../../../hooks/useAlchemy';
 import { GetTransfersForOwnerTransferType, NftTokenType } from 'alchemy-sdk';
@@ -33,17 +33,10 @@ import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
-import { ReqType } from '../../../../hooks/useNftProtectGraph';
+import { MetaEvidenceType, ReqStatus, ReqType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 import AddressDisplay from '../../../AddressDisplay';
 import KlerosCaseSteps from './KlerosCaseSteps';
-
-export enum MetaEvidenceType {
-    Adjustment, // used in askOwnershipAdjustmentArbitrate()
-    Mistake, // used in askOwnershipRestoreArbitrate()
-    Phishing, // used in askOwnershipRestoreArbitrate()
-    ProtocolBreach // used in askOwnershipRestoreArbitrate()
-}
 
 export interface KlerosCaseInitialData {
     nft: NFT,
@@ -62,7 +55,7 @@ export interface EvidenceUpload {
 
 interface CaseContentInitialData extends KlerosCaseInitialData {
     requestType: ReqType,
-    requestStatus?: RequestStatus,
+    requestStatus?: ReqStatus,
     disputeData?: DisputeGraphData,
     disputeIsRuled?: boolean
 }
@@ -75,7 +68,7 @@ const KlerosCaseContent = ({
     contractAddress,
     evidences,
     requestType,
-    requestStatus = RequestStatus.Disputed,
+    requestStatus = ReqStatus.Disputed,
     disputeData,
     disputeIsRuled
 }: CaseContentInitialData) => {
@@ -160,7 +153,7 @@ const KlerosCaseContent = ({
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
     const getBlockDate = async (blockNumber: string) => {
-        const block = await library.getBlock(blockNumber)
+        const block = await library!.getBlock(blockNumber)
         return timestampToDate(block.timestamp)
     }
 
@@ -394,7 +387,7 @@ const KlerosCaseContent = ({
                 <Flex alignItems="center" justifyContent="space-between" px={{base: "22px"}} py={{base: "20px"}} border="1px solid #2D7BD6" borderRadius={{base: "16px"}} mb={{base: "30px"}}>
                     { ((): JSX.Element => {
                         const isAppealingPeriod: boolean = disputeData?.period === Period.Appeal
-                        const enforced: boolean = (requestStatus === RequestStatus.Accepted || requestStatus === RequestStatus.Rejected)
+                        const enforced: boolean = (requestStatus === ReqStatus.Accepted || requestStatus === ReqStatus.Rejected)
                         const appealButton = <Flex w={{base: "200px"}}>
                             <Button 
                                 variant="primaryLight"

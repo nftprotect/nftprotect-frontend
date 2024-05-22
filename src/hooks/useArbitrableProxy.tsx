@@ -42,7 +42,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitrableProxyAddress,
             ArbitrableProxyABI, 
-            account && active ? library.getSigner(account) : library
+            account && active ? library!.getSigner(account) : library
         )
         return contract
     }
@@ -52,7 +52,7 @@ export const useArbitrableProxy = () => {
         const contract = new Contract(
             arbitratorAddress, 
             KlerosLiquidABI, 
-            account && active ? library.getSigner(account) : library
+            account && active ? library!.getSigner(account) : library
         )
         return contract
     }

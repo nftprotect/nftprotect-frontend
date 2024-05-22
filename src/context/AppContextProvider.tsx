@@ -9,8 +9,7 @@ import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
-import { useMemo } from "react";
-import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient, useBlockNumber} from "wagmi";
+import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient } from "wagmi";
 import { Client, PublicClient, WalletClient } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
@@ -22,8 +21,8 @@ export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
     account: `0x${string}` | null | undefined,
-    client: Client,
-    library: Web3Provider,
+    client: Client|undefined,
+    library: Web3Provider|undefined,
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
@@ -62,8 +61,7 @@ export function AppContextProvider({ children }:any) {
         isDisconnected,
         chain
     } = useAccount()
-    const isCorrectChain = !chainId || !chain || (chainId === chain?.id)
-    const client  = useClient(chainId ? {chainId} : undefined)
+    const client  = useClient(chainId ?{chainId} : undefined )
     const {data: connectorClient} = useConnectorClient()
     const currentClient = connectorClient || client
     const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
@@ -79,6 +77,8 @@ export function AppContextProvider({ children }:any) {
         arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
         signatureVerifierContract: new Contract(nullAddress, SignatureVerifierABI, providedLibrary)
     })
+
+    const isCorrectChain = appState.currentChain ? ((chainId === undefined) || (chainId === appState.currentChain.id)) : false
 
     const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
@@ -100,7 +100,7 @@ export function AppContextProvider({ children }:any) {
     const stateSetter = () => {
         let currentChain: any
         const library = providedLibrary
-        const currentChainId = chainId || chain?.id
+        const currentChainId = chain?.id
         if (currentChainId) {
             currentChain = supportedChains.find( it => it.id === currentChainId )
             if (!currentChain) {
@@ -122,8 +122,24 @@ export function AppContextProvider({ children }:any) {
         })
     }
 
+    useEffect(() => {
+        console.log('SET STATE', appState)
+
+    }, [appState])
+
     useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
     useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
+    // Handle chain switching
+    useEffect(() => {
+        if (chain && chainId && chain.id !== chainId) {
+            const nextChain = supportedChains.find( it => it.id === chainId )
+            if (!nextChain) {
+                console.error('Chain not supported:', chainId)
+                return
+            }
+            switchChain({chainId})
+        }
+    }, [chain, chainId, switchChain])
 
     // Handle referral link
     useEffect(() => {
@@ -198,9 +214,8 @@ export function AppContextProvider({ children }:any) {
         updateFeeBasedOnSystemAndPartner();
     }, [appState.currentChain, appState.account]);
 
-
     return (
-        appState.library && appState.client && <AppContext.Provider value={{
+        <AppContext.Provider value={{
             ...appState,
             library: appState.library,
             client: appState.client,
