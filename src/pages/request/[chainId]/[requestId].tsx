@@ -27,15 +27,13 @@ import Footer from '../../../components/footer/Footer'
 import LoginScreen from '../../../components/LoginScreen'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
-    const requestId = params?.requestId
     const translation = await loadTranslation(
         locale!,
         process.env.NODE_ENV === 'production'
     )
     return {
         props: {
-            translation,
-            requestId,
+            translation
         }
     }
 }
@@ -45,8 +43,42 @@ const RequestPage: NextPage = () => {
     const { account, active, library, currentChain, defaultChain, isCorrectChain, nftProtectContract } = context
     const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
     const { query } = useRouter()
-    const [ selectedChain, setSelectedChain ] = useState<any>()
-    const [ requestId, setRequestId ] = useState<BigNumber>()
+    // Processing query params
+    const { requestId, selectedChain, error: initialError } = useMemo(() => {
+        let error = undefined;
+        let requestId: BigNumber | undefined;
+        let chainId: number | undefined;
+    
+        try {
+            requestId = BigNumber.from(query.requestId?.toString());
+        } catch (ex) {
+            console.error('Incorrect requestId', ex);
+            error = t`Incorrect requestId`;
+        }
+    
+        if (query.chainId) {
+            try {
+                chainId = parseInt(query.chainId?.toString());
+            } catch (ex) {
+                console.error('Incorrect chainId', ex);
+                error = t`Incorrect chainId`;
+            }
+        } else {
+            console.error('No chainId provided');
+            error = t`No chainId provided`;
+        }
+    
+        const selectedChain = (chainId !== undefined) ?
+            supportedChains.find(it => it.id === chainId) :
+            undefined;
+        if (!selectedChain) {
+            console.error('Unsupported chain', chainId);
+            error = t`Unsupported chain`;
+        }
+    
+        return { requestId, selectedChain, error };
+    }, [query]);
+
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
     const [ disputeData, setDisputeData ] = useState<DisputeGraphData>()
@@ -56,7 +88,7 @@ const RequestPage: NextPage = () => {
     const { getDispute } = useArbitratorGraph(selectedChain?.id || defaultChain.id, selectedChain?.defaultArbitrator || defaultChain.defaultArbitrator)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
-    const [ error, setError ] = useState<string>()
+    const [ error, setError ] = useState<string|undefined>(initialError)
     const { getToken, getRequest } = useNftProtectGraph(selectedChain?.id || defaultChain.id)
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
@@ -114,46 +146,14 @@ const RequestPage: NextPage = () => {
         }
     }
 
-    // Process request params
+    // Set selected chain globally
     useEffect(() => {
-        try {
-            const pRequestId = BigNumber.from(query.requestId?.toString())
-            setRequestId(pRequestId)
-        } catch (ex) {
-            console.error('Incorrect requestId', ex)
-            setError(t`Incorrect requestId`)
-        }
-        let chainId: number = -1
-        if (query.chainId) {
-            try {
-                chainId = parseInt(query.chainId?.toString())
-            } catch (ex) {
-                console.error('Incorrect chainId', ex)
-                setError(t`Incorrect chainId`)
-            }
-        } else {
-            console.error('No chainId provided')
-        }
-        if (chainId > -1) {
-            const selectedChain = supportedChains.find(it => it.id === chainId)
-            if (selectedChain) {
-                setSelectedChain(selectedChain)
-                context.setChainId(chainId)
-            } else {
-                console.error('Unsupported chain', chainId)
-                setError(t`Unsupported chain`)
-            }
-            
-        } else {
-            console.error('Unsupported chain', chainId)
-            setError(t`Unsupported chain`,)
-        }
-        console.log('INITIAL', chainId, requestId)
-    }, [query])
+        selectedChain && context.setChainId(selectedChain.id)
+    }, [selectedChain])
 
     const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
         const alchemyNft = await nftApi.getNftMetadata(
-            selectedChain.nftpContractAddress,
+            selectedChain!.nftpContractAddress,
             tokenId
         )
         return alchemyNft ?
