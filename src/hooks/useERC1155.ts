@@ -8,7 +8,7 @@ const useERC1155 = (chainId: number) => {
     const { data: walletClient } = useWalletClient({ chainId });
     const currentClient = walletClient || client;
 
-    const getBalance = async (contractAddress: `0x${string}`, tokenId: BigNumber, userAddress: `0x${string}`): Promise<BigNumber | null> => {
+    const getBalance = async (contractAddress: `0x${string}`, tokenId: BigNumber|bigint|string, userAddress: `0x${string}`): Promise<BigNumber | null> => {
         if (!currentClient) {
             throw new Error('Client not configured');
         }

@@ -25,6 +25,7 @@ import { WarningTwoIcon } from '@chakra-ui/icons'
 import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
 import LoginScreen from '../../../components/LoginScreen'
+import useNftProtect from '../../../hooks/useNftProtect'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const translation = await loadTranslation(
@@ -78,6 +79,8 @@ const RequestPage: NextPage = () => {
     
         return { requestId, selectedChain, error };
     }, [query]);
+
+    const { getRequestByTokenId } = useNftProtect(selectedChain?.id || defaultChain.id)
 
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
@@ -337,8 +340,12 @@ const RequestPage: NextPage = () => {
                     {/* TODO: Evidences not reloading */}
                     <AddEvidencesDialog onSubmitted={loadEvidences} />
                     <EnforceRulingDialog onSubmitted={async () => {
-                        const request = await nft?.loadPendingRequest()
-                        request && setRequestData(request)
+                        const action = async () => {
+                            nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                            setNft(nft)
+                            setRequestData(nft!.pendingRequest)
+                        }
+                        action();
                     }} />
                 </chakra.main>
             </GridItem>

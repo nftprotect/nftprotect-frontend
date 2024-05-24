@@ -43,6 +43,7 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
 import { ReqStatus } from '../../../hooks/useNftProtectGraph';
+import useNftProtect from '../../../hooks/useNftProtect';
 
 interface DialogInitialData {
     nftReFetch: Function, // function to update nft list
@@ -51,7 +52,8 @@ interface DialogInitialData {
 const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, baseTokenPrice } = useAppContext()
+    const { nftProtectContract, account, library, baseTokenPrice, currentChain, defaultChain } = useAppContext()
+    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -100,14 +102,18 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = () => {
+    const finalTransactionSent = async () => {
         return (tx: any) => {
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    nft && nft.loadPendingRequest()
-                    // after mined fire wrap
-                    setNextStep(StepMapping.caseSent)
+                    const action = async () => {
+                        nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                        setNft(nft)
+                        // TODO: probably we have to set NFT in parent component
+                    }
+                    action();
+                    setNextStep(StepMapping.caseSent);
                     console.log("Transaction successful", tx.hash);
                     nftReFetch();
                 } else {

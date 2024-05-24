@@ -21,6 +21,7 @@ import { arbitratorGraphs } from "../../config"
 import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
 import { Contract } from "@ethersproject/contracts"
 import AddressDisplay from "../AddressDisplay"
+import useNftProtect from "../../hooks/useNftProtect"
 
 const CommonNotificationBody = ({
     header,
@@ -46,7 +47,8 @@ const klerosAppealPeriod = 84
 
 const NotificationsLoader = () => {
     const context = useAppContext()
-    const { account, active, currentChain, nftProtectContract } = context
+    const { account, active, currentChain, defaultChain, nftProtectContract } = context
+    const { getRequest } = useNftProtect(currentChain?.id || defaultChain.id)
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph(currentChain.id)
     const { getArbitrableProxy, getArbitrator } = useArbitrableProxy()
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
@@ -64,11 +66,6 @@ const NotificationsLoader = () => {
             `${nft.latestRequest.id}-${nft.latestRequest.type}` :
             'none'
         return `${currentChain?.id}-${nft.id}-${requestPart}`
-    }
-
-    const loadRequest = async (requestId: BigNumber): Promise<ActionRequest> => {
-        const request = await nftProtectContract.requests(requestId)
-        return {id: requestId, ...request}
     }
 
     const loadOriginalNFT = async (nft: TokenGraphData): Promise<NFT> => {
@@ -135,7 +132,10 @@ const NotificationsLoader = () => {
                 const notificationId = generateNotificationId(nft)
                 const { latestRequest: request } = nft
                 if (request) {
-                    const loadedRequest = await loadRequest(request.id)
+                    const loadedRequest = await getRequest(request.id)
+                    if (!loadedRequest) {
+                        throw new Error(`Error fetching request ${request.id}`)
+                    }
                     // NFT has a pending request
                     if (request.status === ReqStatus.Accepted) { 
                         if (loadedRequest.externalDisputeId.toString() !== '0') { // Decision is already applied
@@ -566,9 +566,9 @@ const NotificationsLoader = () => {
                                 const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
                                 if (timeoutDate <= new Date()) {
                                     const loadedNft = await getPNft(nft)
-                                    // Pending request is needed for dialog
+// Pending request is needed for dialog
                                     if (!loadedNft.pendingRequest) {
-                                        await loadedNft.loadPendingRequest()
+                                        loadedNft.pendingRequest = loadedRequest
                                     }
                                     // 4. Original NFT request timeout
                                     addNotification({
@@ -751,7 +751,10 @@ const NotificationsLoader = () => {
                 const notificationId = generateNotificationId(nft)
                 const { latestRequest: request } = nft
                 if (request) {
-                    const loadedRequest = await loadRequest(request.id)
+                    const loadedRequest = await getRequest(request.id)
+                    if (!loadedRequest) {
+                        throw new Error(`Error fetching request ${request.id}`)
+                    }
                     // NFT has a pending request
                     if (request.status === ReqStatus.Accepted) {
                         if (loadedRequest.externalDisputeId.toString() !== '0') {
@@ -1238,10 +1241,7 @@ const NotificationsLoader = () => {
                         const loadedNft = await getPNft(nft)
                         // Pending request is needed for dialog
                         if (!loadedNft.pendingRequest) {
-                            await loadedNft.loadPendingRequest()
-                        }
-                        if (!loadedNft.ownerAddress) {
-                            await loadedNft.loadOwnerAddress()
+                            loadedNft.pendingRequest = loadedRequest
                         }
                         addNotification({
                             id: notificationId+'.21',

@@ -49,7 +49,7 @@ const useNftProtect = (chainId: number) => {
      * @param requestId The request ID.
      * @returns Request data.
      */
-    const getRequest = async (requestId: BigNumber): Promise<ActionRequest|null> => { // TODO: use bigint
+    const getRequest = async (requestId: BigNumber|bigint|string): Promise<ActionRequest|null> => { // TODO: use bigint
         if (!contract) {
             throw new Error('Client not configured')
         }
@@ -73,7 +73,7 @@ const useNftProtect = (chainId: number) => {
                 metaevidence
             ] = result;
             return {
-                id: requestId,
+                id: BigNumber.from(requestId.toString()),
                 reqtype,
                 tokenId: BigNumber.from(tokenId.toString()),
                 newowner,
@@ -89,11 +89,30 @@ const useNftProtect = (chainId: number) => {
     }
 
     /**
+     * Fetches the request by token ID.
+     * @param tokenId The token ID.
+     * @returns Request data.
+     */
+    const getRequestByTokenId = async (tokenId: BigNumber|bigint|string): Promise<ActionRequest|null> => {
+        if (!contract) {
+            throw new Error('Client not configured')
+        }
+        let requestId
+        try {
+            requestId = await contract.read.tokenToRequest([tokenId.toString()])
+        } catch (e: any) {
+            console.error(`Failed fetching request ID for token ${tokenId.toString()}`, e)
+            return null
+        }
+        return requestId ? getRequest(requestId.toString()) : null
+    }
+
+    /**
      * Fetches the owner address of the pNFT.
      * @param tokenId The token ID of the pNFT.
      * @returns The owner address.
      */
-    const getOwnerAddress = async (tokenId: BigNumber): Promise<`0x${string}`|null> => {
+    const getOwnerAddress = async (tokenId: BigNumber|bigint|string): Promise<`0x${string}`|null> => {
         if (!contract) {
             throw new Error('Client not configured')
         }
@@ -111,7 +130,7 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID of the pNFT.
      * @returns The original NFT data.
      */
-    const getOriginalNFTData = async (tokenId: BigNumber): Promise<OriginalNFTData|null> => {
+    const getOriginalNFTData = async (tokenId: BigNumber|bigint|string): Promise<OriginalNFTData|null> => {
         if (!contract) {
             throw new Error('Client not configured')
         }
@@ -159,6 +178,7 @@ const useNftProtect = (chainId: number) => {
 
     return {
         getRequest,
+        getRequestByTokenId,
         getOwnerAddress,
         getOriginalNFTData
     }

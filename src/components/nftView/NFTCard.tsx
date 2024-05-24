@@ -20,6 +20,7 @@ import { useCallableDialogContext } from '../../context/CallableDialogContextPro
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { generateRequestLink } from '../../utils/helpers';
 import { ReqStatus } from '../../hooks/useNftProtectGraph';
+import useNftProtect from '../../hooks/useNftProtect';
 
 interface NFTInitialData {
     nft: NFT,
@@ -27,7 +28,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { currentChain } = useAppContext()
+    const { currentChain, defaultChain } = useAppContext()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -35,6 +36,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     // In case of external metadata fetching it marks if fetch is ended
     //const [ fetchEnded, setFetchEnded ] = useState(false)
     const [ nft, setNft ] = useState<NFT>(_nft)
+    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const originalNFTData = nft.originalData
     // Stores pending request data if available
     const [ pendingRequest, setPendingRequest ] = useState<ActionRequest>()
@@ -45,8 +47,9 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     useEffect(() => {
         const load = async () => {
             // Load request if exists
-            const request = await nft.loadPendingRequest()
-            setPendingRequest(request)
+            nft.pendingRequest = await getRequestByTokenId(nft.tokenId) || undefined
+            setNft(nft)
+            setPendingRequest(nft.pendingRequest)
         }
         load()
     }, [])
