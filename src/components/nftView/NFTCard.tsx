@@ -15,12 +15,10 @@ import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro';
 import NFT from '../../classes/NFT';
-import { ActionRequest } from '../../classes/NFT';
 import { useCallableDialogContext } from '../../context/CallableDialogContextProvider';
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { generateRequestLink } from '../../utils/helpers';
-import { ReqStatus } from '../../hooks/useNftProtectGraph';
-import useNftProtect from '../../hooks/useNftProtect';
+import useNftProtect, { ActionRequest, ReqStatus } from '../../hooks/useNftProtect';
 
 interface NFTInitialData {
     nft: NFT,
@@ -28,7 +26,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { currentChain, defaultChain } = useAppContext()
+    const { account, nftProtectContract, currentChain, defaultChain } = useAppContext()
     // Stores the metadata of NFT
     //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
     // Becomes false if metadata is unawailable for some reason
@@ -71,10 +69,10 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     }, [pendingRequest]);
 
     let buttons = <div />
-    if (nft.isPNFT()) {
+    if (nft.isMintedBy(nftProtectContract.address)) { // Is pNFT
         // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData !== undefined) {
-            if (!nft.isOnAnotherAddress() && nft.isOriginalOwnedByAccount()) {
+            if (!nft.isOnAnotherAddress() && nft.isOriginalOwnedByAccount(account!)) {
                 // Original NFT and pNFT are both belong to user
                 buttons = 
                     <Box mt={[2]}>
@@ -89,7 +87,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
                             <Trans>Restore original</Trans>
                         </Button>
                     </Box>
-            } else if (!nft.isOnAnotherAddress() && !nft.isOriginalOwnedByAccount()) {
+            } else if (!nft.isOnAnotherAddress() && !nft.isOriginalOwnedByAccount(account!)) {
                 // This pNFT belongs to user but original is not
                 if (!pendingRequest) {
                     // If no request pending then we can sent it, so showing the button

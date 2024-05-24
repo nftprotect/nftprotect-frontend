@@ -42,7 +42,7 @@ import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
-import { ReqStatus } from '../../../hooks/useNftProtectGraph';
+import { ReqStatus } from '../../../hooks/useNftProtect';
 import useNftProtect from '../../../hooks/useNftProtect';
 
 interface DialogInitialData {

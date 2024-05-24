@@ -12,7 +12,7 @@ import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
 import { useAlchemy } from '../../hooks/useAlchemy';
 import { Nft as NFTInterface, NftFilters, NftMetadataBatchToken, NftTokenType } from 'alchemy-sdk';
-import NFT, { OriginalNFTData } from '../../classes/NFT';
+import NFT from '../../classes/NFT';
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
 import ProtectNftDialog from '../dialogs/nft/ProtectNftDialog';
 import UnProtectNftDialog from '../dialogs/nft/UnProtectNftDialog';
@@ -23,11 +23,13 @@ import TransferOriginalNftDialog from '../dialogs/nft/TransferOriginalNftDialog'
 import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
 import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
 import { TokenGraphData, convertTokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
+import useERC1155 from '../../hooks/useERC1155';
 
 const NFTView = () => {
     const { nft: nftApi } = useAlchemy()
     const appContext = useAppContext()
-    const { currentChain, account, active, nftProtectContract } = appContext
+    const { currentChain, account, active, nftProtectContract, defaultChain } = appContext
+    const { getBalance } = useERC1155(currentChain?.id || defaultChain.id)
     const { listTokensTransfered, listTokensOwned } = useNftProtectGraph(currentChain?.id);
 
     const marketplaces = currentChain?.wagmiId?.testnet ?
@@ -75,7 +77,7 @@ const NFTView = () => {
     // Stores pNFTs given to another accounts
     const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
 
-    // Loads all the NFTs (and NO pNFTs) owned by user
+    // Loads all the NFTs (NOT pNFTs) owned by user
     const fetchOwnedNfts = () => {
         if (currentChain && account) {
             // Own NFTs
@@ -88,10 +90,15 @@ const NFTView = () => {
                         return item.contract.address.toLowerCase() !== nftProtectContract.address.toLowerCase()
                     })
                     .map((item: NFTInterface) => {
-                        return new NFT(item, appContext, {ownerAddress: account})
+                        return new NFT(item, {ownerAddress: account})
                     })
-                Promise.all(nftObjects.map((nft: NFT) => {
-                    return nft.loadInitialData()
+                // Load amounts for every ERC1155
+                Promise.all(nftObjects.map(async (nft: NFT) => {
+                    const amount = (nft.tokenType === NftTokenType.ERC1155) ?
+                        await getBalance(nft.contract.address as `0x${string}`, nft.tokenId, account) || 1 :
+                        1;
+                    nft.amount = Number(amount); // TODO: use BigNumber/bigint
+                    return amount;
                 })).then(() => {
                     console.log('ALCHEMY ALL MY NFTS:', nftObjects)
                     setMyOwnNfts(nftObjects);
@@ -121,7 +128,7 @@ const NFTView = () => {
             const nfts: NFT[] = batchDetails.map(details => {
                 // Find corresponding TokenGraphData
                 const originalData = currentBatch.find(({id}) => id.toString() === details.tokenId);
-                return new NFT(details, appContext, convertTokenGraphData(originalData!));
+                return new NFT(details, convertTokenGraphData(originalData!));
             });
             batchedNfts = batchedNfts.concat(nfts);
         }

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { useAppContext } from "../../context/AppContextProvider"
-import { ReqStatus, ReqType, TokenGraphData, convertTokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
+import { TokenGraphData, convertTokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
 import { Heading, Text, Link, getToken } from "@chakra-ui/react"
 import { Trans } from "@lingui/macro"
 import { generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
 import { BigNumber } from '@ethersproject/bignumber'
-import NFT, { ActionRequest } from "../../classes/NFT"
+import NFT from "../../classes/NFT"
 import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
 import { SeverityLevel } from "../../context/NotificationContextProvider"
 import NFTImage from "../nftView/NFTImage"
@@ -21,7 +21,7 @@ import { arbitratorGraphs } from "../../config"
 import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
 import { Contract } from "@ethersproject/contracts"
 import AddressDisplay from "../AddressDisplay"
-import useNftProtect from "../../hooks/useNftProtect"
+import useNftProtect, { ReqStatus, ReqType } from "../../hooks/useNftProtect"
 
 const CommonNotificationBody = ({
     header,
@@ -70,12 +70,12 @@ const NotificationsLoader = () => {
 
     const loadOriginalNFT = async (nft: TokenGraphData): Promise<NFT> => {
         const result = await nftApi.getNftMetadata(nft.contractAddress, nft.tokenId)
-        return new NFT(result, context)
+        return new NFT(result)
     }
 
     const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
         const result = await nftApi.getNftMetadata(nftProtectContract.address, nft.id)
-        return new NFT(result, context, convertTokenGraphData(nft))
+        return new NFT(result, convertTokenGraphData(nft))
     }
 
     const getOriginalNft = async (nft: TokenGraphData): Promise<NFT> => {

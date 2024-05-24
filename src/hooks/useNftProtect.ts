@@ -1,15 +1,14 @@
 import { useClient, useWalletClient } from 'wagmi';
 import NFTProtectABI from '../abi/NFTProtectABI';
-import { Client, getContract } from 'viem';
+import { getContract } from 'viem';
 import { useMemo } from 'react';
 import { BigNumber } from '@ethersproject/bignumber'
 import { supportedChains } from '../config';
-import { ReqStatus } from './useNftProtectGraph';
 import { NftTokenType } from 'alchemy-sdk';
 
 export interface ActionRequest {
     id: BigNumber,
-    reqtype: number,
+    reqtype: ReqType,
     tokenId: BigNumber,
     newowner: string,
     timeout: BigNumber,
@@ -27,6 +26,19 @@ export interface OriginalNFTData {
     tokenType: NftTokenType
     amount: number,
     nonce: number     //** Holds nonce for signing purposes */
+}
+
+export enum ReqType {
+    OwnershipAdjustment,
+    OwnershipRestore,
+    Burn
+}
+
+export enum ReqStatus {
+    Initial,
+    Accepted,
+    Rejected,
+    Disputed
 }
 
 const useNftProtect = (chainId: number) => {
@@ -74,7 +86,7 @@ const useNftProtect = (chainId: number) => {
             ] = result;
             return {
                 id: BigNumber.from(requestId.toString()),
-                reqtype,
+                reqtype: reqtype as ReqType,
                 tokenId: BigNumber.from(tokenId.toString()),
                 newowner,
                 timeout: BigNumber.from(timeout.toString()),

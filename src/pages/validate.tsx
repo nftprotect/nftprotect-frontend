@@ -7,7 +7,7 @@ import { useAlchemy } from '../hooks/useAlchemy'
 import NFT from '../classes/NFT'
 import { useAppContext } from '../context/AppContextProvider'
 import { Trans, t } from '@lingui/macro'
-import { ReqStatus, RequestGraphData, TokenGraphData, useNftProtectGraph } from '../hooks/useNftProtectGraph'
+import { RequestGraphData, TokenGraphData, useNftProtectGraph } from '../hooks/useNftProtectGraph'
 import {
     chakra,
     Container,
@@ -49,6 +49,7 @@ import Footer from '../components/footer/Footer'
 import { generateAddressURL, generateTokenURL } from '../utils/etherscan'
 import { generateRequestLink } from '../utils/helpers'
 import AddressDisplay from '../components/AddressDisplay'
+import { ReqStatus } from '../hooks/useNftProtect'
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const translation = await loadTranslation(
@@ -80,7 +81,7 @@ const ValidatePage: NextPage = () => {
             nftProtectContract.address,
             tokenId
         )
-        return new NFT(alchemyNft, context)
+        return new NFT(alchemyNft)
     }
 
     useEffect(() => {

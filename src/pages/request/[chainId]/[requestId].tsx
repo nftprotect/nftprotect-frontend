@@ -8,11 +8,9 @@ import { useAlchemy } from '../../../hooks/useAlchemy'
 import NFT from '../../../classes/NFT'
 import { useAppContext } from '../../../context/AppContextProvider'
 import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/klerosCase/step/KlerosCaseContent'
-import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
-import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData, convertTokenGraphData } from '../../../hooks/useNftProtectGraph'
+import { useNftProtectGraph, RequestGraphData, convertTokenGraphData } from '../../../hooks/useNftProtectGraph'
 import { chakra, Box, Container, Grid, GridItem, Link, Text } from '@chakra-ui/react'
-import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
 import { timestampToDate } from '../../../utils/helpers'
@@ -24,8 +22,7 @@ import Head from 'next/head'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
-import LoginScreen from '../../../components/LoginScreen'
-import useNftProtect from '../../../hooks/useNftProtect'
+import useNftProtect, { ActionRequest, ReqType } from '../../../hooks/useNftProtect'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const translation = await loadTranslation(
@@ -160,7 +157,7 @@ const RequestPage: NextPage = () => {
             tokenId
         )
         return alchemyNft ?
-            new NFT(alchemyNft, context, params) :
+            new NFT(alchemyNft, params) :
             undefined
     }
 

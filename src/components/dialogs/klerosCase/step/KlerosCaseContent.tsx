@@ -33,10 +33,11 @@ import NFTImage from '../../../nftView/NFTImage';
 import { EvidenceJson } from '../../../steps/KlerosEvidencesForm';
 import { centralizeIpfsUrl } from '../../../../utils/ipfs';
 import { DisputeGraphData, Period } from '../../../../hooks/useArbitratorGraph';
-import { MetaEvidenceType, ReqStatus, ReqType } from '../../../../hooks/useNftProtectGraph';
+import { MetaEvidenceType } from '../../../../hooks/useNftProtectGraph';
 import { useCallableDialogContext } from '../../../../context/CallableDialogContextProvider';
 import AddressDisplay from '../../../AddressDisplay';
 import KlerosCaseSteps from './KlerosCaseSteps';
+import { ReqStatus, ReqType } from '../../../../hooks/useNftProtect';
 
 export interface KlerosCaseInitialData {
     nft: NFT,

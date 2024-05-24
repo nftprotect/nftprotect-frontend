@@ -48,7 +48,7 @@ interface ButtonInitialData {
 const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, currentChain, defaultChain } = useAppContext()
+    const { nftProtectContract, library, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -81,9 +81,8 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
     const finalTransactionSent = (nft: NFT) => {
         return (tx: any) => {
-            const tokenContract = nft.getContract()
             setNextStep(StepMapping.waitForTransactionConfirmation);
-            tokenContract.provider.once(tx.hash, (receipt) => {
+            library!.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);

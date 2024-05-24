@@ -52,7 +52,7 @@ interface DialogInitialData {
 const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { account, nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
+    const { account, library, nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
     const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
@@ -89,9 +89,8 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const finalTransactionSent = (nft: NFT, waitingStep: number, completeStep: number) => {
         return (tx: any) => {
-            const tokenContract = nft.getContract()
             setNextStep(waitingStep);
-            tokenContract.provider.once(tx.hash, (receipt) => {
+            library!.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
