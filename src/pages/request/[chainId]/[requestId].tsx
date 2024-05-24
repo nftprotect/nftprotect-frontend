@@ -255,7 +255,7 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    const allRequiredLoaded = requestData && nft && claimantAddress && defendantAddress
+    const allRequiredLoaded = currentChain && requestData && nft && claimantAddress && defendantAddress
 
     return (<>
         { selectedChain && <Head>
