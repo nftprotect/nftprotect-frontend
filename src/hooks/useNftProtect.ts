@@ -1,62 +1,75 @@
-import { useReadContract } from 'wagmi';
-import { supportedChains } from '../config';
+import { useClient, useWalletClient } from 'wagmi';
 import NFTProtectABI from '../abi/NFTProtectABI';
-import { BigNumber } from '@ethersproject/bignumber';
-import { ActionRequest } from '../classes/NFT';
+import { Client, getContract } from 'viem';
+import { useMemo } from 'react';
+import { BigNumber } from '@ethersproject/bignumber'
+import { supportedChains } from '../config';
+import { ReqStatus } from './useNftProtectGraph';
 
-export const useGetToken = (chainId: number, tokenId: BigNumber) => {
-  const chainConfig = supportedChains.find(chain => chain.id === chainId);
+export interface ActionRequest {
+    id: BigNumber,
+    reqtype: number,
+    tokenId: BigNumber,
+    newowner: string,
+    timeout: BigNumber,
+    status: ReqStatus,
+    arbitratorId: number,
+    localDisputeId: BigNumber,
+    externalDisputeId: BigNumber,
+    metaevidence: number
+}
 
-  if (!chainConfig) {
-    throw new Error(`Unsupported chainId: ${chainId}`);
-  }
+const useNftProtect = (chainId: number) => {
 
-  const contractConfig = {
-    address: chainConfig.nftpContractAddress as `0x${string}`,
-    abi: NFTProtectABI,
-    chainId: chainConfig.id,
-  };
+    const client  = useClient({chainId}) // useClient is recommended by wagmi docs but is always undefined
+    const {data: walletClient} = useWalletClient({chainId})  
+    const currentClient = walletClient || client
 
-  return useReadContract({
-    ...contractConfig,
-    functionName: 'tokens',
-    args: [tokenId.toString()],
-  });
+    const contract = useMemo(() => {
+        const address = supportedChains.find(it => it.id === chainId)?.nftpContractAddress
+        return currentClient && address ? getContract({
+            address: address as `0x${string}`,
+            abi: NFTProtectABI,
+            client: currentClient
+        }) : null
+    }, [currentClient])
+
+    const getRequest = async (requestId: BigNumber): Promise<ActionRequest|null> => { // TODO: use bigint
+        if (!contract) {
+            throw new Error('Client not configured')
+        }
+        const result = await contract.read.requests([requestId.toString()])
+        if (Array.isArray(result)) {
+            const [
+                reqtype,
+                tokenId,
+                newowner,
+                timeout,
+                status,
+                arbitratorId,
+                localDisputeId,
+                externalDisputeId,
+                metaevidence
+            ] = result;
+            return {
+                id: requestId,
+                reqtype,
+                tokenId: BigNumber.from(tokenId.toString()),
+                newowner,
+                timeout: BigNumber.from(timeout.toString()),
+                status: status as ReqStatus,
+                arbitratorId: Number(arbitratorId),
+                localDisputeId: BigNumber.from(localDisputeId.toString()),
+                externalDisputeId: BigNumber.from(externalDisputeId.toString()),
+                metaevidence
+            }
+        }
+        return null
+    }
+
+    return {
+        getRequest
+    }
 };
 
-
-export const useGetRequest = (chainId: number, requestId: BigNumber) => {
-  const chainConfig = supportedChains.find(chain => chain.id === chainId);
-
-  if (!chainConfig) {
-    throw new Error(`Unsupported chainId: ${chainId}`);
-  }
-
-  const contractConfig = {
-    address: chainConfig.nftpContractAddress as `0x${string}`,
-    abi: NFTProtectABI,
-    chainId: chainConfig.id,
-  };
-
-  const { data }: {data: any} = useReadContract({
-    ...contractConfig,
-    functionName: 'requests',
-    args: [requestId.toString()],
-  });
-
-  if (data) {
-    const actionRequest: ActionRequest = {
-        ...data,
-      id: BigNumber.from(data.id),
-      tokenId: BigNumber.from(data.tokenId),
-      newowner: data.newowner,
-      timeout: BigNumber.from(data.timeout),
-      arbitratorId: Number(data.arbitratorId),
-      localDisputeId: BigNumber.from(data.localDisputeId),
-      externalDisputeId: BigNumber.from(data.externalDisputeId),
-      metaevidence: Number(data.metaevidence),
-    };
-    return actionRequest;
-  }
-  return undefined;
-};
+export default useNftProtect;
