@@ -1,13 +1,13 @@
-import { useContext, useEffect, useMemo, useRef } from "react";
-import { AppContext, useAppContext } from "../context/AppContextProvider";
-import { Contract } from "@ethersproject/contracts";
-import ArbitrableProxyABI from "../abi/ArbitrableProxyABI";
-import { maxBlocksPerRequest } from "../config";
+import { useClient, usePublicClient, useWalletClient } from 'wagmi';
+import { Abi, GetContractReturnType, getContract } from 'viem';
+import { useMemo, useRef } from 'react';
 import { BigNumber } from '@ethersproject/bignumber';
-import KlerosLiquidABI from "../abi/KlerosLiquidABI";
-import { timestampToDate } from "../utils/helpers";
-import { Period } from "./useArbitratorGraph";
-import { useBlockNumber } from "wagmi";
+import { supportedChains, maxBlocksPerRequest } from '../config';
+import ArbitrableProxyABI from '../abi/ArbitrableProxyABI';
+import KlerosLiquidABI from '../abi/KlerosLiquidABI';
+import { useBlockNumber } from 'wagmi';
+import { Period } from './useArbitratorGraph';
+import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI';
 
 export interface EvidenceSubmission {
     evidenceURI: string,
@@ -17,8 +17,8 @@ export interface EvidenceSubmission {
 
 interface ContractsHolder {
     arbitratorId: number,
-    arbitrableProxy?: Contract,
-    arbitrator?: Contract
+    arbitrableProxy?: GetContractReturnType,
+    arbitrator?: GetContractReturnType
 }
 
 export interface DisputePeriodData {
@@ -26,149 +26,165 @@ export interface DisputePeriodData {
     lastPeriodChange: Date
 }
 
-export const useArbitrableProxy = () => {
-    const currentContext = useContext(AppContext)
-    if (!currentContext) {
-        throw new Error(
-            "useArbitrable has to be used within <AppContext.Provider>"
-        );
-    }
-    const { currentChain, defaultChain, active, library, account, arbRegistryContract } = useAppContext()
-    const contracts = useRef<ContractsHolder[]>([])
-    const {data: currentBlock} = useBlockNumber({chainId: currentChain?.id || defaultChain.id})
+export const useArbitrableProxy = (chainId: number) => {
+    const { data: walletClient } = useWalletClient({ chainId });
+    const publicClient = usePublicClient({ chainId })
+    const { data: currentBlock } = useBlockNumber({ chainId });
+
+    const contracts = useMemo(() => new Map<number, ContractsHolder>(), [chainId]);
 
     const loadArbitrableProxy = async (arbitratorId: number) => {
-        const [ arbitrableProxyAddress ] = await arbRegistryContract.arbitrator(arbitratorId)
-        const contract = new Contract(
-            arbitrableProxyAddress,
-            ArbitrableProxyABI, 
-            account && active ? library!.getSigner(account) : library
-        )
-        return contract
-    }
+        const arbRegistryAddress = supportedChains.find(it => it.id === chainId)?.arbRegistryContractAddress;
+        if (!arbRegistryAddress) throw new Error('Arbitrator registry contract address not found');
 
-    const loadArbitrator = async (arbitrableProxy: Contract) => {
-        const arbitratorAddress = await arbitrableProxy.arbitrator()
-        const contract = new Contract(
-            arbitratorAddress, 
-            KlerosLiquidABI, 
-            account && active ? library!.getSigner(account) : library
-        )
-        return contract
-    }
+        const arbRegistryContract = getContract({
+            address: arbRegistryAddress as `0x${string}`,
+            abi: ArbitratorRegistryABI as Abi,
+            client: {wallet: walletClient, public: publicClient!}
+        });
 
-    const getArbitrableProxy = async (arbitratorId: number): Promise<Contract> => {
-        let holder = contracts.current.find( (item) => item.arbitratorId === arbitratorId )
+        const result = await arbRegistryContract.read.arbitrators([arbitratorId.toString()]) as any;
+        const arbitrableProxyAddress = result[1] as `0x${string}`;
+        return getContract({
+            address: arbitrableProxyAddress ,
+            abi: ArbitrableProxyABI as Abi,
+            client: {wallet: walletClient, public: publicClient!}
+        });
+    };
+
+    const loadArbitrator = async (arbitrableProxy: GetContractReturnType) => {
+        const arbitratorAddress = await (arbitrableProxy as any).read.arbitrator();
+        return getContract({
+            address: arbitratorAddress as `0x${string}`,
+            abi: KlerosLiquidABI as Abi,
+            client: {wallet: walletClient, public: publicClient!}
+        });
+    };
+
+    const getArbitrableProxy = async (arbitratorId: number) => {
+        let holder = contracts.get(arbitratorId);
         if (!holder?.arbitrableProxy) {
-            const newHolder: ContractsHolder = holder || { arbitratorId }
-            newHolder.arbitrableProxy = await loadArbitrableProxy(arbitratorId)
-            contracts.current.push(newHolder)
-            holder = newHolder
+            const newHolder: ContractsHolder = holder || { arbitratorId };
+            newHolder.arbitrableProxy = await loadArbitrableProxy(arbitratorId);
+            contracts.set(arbitratorId, newHolder);
+            holder = newHolder;
         }
         if (holder?.arbitrableProxy) {
-            return holder.arbitrableProxy
+            return holder.arbitrableProxy;
         } else {
-            throw Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`)
+            throw new Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`);
         }
-        
-    }
+    };
 
     const getArbitrator = async (arbitratorId: number) => {
-        const arbitrableProxy = await getArbitrableProxy(arbitratorId)
-        let holder = contracts.current.find( (item) => item.arbitratorId === arbitratorId )
+        const arbitrableProxy = await getArbitrableProxy(arbitratorId);
+        let holder = contracts.get(arbitratorId);
         if (!holder) {
-            throw Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`)
+            throw new Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`);
         }
         if (!holder.arbitrator) {
-            holder.arbitrator = await loadArbitrator(arbitrableProxy)
+            holder.arbitrator = await loadArbitrator(arbitrableProxy);
         }
         if (holder.arbitrator) {
-            return holder.arbitrator
+            return holder.arbitrator;
         } else {
-            throw Error(`Unable to load arbitrator for arbitratorId ${arbitratorId}`)
+            throw new Error(`Unable to load arbitrator for arbitratorId ${arbitratorId}`);
         }
-    }
+    };
 
-    const listEvidences = async ( 
-        arbitratorId: number, 
-        internalDisputeId: BigNumber, 
+    const listEvidences = async (
+        arbitratorId: number,
+        internalDisputeId: BigNumber,
         blockNumber: number
     ): Promise<EvidenceSubmission[]> => {
-        const contract = await getArbitrableProxy(arbitratorId)
-        const startBlock = blockNumber
-
-        const endBlock = Number(currentBlock) || startBlock
-        const ranges = []
-        let i = startBlock
+        const contract = await getArbitrableProxy(arbitratorId);
+        const startBlock = blockNumber;
+        const endBlock = Number(currentBlock) || startBlock;
+        const ranges = [];
+        let i = startBlock;
         do {
-            let j = i + maxBlocksPerRequest
+            let j = i + maxBlocksPerRequest;
             ranges.push({
                 rangeStart: i,
                 rangeEnd: ((j - 1) <= endBlock) ? (j - 1) : endBlock
+            });
+            i = j;
+        } while (i - 1 < endBlock);
+        
+        //const filter = contract.filters.Evidence(null, internalDisputeId);
+        const promises = ranges.map(({ rangeStart, rangeEnd }) => {
+            //return contract.queryFilter(filter, rangeStart, rangeEnd);
+            return publicClient!.getLogs({
+                address: contract.address,
+                event: {
+                    name: "Evidence",
+                    type: "event",
+                    inputs: [
+                        { type: 'address', indexed: true, name: '_arbitrator' },
+                        { type: 'uint256', indexed: true, name: '_evidenceGroupID' },
+                        { type: 'address', indexed: true, name: '_party' },
+                        { type: 'string', indexed: false, name: '_evidence' }
+                    ]
+                },
+                args: {
+                    _evidenceGroupID: BigInt(internalDisputeId.toString()),
+                },
+                fromBlock: BigInt(rangeStart),
+                toBlock: BigInt(rangeEnd)
             })
-            i = j
-        } while (i - 1 < endBlock)
-        const filter = contract.filters.Evidence(null, internalDisputeId);
-        const promises = ranges.map(({rangeStart, rangeEnd}) => {
-            return contract.queryFilter(filter, rangeStart, rangeEnd)
-        })
-        const allResults = await Promise.all(promises)
-        const events = allResults.flat()
-
-        const result:EvidenceSubmission[] = []
+        });
+        const allResults = await Promise.all(promises);
+        const events = allResults.flat();
+        const result: EvidenceSubmission[] = [];
         for (const event of events) {
             if (event.args) {
                 result.push({
-                    evidenceURI: event.args._evidence,
-                    submittedBy: event.args._party,
-                    blockNumber: event.blockNumber
-                })
+                    evidenceURI: event.args._evidence!,
+                    submittedBy: event.args._party!,
+                    blockNumber: Number(event.blockNumber) // TODO: use bigint
+                });
             }
         }
-        return result
-    }
+        return result;
+    };
 
-    const getPeriod = async ( 
-        arbitratorId: number, 
-        externalDisputeId: BigNumber, 
+    const getPeriod = async (
+        arbitratorId: number,
+        externalDisputeId: BigNumber,
     ): Promise<DisputePeriodData> => {
-        const contract = await getArbitrator(arbitratorId)
-        const { period, lastPeriodChange } = await contract.disputes(externalDisputeId)
-        return { 
-            period, 
-            lastPeriodChange: timestampToDate(lastPeriodChange)
-        }
-    }
+        const contract = await getArbitrator(arbitratorId);
+        const { period, lastPeriodChange } = await (contract as any).read.disputes([externalDisputeId.toString()]);
+        return {
+            period,
+            lastPeriodChange: new Date(lastPeriodChange * 1000)
+        };
+    };
 
-    const isRuled = async ( 
-        arbitratorId: number, 
-        internalDisputeId: BigNumber, 
+    const isRuled = async (
+        arbitratorId: number,
+        internalDisputeId: BigNumber,
     ): Promise<boolean> => {
-        const contract = await getArbitrableProxy(arbitratorId)
-        const { isRuled } = await contract.disputes(internalDisputeId)
-        return isRuled
-    }
+        const contract = await getArbitrableProxy(arbitratorId);
+        const { isRuled } = await (contract as any).read.disputes([internalDisputeId.toString()]);
+        return isRuled;
+    };
 
-    const submitEvidence = async ( 
-        arbitratorId: number, 
+    const submitEvidence = async (
+        arbitratorId: number,
         localDisputeId: BigNumber,
         evidenceURI: string
     ): Promise<any> => {
-        const contract = await getArbitrableProxy(arbitratorId)
-        return contract.submitEvidence(localDisputeId, evidenceURI)
-    }
+        const contract = await getArbitrableProxy(arbitratorId);
+        return (contract as any).write.submitEvidence([localDisputeId.toString(), evidenceURI]);
+    };
 
-    const executeRuling = async ( 
-        arbitratorId: number, 
+    const executeRuling = async (
+        arbitratorId: number,
         externalDisputeId: BigNumber,
     ): Promise<any> => {
-        const contract = await getArbitrator(arbitratorId)
-        return contract.executeRuling(externalDisputeId)
-    }
-
-    useEffect(() => {
-        contracts.current = []
-    }, [active, currentChain])
+        const contract = await getArbitrator(arbitratorId);
+        return (contract as any).write.executeRuling([externalDisputeId.toString()]);
+    };
 
     return {
         listEvidences,
@@ -178,5 +194,5 @@ export const useArbitrableProxy = () => {
         getArbitrableProxy,
         getArbitrator,
         executeRuling
-    }
-}
+    };
+};

@@ -39,7 +39,7 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const { executeRuling } = useArbitrableProxy()
+    const { executeRuling } = useArbitrableProxy(currentChain.id)
 
     const disputeId = nft?.pendingRequest?.externalDisputeId
 

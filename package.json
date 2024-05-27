@@ -34,7 +34,7 @@
     "@web3uikit/core": "^0.2.38",
     "alchemy-sdk": "^2.7.0",
     "base-x": "^4.0.0",
-    "connectkit": "^1.7.2",
+    "connectkit": "^1.7.3",
     "crypto-convert": "^2.1.5",
     "eslint": "8.31.0",
     "eslint-config-next": "^14.0.3",
@@ -54,7 +54,7 @@
     "swr": "^2.1.3",
     "typescript": "^5.0.4",
     "viem": "^2.7.16",
-    "wagmi": "^2.5.7"
+    "wagmi": "^2.9.7"
   },
   "devDependencies": {
     "@lingui/cli": "^4.6.0",

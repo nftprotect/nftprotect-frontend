@@ -61,9 +61,9 @@ export function AppContextProvider({ children }:any) {
         isDisconnected,
         chain
     } = useAccount()
-    const client  = useClient(chainId ? {chainId} : undefined) // useClient is recommended by wagmi docs but is always undefined
-    const {data: walletClient} = useWalletClient(chainId ? {chainId} : undefined)
-    const currentClient = walletClient || client
+    const {data: walletClient} = useWalletClient({ chainId })
+    const publicClient = usePublicClient({ chainId })
+    const currentClient = walletClient || publicClient
     const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
 
     const [appState, setAppState] = useState<AppState>({

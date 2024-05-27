@@ -50,7 +50,7 @@ const NotificationsLoader = () => {
     const { account, active, currentChain, defaultChain, nftProtectContract } = context
     const { getRequest } = useNftProtect(currentChain?.id || defaultChain.id)
     const { listTokensReceived, listTokensTransfered } = useNftProtectGraph(currentChain.id)
-    const { getArbitrableProxy, getArbitrator } = useArbitrableProxy()
+    const { getArbitrableProxy, getArbitrator } = useArbitrableProxy(currentChain?.id || defaultChain.id)
     const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { nft: nftApi } = useAlchemy()

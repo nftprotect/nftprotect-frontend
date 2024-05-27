@@ -224,17 +224,17 @@ const RequestPage: NextPage = () => {
 
     // Load evidences
     useEffect(() => {
-        if (currentChain && selectedChain && isCorrectChain) {
+        if (selectedChain) {
             loadEvidences()
         }
-    }, [requestData, requestGraphData, currentChain, selectedChain, isCorrectChain])
+    }, [requestData, requestGraphData, selectedChain])
 
     // Load period
     useEffect(() => {
-        if (currentChain && selectedChain && isCorrectChain) {
+        if ( selectedChain ) {
             loadPeriod()
         }
-    }, [requestData, currentChain, selectedChain, isCorrectChain])
+    }, [requestData, selectedChain])
 
     useEffect(() => {
         if (period?.period === Period.Execution) {
