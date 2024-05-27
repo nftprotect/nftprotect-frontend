@@ -1,6 +1,6 @@
-import { useClient, usePublicClient, useWalletClient } from 'wagmi';
+import { usePublicClient, useWalletClient } from 'wagmi';
 import { Abi, GetContractReturnType, getContract } from 'viem';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { BigNumber } from '@ethersproject/bignumber';
 import { supportedChains, maxBlocksPerRequest } from '../config';
 import ArbitrableProxyABI from '../abi/ArbitrableProxyABI';
@@ -66,7 +66,7 @@ export const useArbitrableProxy = (chainId: number) => {
         if (!holder?.arbitrableProxy) {
             const newHolder: ContractsHolder = holder || { arbitratorId };
             newHolder.arbitrableProxy = await loadArbitrableProxy(arbitratorId);
-            contracts.set(arbitratorId, newHolder);
+            contracts.set(arbitratorId, holder ? {...holder, ...newHolder} : newHolder);
             holder = newHolder;
         }
         if (holder?.arbitrableProxy) {
