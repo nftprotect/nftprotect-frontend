@@ -39,8 +39,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
 }
 
 const RequestPage: NextPage = () => {
-    const context = useAppContext()
-    const { account, active, library, currentChain, defaultChain, isCorrectChain, nftProtectContract } = context
+    const { defaultChain, setChainId, isCorrectChain } = useAppContext()
     const { query } = useRouter()
     // Processing query params
     const { requestId, selectedChain, error: initialError } = useMemo(() => {
@@ -79,7 +78,7 @@ const RequestPage: NextPage = () => {
     }, [query]);
 
     const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy(selectedChain?.id || defaultChain.id)
-    const { getRequestByTokenId } = useNftProtect(selectedChain?.id || defaultChain.id)
+    const { getRequestByTokenId, getRequest: getRequestOnchain } = useNftProtect(selectedChain?.id || defaultChain.id)
 
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
@@ -153,7 +152,7 @@ const RequestPage: NextPage = () => {
 
     // Set selected chain globally
     useEffect(() => {
-        selectedChain && context.setChainId(selectedChain.id)
+        selectedChain && setChainId(selectedChain.id)
     }, [selectedChain])
 
     const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
@@ -173,22 +172,21 @@ const RequestPage: NextPage = () => {
                 let currentNFT: NFT|undefined
                 // Fetch request data from The Graph
                 const graphRequest: RequestGraphData|null = await getRequest(requestId)
-                
-                const contractRequest: ActionRequest = await nftProtectContract.requests(requestId.toString())
-                setRequestData(contractRequest)
-
-                // If there's a dispute, load it
-                if (contractRequest.externalDisputeId) {
-                    getDispute(contractRequest.externalDisputeId).then((disputeData) => {
-                        setDisputeData(disputeData)
-                    })
-                }
+                const contractRequest: ActionRequest|null = await getRequestOnchain(requestId)//nftProtectContract.requests(requestId.toString())
 
                 if (!graphRequest && !contractRequest) {
                     setError(t`Incorrect requestId`)
                 } else if (!graphRequest || !contractRequest) {
                     setError(t`Error loading request`)
                 } else {
+                    setRequestData(contractRequest)
+
+                    // If there's a dispute, load it
+                    if (contractRequest.externalDisputeId) {
+                        getDispute(contractRequest.externalDisputeId).then((disputeData) => {
+                            setDisputeData(disputeData)
+                        })
+                    }
                     setRequestGraphData(graphRequest)
                     const nftData = await getToken(graphRequest.tokenId)
                     if (!nftData) {
