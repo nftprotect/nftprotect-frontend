@@ -38,9 +38,13 @@ import { useCallableDialogContext } from '../../../../context/CallableDialogCont
 import AddressDisplay from '../../../AddressDisplay';
 import KlerosCaseSteps from './KlerosCaseSteps';
 import { ReqStatus, ReqType } from '../../../../hooks/useNftProtect';
+import { useClient, useWalletClient } from "wagmi";
+import { getBlock } from 'viem/actions'
+
 
 export interface KlerosCaseInitialData {
     nft: NFT,
+    selectedChain: any, // The chain selected
     metaEvidenceId: MetaEvidenceType,
     claimantAddress: string,
     defendantAddress: string,
@@ -63,6 +67,7 @@ interface CaseContentInitialData extends KlerosCaseInitialData {
 
 const KlerosCaseContent = ({
     nft,
+    selectedChain,
     metaEvidenceId,
     claimantAddress, 
     defendantAddress, 
@@ -145,8 +150,10 @@ const KlerosCaseContent = ({
     const [ acquireTx, setAcquireTx ] = useState<string|null|undefined>()
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string|null|undefined>()
-
-    const { library, account, active, currentChain, nftProtectContract } = useAppContext()
+    const { active, isCorrectChain } = useAppContext()
+    const client  = useClient({chainId: selectedChain.id}) // useClient is recommended by wagmi docs but is always undefined
+    const {data: walletClient} = useWalletClient({chainId: selectedChain.id})
+    const currentClient = walletClient || client
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
     const pageData = metaEvidenceDescriptions.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceDescriptions[0].page
@@ -154,8 +161,8 @@ const KlerosCaseContent = ({
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
     const getBlockDate = async (blockNumber: string) => {
-        const block = await library!.getBlock(blockNumber)
-        return timestampToDate(block.timestamp)
+        const block = await getBlock(currentClient!, {blockNumber: BigInt(blockNumber)})
+        return timestampToDate(Number(block.timestamp))
     }
 
     const formatDate = (date: Date) => date.toLocaleDateString("en-US")
@@ -205,7 +212,7 @@ const KlerosCaseContent = ({
                 nft.originalData.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
-                    contractAddresses: [nftProtectContract.address],
+                    contractAddresses: [selectedChain.nftProtectContract],
                     tokenType: NftTokenType.ERC721
                 }
             ).then((result) => {
@@ -286,7 +293,7 @@ const KlerosCaseContent = ({
         }
         loadDependingOnInitial()
         loadDependingOnOriginal()
-    }, [nft, account, library])
+    }, [nft])
 
     const mainContent = <>
         <Flex flexDirection="column" flexWrap="nowrap" my={{base: "34px"}}>
@@ -378,7 +385,7 @@ const KlerosCaseContent = ({
                         <InputLeftElement  py={{base: "14px"}} pointerEvents='none'>
                             <User fontSize="18px" />
                         </InputLeftElement>
-                        <Input value={ currentChain.name } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
+                        <Input value={ selectedChain.name } type='text' py={{base: "8px"}} isReadOnly border="1px solid rgba(0, 0, 0, 0.1)" borderRadius="3px" boxShadow="0px 2px 8px rgba(0, 0, 0, 0.1)" sx={{"&:focus": {border: '1px solid rgba(0, 0, 0, 0.1)' }}} />
                     </InputGroup>
                 </FormControl>
             </Flex>
@@ -408,7 +415,7 @@ const KlerosCaseContent = ({
                                     dialog.setData({nft, isRuled: disputeIsRuled})
                                     dialog.onOpen()
                                 }}
-                                isDisabled={!active}
+                                isDisabled={!(active && isCorrectChain)}
                             >
                                 <Trans>Enforce the ruling</Trans>
                             </Button>
@@ -590,7 +597,7 @@ const KlerosCaseContent = ({
                         <Trans>Wallet{":"}</Trans>
                         {' '}
                         { claimantAddress && <Link 
-                            href={ generateAddressURL(claimantAddress, currentChain.id) }
+                            href={ generateAddressURL(claimantAddress, selectedChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             
@@ -615,7 +622,7 @@ const KlerosCaseContent = ({
                         <Trans>Original{":"}</Trans>
                         {" "}
                         { nft.originalData && <Link 
-                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, currentChain.id) }
+                            href={ generateTokenURL(nft.originalData?.contractAddress, nft.originalData?.tokenId, selectedChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -632,7 +639,7 @@ const KlerosCaseContent = ({
                         { pageData.claimantText }
                         {" "}
                         { claimantTx1 ? <Link 
-                            href={ generateTxURL(claimantTx1, currentChain.id) } 
+                            href={ generateTxURL(claimantTx1, selectedChain.id) } 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -653,7 +660,7 @@ const KlerosCaseContent = ({
                             { pageData.claimantText2 }
                             {" "}
                             { claimantTx2 ? <Link 
-                                href={ generateTxURL(claimantTx2, currentChain.id) } 
+                                href={ generateTxURL(claimantTx2, selectedChain.id) } 
                                 isExternal 
                                 rel="noreferrer" 
                                 color="#2D7BD6" 
@@ -699,7 +706,7 @@ const KlerosCaseContent = ({
                         }
                         {' '}
                         <Link 
-                            href={ generateAddressURL(contractAddress || defendantAddress, currentChain.id) }
+                            href={ generateAddressURL(contractAddress || defendantAddress, selectedChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -727,7 +734,7 @@ const KlerosCaseContent = ({
                         <Trans>pNFT{":"}</Trans>
                         {" "}
                         <Link
-                            href={ generateTokenURL(nft.contract.address, nft.tokenId, currentChain.id) }
+                            href={ generateTokenURL(nft.contract.address, nft.tokenId, selectedChain.id) }
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -744,7 +751,7 @@ const KlerosCaseContent = ({
                         { pageData.defendantText }
                         {" "}
                         { defendantTx1 ? <Link 
-                            href={ defendantTx1 ? generateTxURL(defendantTx1, currentChain.id) : '#'} 
+                            href={ defendantTx1 ? generateTxURL(defendantTx1, selectedChain.id) : '#'} 
                             isExternal 
                             rel="noreferrer" 
                             color="#2D7BD6" 
@@ -858,7 +865,7 @@ const KlerosCaseContent = ({
                             dialog.setNft(nft)
                             dialog.onOpen()
                         }}
-                        isDisabled={!active}
+                        isDisabled={!(active && isCorrectChain)}
                     >
                         <Trans>Submit new evidence</Trans>
                     </Button>

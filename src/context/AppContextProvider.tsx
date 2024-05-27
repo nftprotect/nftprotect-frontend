@@ -110,7 +110,7 @@ export function AppContextProvider({ children }:any) {
         }
         const signer =  account && library?.getSigner(account)
         setAppState({
-            active: active && isCorrectChain,
+            active,
             account,
             currentChain,
             library,

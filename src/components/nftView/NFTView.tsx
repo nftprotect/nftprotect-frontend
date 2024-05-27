@@ -176,7 +176,10 @@ const NFTView = () => {
     }
 
     // Reload NFTs when chain or account changed
-    useEffect(fetchAllNfts, [currentChain, account])
+    useEffect(() => {
+        console.log('Fetching all NFTs'); // Trying to catch requests in requestId
+        fetchAllNfts();
+    }, [currentChain, account]);
 
     useEffect(() => {
         console.log('MY OWN NFTS', myOwnNfts)

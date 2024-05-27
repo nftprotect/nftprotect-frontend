@@ -18,7 +18,7 @@ const ConnectButton = ({
     const { active, isCorrectChain } = useAppContext() 
     const { switchChain } = useSwitchChain()    
 
-    if (active) {
+    if (active && isCorrectChain) {
         return (
             <Button 
                 variant={buttonVariant}
@@ -30,7 +30,7 @@ const ConnectButton = ({
     } else {
         // isCorrectChain here handles only case with requested chainId
         // Unsupported chain behavior is handled by ConnectKit 
-        if (chainId && switchChain && !isCorrectChain) {
+        if (chainId && !isCorrectChain) {
             return <Button
                 variant={buttonVariant}
                 leftIcon={<Swap fontSize="1.375rem" />}

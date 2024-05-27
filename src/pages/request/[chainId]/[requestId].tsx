@@ -23,6 +23,8 @@ import { WarningTwoIcon } from '@chakra-ui/icons'
 import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
 import useNftProtect, { ActionRequest, ReqType } from '../../../hooks/useNftProtect'
+import { getBlock } from 'viem/actions'
+import { useClient, useWalletClient } from 'wagmi'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const translation = await loadTranslation(
@@ -39,7 +41,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale } 
 const RequestPage: NextPage = () => {
     const context = useAppContext()
     const { account, active, library, currentChain, defaultChain, isCorrectChain, nftProtectContract } = context
-    const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
     const { query } = useRouter()
     // Processing query params
     const { requestId, selectedChain, error: initialError } = useMemo(() => {
@@ -77,6 +78,7 @@ const RequestPage: NextPage = () => {
         return { requestId, selectedChain, error };
     }, [query]);
 
+    const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy(selectedChain?.id || defaultChain.id)
     const { getRequestByTokenId } = useNftProtect(selectedChain?.id || defaultChain.id)
 
     const [ requestData, setRequestData ] = useState<ActionRequest>()
@@ -93,15 +95,18 @@ const RequestPage: NextPage = () => {
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
+    const client  = useClient({chainId: selectedChain?.id || defaultChain.id }) // useClient is recommended by wagmi docs but is always undefined
+    const {data: walletClient} = useWalletClient({chainId: selectedChain?.id || defaultChain.id})
+    const currentClient = walletClient || client
 
     // setup ipfs endpoint
     useEffect(() => {
         setBaseUrl(window.location.origin)
     }, [])
 
-    const getBlockDate = async (blockNumber: number) => {
-        const block = await library!.getBlock(blockNumber)
-        return timestampToDate(block.timestamp)
+    const getBlockDate = async (blockNumber: string|number) => {
+        const block = await getBlock(currentClient!, {blockNumber: BigInt(blockNumber)})
+        return timestampToDate(Number(block.timestamp))
     }
 
     // Loads all submitted evidence data
@@ -164,7 +169,7 @@ const RequestPage: NextPage = () => {
     // Load Request and NFT
     useEffect(() => {
         const fetchData = async () => {
-            if (currentChain && requestId && selectedChain && isCorrectChain) {
+            if ( requestId && selectedChain ) {
                 let currentNFT: NFT|undefined
                 // Fetch request data from The Graph
                 const graphRequest: RequestGraphData|null = await getRequest(requestId)
@@ -215,7 +220,7 @@ const RequestPage: NextPage = () => {
             }
         }
         fetchData()
-    }, [requestId, currentChain, selectedChain, isCorrectChain])
+    }, [requestId, selectedChain])
 
     // Load evidences
     useEffect(() => {
@@ -255,7 +260,7 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    const allRequiredLoaded = currentChain && requestData && nft && claimantAddress && defendantAddress
+    const allRequiredLoaded = selectedChain && requestData && nft && claimantAddress && defendantAddress
 
     return (<>
         { selectedChain && <Head>
@@ -320,6 +325,7 @@ const RequestPage: NextPage = () => {
                         </Box>
                         <Box mx={{base: "1rem", md: "2rem"}}>
                             <KlerosCaseContent
+                                selectedChain={selectedChain}
                                 metaEvidenceId={requestData.metaevidence}
                                 nft={nft}
                                 claimantAddress={claimantAddress}

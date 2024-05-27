@@ -383,6 +383,7 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
                                             onClick={() => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
+                                                    currentChain,
                                                     nft,
                                                     metaEvidenceId,
                                                     claimantAddress: account,

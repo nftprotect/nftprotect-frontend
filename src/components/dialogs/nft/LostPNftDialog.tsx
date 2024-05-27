@@ -515,6 +515,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             onClick={() => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
+                                                    currentChain,
                                                     nft,
                                                     metaEvidenceId: lostReason,
                                                     claimantAddress: account,
