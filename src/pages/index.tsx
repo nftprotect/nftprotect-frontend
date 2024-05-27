@@ -194,7 +194,7 @@ const Home: NextPage = () => {
                                 {innerPart}
                                 <NFTView />
                                 {/* Load all notifications */}
-                                { currentChain && <NotificationsLoader /> }
+                                {/* { currentChain && <NotificationsLoader /> } */}
                             </>
                         )}
                     </chakra.main>
