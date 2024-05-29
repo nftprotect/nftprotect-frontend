@@ -65,8 +65,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 }
 
 const ValidatePage: NextPage = () => {
-    const context = useAppContext()
-    const { account, active, library, currentChain, defaultChain, nftProtectContract, setChainId } = context
+    const { currentChain, defaultChain, setChainId } = useAppContext()
     const [ nft, setNft ] = useState<NFT>()
     const [ nftGraphData, setNftGraphData ] = useState<TokenGraphData>()
     const [ validationResult, setValidationResult ] = useState<boolean>()
@@ -78,7 +77,7 @@ const ValidatePage: NextPage = () => {
 
     const loadNft = async (tokenId: BigNumber) => {
         const alchemyNft = await nftApi.getNftMetadata(
-            nftProtectContract.address,
+            currentChain.nftpContractAddress,
             tokenId
         )
         return new NFT(alchemyNft)

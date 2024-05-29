@@ -26,13 +26,7 @@ interface NFTInitialData {
 }
 
 const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
-    const { account, nftProtectContract, currentChain, defaultChain } = useAppContext()
-    // Stores the metadata of NFT
-    //const [ metadata, setMetadata ] = useState<any>(nft.metadata)
-    // Becomes false if metadata is unawailable for some reason
-    //const [ hasMetadata, setHasMetadata ] = useState(true)
-    // In case of external metadata fetching it marks if fetch is ended
-    //const [ fetchEnded, setFetchEnded ] = useState(false)
+    const { account, currentChain, defaultChain } = useAppContext()
     const [ nft, setNft ] = useState<NFT>(_nft)
     const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const originalNFTData = nft.originalData
@@ -69,7 +63,7 @@ const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
     }, [pendingRequest]);
 
     let buttons = <div />
-    if (nft.isMintedBy(nftProtectContract.address)) { // Is pNFT
+    if (nft.isMintedBy(currentChain.nftpContractAddress)) { // Is pNFT
         // We can't show buttons for pNFT before we have info about original NFT
         if (originalNFTData !== undefined) {
             if (!nft.isOnAnotherAddress() && nft.isOriginalOwnedByAccount(account!)) {

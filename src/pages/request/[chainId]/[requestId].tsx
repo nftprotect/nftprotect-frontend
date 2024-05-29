@@ -170,7 +170,7 @@ const RequestPage: NextPage = () => {
                 let currentNFT: NFT|undefined
                 // Fetch request data from The Graph
                 const graphRequest: RequestGraphData|null = await getRequest(requestId)
-                const contractRequest: ActionRequest|null = await getRequestOnchain(requestId)//nftProtectContract.requests(requestId.toString())
+                const contractRequest: ActionRequest|null = await getRequestOnchain(requestId)
 
                 if (!graphRequest && !contractRequest) {
                     setError(t`Incorrect requestId`)
