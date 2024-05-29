@@ -190,6 +190,18 @@ const NFTProtectABI = [
 		  "type": "uint256"
 		},
 		{
+		  "indexed": true,
+		  "internalType": "address",
+		  "name": "newowner",
+		  "type": "address"
+		},
+		{
+		  "indexed": true,
+		  "internalType": "address",
+		  "name": "oldowner",
+		  "type": "address"
+		},
+		{
 		  "indexed": false,
 		  "internalType": "bool",
 		  "name": "accept",
@@ -209,13 +221,19 @@ const NFTProtectABI = [
 		  "type": "uint256"
 		},
 		{
-		  "indexed": false,
+		  "indexed": true,
 		  "internalType": "address",
-		  "name": "dst",
+		  "name": "newowner",
 		  "type": "address"
 		},
 		{
 		  "indexed": true,
+		  "internalType": "address",
+		  "name": "oldowner",
+		  "type": "address"
+		},
+		{
+		  "indexed": false,
 		  "internalType": "uint256",
 		  "name": "tokenId",
 		  "type": "uint256"
@@ -265,6 +283,18 @@ const NFTProtectABI = [
 		  "type": "uint256"
 		},
 		{
+		  "indexed": true,
+		  "internalType": "address",
+		  "name": "newowner",
+		  "type": "address"
+		},
+		{
+		  "indexed": true,
+		  "internalType": "address",
+		  "name": "oldowner",
+		  "type": "address"
+		},
+		{
 		  "indexed": false,
 		  "internalType": "bool",
 		  "name": "accept",
@@ -300,6 +330,12 @@ const NFTProtectABI = [
 		  "internalType": "uint256",
 		  "name": "tokenId",
 		  "type": "uint256"
+		},
+		{
+		  "indexed": false,
+		  "internalType": "enum NFTProtect.MetaEvidenceType",
+		  "name": "metaEvidenceType",
+		  "type": "uint8"
 		}
 	  ],
 	  "name": "OwnershipRestoreAsked",

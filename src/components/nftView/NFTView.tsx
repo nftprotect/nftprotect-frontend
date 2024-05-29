@@ -40,25 +40,44 @@ const NFTView = () => {
         nftMarketplaces.testnet :
         nftMarketplaces.mainnet
 
+    // Stores original NFTs (not protected) owned by account
+    const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
+    // Stores all pNFTs owned by account
+    const [ownedPNfts, setOwnedPNfts] = useState<NFT[]>()
+    // Stores pNFTs given to another accounts
+    const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
+
     const renderNFT = (nft: NFT) => {
         console.log('NFT: ', nft.title, nft)
         return <NFTCard
             key={`${nft.contract.address}:${nft.tokenId}`}
             nft={nft}
-            nftReFetch={fetchAllNfts}
         />
     }
 
     const subscribeNftTransfers = () => {
+        const onEvent = (logs: any) => {
+            console.log('NFT Protect event:', logs);
+            fetchAllNfts();
+        }
+
         const config = {
             address: currentChain.nftpContractAddress,
             abi: NFTProtectABI,
-            onLogs(logs: any) {
-                console.log('NFT Protect event:', logs);
-                fetchAllNfts();
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    // Only events for account (oldowner and newowner)
+                    (log: any) => log.args && account && 
+                        ((log.args.newowner.toLowerCase() === account.toLowerCase()) ||
+                        (log.args.oldowner.toLowerCase() === account.toLowerCase()))
+                );
+                if (foundLog) {
+                    onEvent(logs);
+                }
             }
         };
-    
+
+        // Transfer uses to and from args
         const uwatchTransfer = publicClient!.watchContractEvent({
             ...config,
             eventName: 'Transfer',
@@ -69,22 +88,77 @@ const NFTView = () => {
                         (log.args.from.toLowerCase() === account.toLowerCase()))
                 );
                 if (foundLog) {
-                    config.onLogs(logs);
+                    onEvent(logs);
                 }
             }
         });
+
+        // Unprotect uses dst args
+        const uwatchUnprotected = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'Unprotected',
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    (log: any) => log.args && account &&
+                        (log.args.dst.toLowerCase() === account.toLowerCase())
+                );
+                if (foundLog) {
+                    config.onLogs(logs);
+                }
+            }
+        }); 
+    
+        const uwatchOwnershipAdjusted = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjusted'
+        });
+    
+        const uwatchOwnershipAdjustmentAsked = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentAsked'
+        });
+    
+        const uwatchOwnershipRestoreAsked = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipRestoreAsked'
+        });
+
+        const uwatchOwnershipAdjustmentArbitrateAsked= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentArbitrateAsked'
+        })
+        const uwatchOwnershipAdjustmentAnswered= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentAnswered'
+        })
+        const uwatchOwnershipRestoreAnswered= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipRestoreAnswered',
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    // Only events for account (oldowner and newowner)
+                    // Exclude accept to prevent duplicate loading because Transfer event will be fired
+                    (log: any) => log.args && !log.args.accept && account &&
+                        ((log.args.newowner.toLowerCase() === account.toLowerCase()) ||
+                        (log.args.oldowner.toLowerCase() === account.toLowerCase()))
+                );
+                if (foundLog) {
+                    onEvent(logs);
+                }
+            }
+        })
     
         return () => {
             uwatchTransfer();
+            uwatchUnprotected();
+            uwatchOwnershipAdjusted();
+            uwatchOwnershipAdjustmentAsked();
+            uwatchOwnershipRestoreAsked();
+            uwatchOwnershipAdjustmentArbitrateAsked();
+            uwatchOwnershipAdjustmentAnswered();
+            uwatchOwnershipRestoreAnswered();
         };
     };
-
-    // Stores original NFTs (not protected) owned by account
-    const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
-    // Stores all pNFTs owned by account
-    const [ownedPNfts, setOwnedPNfts] = useState<NFT[]>()
-    // Stores pNFTs given to another accounts
-    const [givenPNfts, setGivenPNfts] = useState<NFT[]>()
 
     // Loads all the NFTs (NOT pNFTs) owned by user
     const fetchOwnedNfts = () => {
@@ -305,14 +379,14 @@ const NFTView = () => {
 
             {/** Dialogs registration following */}
             <KlerosCaseDialog/>
-            <ProtectNftDialog nftReFetch={ fetchAllNfts } />
-            <UnProtectNftDialog nftReFetch={ fetchAllNfts } />
-            <LostPNftDialog nftReFetch={ fetchAllNfts } />
-            <OriginalNftRequestedDialog nftReFetch={ fetchAllNfts } />
-            <TransferOriginalNftDialog nftReFetch={ fetchAllNfts } />
-            <DoNotTransferOriginalNftDialog nftReFetch={ fetchAllNfts } />
-            <RequestOriginalNftDialog nftReFetch={ fetchAllNfts } />
-            <ArbitrateOwnershipAdjustmentDialog nftReFetch={ fetchAllNfts } />
+            <ProtectNftDialog/>
+            <UnProtectNftDialog/>
+            <LostPNftDialog />
+            <OriginalNftRequestedDialog/> 
+            <TransferOriginalNftDialog/> 
+            <DoNotTransferOriginalNftDialog/> 
+            <RequestOriginalNftDialog/> 
+            <ArbitrateOwnershipAdjustmentDialog/> 
         </>
 )}
 

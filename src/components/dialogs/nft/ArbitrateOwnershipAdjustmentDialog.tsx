@@ -45,11 +45,7 @@ import AddressDisplay from '../../AddressDisplay';
 import { ReqStatus } from '../../../hooks/useNftProtect';
 import useNftProtect from '../../../hooks/useNftProtect';
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) => {
+const ArbitrateOwnershipAdjustmentDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract, account, library, baseTokenPrice, currentChain, defaultChain } = useAppContext()
@@ -107,15 +103,14 @@ const ArbitrateOwnershipAdjustmentDialog = ({ nftReFetch }: DialogInitialData) =
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    const action = async () => {
-                        nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                        setNft(nft)
-                        // TODO: probably we have to set NFT in parent component
-                    }
-                    action();
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                     setNextStep(StepMapping.caseSent);
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }

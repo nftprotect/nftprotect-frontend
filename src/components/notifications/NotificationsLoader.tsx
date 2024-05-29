@@ -1351,15 +1351,23 @@ const NotificationsLoader = ({
         const config = {
             address: chain.nftpContractAddress,
             abi: NFTProtectABI,
-            onLogs(logs: any) { // Default function when nothing to filter
-                console.log('NFT Protect event:', logs)
-                loadNotifications();
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    // Only events for account (oldowner and newowner)
+                    (log: any) => log.args && account && 
+                        ((log.args.newowner.toLowerCase() === account.toLowerCase()) ||
+                        (log.args.oldowner.toLowerCase() === account.toLowerCase()))
+                );
+                if (foundLog) {
+                    console.log('NFT Protect event:', logs)
+                    loadNotifications();
+                }
             }
         }
         const uwatchTransfer = publicClient!.watchContractEvent({
             ...config,
             eventName: 'Transfer',
-            onLogs: (logs: Log[]) => {
+            onLogs: (logs: Log[]) => { // for transfer another parameter names used
                 const foundLog = logs.find(
                     // Only transfer to and from account
                     (log: any) => log.args && account && 
@@ -1367,38 +1375,24 @@ const NotificationsLoader = ({
                         (log.args.from.toLowerCase() === account.toLowerCase()))
                 );
                 if (foundLog) {
-                    config.onLogs(logs);
+                    console.log('NFT Protect event:', logs)
+                    loadNotifications();
                 }
             }
         })
 
-        const onLogsTwoOwners = (logs: Log[]) => {
-            const foundLog = logs.find(
-                // Only events for account (oldowner and newowner)
-                (log: any) => log.args && account && 
-                    ((log.args.newowner.toLowerCase() === account.toLowerCase()) ||
-                    (log.args.oldowner.toLowerCase() === account.toLowerCase()))
-            );
-            if (foundLog) {
-                config.onLogs(logs);
-            }
-        }
         const uwatchOwnershipAdjusted = publicClient!.watchContractEvent({
             ...config,
-            eventName: 'OwnershipAdjusted',
-            onLogs: onLogsTwoOwners
+            eventName: 'OwnershipAdjusted'
         })
         const uwatchOwnershipAdjustmentAsked = publicClient!.watchContractEvent({
             ...config,
-            eventName: 'OwnershipAdjustmentAsked',
-            onLogs: onLogsTwoOwners
+            eventName: 'OwnershipAdjustmentAsked'
         })
         const uwatchOwnershipRestoreAsked = publicClient!.watchContractEvent({
             ...config,
             eventName: 'OwnershipRestoreAsked',
-            onLogs: onLogsTwoOwners
         })
-        // These events doesn't contain indexed user information, so listen all
         const uwatchOwnershipAdjustmentArbitrateAsked= publicClient!.watchContractEvent({
             ...config,
             eventName: 'OwnershipAdjustmentArbitrateAsked'

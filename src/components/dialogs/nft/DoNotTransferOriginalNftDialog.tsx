@@ -41,11 +41,7 @@ import { CopyIcon } from '@chakra-ui/icons'
 import AddressDisplay from '../../AddressDisplay';
 import useNftProtect from '../../../hooks/useNftProtect';
 
-interface ButtonInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
+const DoNotTransferOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract, library, currentChain, defaultChain } = useAppContext()
@@ -86,13 +82,12 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    const action = async () => {
-                        nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                        setNft(nft)
-                        // TODO: probably we have to set NFT in parent component
-                    }
-                    action();
-                    nftReFetch();
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }

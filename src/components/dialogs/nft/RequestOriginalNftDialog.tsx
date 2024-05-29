@@ -43,11 +43,7 @@ import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from "../../AddressDisplay";
 import useNftProtect from "../../../hooks/useNftProtect";
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const RequestOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const { account, nftProtectContract, referrerAddress, currentChain, defaultChain } = useAppContext()
@@ -91,15 +87,12 @@ const RequestOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash)
-                    //nftReFetch()
-                    // List of NFTs is the same after reFetch() so component won't be re-rendered
-                    // So in this case we have to reload request only
-                    const action = async () => {
-                        nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                        setNft(nft)
-                        // TODO: probably we have to set NFT in parent component
-                    }
-                    action();
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }

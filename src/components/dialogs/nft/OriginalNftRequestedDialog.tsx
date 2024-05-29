@@ -24,7 +24,6 @@ import {
     CardFooter,
     useDisclosure
 } from '@chakra-ui/react'
-import { useAppContext } from '../../../context/AppContextProvider';
 import { copyTextToClipboard } from '../../../utils/helpers';
 import { Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons'
@@ -34,11 +33,7 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const OriginalNftRequestedDialog = ({ nftReFetch }: DialogInitialData) => {
+const OriginalNftRequestedDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const disclosure = useDisclosure()

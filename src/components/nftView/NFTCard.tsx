@@ -21,11 +21,10 @@ import { generateRequestLink } from '../../utils/helpers';
 import useNftProtect, { ActionRequest, ReqStatus } from '../../hooks/useNftProtect';
 
 interface NFTInitialData {
-    nft: NFT,
-    nftReFetch: Function,
+    nft: NFT
 }
 
-const NFTCard = ({ nft: _nft, nftReFetch }: NFTInitialData ) => {
+const NFTCard = ({ nft: _nft }: NFTInitialData ) => {
     const { account, currentChain, defaultChain } = useAppContext()
     const [ nft, setNft ] = useState<NFT>(_nft)
     const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)

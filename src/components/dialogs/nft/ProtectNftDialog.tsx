@@ -34,10 +34,6 @@ import NFTImage from '../../nftView/NFTImage';
 import ERC721ABI from "../../../abi/ERC721ABI";
 import ERC1155ABI from "../../../abi/ERC1155ABI";
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
 enum NFTPTokenStandard
 {
     ERC721,
@@ -45,7 +41,7 @@ enum NFTPTokenStandard
     ERC20
 }
 
-const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const ProtectNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const {
@@ -97,7 +93,6 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }

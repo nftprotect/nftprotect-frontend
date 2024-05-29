@@ -49,11 +49,7 @@ import AddressDisplay from '../../AddressDisplay';
 import { MetaEvidenceType } from '../../../hooks/useNftProtectGraph';
 import useNftProtect from '../../../hooks/useNftProtect';
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const LostPNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const {account, nftProtectContract, baseTokenPrice, currentChain, defaultChain} = useAppContext()
@@ -113,15 +109,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
             setNextStep(StepMapping.waitForTransactionConfirmation);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    const action = async () => {
-                        nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                        setNft(nft)
-                        // TODO: probably we have to set NFT in parent component
-                    }
-                    action();
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    // }
+                    // action();
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }

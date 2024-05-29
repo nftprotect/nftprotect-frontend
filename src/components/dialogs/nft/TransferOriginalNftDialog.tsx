@@ -45,11 +45,7 @@ import { useSignTypedData } from "wagmi";
 import { getSigningData } from "../../../utils/signing";
 import useNftProtect from "../../../hooks/useNftProtect";
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const TransferOriginalNftDialog = () => {
     
     const [ nft, setNft ] = useState<NFT>()
     const { account, library, nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
@@ -94,13 +90,12 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 if (receipt.status === 1) {
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
-                    const action = async () => {
-                        nft.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                        setNft(nft)
-                        // TODO: probably we have to set NFT in parent component
-                    }
-                    action();
-                    nftReFetch();
+                    // const action = async () => {
+                    //     nft.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }
