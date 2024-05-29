@@ -116,5 +116,19 @@ export const arbitratorGraphs = [
     }
 ]
 
+// NFT Marketplaces
+export const nftMarketplaces = {
+    testnet: {
+        opensea: "https://testnets.opensea.io/",
+        rarible: "https://testnet.rarible.com/",
+        blur: "https://blur.io/"
+    }, 
+    mainnet: {
+        opensea: "https://opensea.io/",
+        rarible: "https://rarible.com/",
+        blur: "https://blur.io/"
+    }
+}
+
 // Testnet
 export const switchingManualURI = 'https://docs.nftprotect.app/guides/testnet-guidelines#switching-the-dispute-stage-in-kleros'
