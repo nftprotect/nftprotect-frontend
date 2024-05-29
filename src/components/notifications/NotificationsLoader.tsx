@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import { useAppContext } from "../../context/AppContextProvider"
 import { TokenGraphData, convertTokenGraphData, useNftProtectGraph } from "../../hooks/useNftProtectGraph"
 import { useNotifications } from "../../hooks/useNotifications"
 import { Heading, Text, Link, getToken } from "@chakra-ui/react"
 import { Trans } from "@lingui/macro"
 import { generateRequestLink, timestampToDate } from "../../utils/helpers"
 import { useAlchemy } from "../../hooks/useAlchemy"
-import { BigNumber } from '@ethersproject/bignumber'
 import NFT from "../../classes/NFT"
 import { Period, useArbitratorGraph } from "../../hooks/useArbitratorGraph"
 import { SeverityLevel } from "../../context/NotificationContextProvider"
@@ -19,9 +17,11 @@ import SuedToObtainTheOriginalNFTDialog from "../dialogs/notifications/SuedToObt
 import OriginalNftUnresponsiveDialog from "../dialogs/notifications/OriginalNftUnresponsiveDialog"
 import { arbitratorGraphs } from "../../config"
 import { useArbitrableProxy } from "../../hooks/useArbitrableProxy"
-import { Contract } from "@ethersproject/contracts"
 import AddressDisplay from "../AddressDisplay"
 import useNftProtect, { ReqStatus, ReqType } from "../../hooks/useNftProtect"
+import { GetContractReturnType, Log } from "viem"
+import { usePublicClient } from "wagmi"
+import NFTProtectABI from "../../abi/NFTProtectABI"
 
 const CommonNotificationBody = ({
     header,
@@ -45,27 +45,31 @@ const CommonNotificationBody = ({
 
 const klerosAppealPeriod = 84
 
-const NotificationsLoader = () => {
-    const context = useAppContext()
-    const { account, active, currentChain, defaultChain, nftProtectContract } = context
-    const { getRequest } = useNftProtect(currentChain?.id || defaultChain.id)
-    const { listTokensReceived, listTokensTransfered } = useNftProtectGraph(currentChain.id)
-    const { getArbitrableProxy, getArbitrator } = useArbitrableProxy(currentChain?.id || defaultChain.id)
-    const { getDispute } = useArbitratorGraph(currentChain.id, currentChain.defaultArbitrator)
+const NotificationsLoader = ({
+    chain,
+    account
+}: {
+    chain: any,
+    account: `0x${string}`
+}) => {
+    const { getRequest } = useNftProtect(chain.id)
+    const { listTokensReceived, listTokensTransfered } = useNftProtectGraph(chain.id)
+    const { getArbitrableProxy, getArbitrator } = useArbitrableProxy(chain.id)
+    const { getDispute } = useArbitratorGraph(chain.id, chain.defaultArbitrator)
     const { addNotification, getNotification, deleteNotification, clearNotifications } = useNotifications()
     const { nft: nftApi } = useAlchemy()
     const originalsCache = useRef<NFT[]>([])
     const pNftsCache = useRef<NFT[]>([])
     const { getDialog } = useCallableDialogContext()
-    const [ arbitrableProxies, setArbitrableProxies ] = useState<Contract[]>()
-    const [ arbitrators, setArbitrators ] = useState<Contract[]>()
-
+    const [ arbitrableProxies, setArbitrableProxies ] = useState<GetContractReturnType[]>()
+    const [ arbitrators, setArbitrators ] = useState<GetContractReturnType[]>()
+    const publicClient = usePublicClient(chain.id)
 
     const generateNotificationId = (nft: TokenGraphData) => {
         const requestPart = nft.latestRequest ? 
             `${nft.latestRequest.id}-${nft.latestRequest.type}` :
             'none'
-        return `${currentChain?.id}-${nft.id}-${requestPart}`
+        return `${chain.id}-${nft.id}-${requestPart}`
     }
 
     const loadOriginalNFT = async (nft: TokenGraphData): Promise<NFT> => {
@@ -74,7 +78,7 @@ const NotificationsLoader = () => {
     }
 
     const loadPNFT = async (nft: TokenGraphData): Promise<NFT> => {
-        const result = await nftApi.getNftMetadata(nftProtectContract.address, nft.id)
+        const result = await nftApi.getNftMetadata(chain.nftpContractAddress, nft.id)
         return new NFT(result, convertTokenGraphData(nft))
     }
 
@@ -155,7 +159,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -176,7 +180,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -234,7 +238,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Info,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -255,7 +259,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Major,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -275,7 +279,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Info,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -313,7 +317,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Major,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: dispute.startTime
@@ -408,7 +412,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Critical,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: targetDate
@@ -435,7 +439,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -456,7 +460,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -479,7 +483,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Critical,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: targetDate
@@ -502,7 +506,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -523,7 +527,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -546,7 +550,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Critical,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: targetDate
@@ -566,7 +570,7 @@ const NotificationsLoader = () => {
                                 const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
                                 if (timeoutDate <= new Date()) {
                                     const loadedNft = await getPNft(nft)
-// Pending request is needed for dialog
+                                    // Pending request is needed for dialog
                                     if (!loadedNft.pendingRequest) {
                                         loadedNft.pendingRequest = loadedRequest
                                     }
@@ -629,7 +633,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -650,7 +654,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -774,7 +778,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -795,7 +799,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -821,7 +825,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Info,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -842,7 +846,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Major,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -930,7 +934,7 @@ const NotificationsLoader = () => {
                                             />, 
                                         severity: SeverityLevel.Info,
                                         buttonCallback: () => {
-                                            const uri = generateRequestLink(request.id, currentChain?.id)
+                                            const uri = generateRequestLink(request.id, chain.id)
                                             window.open(uri, '_blank');
                                         },
                                         dateCreated: dispute.startTime
@@ -968,7 +972,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Major,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: dispute.startTime
@@ -1013,7 +1017,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Major,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: dispute.startTime
@@ -1031,7 +1035,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Major,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: dispute.startTime
@@ -1057,7 +1061,7 @@ const NotificationsLoader = () => {
                                                 />, 
                                             severity: SeverityLevel.Critical,
                                             buttonCallback: () => {
-                                                const uri = generateRequestLink(request.id, currentChain?.id)
+                                                const uri = generateRequestLink(request.id, chain.id)
                                                 window.open(uri, '_blank');
                                             },
                                             dateCreated: targetDate
@@ -1084,7 +1088,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -1105,7 +1109,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -1128,7 +1132,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Critical,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: targetDate
@@ -1151,7 +1155,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -1172,7 +1176,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Major,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: dispute.startTime
@@ -1195,7 +1199,7 @@ const NotificationsLoader = () => {
                                                     />, 
                                                 severity: SeverityLevel.Critical,
                                                 buttonCallback: () => {
-                                                    const uri = generateRequestLink(request.id, currentChain?.id)
+                                                    const uri = generateRequestLink(request.id, chain.id)
                                                     window.open(uri, '_blank');
                                                 },
                                                 dateCreated: targetDate
@@ -1281,7 +1285,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -1302,7 +1306,7 @@ const NotificationsLoader = () => {
                                         />, 
                                     severity: SeverityLevel.Major,
                                     buttonCallback: () => {
-                                        const uri = generateRequestLink(request.id, currentChain?.id)
+                                        const uri = generateRequestLink(request.id, chain.id)
                                         window.open(uri, '_blank');
                                     },
                                     dateCreated: request.updateDate
@@ -1326,131 +1330,179 @@ const NotificationsLoader = () => {
     }
 
     const loadArbitrableProxies = async () => {
-        if (account && active && currentChain) {
-            const currentArbitrators = arbitratorGraphs.find(it => it.chainId === currentChain.id)
-            if (currentArbitrators) {
-                const proxyPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrableProxy(arbitratorConfig.arbitratorId))
-                const proxies = await Promise.all(proxyPromises)
-                setArbitrableProxies(proxies)
-            }
+        const currentArbitrators = arbitratorGraphs.find(it => it.chainId === chain.id)
+        if (currentArbitrators) {
+            const proxyPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrableProxy(arbitratorConfig.arbitratorId))
+            const proxies = await Promise.all(proxyPromises)
+            setArbitrableProxies(proxies)
         }
     }
 
     const loadArbitrators = async () => {
-        if (account && active && currentChain) {
-            const currentArbitrators = arbitratorGraphs.find(it => it.chainId === currentChain.id)
-            if (currentArbitrators) {
-                const arbPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrator(arbitratorConfig.arbitratorId))
-                const arbitrators = await Promise.all(arbPromises)
-                setArbitrators(arbitrators)
-            }
+        const currentArbitrators = arbitratorGraphs.find(it => it.chainId === chain.id)
+        if (currentArbitrators) {
+            const arbPromises = currentArbitrators.arbitrators.map(arbitratorConfig => getArbitrator(arbitratorConfig.arbitratorId))
+            const arbitrators = await Promise.all(arbPromises)
+            setArbitrators(arbitrators)
         }
     }
 
-    useEffect(() => {
-        clearNotifications()
-        loadNotifications()
-        loadArbitrableProxies()
-    }, [account, active, currentChain])
-
     const subscribeNFTProtectEvents = () => {
-        if (account && active) {
-            const fromMe = nftProtectContract.filters.Transfer(account, null)
-            const toMe = nftProtectContract.filters.Transfer(null, account)
-            const ownershipAdjustedNewOwner = nftProtectContract.filters.OwnershipAdjusted(account)
-            const ownershipAdjustedOldOwner = nftProtectContract.filters.OwnershipAdjusted(null, account)
-            const ownershipAdjustmentAskedNewOwner = nftProtectContract.filters.OwnershipAdjustmentAsked(null, account)
-            const ownershipAdjustmentAskedOldOwner = nftProtectContract.filters.OwnershipAdjustmentAsked(null, null, account)
-            const ownershipRestoreAskedNewOwner = nftProtectContract.filters.OwnershipRestoreAsked(null, account)
-            const ownershipRestoreAskedOldOwner = nftProtectContract.filters.OwnershipRestoreAsked(null, null, account)
-            // These events doesn't contain indexed user information, so listen all
-            const ownershipAdjustmentArbitrateAsked = nftProtectContract.filters.OwnershipAdjustmentArbitrateAsked()
-            const ownershipAdjustmentAnswered = nftProtectContract.filters.OwnershipAdjustmentAnswered()
-            const ownershipRestoreAnswered = nftProtectContract.filters.OwnershipRestoreAnswered()
-
-            nftProtectContract.on(fromMe, loadNotifications)
-            nftProtectContract.on(toMe, loadNotifications)
-            nftProtectContract.on(ownershipAdjustmentArbitrateAsked, loadNotifications)
-            nftProtectContract.on(ownershipAdjustedNewOwner, loadNotifications)
-            nftProtectContract.on(ownershipAdjustedOldOwner, loadNotifications)
-            nftProtectContract.on(ownershipAdjustmentAskedNewOwner, loadNotifications)
-            nftProtectContract.on(ownershipAdjustmentAskedOldOwner, loadNotifications)
-            nftProtectContract.on(ownershipRestoreAskedNewOwner, loadNotifications)
-            nftProtectContract.on(ownershipRestoreAskedOldOwner, loadNotifications)
-            nftProtectContract.on(ownershipAdjustmentAnswered, loadNotifications)
-            nftProtectContract.on(ownershipRestoreAnswered, loadNotifications)
-            return () => {
-                nftProtectContract.removeAllListeners(toMe)
-                nftProtectContract.removeAllListeners(fromMe)
-                nftProtectContract.removeAllListeners(ownershipAdjustmentArbitrateAsked)
-                nftProtectContract.removeAllListeners(ownershipAdjustedNewOwner)
-                nftProtectContract.removeAllListeners(ownershipAdjustedOldOwner)
-                nftProtectContract.removeAllListeners(ownershipAdjustmentAskedNewOwner)
-                nftProtectContract.removeAllListeners(ownershipAdjustmentAskedOldOwner)
-                nftProtectContract.removeAllListeners(ownershipRestoreAskedNewOwner)
-                nftProtectContract.removeAllListeners(ownershipRestoreAskedOldOwner)
-                nftProtectContract.removeAllListeners(ownershipAdjustmentAnswered)
-                nftProtectContract.removeAllListeners(ownershipRestoreAnswered)
+        const config = {
+            address: chain.nftpContractAddress,
+            abi: NFTProtectABI,
+            onLogs(logs: any) { // Default function when nothing to filter
+                console.log('NFT Protect event:', logs)
+                loadNotifications();
             }
+        }
+        const uwatchTransfer = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'Transfer',
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    // Only transfer to and from account
+                    (log: any) => log.args && account && 
+                        ((log.args.to.toLowerCase() === account.toLowerCase()) ||
+                        (log.args.from.toLowerCase() === account.toLowerCase()))
+                );
+                if (foundLog) {
+                    config.onLogs(logs);
+                }
+            }
+        })
+
+        const onLogsTwoOwners = (logs: Log[]) => {
+            const foundLog = logs.find(
+                // Only events for account (oldowner and newowner)
+                (log: any) => log.args && account && 
+                    ((log.args.newowner.toLowerCase() === account.toLowerCase()) ||
+                    (log.args.oldowner.toLowerCase() === account.toLowerCase()))
+            );
+            if (foundLog) {
+                config.onLogs(logs);
+            }
+        }
+        const uwatchOwnershipAdjusted = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjusted',
+            onLogs: onLogsTwoOwners
+        })
+        const uwatchOwnershipAdjustmentAsked = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentAsked',
+            onLogs: onLogsTwoOwners
+        })
+        const uwatchOwnershipRestoreAsked = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipRestoreAsked',
+            onLogs: onLogsTwoOwners
+        })
+        // These events doesn't contain indexed user information, so listen all
+        const uwatchOwnershipAdjustmentArbitrateAsked= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentArbitrateAsked'
+        })
+        const uwatchOwnershipAdjustmentAnswered= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipAdjustmentAnswered'
+        })
+        const uwatchOwnershipRestoreAnswered= publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'OwnershipRestoreAnswered'
+        })
+        return () => {
+            uwatchTransfer();
+            uwatchOwnershipAdjusted();
+            uwatchOwnershipAdjustmentAsked();
+            uwatchOwnershipRestoreAsked();
+            uwatchOwnershipAdjustmentArbitrateAsked();
+            uwatchOwnershipAdjustmentAnswered();
+            uwatchOwnershipRestoreAnswered();
         }
     }
 
     const subscribeArbitrableProxyEvents = () => {
         if (arbitrableProxies) {
-            arbitrableProxies.forEach((proxy) => {
-                // No way to filter, listening all
-                const disputeCreated = proxy.filters.Dispute()
-                const evidenceSubmitted = proxy.filters.Evidence()
-                const ruled = proxy.filters.Ruling()
-                proxy.on(disputeCreated, loadNotifications)
-                proxy.on(evidenceSubmitted, loadNotifications)
-                proxy.on(ruled, loadNotifications)
+            const config = {
+                address: arbitrableProxies.map(it => it.address),
+                abi: arbitrableProxies[0].abi,
+                onLogs(logs: any) {
+                    console.log('ArbitratorProxy event:', logs)
+                    loadNotifications(); // Can't filter specific events, so use all
+                }
+            }
+            const uwatchDispute = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'Dispute'
             })
+            const uwatchEvidence = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'Evidence'
+            })
+            const uwatchRuling = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'Ruling'
+            })
+
             return () => {
-                arbitrableProxies.forEach((proxy) => {
-                    const disputeCreated = proxy.filters.Dispute()
-                    const evidenceSubmitted = proxy.filters.Evidence()
-                    const ruled = proxy.filters.Ruling()
-                    proxy.removeAllListeners(disputeCreated)
-                    proxy.removeAllListeners(evidenceSubmitted)
-                    proxy.removeAllListeners(ruled)
-                })
+                uwatchDispute();
+                uwatchEvidence();
+                uwatchRuling();
             }
         }
     }
 
     const subscribeArbitratorEvents = () => {
         // The most uneffective thing
-        if (arbitrators && arbitrableProxies) {
-            arbitrators.forEach((arbitrator, idx) => {
-                const proxy = arbitrableProxies[idx]
-                // No way to filter, listening all
-                const appealPossible = arbitrator.filters.AppealPossible()
-                const newPerod = arbitrator.filters.NewPeriod()
-                const appealDecision = arbitrator.filters.AppealDecision(null, proxy.address)
-
-                arbitrator.on(appealPossible, loadNotifications)
-                arbitrator.on(newPerod, loadNotifications)
-                arbitrator.on(appealDecision, loadNotifications)
+        if (arbitrableProxies && arbitrators) {
+            const config = {
+                address: arbitrators.map(it => it.address),
+                abi: arbitrators[0].abi,
+                onLogs(logs: Log[]) {
+                    console.log('Arbitrator event:', logs)
+                    loadNotifications(); // Can't filter specific events, so use all
+                }
+            }
+            const uwatchAppealPossible = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'AppealPossible'
             })
+            const uwatchNewPeriod = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'NewPeriod'
+            })
+            const uwatchAppealDecision = publicClient!.watchContractEvent({
+                ...config,
+                eventName: 'AppealDecision',
+                onLogs: (logs: Log[]) => {
+                    const arbitrableAddresses = arbitrableProxies.map(it => it.address.toLowerCase());
+                    const foundLog = logs.find(
+                        // Only events for known proxies
+                        (log: any) => log.args && arbitrableAddresses.includes(log.args._arbitrable.toLowerCase())
+                    );
+                    if (foundLog) {
+                        config.onLogs(logs);
+                    }
+                }
+            })
+
             return () => {
-                arbitrators.forEach((arbitrator, idx) => {
-                    const proxy = arbitrableProxies[idx]
-                    // No way to filter, listening all
-                    const appealPossible = arbitrator.filters.AppealPossible()
-                    const newPerod = arbitrator.filters.NewPeriod()
-                    const appealDecision = arbitrator.filters.AppealDecision(null, proxy.address)    
-                    arbitrator.removeAllListeners(appealPossible)
-                    arbitrator.removeAllListeners(newPerod)
-                    arbitrator.removeAllListeners(appealDecision)
-                })
+                uwatchAppealPossible();
+                uwatchNewPeriod();
+                uwatchAppealDecision();
             }
         }
     }
 
-    useEffect(subscribeNFTProtectEvents, [account, currentChain])
+    useEffect(subscribeNFTProtectEvents, [account, chain])
+    useEffect(() => {
+        clearNotifications()
+        loadNotifications()
+        loadArbitrableProxies().then(loadArbitrators)
+    }, [account, chain])
     useEffect(subscribeArbitrableProxyEvents, [arbitrableProxies])
-    useEffect(subscribeArbitratorEvents, [arbitrators, arbitrableProxies])
+    useEffect(subscribeArbitratorEvents, [arbitrators])
 
 
     return (<>
