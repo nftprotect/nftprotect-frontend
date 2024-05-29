@@ -41,19 +41,41 @@ export enum ReqStatus {
     Disputed
 }
 
+export enum NFTPTokenStandard {
+    ERC721,
+    ERC1155,
+    ERC20
+}
+
 const useNftProtect = (chainId: number) => {
 
     const publicClient = usePublicClient({chainId})
     const {data: walletClient} = useWalletClient({chainId})  
+    const address = useMemo(() => {
+        return supportedChains.find(it => it.id === chainId)?.nftpContractAddress as `0x${string}`
+    }, [chainId])
 
-    const contract = useMemo(() => {
-        const address = supportedChains.find(it => it.id === chainId)?.nftpContractAddress
-        return publicClient && address ? getContract({
-            address: address as `0x${string}`,
+    const getPublicContractInstance = (contractAddress: `0x${string}`) => {
+        if (!publicClient) {
+            throw new Error('Public client not configured')
+        }
+        return getContract({
+            address,
             abi: NFTProtectABI,
-            client: {wallet: walletClient, public: publicClient}
-        }) : null
-    }, [publicClient, walletClient])
+            client: publicClient
+        });
+    }
+
+    const getWalletContractInstance = (contractAddress: `0x${string}`) => {
+        if (!walletClient) {
+            throw new Error('Wallet client not configured')
+        }
+        return getContract({
+            address,
+            abi: NFTProtectABI,
+            client: walletClient
+        });
+    }
 
     /**
      * Fetches the request.
@@ -61,42 +83,31 @@ const useNftProtect = (chainId: number) => {
      * @returns Request data.
      */
     const getRequest = async (requestId: BigNumber|bigint|string): Promise<ActionRequest|null> => { // TODO: use bigint
-        if (!contract) {
-            throw new Error('Client not configured')
+        const contract = getPublicContractInstance(address)
+        const result = await contract.read.requests([requestId.toString()]) as Array<any>
+        const [
+            reqtype,
+            tokenId,
+            newowner,
+            timeout,
+            status,
+            arbitratorId,
+            localDisputeId,
+            externalDisputeId,
+            metaevidence
+        ] = result;
+        return {
+            id: BigNumber.from(requestId.toString()),
+            reqtype: reqtype as ReqType,
+            tokenId: BigNumber.from(tokenId.toString()),
+            newowner,
+            timeout: BigNumber.from(timeout.toString()),
+            status: status as ReqStatus,
+            arbitratorId: Number(arbitratorId),
+            localDisputeId: BigNumber.from(localDisputeId.toString()),
+            externalDisputeId: BigNumber.from(externalDisputeId.toString()),
+            metaevidence
         }
-        let result
-        try {
-            result = await contract.read.requests([requestId.toString()])
-        } catch (e: any) {
-            console.error(`Failed fetching request ${requestId.toString()}`, e)
-            return null
-        }
-        if (Array.isArray(result)) {
-            const [
-                reqtype,
-                tokenId,
-                newowner,
-                timeout,
-                status,
-                arbitratorId,
-                localDisputeId,
-                externalDisputeId,
-                metaevidence
-            ] = result;
-            return {
-                id: BigNumber.from(requestId.toString()),
-                reqtype: reqtype as ReqType,
-                tokenId: BigNumber.from(tokenId.toString()),
-                newowner,
-                timeout: BigNumber.from(timeout.toString()),
-                status: status as ReqStatus,
-                arbitratorId: Number(arbitratorId),
-                localDisputeId: BigNumber.from(localDisputeId.toString()),
-                externalDisputeId: BigNumber.from(externalDisputeId.toString()),
-                metaevidence
-            }
-        }
-        return null
     }
 
     /**
@@ -105,17 +116,10 @@ const useNftProtect = (chainId: number) => {
      * @returns Request data.
      */
     const getRequestByTokenId = async (tokenId: BigNumber|bigint|string): Promise<ActionRequest|null> => {
-        if (!contract) {
-            throw new Error('Client not configured')
-        }
+        const contract = getPublicContractInstance(address)
         let requestId
-        try {
-            requestId = await contract.read.tokenToRequest([tokenId.toString()])
-        } catch (e: any) {
-            console.error(`Failed fetching request ID for token ${tokenId.toString()}`, e)
-            return null
-        }
-        return requestId ? getRequest(requestId.toString()) : null
+        requestId = await contract.read.tokenToRequest([tokenId.toString()]) as bigint
+        return (requestId && requestId > BigInt(0)) ? getRequest(requestId.toString()) : null
     }
 
     /**
@@ -123,17 +127,10 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID of the pNFT.
      * @returns The owner address.
      */
-    const getOwnerAddress = async (tokenId: BigNumber|bigint|string): Promise<`0x${string}`|null> => {
-        if (!contract) {
-            throw new Error('Client not configured')
-        }
-        try {
-            const ownerAddress = await contract.read.ownerOf([tokenId.toString()])
-            return ownerAddress as `0x${string}`
-        } catch (e: any) {
-            console.error(`Failed fetching token ${tokenId.toString()}`, e)
-            return null
-        }
+    const getOwnerAddress = async (tokenId: BigNumber|bigint|string): Promise<`0x${string}`> => {
+        const contract = getPublicContractInstance(address)
+        const ownerAddress = await contract.read.ownerOf([tokenId.toString()])
+        return ownerAddress as `0x${string}`
     }
     
     /**
@@ -141,57 +138,64 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID of the pNFT.
      * @returns The original NFT data.
      */
-    const getOriginalNFTData = async (tokenId: BigNumber|bigint|string): Promise<OriginalNFTData|null> => {
-        if (!contract) {
-            throw new Error('Client not configured')
-        }
+    const getOriginalNFTData = async (tokenId: BigNumber|bigint|string): Promise<OriginalNFTData> => {
+        const contract = getPublicContractInstance(address)
         let result
-        try {
-            result = await contract.read.tokens([tokenId.toString()])
-        } catch (e: any) {
-            console.error(`Failed fetching data for token ${tokenId.toString()}`, e)
-            return null
+        result = await contract.read.tokens([tokenId.toString()]) as Array<any>
+        const [
+            standardId, 
+            contractAddress, 
+            tokenIdR, 
+            amount, 
+            owner, 
+            nonce
+        ] = result;
+        
+        const nftData: OriginalNFTData = {
+            tokenId: tokenId.toString(),
+            amount: Number(amount),
+            nonce: Number(nonce),
+            contractAddress,
+            ownerAddress: owner as string,
+            tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD
+        };
+        switch (standardId) {
+            case NFTPTokenStandard.ERC721:
+                nftData.tokenType = NftTokenType.ERC721;
+                break;
+            case NFTPTokenStandard.ERC1155:
+                nftData.tokenType = NftTokenType.ERC1155;
+                break;
+            default:
+                nftData.tokenType = NftTokenType.NO_SUPPORTED_NFT_STANDARD;
+                break;
         }
-        if (Array.isArray(result)) {
-            const [
-                standardId, 
-                contractAddress, 
-                tokenId, 
-                amount, 
-                owner, 
-                nonce
-            ] = result;
-            
-            const nftData: OriginalNFTData = {
-                tokenId: tokenId.toString(),
-                amount: Number(amount),
-                nonce: Number(nonce),
-                contractAddress,
-                ownerAddress: owner as string,
-                tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD
-            };
-            switch (standardId) {
-                case 0: // Assuming 0 is ERC721
-                    nftData.tokenType = NftTokenType.ERC721;
-                    break;
-                case 1: // Assuming 1 is ERC1155
-                    nftData.tokenType = NftTokenType.ERC1155;
-                    break;
-                default:
-                    nftData.tokenType = NftTokenType.NO_SUPPORTED_NFT_STANDARD;
-                    break;
-            }
 
-            return nftData;
-        }
-        return null;
+        return nftData;
     }
+
+    const protect = async (
+        tokenStandard: NFTPTokenStandard,
+        contractAddress: `0x${string}`,
+        tokenId: BigNumber|bigint|string,
+        amount: BigNumber|bigint|string|number,
+        account: string,
+        referrerAddress: `0x${string}`,
+        value: BigNumber|bigint|string|number
+    ) => {
+        const contract = getWalletContractInstance(address)
+        return await contract.write.protect(
+            [tokenStandard, contractAddress, BigInt(tokenId.toString()), BigInt(amount.toString()), account, referrerAddress],
+            {value: BigInt(value.toString())}
+        );
+    };
 
     return {
         getRequest,
         getRequestByTokenId,
         getOwnerAddress,
-        getOriginalNFTData
+        getOriginalNFTData,
+        protect
     }
 };
 

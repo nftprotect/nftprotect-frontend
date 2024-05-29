@@ -43,13 +43,11 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
 import { ReqStatus } from '../../../hooks/useNftProtect';
-import useNftProtect from '../../../hooks/useNftProtect';
 
 const ArbitrateOwnershipAdjustmentDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, library, baseTokenPrice, currentChain, defaultChain } = useAppContext()
-    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
+    const { nftProtectContract, account, baseTokenPrice, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -103,12 +101,6 @@ const ArbitrateOwnershipAdjustmentDialog = () => {
             setNextStep(StepMapping.waitingForTransaction);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // const action = async () => {
-                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                    //     setNft(nft)
-                    //     // TODO: probably we have to set NFT in parent component
-                    // }
-                    // action();
                     setNextStep(StepMapping.caseSent);
                     console.log("Transaction successful", tx.hash);
                 } else {

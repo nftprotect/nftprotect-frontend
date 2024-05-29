@@ -44,7 +44,7 @@ import useNftProtect from '../../../hooks/useNftProtect';
 const DoNotTransferOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, library, currentChain, defaultChain } = useAppContext()
+    const { nftProtectContract, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -78,7 +78,7 @@ const DoNotTransferOriginalNftDialog = () => {
     const finalTransactionSent = (nft: NFT) => {
         return (tx: any) => {
             setNextStep(StepMapping.waitForTransactionConfirmation);
-            library!.once(tx.hash, (receipt) => {
+            nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);

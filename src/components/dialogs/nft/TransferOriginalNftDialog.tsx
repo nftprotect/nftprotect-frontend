@@ -48,8 +48,7 @@ import useNftProtect from "../../../hooks/useNftProtect";
 const TransferOriginalNftDialog = () => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { account, library, nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
-    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
+    const { nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -86,16 +85,10 @@ const TransferOriginalNftDialog = () => {
     const finalTransactionSent = (nft: NFT, waitingStep: number, completeStep: number) => {
         return (tx: any) => {
             setNextStep(waitingStep);
-            library!.once(tx.hash, (receipt) => {
+            nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
-                    // const action = async () => {
-                    //     nft.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                    //     setNft(nft)
-                    //     // TODO: probably we have to set NFT in parent component
-                    // }
-                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }

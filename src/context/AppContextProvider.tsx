@@ -7,7 +7,6 @@ import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
-import { Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
 import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
 import { Client } from "viem";
@@ -22,7 +21,6 @@ export interface AppContextInterface {
     isCorrectChain: boolean,
     account: `0x${string}` | null | undefined,
     client: Client|undefined,
-    library: Web3Provider|undefined,
     defaultChain: any | undefined,
     currentChain: any | undefined,
     nftProtectContract: Contract,
@@ -42,8 +40,7 @@ interface AppState {
     userRegistryContract: Contract,
     arbRegistryContract: Contract,
     signatureVerifierContract: Contract,
-    client: Client|undefined,
-    library: Web3Provider|undefined
+    client: Client|undefined
 }
 
 export const AppContext = createContext<AppContextInterface|null>(null);
@@ -71,7 +68,6 @@ export function AppContextProvider({ children }:any) {
         account: undefined,
         currentChain: undefined,
         client: currentClient,
-        library: providedLibrary, // this and next props temporarily not null
         nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary),
         userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary),
         arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
@@ -113,7 +109,6 @@ export function AppContextProvider({ children }:any) {
             active,
             account,
             currentChain,
-            library,
             client: currentClient,
             nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
             userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
@@ -127,7 +122,7 @@ export function AppContextProvider({ children }:any) {
 
     }, [appState])
 
-    useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
+    useEffect(updateBaseTokenPrice, [appState.currentChain])
     useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
     // Handle chain switching
     useEffect(() => {
@@ -217,7 +212,6 @@ export function AppContextProvider({ children }:any) {
     return (
         <AppContext.Provider value={{
             ...appState,
-            library: appState.library,
             client: appState.client,
             isCorrectChain,
             defaultChain,

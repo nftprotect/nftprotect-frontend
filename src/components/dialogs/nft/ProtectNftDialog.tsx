@@ -31,31 +31,30 @@ import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
-import ERC721ABI from "../../../abi/ERC721ABI";
-import ERC1155ABI from "../../../abi/ERC1155ABI";
-
-enum NFTPTokenStandard
-{
-    ERC721,
-    ERC1155,
-    ERC20
-}
+import { usePublicClient } from "wagmi";
+import useERC721 from "../../../hooks/useERC721";
+import useERC1155 from "../../../hooks/useERC1155";
+import useNftProtect, { NFTPTokenStandard } from "../../../hooks/useNftProtect";
 
 const ProtectNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const {
         account,
-        library,
-        nftProtectContract, 
         referrerAddress, 
         fee, 
-        baseTokenPrice, 
+        baseTokenPrice,
+        currentChain,
+        defaultChain
     } = useAppContext()
     const { setDialog } = useCallableDialogContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const publicClient = usePublicClient()
+    const { approve, getApproved } = useERC721(currentChain?.id || defaultChain.id)
+    const { setApprovalForAll, isApprovedForAll } = useERC1155(currentChain?.id || defaultChain.id)
+    const { protect } = useNftProtect(currentChain?.id || defaultChain.id)
 
     enum StepMapping {
         start,
@@ -86,105 +85,94 @@ const ProtectNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (tokenContract: Contract) => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitingForFinal);
-            tokenContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.finalCompleted)
-                    console.log("Transaction successful", tx.hash);
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.waitingForFinal);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash })
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.finalCompleted)
+            console.log("Transaction successful", hash);
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
-    const secureNFT = (
-        tokenContract: Contract,
+    const secureNFT = async (
         checkApprovedMethodCall: Function,
         checkApproved: Function,
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
+        const wrapErrorMapping = {
+            'invalid referrer': handleUnknownError,
+            'ACTION_REJECTED': handleRejected,
+            default: handleUnknownError
+        }
         setNextStep(StepMapping.checkPermission);
         onOpen()
-        checkApprovedMethodCall()
-            .then((result: any) => {
-                const wrapErrorMapping = {
-                    'invalid referrer': handleUnknownError,
-                    'ACTION_REJECTED': handleRejected,
-                    default: handleUnknownError
+        // check if transfer already approved 
+        let checkApprovedResult
+        try {
+            checkApprovedResult = await checkApprovedMethodCall()
+        } catch (error) {
+            handleContractError(wrapErrorMapping)(error)
+        }
+        let hash
+        debugger;
+        if (checkApproved(checkApprovedResult)) {
+            setNextStep(StepMapping.requestWrap);
+            console.log('Token transfer already approved')
+            try {
+                hash = await wrapMethodCall()
+            } catch (error) {
+                handleContractError(wrapErrorMapping)(error)
+                return
+            }
+        } else {
+            setNextStep(StepMapping.requestConcrete)
+            console.log('Asking to approve token transfer')
+            try {
+                hash = await setApproveMethodCall()
+            } catch (error) {
+                handleContractError(wrapErrorMapping)(error)
+                return
+            }
+            setNextStep(StepMapping.waitingForAllow)
+            console.log('Waiting for TX', hash);
+            // Waiting for transaction to complete
+            const receipt = await publicClient!.waitForTransactionReceipt(hash)
+            if (receipt.status === 'success') {
+                // after mined fire wrap
+                setNextStep(StepMapping.requestWrap)
+                console.log("Transaction successful", hash);
+                try {
+                    hash = await wrapMethodCall()
+                } catch (error) {
+                    handleContractError(wrapErrorMapping)(error)
+                    return
                 }
-                // check if transfer already approved 
-                if (checkApproved(result)) {
-                    setNextStep(StepMapping.requestWrap);
-                    console.log('Token transfer already approved')
-                    wrapMethodCall()
-                        .then( finalTransactionSent(tokenContract) )
-                        .catch( 
-                            handleContractError(wrapErrorMapping)
-                        )
-                } else {
-                    setNextStep(StepMapping.requestConcrete)
-                    console.log('Asking to approve token transfer')
-                    setApproveMethodCall()
-                        .then((tx: any) => {
-                            setNextStep(StepMapping.waitingForAllow)
-                            console.log('Waiting for TX', tx.hash);
-                            // Waiting for transaction to complete
-                            tokenContract.provider.once(tx.hash, (receipt) => {
-                                if (receipt.status === 1) {
-                                    // after mined fire wrap
-                                    setNextStep(StepMapping.requestWrap)
-                                    console.log("Transaction successful", tx.hash);
-                                    wrapMethodCall()
-                                        .then( finalTransactionSent(tokenContract) )
-                                        .catch(
-                                            handleContractError(wrapErrorMapping)
-                                        )
-                                } else {
-                                    handleTransactionFailed(tx);
-                                }
-                            })
-                        })
-                        .catch(
-                            handleContractError({
-                                'ACTION_REJECTED': handleRejected,
-                                default: handleUnknownError
-                            })
-                        )
-                }
-            })
+            } else {
+                handleTransactionFailed(receipt);
+            }
+            finalTransactionSent(hash)
+        }
     }
 
     const startButtonOnClick = () => {
         try {
+            const contractAddress = nft ? nft.contract.address as `0x${string}` : undefined
             if (nft?.tokenType === NftTokenType.ERC721) {
-                const tokenContract = new Contract(
-                    nft.contract.address, 
-                    ERC721ABI, 
-                    library!.getSigner(account!)
-                )
                 secureNFT(
-                    tokenContract,
-                    () => tokenContract.getApproved(nft.tokenId),
-                    (result: string) => ( result.toLowerCase() === nftProtectContract.address.toLowerCase() ),
-                    () => tokenContract.approve(nftProtectContract.address, nft.tokenId),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, account, referrerAddress, {value: fee})
+                    () => getApproved(contractAddress!, nft.tokenId),
+                    (result: string) => ( result.toLowerCase() === currentChain.nftpContractAddress.toLowerCase() ),
+                    () => approve(contractAddress!, currentChain.nftpContractAddress, nft.tokenId),
+                    () => protect(NFTPTokenStandard.ERC721, contractAddress!, nft.tokenId, 0, account!, referrerAddress, fee || 0)
                 )
             } else if (nft?.tokenType === NftTokenType.ERC1155) {
-                const tokenContract = new Contract(
-                    nft.contract.address, 
-                    ERC1155ABI, 
-                    library!.getSigner(account!)
-                )
                 secureNFT(
-                    tokenContract,
-                    () => tokenContract.isApprovedForAll(account, nftProtectContract.address),
+                    () => isApprovedForAll(contractAddress!, account!, currentChain.nftpContractAddress),
                     (result: boolean) => result,
-                    () => tokenContract.setApprovalForAll(nftProtectContract.address, true),
-                    () => nftProtectContract.protect(NFTPTokenStandard.ERC1155, tokenContract.address, nft.tokenId, nft.amount, account, referrerAddress, {value: fee})
+                    () => setApprovalForAll(contractAddress!, currentChain.nftpContractAddress),
+                    () => protect(NFTPTokenStandard.ERC1155, contractAddress!, nft.tokenId, nft.amount!, account!, referrerAddress, fee || 0)
                 )
             } else {
                 console.log(`Unknown NFT contract type: ${nft?.tokenType}`)

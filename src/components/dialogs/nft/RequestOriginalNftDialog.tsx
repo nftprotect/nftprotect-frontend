@@ -87,12 +87,6 @@ const RequestOriginalNftDialog = () => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash)
-                    // const action = async () => {
-                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                    //     setNft(nft)
-                    //     // TODO: probably we have to set NFT in parent component
-                    // }
-                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }
