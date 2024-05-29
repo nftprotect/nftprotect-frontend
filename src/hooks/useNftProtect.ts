@@ -1,4 +1,4 @@
-import { useClient, useWalletClient } from 'wagmi';
+import { usePublicClient, useWalletClient } from 'wagmi';
 import NFTProtectABI from '../abi/NFTProtectABI';
 import { getContract } from 'viem';
 import { useMemo } from 'react';
@@ -43,18 +43,17 @@ export enum ReqStatus {
 
 const useNftProtect = (chainId: number) => {
 
-    const client  = useClient({chainId}) // useClient is recommended by wagmi docs but is always undefined
+    const publicClient = usePublicClient({chainId})
     const {data: walletClient} = useWalletClient({chainId})  
-    const currentClient = walletClient || client
 
     const contract = useMemo(() => {
         const address = supportedChains.find(it => it.id === chainId)?.nftpContractAddress
-        return currentClient && address ? getContract({
+        return publicClient && address ? getContract({
             address: address as `0x${string}`,
             abi: NFTProtectABI,
-            client: currentClient
+            client: {wallet: walletClient, public: publicClient}
         }) : null
-    }, [currentClient])
+    }, [publicClient, walletClient])
 
     /**
      * Fetches the request.
