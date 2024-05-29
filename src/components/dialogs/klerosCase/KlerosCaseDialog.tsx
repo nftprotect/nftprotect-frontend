@@ -14,7 +14,8 @@ import {
 import KlerosCaseContent from './step/KlerosCaseContent';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { KlerosCaseInitialData } from './step/KlerosCaseContent';
-import { MetaEvidenceType, ReqType } from '../../../hooks/useNftProtectGraph';
+import { MetaEvidenceType } from '../../../hooks/useNftProtectGraph';
+import { ReqType } from '../../../hooks/useNftProtect';
 
 const KlerosCaseDialog = () => {
 

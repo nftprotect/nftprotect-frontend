@@ -5,19 +5,7 @@ import { timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
 import { NftTokenType } from "alchemy-sdk";
 import NFT from "../classes/NFT";
-
-export enum ReqType {
-    OwnershipAdjustment,
-    OwnershipRestore,
-    Burn
-}
-
-export enum ReqStatus {
-    Initial,
-    Accepted,
-    Rejected,
-    Disputed
-}
+import { ReqStatus, ReqType } from "./useNftProtect";
 
 export enum AffiliateActionType {
     Register,

@@ -21,10 +21,10 @@ import { CallableDialogContextProvider } from '../context/CallableDialogContextP
 import { WagmiProvider, createConfig } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { useLinguiInit } from '../utils/lingui';
 import { GoogleAnalytics } from '@next/third-parties/google'
 import ccTheme from '../theme/ck_theme.json';
 import { Transport } from 'viem'
+import useLinguiInit from '../hooks/useLinguiInit'
 
 const chains = supportedChains.map(it => it.wagmiId)
 const transports = supportedChains.reduce((acc, it) => {

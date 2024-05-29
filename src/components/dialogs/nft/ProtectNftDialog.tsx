@@ -31,10 +31,8 @@ import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
-
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
+import ERC721ABI from "../../../abi/ERC721ABI";
+import ERC1155ABI from "../../../abi/ERC1155ABI";
 
 enum NFTPTokenStandard
 {
@@ -43,11 +41,12 @@ enum NFTPTokenStandard
     ERC20
 }
 
-const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const ProtectNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const {
-        account, 
+        account,
+        library,
         nftProtectContract, 
         referrerAddress, 
         fee, 
@@ -94,7 +93,6 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                 if (receipt.status === 1) {
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -163,7 +161,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
     const startButtonOnClick = () => {
         try {
             if (nft?.tokenType === NftTokenType.ERC721) {
-                const tokenContract = nft.getContract()
+                const tokenContract = new Contract(
+                    nft.contract.address, 
+                    ERC721ABI, 
+                    library!.getSigner(account!)
+                )
                 secureNFT(
                     tokenContract,
                     () => tokenContract.getApproved(nft.tokenId),
@@ -172,7 +174,11 @@ const ProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     () => nftProtectContract.protect(NFTPTokenStandard.ERC721, tokenContract.address, nft.tokenId, 0, account, referrerAddress, {value: fee})
                 )
             } else if (nft?.tokenType === NftTokenType.ERC1155) {
-                const tokenContract = nft.getContract()
+                const tokenContract = new Contract(
+                    nft.contract.address, 
+                    ERC1155ABI, 
+                    library!.getSigner(account!)
+                )
                 secureNFT(
                     tokenContract,
                     () => tokenContract.isApprovedForAll(account, nftProtectContract.address),

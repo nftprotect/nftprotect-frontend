@@ -47,15 +47,13 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
 import { MetaEvidenceType } from '../../../hooks/useNftProtectGraph';
+import useNftProtect from '../../../hooks/useNftProtect';
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const LostPNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const {account, nftProtectContract, baseTokenPrice, currentChain} = useAppContext()
+    const {account, nftProtectContract, baseTokenPrice, currentChain, defaultChain} = useAppContext()
+    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -111,11 +109,13 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
             setNextStep(StepMapping.waitForTransactionConfirmation);
             nftProtectContract.provider.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    nft && nft.loadPendingRequest()
-                    // after mined fire wrap
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    // }
+                    // action();
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }
@@ -509,6 +509,7 @@ const LostPNftDialog = ({ nftReFetch }: DialogInitialData) => {
                                             onClick={() => {
                                                 const dialog = getDialog('KlerosCaseDialog')
                                                 dialog.setCaseData({
+                                                    currentChain,
                                                     nft,
                                                     metaEvidenceId: lostReason,
                                                     claimantAddress: account,

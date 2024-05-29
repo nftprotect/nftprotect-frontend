@@ -39,18 +39,16 @@ import NFTImage from '../../nftView/NFTImage';
 import { copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon } from '@chakra-ui/icons'
 import AddressDisplay from '../../AddressDisplay';
+import useNftProtect from '../../../hooks/useNftProtect';
 
-interface ButtonInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
+const DoNotTransferOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract } = useAppContext()
+    const { nftProtectContract, library, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
+    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const [ nextStep, setNextStep ] = useState<number>(0)
 
     enum StepMapping {
@@ -79,15 +77,17 @@ const DoNotTransferOriginalNftDialog = ({ nftReFetch }: ButtonInitialData) => {
 
     const finalTransactionSent = (nft: NFT) => {
         return (tx: any) => {
-            const tokenContract = nft.getContract()
             setNextStep(StepMapping.waitForTransactionConfirmation);
-            tokenContract.provider.once(tx.hash, (receipt) => {
+            library!.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
-                    // after mined fire wrap
                     setNextStep(StepMapping.finalCompleted)
                     console.log("Transaction successful", tx.hash);
-                    nft.loadPendingRequest()
-                    nftReFetch();
+                    // const action = async () => {
+                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }

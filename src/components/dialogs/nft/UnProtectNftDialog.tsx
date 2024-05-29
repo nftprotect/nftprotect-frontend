@@ -30,11 +30,7 @@ import NFTImage from '../../nftView/NFTImage';
 import { getSigningData } from "../../../utils/signing";
 import { useSignTypedData } from 'wagmi'
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const UnProtectNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
     const { nftProtectContract, signatureVerifierContract ,account, currentChain } = useAppContext()
@@ -79,7 +75,6 @@ const UnProtectNftDialog = ({ nftReFetch }: DialogInitialData) => {
                     // after mined fire wrap
                     setNextStep(StepMapping.success)
                     console.log("Transaction successful", tx.hash);
-                    nftReFetch();
                 } else {
                     handleTransactionFailed(tx);
                 }

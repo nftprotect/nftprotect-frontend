@@ -27,11 +27,12 @@ import { copyTextToClipboard, generateRequestLink } from '../../../utils/helpers
 import { Info } from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro';
-import NFT, { ActionRequest } from '../../../classes/NFT';
+import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from "../../../context/CallableDialogContextProvider"
 import NFTImage from "../../nftView/NFTImage";
 import { useAppContext } from "../../../context/AppContextProvider";
 import AddressDisplay from "../../AddressDisplay";
+import { ActionRequest } from "../../../hooks/useNftProtect";
 
 const SuedToObtainTheOriginalNFTDialog = () => {
 

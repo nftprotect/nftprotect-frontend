@@ -46,7 +46,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
-    const { submitEvidence } = useArbitrableProxy()
+    const { submitEvidence } = useArbitrableProxy(currentChain?.id)
 
     // Naming of wizard step numbers
     enum StepMapping {

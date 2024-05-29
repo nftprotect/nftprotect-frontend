@@ -33,13 +33,13 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
 
     const [ data, setData ] = useState<EnforceRulingData>()
     const { nft, isRuled } = data || {}
-    const { nftProtectContract, currentChain } = useAppContext()
+    const { nftProtectContract, currentChain, defaultChain } = useAppContext()
     const isTestnet: boolean = currentChain?.wagmiId?.testnet;
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
-    const { executeRuling } = useArbitrableProxy()
+    const { executeRuling } = useArbitrableProxy(currentChain?.id || defaultChain.id)
 
     const disputeId = nft?.pendingRequest?.externalDisputeId
 

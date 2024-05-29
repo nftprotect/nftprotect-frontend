@@ -26,8 +26,7 @@ import {
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useAppContext } from '../../context/AppContextProvider'
-import { BigNumber } from '@ethersproject/bignumber'
-import { useDisconnect } from 'wagmi'
+import { useDisconnect, usePublicClient } from 'wagmi'
 import AddressDisplay from '../AddressDisplay'
 import { useRouter } from 'next/router'
 import useEnsName from '../../hooks/useEnsName'
@@ -35,7 +34,8 @@ import Avatar from './Avatar'
 
 const ShowConnectionState = () => {
 
-    const { account, active, library, baseTokenPrice } = useAppContext()
+    const { account, active, baseTokenPrice } = useAppContext()
+    const publicClient = usePublicClient()
     const { disconnect } = useDisconnect()
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
     const { hasCopied, onCopy } = useClipboard(account || '');
@@ -43,8 +43,8 @@ const ShowConnectionState = () => {
     const router = useRouter();
 
     useEffect(() => {
-        if(active && account){
-            library?.getBalance(account).then((result: BigNumber)=>{
+        if(active && account && publicClient){
+            publicClient.getBalance({address: account}).then((result: bigint) => {
                 setEthBalance(Number(formatEther(result)))
             })
         }

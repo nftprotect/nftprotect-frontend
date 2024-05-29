@@ -43,15 +43,13 @@ import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from "../../AddressDisplay";
 import { useSignTypedData } from "wagmi";
 import { getSigningData } from "../../../utils/signing";
+import useNftProtect from "../../../hooks/useNftProtect";
 
-interface DialogInitialData {
-    nftReFetch: Function, // function to update nft list
-}
-
-const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
+const TransferOriginalNftDialog = () => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { account, nftProtectContract, signatureVerifierContract, currentChain } = useAppContext()
+    const { account, library, nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
+    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -87,14 +85,17 @@ const TransferOriginalNftDialog = ({ nftReFetch }: DialogInitialData) => {
 
     const finalTransactionSent = (nft: NFT, waitingStep: number, completeStep: number) => {
         return (tx: any) => {
-            const tokenContract = nft.getContract()
             setNextStep(waitingStep);
-            tokenContract.provider.once(tx.hash, (receipt) => {
+            library!.once(tx.hash, (receipt) => {
                 if (receipt.status === 1) {
                     setNextStep(completeStep)
                     console.log("Transaction successful", tx.hash);
-                    nft.loadPendingRequest()
-                    nftReFetch();
+                    // const action = async () => {
+                    //     nft.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                    //     setNft(nft)
+                    //     // TODO: probably we have to set NFT in parent component
+                    // }
+                    // action();
                 } else {
                     handleTransactionFailed(tx);
                 }

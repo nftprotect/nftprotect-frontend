@@ -2,17 +2,15 @@ import { useRouter } from 'next/router'
 import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
-import { defaultChain, supportedChains, switchingManualURI } from '../../../config'
+import { supportedChains, switchingManualURI } from '../../../config'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAlchemy } from '../../../hooks/useAlchemy'
 import NFT from '../../../classes/NFT'
 import { useAppContext } from '../../../context/AppContextProvider'
 import KlerosCaseContent, { EvidenceUpload } from '../../../components/dialogs/klerosCase/step/KlerosCaseContent'
-import { NFTEvents } from '../../../classes/NFT'
 import { Trans, t } from '@lingui/macro'
-import { ReqType, ReqStatus, useNftProtectGraph, RequestGraphData, convertTokenGraphData } from '../../../hooks/useNftProtectGraph'
+import { useNftProtectGraph, RequestGraphData, convertTokenGraphData } from '../../../hooks/useNftProtectGraph'
 import { chakra, Box, Container, Grid, GridItem, Link, Text } from '@chakra-ui/react'
-import { ActionRequest } from '../../../classes/NFT'
 import { useArbitrableProxy, DisputePeriodData } from '../../../hooks/useArbitrableProxy'
 import { centralizeIpfsUrl } from '../../../utils/ipfs'
 import { timestampToDate } from '../../../utils/helpers'
@@ -24,29 +22,64 @@ import Head from 'next/head'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
-import LoginScreen from '../../../components/LoginScreen'
+import useNftProtect, { ActionRequest, ReqType } from '../../../hooks/useNftProtect'
+import { getBlock } from 'viem/actions'
+import { usePublicClient } from 'wagmi'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
-    const requestId = params?.requestId
     const translation = await loadTranslation(
         locale!,
         process.env.NODE_ENV === 'production'
     )
     return {
         props: {
-            translation,
-            requestId,
+            translation
         }
     }
 }
 
 const RequestPage: NextPage = () => {
-    const context = useAppContext()
-    const { account, active, library, currentChain, defaultChain, isCorrectChain, nftProtectContract } = context
-    const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy()
+    const { defaultChain, setChainId, isCorrectChain } = useAppContext()
     const { query } = useRouter()
-    const [ selectedChain, setSelectedChain ] = useState<any>()
-    const [ requestId, setRequestId ] = useState<BigNumber>()
+    // Processing query params
+    const { requestId, selectedChain, error: initialError } = useMemo(() => {
+        let error = undefined;
+        let requestId: BigNumber | undefined;
+        let chainId: number | undefined;
+    
+        try {
+            requestId = BigNumber.from(query.requestId?.toString());
+        } catch (ex) {
+            console.error('Incorrect requestId', ex);
+            error = t`Incorrect requestId`;
+        }
+    
+        if (query.chainId) {
+            try {
+                chainId = parseInt(query.chainId?.toString());
+            } catch (ex) {
+                console.error('Incorrect chainId', ex);
+                error = t`Incorrect chainId`;
+            }
+        } else {
+            console.error('No chainId provided');
+            error = t`No chainId provided`;
+        }
+    
+        const selectedChain = (chainId !== undefined) ?
+            supportedChains.find(it => it.id === chainId) :
+            undefined;
+        if (!selectedChain) {
+            console.error('Unsupported chain', chainId);
+            error = t`Unsupported chain`;
+        }
+    
+        return { requestId, selectedChain, error };
+    }, [query]);
+
+    const { listEvidences, getPeriod, isRuled: checkIsRuled } = useArbitrableProxy(selectedChain?.id || defaultChain.id)
+    const { getRequestByTokenId, getRequest: getRequestOnchain } = useNftProtect(selectedChain?.id || defaultChain.id)
+
     const [ requestData, setRequestData ] = useState<ActionRequest>()
     const [ requestGraphData, setRequestGraphData ] = useState<RequestGraphData>()
     const [ disputeData, setDisputeData ] = useState<DisputeGraphData>()
@@ -56,20 +89,21 @@ const RequestPage: NextPage = () => {
     const { getDispute } = useArbitratorGraph(selectedChain?.id || defaultChain.id, selectedChain?.defaultArbitrator || defaultChain.defaultArbitrator)
     const [ claimantAddress, setClaimaintAddress ] = useState<string>()
     const [ defendantAddress, setDefendantAddress ] = useState<string>()
-    const [ error, setError ] = useState<string>()
+    const [ error, setError ] = useState<string|undefined>(initialError)
     const { getToken, getRequest } = useNftProtectGraph(selectedChain?.id || defaultChain.id)
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
+    const publicClient  = usePublicClient({chainId: selectedChain?.id || defaultChain.id })
 
     // setup ipfs endpoint
     useEffect(() => {
         setBaseUrl(window.location.origin)
     }, [])
 
-    const getBlockDate = async (blockNumber: number) => {
-        const block = await library!.getBlock(blockNumber)
-        return timestampToDate(block.timestamp)
+    const getBlockDate = async (blockNumber: string|number) => {
+        const block = await getBlock(publicClient!, {blockNumber: BigInt(blockNumber)})
+        return timestampToDate(Number(block.timestamp))
     }
 
     // Loads all submitted evidence data
@@ -114,76 +148,43 @@ const RequestPage: NextPage = () => {
         }
     }
 
-    // Process request params
+    // Set selected chain globally
     useEffect(() => {
-        try {
-            const pRequestId = BigNumber.from(query.requestId?.toString())
-            setRequestId(pRequestId)
-        } catch (ex) {
-            console.error('Incorrect requestId', ex)
-            setError(t`Incorrect requestId`)
-        }
-        let chainId: number = -1
-        if (query.chainId) {
-            try {
-                chainId = parseInt(query.chainId?.toString())
-            } catch (ex) {
-                console.error('Incorrect chainId', ex)
-                setError(t`Incorrect chainId`)
-            }
-        } else {
-            console.error('No chainId provided')
-        }
-        if (chainId > -1) {
-            const selectedChain = supportedChains.find(it => it.id === chainId)
-            if (selectedChain) {
-                setSelectedChain(selectedChain)
-                context.setChainId(chainId)
-            } else {
-                console.error('Unsupported chain', chainId)
-                setError(t`Unsupported chain`)
-            }
-            
-        } else {
-            console.error('Unsupported chain', chainId)
-            setError(t`Unsupported chain`,)
-        }
-        console.log('INITIAL', chainId, requestId)
-    }, [query])
+        selectedChain && setChainId(selectedChain.id)
+    }, [selectedChain])
 
     const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
         const alchemyNft = await nftApi.getNftMetadata(
-            selectedChain.nftpContractAddress,
+            selectedChain!.nftpContractAddress,
             tokenId
         )
         return alchemyNft ?
-            new NFT(alchemyNft, context, params) :
+            new NFT(alchemyNft, params) :
             undefined
     }
 
     // Load Request and NFT
     useEffect(() => {
         const fetchData = async () => {
-            if (currentChain && requestId && selectedChain && isCorrectChain) {
+            if ( requestId && selectedChain ) {
                 let currentNFT: NFT|undefined
                 // Fetch request data from The Graph
                 const graphRequest: RequestGraphData|null = await getRequest(requestId)
-                
-                const contractRequest: ActionRequest = await nftProtectContract.requests(requestId.toString())
-                setRequestData(contractRequest)
-
-                // If there's a dispute, load it
-                if (contractRequest.externalDisputeId) {
-                    getDispute(contractRequest.externalDisputeId).then((disputeData) => {
-                        setDisputeData(disputeData)
-                    })
-                }
+                const contractRequest: ActionRequest|null = await getRequestOnchain(requestId)
 
                 if (!graphRequest && !contractRequest) {
                     setError(t`Incorrect requestId`)
                 } else if (!graphRequest || !contractRequest) {
                     setError(t`Error loading request`)
                 } else {
+                    setRequestData(contractRequest)
+
+                    // If there's a dispute, load it
+                    if (contractRequest.externalDisputeId) {
+                        getDispute(contractRequest.externalDisputeId).then((disputeData) => {
+                            setDisputeData(disputeData)
+                        })
+                    }
                     setRequestGraphData(graphRequest)
                     const nftData = await getToken(graphRequest.tokenId)
                     if (!nftData) {
@@ -215,21 +216,21 @@ const RequestPage: NextPage = () => {
             }
         }
         fetchData()
-    }, [requestId, currentChain, selectedChain, isCorrectChain])
+    }, [requestId, selectedChain])
 
     // Load evidences
     useEffect(() => {
-        if (currentChain && selectedChain && isCorrectChain) {
+        if (selectedChain) {
             loadEvidences()
         }
-    }, [requestData, requestGraphData, currentChain, selectedChain, isCorrectChain])
+    }, [requestData, requestGraphData, selectedChain])
 
     // Load period
     useEffect(() => {
-        if (currentChain && selectedChain && isCorrectChain) {
+        if ( selectedChain ) {
             loadPeriod()
         }
-    }, [requestData, currentChain, selectedChain, isCorrectChain])
+    }, [requestData, selectedChain])
 
     useEffect(() => {
         if (period?.period === Period.Execution) {
@@ -255,7 +256,7 @@ const RequestPage: NextPage = () => {
         }
     }, [nft])
 
-    const allRequiredLoaded = requestData && nft && claimantAddress && defendantAddress
+    const allRequiredLoaded = selectedChain && requestData && nft && claimantAddress && defendantAddress
 
     return (<>
         { selectedChain && <Head>
@@ -320,6 +321,7 @@ const RequestPage: NextPage = () => {
                         </Box>
                         <Box mx={{base: "1rem", md: "2rem"}}>
                             <KlerosCaseContent
+                                selectedChain={selectedChain}
                                 metaEvidenceId={requestData.metaevidence}
                                 nft={nft}
                                 claimantAddress={claimantAddress}
@@ -337,8 +339,12 @@ const RequestPage: NextPage = () => {
                     {/* TODO: Evidences not reloading */}
                     <AddEvidencesDialog onSubmitted={loadEvidences} />
                     <EnforceRulingDialog onSubmitted={async () => {
-                        const request = await nft?.loadPendingRequest()
-                        request && setRequestData(request)
+                        const action = async () => {
+                            nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                            setNft(nft)
+                            setRequestData(nft!.pendingRequest)
+                        }
+                        action();
                     }} />
                 </chakra.main>
             </GridItem>

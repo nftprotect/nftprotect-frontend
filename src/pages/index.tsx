@@ -26,7 +26,6 @@ import { useEffect, useState } from "react";
 import { loadTranslation } from '../utils/lingui';
 import NotificationsLoader from "../components/notifications/NotificationsLoader";
 import Head from "next/head";
-import ConnectButton from "../components/ConnectButton";
 import LoginScreen from "../components/LoginScreen";
 import { appUrl } from "../config";
 
@@ -44,7 +43,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 const Home: NextPage = () => {
-    const { active, baseTokenPrice, currentChain } = useAppContext();
+    const { active, account, baseTokenPrice, currentChain } = useAppContext();
     const { notificationsCount } = useNotifications();
     const { setBaseUrl } = useIPFSContext();
     const [ blackBoxClosed, setBlackBoxClosed ] = useState<Boolean>(false)
@@ -194,7 +193,7 @@ const Home: NextPage = () => {
                                 {innerPart}
                                 <NFTView />
                                 {/* Load all notifications */}
-                                { currentChain && <NotificationsLoader /> }
+                                { currentChain && account && active && <NotificationsLoader chain={currentChain} account={account}/> }
                             </>
                         )}
                     </chakra.main>

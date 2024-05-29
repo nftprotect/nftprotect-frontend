@@ -7,10 +7,10 @@ import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
-import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
-import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient } from "wagmi";
-import { Client, PublicClient, WalletClient } from "viem";
+import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
+import { Client } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite } from "../utils/referral";
@@ -61,9 +61,9 @@ export function AppContextProvider({ children }:any) {
         isDisconnected,
         chain
     } = useAccount()
-    const client  = useClient(chainId ?{chainId} : undefined )
-    const {data: connectorClient} = useConnectorClient()
-    const currentClient = connectorClient || client
+    const {data: walletClient} = useWalletClient({ chainId })
+    const publicClient = usePublicClient({ chainId })
+    const currentClient = walletClient || publicClient
     const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
 
     const [appState, setAppState] = useState<AppState>({
@@ -110,7 +110,7 @@ export function AppContextProvider({ children }:any) {
         }
         const signer =  account && library?.getSigner(account)
         setAppState({
-            active: active && isCorrectChain,
+            active,
             account,
             currentChain,
             library,
