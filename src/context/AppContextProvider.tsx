@@ -7,10 +7,10 @@ import NFTProtectABI from "../abi/NFTProtectABI";
 import UserRegistryABI from "../abi/UserRegistryABI";
 import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
 import { Contract } from '@ethersproject/contracts';
-import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
-import { useAccount, useWalletClient, usePublicClient, useClient, useSwitchChain, useConnectorClient } from "wagmi";
-import { Client, PublicClient, WalletClient } from "viem";
+import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
+import { Client } from "viem";
 import { clientToProvider } from '../utils/ethers';
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite } from "../utils/referral";

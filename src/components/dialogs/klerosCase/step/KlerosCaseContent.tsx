@@ -38,7 +38,7 @@ import { useCallableDialogContext } from '../../../../context/CallableDialogCont
 import AddressDisplay from '../../../AddressDisplay';
 import KlerosCaseSteps from './KlerosCaseSteps';
 import { ReqStatus, ReqType } from '../../../../hooks/useNftProtect';
-import { useClient, useWalletClient } from "wagmi";
+import { usePublicClient, useWalletClient } from "wagmi";
 import { getBlock } from 'viem/actions'
 
 
@@ -151,9 +151,7 @@ const KlerosCaseContent = ({
     // Holds TX hash for acquiring pNFT by current owner
     const [ sentToProtocolTx, setSentToProtocolTx ] = useState<string|null|undefined>()
     const { active, isCorrectChain } = useAppContext()
-    const client  = useClient({chainId: selectedChain.id}) // useClient is recommended by wagmi docs but is always undefined
-    const {data: walletClient} = useWalletClient({chainId: selectedChain.id})
-    const currentClient = walletClient || client
+    const publicClient  = usePublicClient({chainId: selectedChain.id})
     const { getDialog } = useCallableDialogContext()
     const [ sortDirection, setSortDirection ] = useState<'asc'|'desc'>('asc')
     const pageData = metaEvidenceDescriptions.find((item) => item.id === metaEvidenceId )?.page || metaEvidenceDescriptions[0].page
@@ -161,7 +159,7 @@ const KlerosCaseContent = ({
     const claimantIsPNftOwner = () => nft.originalData?.ownerAddress ? (claimantAddress === nft.originalData?.ownerAddress) : undefined
 
     const getBlockDate = async (blockNumber: string) => {
-        const block = await getBlock(currentClient!, {blockNumber: BigInt(blockNumber)})
+        const block = await getBlock(publicClient!, {blockNumber: BigInt(blockNumber)})
         return timestampToDate(Number(block.timestamp))
     }
 

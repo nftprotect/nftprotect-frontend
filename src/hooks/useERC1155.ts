@@ -1,22 +1,20 @@
-import { useClient, useWalletClient } from 'wagmi';
+import { usePublicClient } from 'wagmi';
 import { getContract } from 'viem';
 import { BigNumber } from '@ethersproject/bignumber';
 import ERC1155ABI from '../abi/ERC1155ABI';
 
 const useERC1155 = (chainId: number) => {
-    const client = useClient({ chainId });
-    const { data: walletClient } = useWalletClient({ chainId });
-    const currentClient = walletClient || client;
+    const client = usePublicClient({ chainId });
 
     const getBalance = async (contractAddress: `0x${string}`, tokenId: BigNumber|bigint|string, userAddress: `0x${string}`): Promise<BigNumber | null> => {
-        if (!currentClient) {
+        if (!client) {
             throw new Error('Client not configured');
         }
 
         const contract = getContract({
             address: contractAddress as `0x${string}`,
             abi: ERC1155ABI,
-            client: currentClient
+            client
         });
 
         try {

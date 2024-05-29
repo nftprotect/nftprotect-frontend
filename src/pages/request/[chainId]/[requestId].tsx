@@ -24,7 +24,7 @@ import NavBar from '../../../components/navBar/NavBar'
 import Footer from '../../../components/footer/Footer'
 import useNftProtect, { ActionRequest, ReqType } from '../../../hooks/useNftProtect'
 import { getBlock } from 'viem/actions'
-import { useClient, useWalletClient } from 'wagmi'
+import { usePublicClient } from 'wagmi'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, locale } ) => {
     const translation = await loadTranslation(
@@ -94,9 +94,7 @@ const RequestPage: NextPage = () => {
     const [ period, setPeriod ] = useState<DisputePeriodData>()
     const { setBaseUrl } = useIPFSContext()
     const [ isRuled, setIsRuled ] = useState<boolean>(false)
-    const client  = useClient({chainId: selectedChain?.id || defaultChain.id }) // useClient is recommended by wagmi docs but is always undefined
-    const {data: walletClient} = useWalletClient({chainId: selectedChain?.id || defaultChain.id})
-    const currentClient = walletClient || client
+    const publicClient  = usePublicClient({chainId: selectedChain?.id || defaultChain.id })
 
     // setup ipfs endpoint
     useEffect(() => {
@@ -104,7 +102,7 @@ const RequestPage: NextPage = () => {
     }, [])
 
     const getBlockDate = async (blockNumber: string|number) => {
-        const block = await getBlock(currentClient!, {blockNumber: BigInt(blockNumber)})
+        const block = await getBlock(publicClient!, {blockNumber: BigInt(blockNumber)})
         return timestampToDate(Number(block.timestamp))
     }
 
