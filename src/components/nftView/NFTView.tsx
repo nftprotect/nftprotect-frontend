@@ -24,24 +24,21 @@ import RequestOriginalNftDialog from '../dialogs/nft/RequestOriginalNftDialog';
 import ArbitrateOwnershipAdjustmentDialog from '../dialogs/nft/ArbitrateOwnershipAdjustmentDialog';
 import { TokenGraphData, convertTokenGraphData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 import useERC1155 from '../../hooks/useERC1155';
+import NFTProtectABI from '../../abi/NFTProtectABI';
+import { usePublicClient } from 'wagmi';
+import { Log } from 'viem';
+import { nftMarketplaces } from '../../config';
 
 const NFTView = () => {
     const { nft: nftApi } = useAlchemy()
-    const appContext = useAppContext()
-    const { currentChain, account, active, nftProtectContract, defaultChain } = appContext
+    const { currentChain, account, active, defaultChain } = useAppContext()
     const { getBalance } = useERC1155(currentChain?.id || defaultChain.id)
-    const { listTokensTransfered, listTokensOwned } = useNftProtectGraph(currentChain?.id);
+    const { listTokensTransfered, listTokensOwned } = useNftProtectGraph(currentChain?.id || defaultChain.id);
+    const publicClient = usePublicClient({chainId: currentChain?.id || defaultChain.id})
 
     const marketplaces = currentChain?.wagmiId?.testnet ?
-        {
-            opensea: "https://testnets.opensea.io/",
-            rarible: "https://testnet.rarible.com/",
-            blur: "https://blur.io/"
-        } : {
-            opensea: "https://opensea.io/",
-            rarible: "https://rarible.com/",
-            blur: "https://blur.io/"
-        }
+        nftMarketplaces.testnet :
+        nftMarketplaces.mainnet
 
     const renderNFT = (nft: NFT) => {
         console.log('NFT: ', nft.title, nft)
@@ -53,22 +50,34 @@ const NFTView = () => {
     }
 
     const subscribeNftTransfers = () => {
-        const nftEventReceived = () => {
-            fetchAllNfts()
-        }
-        let fromMe:any 
-        let toMe:any
-        if (account && active) {
-            fromMe = nftProtectContract.filters.Transfer(account, null)
-            toMe = nftProtectContract.filters.Transfer(null, account)
-            nftProtectContract.on(fromMe, nftEventReceived)
-            nftProtectContract.on(toMe, nftEventReceived)
-        }
+        const config = {
+            address: currentChain.nftpContractAddress,
+            abi: NFTProtectABI,
+            onLogs(logs: any) {
+                console.log('NFT Protect event:', logs);
+                fetchAllNfts();
+            }
+        };
+    
+        const uwatchTransfer = publicClient!.watchContractEvent({
+            ...config,
+            eventName: 'Transfer',
+            onLogs: (logs: Log[]) => {
+                const foundLog = logs.find(
+                    (log: any) => log.args && account &&
+                        ((log.args.to.toLowerCase() === account.toLowerCase()) ||
+                        (log.args.from.toLowerCase() === account.toLowerCase()))
+                );
+                if (foundLog) {
+                    config.onLogs(logs);
+                }
+            }
+        });
+    
         return () => {
-            toMe && nftProtectContract.removeAllListeners(toMe)
-            fromMe && nftProtectContract.removeAllListeners(fromMe)
-        }
-    }
+            uwatchTransfer();
+        };
+    };
 
     // Stores original NFTs (not protected) owned by account
     const [myOwnNfts, setMyOwnNfts] = useState<NFT[]>()
@@ -87,7 +96,7 @@ const NFTView = () => {
                 const nftObjects = ownedNfts
                     // Remove all the pNFTs
                     .filter((item: NFTInterface) => {
-                        return item.contract.address.toLowerCase() !== nftProtectContract.address.toLowerCase()
+                        return item.contract.address.toLowerCase() !== currentChain.nftpContractAddress.toLowerCase()
                     })
                     .map((item: NFTInterface) => {
                         return new NFT(item, {ownerAddress: account})
