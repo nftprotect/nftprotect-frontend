@@ -1,4 +1,3 @@
-import { Contract } from "@ethersproject/contracts";
 import { useEffect, useState } from 'react';
 import {
     Button,
@@ -24,7 +23,7 @@ import { ArrowForwardIcon} from '@chakra-ui/icons'
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans, t } from '@lingui/macro';
 import { formatEther } from "@ethersproject/units";
 import NFT from '../../../classes/NFT';
@@ -35,6 +34,7 @@ import { usePublicClient } from "wagmi";
 import useERC721 from "../../../hooks/useERC721";
 import useERC1155 from "../../../hooks/useERC1155";
 import useNftProtect, { NFTPTokenStandard } from "../../../hooks/useNftProtect";
+import { ContractFunctionExecutionError, ContractFunctionRevertedError, decodeErrorResult } from 'viem';
 
 const ProtectNftDialog = () => {
 
@@ -107,6 +107,32 @@ const ProtectNftDialog = () => {
             'ACTION_REJECTED': handleRejected,
             default: handleUnknownError
         }
+        const errorHandligs = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected,
+            // ContractFunctionRevertedError: (err: ContractFunctionRevertedError ) => {
+            //     console.log(err);
+            //     Object.entries(err).forEach(([key, value]) => {
+            //         console.log(`${key}: ${value}`);
+            //     });
+            //     console.log(err.signature && decodeErrorResult({...err, data: err.signature}))
+
+            //     debugger;
+            // },
+            // ContractFunctionExecutionError: (err: ContractFunctionExecutionError ) => {
+            //     console.log(err);
+            //     Object.entries(err).forEach(([key, value]) => {
+            //         console.log(`${key}: ${value}`);
+            //     });
+            //     const cause = err.cause ?
+            //         err.cause as ContractFunctionRevertedError :
+            //         null
+            //     const decodedError = cause?.signature && decodeErrorResult({...err, data: cause.signature})
+            //     console.log(decodedError)
+            //     debugger;
+            // },
+        }
+
         setNextStep(StepMapping.checkPermission);
         onOpen()
         // check if transfer already approved 
@@ -114,7 +140,8 @@ const ProtectNftDialog = () => {
         try {
             checkApprovedResult = await checkApprovedMethodCall()
         } catch (error) {
-            handleContractError(wrapErrorMapping)(error)
+            handleTransactionError(error, errorHandligs)
+            //handleContractError(wrapErrorMapping)(error)
         }
         let hash
         debugger;
@@ -124,7 +151,8 @@ const ProtectNftDialog = () => {
             try {
                 hash = await wrapMethodCall()
             } catch (error) {
-                handleContractError(wrapErrorMapping)(error)
+                handleTransactionError(error, errorHandligs)
+                //handleContractError(wrapErrorMapping)(error)
                 return
             }
         } else {
@@ -133,12 +161,14 @@ const ProtectNftDialog = () => {
             try {
                 hash = await setApproveMethodCall()
             } catch (error) {
-                handleContractError(wrapErrorMapping)(error)
+                handleTransactionError(error, errorHandligs)
+                //handleContractError(wrapErrorMapping)(error)
                 return
             }
             setNextStep(StepMapping.waitingForAllow)
             console.log('Waiting for TX', hash);
             // Waiting for transaction to complete
+            debugger;
             const receipt = await publicClient!.waitForTransactionReceipt(hash)
             if (receipt.status === 'success') {
                 // after mined fire wrap
@@ -147,7 +177,8 @@ const ProtectNftDialog = () => {
                 try {
                     hash = await wrapMethodCall()
                 } catch (error) {
-                    handleContractError(wrapErrorMapping)(error)
+                    handleTransactionError(error, errorHandligs)
+                    //handleContractError(wrapErrorMapping)(error)
                     return
                 }
             } else {
@@ -159,6 +190,7 @@ const ProtectNftDialog = () => {
 
     const startButtonOnClick = () => {
         try {
+            debugger;
             const contractAddress = nft ? nft.contract.address as `0x${string}` : undefined
             if (nft?.tokenType === NftTokenType.ERC721) {
                 secureNFT(
@@ -178,6 +210,8 @@ const ProtectNftDialog = () => {
                 console.log(`Unknown NFT contract type: ${nft?.tokenType}`)
             }
         } catch (err: any) {
+            console.log(err);
+            debugger;
             handleUnknownError(err)
         }
     }

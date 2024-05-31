@@ -16,6 +16,88 @@ const UserRegistryABI = [
 	  "type": "constructor"
 	},
 	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "account",
+		  "type": "address"
+		}
+	  ],
+	  "name": "AddressInsufficientBalance",
+	  "type": "error"
+	},
+	{
+	  "inputs": [],
+	  "name": "FailedInnerCall",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "amount",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "IncorrectPaymentAmount",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "uint8",
+		  "name": "discount",
+		  "type": "uint8"
+		}
+	  ],
+	  "name": "InvalidDiscount",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "referrer",
+		  "type": "address"
+		}
+	  ],
+	  "name": "InvalidReferrer",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "sender",
+		  "type": "address"
+		}
+	  ],
+	  "name": "NotNFTProtect",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "owner",
+		  "type": "address"
+		}
+	  ],
+	  "name": "OwnableInvalidOwner",
+	  "type": "error"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "account",
+		  "type": "address"
+		}
+	  ],
+	  "name": "OwnableUnauthorizedAccount",
+	  "type": "error"
+	},
+	{
 	  "anonymous": false,
 	  "inputs": [
 		{
@@ -457,6 +539,6 @@ const UserRegistryABI = [
 	  "stateMutability": "nonpayable",
 	  "type": "function"
 	}
-] 
-
+]
+  
 export default UserRegistryABI
