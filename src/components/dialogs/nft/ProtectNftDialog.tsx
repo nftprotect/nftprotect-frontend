@@ -34,7 +34,6 @@ import { usePublicClient } from "wagmi";
 import useERC721 from "../../../hooks/useERC721";
 import useERC1155 from "../../../hooks/useERC1155";
 import useNftProtect, { NFTPTokenStandard } from "../../../hooks/useNftProtect";
-import { ContractFunctionExecutionError, ContractFunctionRevertedError, decodeErrorResult } from 'viem';
 
 const ProtectNftDialog = () => {
 
@@ -105,28 +104,7 @@ const ProtectNftDialog = () => {
     ) => {
         const errorHandligs = {
             default: handleUnknownError,
-            UserRejectedRequestError: handleRejected,
-            // ContractFunctionRevertedError: (err: ContractFunctionRevertedError ) => {
-            //     console.log(err);
-            //     Object.entries(err).forEach(([key, value]) => {
-            //         console.log(`${key}: ${value}`);
-            //     });
-            //     console.log(err.signature && decodeErrorResult({...err, data: err.signature}))
-
-            //     debugger;
-            // },
-            // ContractFunctionExecutionError: (err: ContractFunctionExecutionError ) => {
-            //     console.log(err);
-            //     Object.entries(err).forEach(([key, value]) => {
-            //         console.log(`${key}: ${value}`);
-            //     });
-            //     const cause = err.cause ?
-            //         err.cause as ContractFunctionRevertedError :
-            //         null
-            //     const decodedError = cause?.signature && decodeErrorResult({...err, data: cause.signature})
-            //     console.log(decodedError)
-            //     debugger;
-            // },
+            UserRejectedRequestError: handleRejected
         }
         setNextStep(StepMapping.checkPermission);
         onOpen()
