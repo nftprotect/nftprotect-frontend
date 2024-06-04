@@ -1,4 +1,3 @@
-import { Contract } from "@ethersproject/contracts";
 import React, { useEffect, useState } from 'react';
 import {
     chakra,
