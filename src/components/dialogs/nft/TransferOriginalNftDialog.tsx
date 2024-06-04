@@ -28,7 +28,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { AlertCircle, Info } from '@web3uikit/icons'
 import { CopyIcon } from '@chakra-ui/icons';
 import { copyTextToClipboard } from '../../../utils/helpers';
@@ -41,20 +41,22 @@ import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from "../../AddressDisplay";
-import { useSignTypedData } from "wagmi";
+import { usePublicClient, useSignTypedData } from "wagmi";
 import { getSigningData } from "../../../utils/signing";
 import useNftProtect from "../../../hooks/useNftProtect";
 
 const TransferOriginalNftDialog = () => {
     
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, signatureVerifierContract, currentChain, defaultChain } = useAppContext()
+    const { currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ startWithDialog, setStartWithDialog ] = useState<boolean>(true)
     const [ nextStep, setNextStep ] = useState<number>(0)
     const { signTypedDataAsync } = useSignTypedData()
+    const { answerOwnershipAdjustment, adjustOwnership } = useNftProtect(currentChain?.id || defaultChain.id)
+    const publicClient = usePublicClient()    
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -82,47 +84,45 @@ const TransferOriginalNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (nft: NFT, waitingStep: number, completeStep: number) => {
-        return (tx: any) => {
-            setNextStep(waitingStep);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(completeStep)
-                    console.log("Transaction successful", tx.hash);
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.pendingTransaction);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.transferredSuccessfully);
+            console.log("Transaction successful", hash);
+            //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+            //     setNft(nft)
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
     const startTransaction = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
+        console.log('Choosed to transfer an original NFT.', nft, nft!.pendingRequest);
+        setNextStep(StepMapping.confirmTransaction);
         try {
-            if (nft) {
-                console.log('Choosed to transfer an original NFT.', nft, nft.pendingRequest)
-                setNextStep(StepMapping.confirmTransaction)
-                const signingData = getSigningData(currentChain.id, nft.tokenId, nft.ownerAddress!, nft.originalData!.nonce!.toString(), signatureVerifierContract.address );
-                const signature = await signTypedDataAsync(signingData as any);
-                console.log('SIGNATURE', signingData, signature);
-                const performAnswer = () => {
-                    if (nft.pendingRequest) {
-                        return nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, true, signature)
-                    } else {
-                        return nftProtectContract.adjustOwnership(nft.tokenId, signature)
-                    }
+            const signingData = getSigningData(currentChain.id, nft!.tokenId, nft!.ownerAddress!, nft!.originalData!.nonce!.toString(), currentChain.signatureVerifierContractAddress );
+            const signature = await signTypedDataAsync(signingData as any);
+            console.log('SIGNATURE', signingData, signature);
+            const performAnswer = async () => {
+                if (nft!.pendingRequest) {
+                    return await answerOwnershipAdjustment(nft!.pendingRequest.id, true, signature);
+                } else {
+                    return await adjustOwnership(nft!.tokenId, signature);
                 }
-                performAnswer().then( finalTransactionSent(
-                    nft,
-                    StepMapping.pendingTransaction,
-                    StepMapping.transferredSuccessfully
-                ))
-                .catch(
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    })
-                )
             }
+            let hash;
+            try {
+                hash = await performAnswer();
+            } catch (error) {
+                handleTransactionError(error, errorHandlings);
+                return;
+            }
+            finalTransactionSent(hash);
         } catch (err: any) {
             handleUnknownError(err)
         }

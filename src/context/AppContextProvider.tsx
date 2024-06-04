@@ -3,29 +3,18 @@ import {
     supportedChains,
     defaultChain as defaultChainId
 } from "../config";
-import NFTProtectABI from "../abi/NFTProtectABI";
-import UserRegistryABI from "../abi/UserRegistryABI";
-import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
-import { Contract } from '@ethersproject/contracts';
 import { getTokenPrice } from "../utils/coimarketcap";
-import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
-import { Client } from "viem";
-import { clientToProvider } from '../utils/ethers';
+import { useAccount, useSwitchChain } from "wagmi";
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite } from "../utils/referral";
-import SignatureVerifierABI from "../abi/SignatureVerifierABI";
 import { useNftProtectGraph } from "../hooks/useNftProtectGraph";
 
 export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
     account: `0x${string}` | null | undefined,
-    client: Client|undefined,
     defaultChain: any | undefined,
     currentChain: any | undefined,
-    nftProtectContract: Contract,
-    arbRegistryContract: Contract,
-    signatureVerifierContract: Contract,
     referrerAddress: `0x${string}`,
     baseTokenPrice: number | undefined,
     fee: number | undefined,
@@ -36,11 +25,6 @@ interface AppState {
     active: boolean,
     account: `0x${string}` | null | undefined,
     currentChain: any | undefined,
-    nftProtectContract: Contract,
-    userRegistryContract: Contract,
-    arbRegistryContract: Contract,
-    signatureVerifierContract: Contract,
-    client: Client|undefined
 }
 
 export const AppContext = createContext<AppContextInterface|null>(null);
@@ -58,20 +42,11 @@ export function AppContextProvider({ children }:any) {
         isDisconnected,
         chain
     } = useAccount()
-    const {data: walletClient} = useWalletClient({ chainId })
-    const publicClient = usePublicClient({ chainId })
-    const currentClient = walletClient || publicClient
-    const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
 
-    const [appState, setAppState] = useState<AppState>({
+    const [appState, setAppState] = useState<AppState>({ // TODO: make it easier with correct initial values
         active: false,
         account: undefined,
         currentChain: undefined,
-        client: currentClient,
-        nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary),
-        userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary),
-        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
-        signatureVerifierContract: new Contract(nullAddress, SignatureVerifierABI, providedLibrary)
     })
 
     const isCorrectChain = appState.currentChain ? ((chainId === undefined) || (chainId === appState.currentChain.id)) : false
@@ -95,7 +70,6 @@ export function AppContextProvider({ children }:any) {
 
     const stateSetter = () => {
         let currentChain: any
-        const library = providedLibrary
         const currentChainId = chain?.id
         if (currentChainId) {
             currentChain = supportedChains.find( it => it.id === currentChainId )
@@ -104,16 +78,10 @@ export function AppContextProvider({ children }:any) {
                 return
             }
         }
-        const signer =  account && library?.getSigner(account)
         setAppState({
             active,
             account,
             currentChain,
-            client: currentClient,
-            nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
-            userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
-            arbRegistryContract: new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, signer || library),
-            signatureVerifierContract: new Contract(currentChain?.signatureVerifierContractAddress || nullAddress, SignatureVerifierABI, signer || library)
         })
     }
 
@@ -123,7 +91,7 @@ export function AppContextProvider({ children }:any) {
     }, [appState])
 
     useEffect(updateBaseTokenPrice, [appState.currentChain])
-    useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
+    useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected])
     // Handle chain switching
     useEffect(() => {
         if (chain && chainId && chain.id !== chainId) {
@@ -212,7 +180,6 @@ export function AppContextProvider({ children }:any) {
     return (
         <AppContext.Provider value={{
             ...appState,
-            client: appState.client,
             isCorrectChain,
             defaultChain,
             referrerAddress,

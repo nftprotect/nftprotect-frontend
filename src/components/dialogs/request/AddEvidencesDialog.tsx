@@ -22,7 +22,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro'
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
@@ -31,11 +31,12 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
+import { usePublicClient } from 'wagmi';
 
 const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, currentChain } = useAppContext()
+    const { currentChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -47,6 +48,7 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const { submitEvidence } = useArbitrableProxy(currentChain?.id)
+    const publicClient = usePublicClient()    
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -75,18 +77,15 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = () => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitingForTransaction);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.evidenceSubmitted)
-                    console.log("Transaction successful", tx.hash);
-                    onSubmitted && onSubmitted()
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.waitingForTransaction);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.evidenceSubmitted);
+            console.log("Transaction successful", hash);
+            onSubmitted && onSubmitted()
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
@@ -101,20 +100,23 @@ const AddEvidencesDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =>
         setEvidence(upload)
     }
 
-    const submitPreparedEvidence = () => {
+    const submitPreparedEvidence = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
         setNextStep(StepMapping.confirmTransaction)
         if (evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nft?.pendingRequest && 
-                    submitEvidence(currentChain.defaultArbitrator, nft.pendingRequest.localDisputeId, evidenceJSONUrl)
-                    .then( finalTransactionSent() )
-                    .catch( 
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        }) 
-                    )
+                let hash;
+                try {
+                    hash = await submitEvidence(currentChain.defaultArbitrator, nft!.pendingRequest!.localDisputeId, evidenceJSONUrl)
+                } catch (error) {
+                    handleTransactionError(error, errorHandlings);
+                    return;
+                }
+                finalTransactionSent(hash);
             } catch (err: any) {
                 handleUnknownError(err)
             }

@@ -18,11 +18,13 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro'
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import { useArbitrableProxy } from '../../../hooks/useArbitrableProxy';
+import { usePublicClient } from 'wagmi';
+import useNftProtect from '../../../hooks/useNftProtect';
 
 interface EnforceRulingData {
     nft: NFT,
@@ -33,13 +35,15 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
 
     const [ data, setData ] = useState<EnforceRulingData>()
     const { nft, isRuled } = data || {}
-    const { nftProtectContract, currentChain, defaultChain } = useAppContext()
+    const { currentChain, defaultChain } = useAppContext()
     const isTestnet: boolean = currentChain?.wagmiId?.testnet;
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const { executeRuling } = useArbitrableProxy(currentChain?.id || defaultChain.id)
+    const { fetchRuling } = useNftProtect(currentChain?.id || defaultChain.id)
+    const publicClient = usePublicClient()    
 
     const disputeId = nft?.pendingRequest?.externalDisputeId
 
@@ -68,57 +72,51 @@ const EnforceRulingDialog = ({onSubmitted}: {onSubmitted: Function|undefined}) =
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = async (tx: any) => {
+    const finalTransactionSent = async (hash: `0x${string}`) => {
         setNextStep(StepMapping.waitingForTransaction);
-        try {
-            const receipt = await nftProtectContract.provider.waitForTransaction(tx.hash);
-            if (receipt.status === 1) {
-                setNextStep(StepMapping.rulingEnforced);
-                console.log("Transaction successful", tx.hash);
-                onSubmitted && onSubmitted();
-                return true;
-            } else {
-                handleTransactionFailed(tx);
-            }
-        } catch (error) {
-            handleUnknownError(error);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.rulingEnforced);
+            console.log("Transaction successful", hash);
+            onSubmitted && onSubmitted()
+        } else {
+            handleTransactionFailed(receipt);
         }
-        return false;
     }
 
-    const arbitratorTransactionSent = async (tx: any) => {
+    const arbitratorTransactionSent = async (hash: `0x${string}`) => {
         setNextStep(StepMapping.waitingForTransaction);
         try {
-            const receipt = await nftProtectContract.provider.waitForTransaction(tx.hash);
-            if (receipt.status === 1) {
+            const receipt = await publicClient!.waitForTransactionReceipt({ hash, confirmations: 2 }); // Wait 2 confirmations to ensure next tx will not fail
+            if (receipt.status === 'success') {
                 setNextStep(StepMapping.confirmTransaction);
-                console.log("Transaction successful", tx.hash);
-                return true;
+                console.log("Transaction successful", hash);
             } else {
-                handleTransactionFailed(tx);
+                handleTransactionFailed(receipt);
             }
         } catch (error) {
             handleUnknownError(error);
         }
-        return false;
     }
 
     const enforceRuling = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
         try {
             if (nft?.pendingRequest) {
                 // In testnet we have to call executeRuling on arbitrator contract
                 if (isTestnet && !isRuled && disputeId) {
-                    const tx = await executeRuling(currentChain.defaultArbitrator, disputeId);
-                    await arbitratorTransactionSent(tx);
+                    const hash = await executeRuling(currentChain.defaultArbitrator, disputeId);
+                    await arbitratorTransactionSent(hash);
                 }
-                const tx = await nftProtectContract.fetchRuling(nft.pendingRequest.id);
-                finalTransactionSent(tx);
+                const hash = await fetchRuling(nft.pendingRequest.id);
+                finalTransactionSent(hash);
             }
-        } catch (error: any) {
-            handleContractError({
-                'ACTION_REJECTED': handleRejected,
-                default: handleUnknownError
-            })(error);
+        } catch (error) {
+            handleTransactionError(error, errorHandlings);
+            return;
         }
     }
 

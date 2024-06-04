@@ -22,7 +22,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError, handleTransactionError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
@@ -81,7 +81,7 @@ const UnProtectNftDialog = () => {
     }
 
     const startButtonOnClick = async () => {
-        const errorHandligs = {
+        const errorHandlings = {
             default: handleUnknownError,
             UserRejectedRequestError: handleRejected,
             // ContractFunctionRevertedError: (err: ContractFunctionRevertedError ) => {
@@ -89,7 +89,7 @@ const UnProtectNftDialog = () => {
             //     Object.entries(err).forEach(([key, value]) => {
             //         console.log('DCD2', `${key}: ${value}`);
             //     });
-            //     console.log('DCD3', err.signature && decodeErrorResult({abi: err.abi, data: err.signature}))
+            //     console.log('DCD3', err.signature && decodeErrorResult({abi: NFTProtectABI, data: err.signature}))
 
             //     debugger;
             // },
@@ -101,7 +101,7 @@ const UnProtectNftDialog = () => {
             //     const cause = err.cause ?
             //         err.cause as ContractFunctionRevertedError :
             //         null
-            //     const decodedError = cause?.signature && decodeErrorResult({abi: err.abi, data: cause.signature})
+            //     const decodedError = cause?.signature && decodeErrorResult({abi: NFTProtectABI, data: cause.signature})
             //     console.log('DCD6', decodedError)
             //     debugger;
             // },
@@ -117,7 +117,7 @@ const UnProtectNftDialog = () => {
                 try {
                     hash = await burn(nft.tokenId, account!, signature); // TODO: allow to choose where to extract
                 } catch (error) {
-                    handleTransactionError(error, errorHandligs);
+                    handleTransactionError(error, errorHandlings);
                     return;
                 }
                 finalTransactionSent(hash);

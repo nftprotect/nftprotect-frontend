@@ -28,7 +28,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { CopyIcon } from '@chakra-ui/icons'
 import { copyTextToClipboard } from '../../../utils/helpers';
 import { Trans } from '@lingui/macro'
@@ -36,18 +36,19 @@ import { KlerosCourts } from '../../../utils/kleros';
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
 import { t } from '@lingui/macro';
-import { parseEther, formatEther } from '@ethersproject/units';
 import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from '../../AddressDisplay';
-import { ReqStatus } from '../../../hooks/useNftProtect';
+import useNftProtect, { ReqStatus } from '../../../hooks/useNftProtect';
+import { usePublicClient } from 'wagmi';
+import { parseEther } from 'viem';
 
 const ArbitrateOwnershipAdjustmentDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, account, baseTokenPrice, currentChain, defaultChain } = useAppContext()
+    const { account, baseTokenPrice, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -59,6 +60,8 @@ const ArbitrateOwnershipAdjustmentDialog = () => {
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
     const [ requestTimedOut, setRequestTimedOut ] = useState(false)
+    const { askOwnershipAdjustmentArbitrate } = useNftProtect(currentChain?.id || defaultChain.id)
+    const publicClient = usePublicClient()    
     const subcourtID = KlerosCourts.General
     const numberOfVotes = 3
     const DISPUTE_PRICE = '0.03'
@@ -96,17 +99,14 @@ const ArbitrateOwnershipAdjustmentDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = async () => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitingForTransaction);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.caseSent);
-                    console.log("Transaction successful", tx.hash);
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.waitingForTransaction);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash })
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.caseSent);
+            console.log("Transaction successful", hash);
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
@@ -122,27 +122,28 @@ const ArbitrateOwnershipAdjustmentDialog = () => {
         setNextStep(StepMapping.evidenceReview)
     }
 
-    const openDispute = () => {
-        setNextStep(StepMapping.confirmTransaction)
+    const openDispute = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
+        setNextStep(StepMapping.confirmTransaction);
         if (evidence) {
-            const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
+            const evidenceJSONUrl = evidence.getRelativeIPFSUrl();
             try {
-                nftProtectContract.askOwnershipAdjustmentArbitrate(nft?.pendingRequest?.id, evidenceJSONUrl, {
-                    value: parseEther(DISPUTE_PRICE),
-                //    gasLimit: 1000000
-                })
-                    .then( finalTransactionSent() )
-                    .catch( 
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        }) 
-                    )
+                let hash;
+                try {
+                    hash = await askOwnershipAdjustmentArbitrate(nft!.pendingRequest!.id, evidenceJSONUrl, parseEther(DISPUTE_PRICE));
+                } catch (error) {
+                    handleTransactionError(error, errorHandlings);
+                    return;
+                }
+                finalTransactionSent(hash!);
             } catch (err: any) {
-                handleUnknownError(err)
+                handleUnknownError(err);
             }
         } else {
-            console.error('Missing evidence.json file')
+            console.error('Missing evidence.json file');
         }
     }
 

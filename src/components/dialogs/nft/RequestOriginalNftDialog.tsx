@@ -30,7 +30,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import {AlertCircle, Info} from '@web3uikit/icons'
 import { CopyIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { copyTextToClipboard } from '../../../utils/helpers';
@@ -42,17 +42,19 @@ import { useCallableDialogContext } from '../../../context/CallableDialogContext
 import NFTImage from '../../nftView/NFTImage';
 import AddressDisplay from "../../AddressDisplay";
 import useNftProtect from "../../../hooks/useNftProtect";
+import { usePublicClient } from "wagmi";
 
 const RequestOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { account, nftProtectContract, referrerAddress, currentChain, defaultChain } = useAppContext()
-    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
+    const { account, referrerAddress, currentChain, defaultChain } = useAppContext()
+    const { getRequestByTokenId, askOwnershipAdjustment } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { setDialog } = useCallableDialogContext()
     const [ nextStep, setNextStep ] = useState<number>(0)
     const originalOwner = nft?.originalData?.ownerAddress
+    const publicClient = usePublicClient()    
 
     // Naming of wizard step numbers
     enum StepMapping {
@@ -80,31 +82,36 @@ const RequestOriginalNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (tokenContract: Contract) => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitingForFinal);
-            tokenContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.finalCompleted)
-                    console.log("Transaction successful", tx.hash)
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.waitingForFinal);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.finalCompleted);
+            console.log("Transaction successful", hash);
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
-    const startButtonOnClick = () => {
+    const startButtonOnClick = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
+        setNextStep(StepMapping.confirmTransaction);
         try {
-            setNextStep(StepMapping.confirmTransaction)
-            nft && nftProtectContract.askOwnershipAdjustment(nft.tokenId, account, currentChain.defaultArbitrator) // account used temporary: will be changed to a new wallet address
-                .then( finalTransactionSent(nftProtectContract) )
-                .catch( 
-                    handleContractError({
-                        'ACTION_REJECTED': handleRejected,
-                        default: handleUnknownError
-                    }) 
-                )
+            let hash;
+            try {
+                hash = await askOwnershipAdjustment(
+                    nft!.tokenId, 
+                    account!, // TODO: Let user to specify a new address
+                    currentChain.defaultArbitrator
+                );
+            } catch (error) {
+                handleTransactionError(error, errorHandlings);
+                return;
+            }
+            finalTransactionSent(hash!);
         } catch (err: any) {
             handleUnknownError(err)
         }

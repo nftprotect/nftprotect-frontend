@@ -210,7 +210,7 @@ const KlerosCaseContent = ({
                 nft.originalData.ownerAddress,
                 GetTransfersForOwnerTransferType.TO,
                 {
-                    contractAddresses: [selectedChain.nftProtectContract],
+                    contractAddresses: [selectedChain.nftpContractAddress],
                     tokenType: NftTokenType.ERC721
                 }
             ).then((result) => {

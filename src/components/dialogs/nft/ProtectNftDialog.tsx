@@ -102,7 +102,7 @@ const ProtectNftDialog = () => {
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
-        const errorHandligs = {
+        const errorHandlings = {
             default: handleUnknownError,
             UserRejectedRequestError: handleRejected
         }
@@ -113,7 +113,7 @@ const ProtectNftDialog = () => {
         try {
             checkApprovedResult = await checkApprovedMethodCall()
         } catch (error) {
-            handleTransactionError(error, errorHandligs)
+            handleTransactionError(error, errorHandlings)
         }
         let hash
         if (checkApproved(checkApprovedResult)) {
@@ -122,7 +122,7 @@ const ProtectNftDialog = () => {
             try {
                 hash = await wrapMethodCall()
             } catch (error) {
-                handleTransactionError(error, errorHandligs)
+                handleTransactionError(error, errorHandlings)
                 return
             }
         } else {
@@ -131,7 +131,7 @@ const ProtectNftDialog = () => {
             try {
                 hash = await setApproveMethodCall()
             } catch (error) {
-                handleTransactionError(error, errorHandligs)
+                handleTransactionError(error, errorHandlings)
                 return
             }
             setNextStep(StepMapping.waitingForAllow)
@@ -146,7 +146,7 @@ const ProtectNftDialog = () => {
                 try {
                     hash = await wrapMethodCall()
                 } catch (error) {
-                    handleTransactionError(error, errorHandligs)
+                    handleTransactionError(error, errorHandlings)
                     return
                 }
             } else {

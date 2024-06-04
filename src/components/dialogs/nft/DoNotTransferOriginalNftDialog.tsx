@@ -33,23 +33,25 @@ import CancelledStepContent from '../../steps/CancelledStepContent'
 import TimeoutStepContent from '../../steps/TimeoutStepContent'
 import ErrorStepContent from '../../steps/ErrorStepContent'
 import NFT from "../../../classes/NFT";
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import { copyTextToClipboard } from '../../../utils/helpers';
 import { CopyIcon } from '@chakra-ui/icons'
 import AddressDisplay from '../../AddressDisplay';
 import useNftProtect from '../../../hooks/useNftProtect';
+import { usePublicClient } from 'wagmi';
 
 const DoNotTransferOriginalNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, currentChain, defaultChain } = useAppContext()
+    const { currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
-    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
+    const { getRequestByTokenId, answerOwnershipAdjustment } = useNftProtect(currentChain?.id || defaultChain.id)
     const [ nextStep, setNextStep ] = useState<number>(0)
+    const publicClient = usePublicClient()    
 
     enum StepMapping {
         confirmTransaction,
@@ -75,41 +77,38 @@ const DoNotTransferOriginalNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (nft: NFT) => {
-        return (tx: any) => {
+    const finalTransactionSent = async (hash: `0x${string}`) => {
             setNextStep(StepMapping.waitForTransactionConfirmation);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    setNextStep(StepMapping.finalCompleted)
-                    console.log("Transaction successful", tx.hash);
-                    // const action = async () => {
-                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                    //     setNft(nft)
-                    //     // TODO: probably we have to set NFT in parent component
-                    // }
-                    // action();
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
-        }
+            const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+            if (receipt.status === 'success') {
+                setNextStep(StepMapping.finalCompleted);
+                console.log("Transaction successful", hash);
+                //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+                //     setNft(nft)
+            } else {
+                handleTransactionFailed(receipt);
+            }
     }
 
-    const startTransaction = () => {
+    const startTransaction = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
         try {
             if (nft && nft.pendingRequest) {
-                console.log('ANSWER ADJUSTMENT REJECT')
-                nftProtectContract.answerOwnershipAdjustment(nft.pendingRequest.id, false, '')
-                    .then( finalTransactionSent(nft) )
-                    .catch(
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        })
-                    )
+                console.log('ANSWER ADJUSTMENT REJECT');
+                let hash;
+                try {
+                    hash = await answerOwnershipAdjustment(nft.pendingRequest.id, false, '');
+                } catch (error) {
+                    handleTransactionError(error, errorHandlings);
+                    return;
+                }
+                finalTransactionSent(hash!);
             }
-        } catch (err: any) {
-            handleUnknownError(err)
+        } catch (error) {
+            handleUnknownError(error);
         }
     }
 

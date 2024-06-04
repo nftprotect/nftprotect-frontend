@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { BigNumber } from '@ethersproject/bignumber'
 import { supportedChains } from '../config';
 import { NftTokenType } from 'alchemy-sdk';
+import { MetaEvidenceType } from './useNftProtectGraph';
 
 export interface ActionRequest {
     id: BigNumber,
@@ -183,7 +184,6 @@ const useNftProtect = (chainId: number) => {
         referrerAddress: `0x${string}`,
         value: BigNumber|bigint|string|number
     ) => {
-        //  debugger;
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.protect(
             [tokenStandard, contractAddress, BigInt(tokenId.toString()), BigInt(amount.toString()), user, referrerAddress],
@@ -207,13 +207,97 @@ const useNftProtect = (chainId: number) => {
         return await walletClient!.writeContract(request)
     };
 
+    const askOwnershipAdjustmentArbitrate = async (
+        requestId: BigNumber|bigint|string,
+        evidenceJSONUrl: string,
+        value: BigNumber|bigint|string|number
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.askOwnershipAdjustmentArbitrate(
+            [requestId, evidenceJSONUrl],
+            {
+                value: BigInt(value.toString())
+            },
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const answerOwnershipAdjustment = async (
+        requestId: BigNumber|bigint|string,
+        answer: boolean,
+        signature: string
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.answerOwnershipAdjustment(
+            [requestId, answer, signature],
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const askOwnershipRestoreArbitrate = async (
+        tokenId: BigNumber|bigint|string,
+        destination: `0x${string}`,
+        arbitratorId: BigNumber|bigint|string|number,
+        metaEvidenceType: MetaEvidenceType,
+        evidenceJSONUrl: string,
+        value: BigNumber|bigint|string|number
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.askOwnershipRestoreArbitrate(
+            [BigInt(tokenId.toString()), destination, BigInt(arbitratorId.toString()), metaEvidenceType, evidenceJSONUrl],
+            {
+                value: BigInt(value.toString())
+            },
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const askOwnershipAdjustment = async (
+        tokenId: BigNumber|bigint|string,
+        destination: `0x${string}`,
+        arbitratorId: BigNumber|bigint|string|number
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.askOwnershipAdjustment(
+            [tokenId, destination, arbitratorId],
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const adjustOwnership = async (
+        tokenId: BigNumber|bigint|string,
+        signature: string
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.adjustOwnership(
+            [tokenId, signature],
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const fetchRuling = async (
+        requestId: BigNumber|bigint|string
+    ) => {
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.fetchRuling(
+            [requestId],
+        )
+        return await walletClient!.writeContract(request)
+    };
+
     return {
         getRequest,
         getRequestByTokenId,
         getOwnerAddress,
         getOriginalNFTData,
         protect,
-        burn
+        burn,
+        askOwnershipAdjustmentArbitrate,
+        answerOwnershipAdjustment,
+        askOwnershipRestoreArbitrate,
+        askOwnershipAdjustment,
+        adjustOwnership,
+        fetchRuling
     }
 };
 
