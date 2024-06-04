@@ -52,6 +52,7 @@ const ProtectNftDialog = () => {
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
     const publicClient = usePublicClient()
+
     const { approve, getApproved } = useERC721(currentChain?.id || defaultChain.id)
     const { setApprovalForAll, isApprovedForAll } = useERC1155(currentChain?.id || defaultChain.id)
     const { protect } = useNftProtect(currentChain?.id || defaultChain.id)
@@ -102,11 +103,6 @@ const ProtectNftDialog = () => {
         setApproveMethodCall: Function,
         wrapMethodCall: Function
     ) => {
-        const wrapErrorMapping = {
-            'invalid referrer': handleUnknownError,
-            'ACTION_REJECTED': handleRejected,
-            default: handleUnknownError
-        }
         const errorHandligs = {
             default: handleUnknownError,
             UserRejectedRequestError: handleRejected,
@@ -132,7 +128,6 @@ const ProtectNftDialog = () => {
             //     debugger;
             // },
         }
-
         setNextStep(StepMapping.checkPermission);
         onOpen()
         // check if transfer already approved 
@@ -141,10 +136,8 @@ const ProtectNftDialog = () => {
             checkApprovedResult = await checkApprovedMethodCall()
         } catch (error) {
             handleTransactionError(error, errorHandligs)
-            //handleContractError(wrapErrorMapping)(error)
         }
         let hash
-        debugger;
         if (checkApproved(checkApprovedResult)) {
             setNextStep(StepMapping.requestWrap);
             console.log('Token transfer already approved')
@@ -152,7 +145,6 @@ const ProtectNftDialog = () => {
                 hash = await wrapMethodCall()
             } catch (error) {
                 handleTransactionError(error, errorHandligs)
-                //handleContractError(wrapErrorMapping)(error)
                 return
             }
         } else {
@@ -162,14 +154,13 @@ const ProtectNftDialog = () => {
                 hash = await setApproveMethodCall()
             } catch (error) {
                 handleTransactionError(error, errorHandligs)
-                //handleContractError(wrapErrorMapping)(error)
                 return
             }
             setNextStep(StepMapping.waitingForAllow)
             console.log('Waiting for TX', hash);
             // Waiting for transaction to complete
-            debugger;
-            const receipt = await publicClient!.waitForTransactionReceipt(hash)
+            // 2 confirmations to fix priblem when connector client doesn't know transaction is complete
+            const receipt = await publicClient!.waitForTransactionReceipt({ hash, confirmations: 2 })
             if (receipt.status === 'success') {
                 // after mined fire wrap
                 setNextStep(StepMapping.requestWrap)
@@ -178,19 +169,17 @@ const ProtectNftDialog = () => {
                     hash = await wrapMethodCall()
                 } catch (error) {
                     handleTransactionError(error, errorHandligs)
-                    //handleContractError(wrapErrorMapping)(error)
                     return
                 }
             } else {
                 handleTransactionFailed(receipt);
             }
-            finalTransactionSent(hash)
         }
+        finalTransactionSent(hash);
     }
 
     const startButtonOnClick = () => {
         try {
-            debugger;
             const contractAddress = nft ? nft.contract.address as `0x${string}` : undefined
             if (nft?.tokenType === NftTokenType.ERC721) {
                 secureNFT(
@@ -211,7 +200,6 @@ const ProtectNftDialog = () => {
             }
         } catch (err: any) {
             console.log(err);
-            debugger;
             handleUnknownError(err)
         }
     }

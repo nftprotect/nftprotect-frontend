@@ -183,10 +183,13 @@ const useNftProtect = (chainId: number) => {
         referrerAddress: `0x${string}`,
         value: BigNumber|bigint|string|number
     ) => {
+        //  debugger;
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.protect(
             [tokenStandard, contractAddress, BigInt(tokenId.toString()), BigInt(amount.toString()), account, referrerAddress],
-            {value: BigInt(value.toString())}
+            {
+                value: BigInt(value.toString())
+            },
         )
         return await walletClient!.writeContract(request)
     };

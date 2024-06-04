@@ -48,7 +48,8 @@ const useERC721 = (chainId: number) => {
      */
     const setApprovalForAll = async (contractAddress: `0x${string}`, spender: `0x${string}`): Promise<`0x${string}`> => {
         const contract = getWalletContractInstance(contractAddress);
-        return await contract.write.setApprovalForAll([spender, true]);
+        const {request} = await contract.simulate.setApprovalForAll([spender, true]);
+        return await walletClient!.writeContract(request);
     }
 
     /**
@@ -73,7 +74,8 @@ const useERC721 = (chainId: number) => {
      */
     const approve = async (contractAddress: `0x${string}`, spender: `0x${string}`, tokenId: bigint|BigNumber|string): Promise<`0x${string}`> => {
         const contract = getWalletContractInstance(contractAddress);
-        return await contract.write.approve([spender, BigInt(tokenId.toString())]);
+        const {request} = await contract.simulate.approve([spender, BigInt(tokenId.toString())]);
+        return await walletClient!.writeContract(request);
     }
 
     /**
