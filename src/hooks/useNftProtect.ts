@@ -179,17 +179,30 @@ const useNftProtect = (chainId: number) => {
         contractAddress: `0x${string}`,
         tokenId: BigNumber|bigint|string,
         amount: BigNumber|bigint|string|number,
-        account: string,
+        user: `0x${string}`,
         referrerAddress: `0x${string}`,
         value: BigNumber|bigint|string|number
     ) => {
         //  debugger;
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.protect(
-            [tokenStandard, contractAddress, BigInt(tokenId.toString()), BigInt(amount.toString()), account, referrerAddress],
+            [tokenStandard, contractAddress, BigInt(tokenId.toString()), BigInt(amount.toString()), user, referrerAddress],
             {
                 value: BigInt(value.toString())
             },
+        )
+        return await walletClient!.writeContract(request)
+    };
+
+    const burn = async (
+        tokenId: BigNumber|bigint|string,
+        destination: `0x${string}`,
+        signature: string
+    ) => {
+        //  debugger;
+        const contract = getWalletContractInstance(address)
+        const {request} = await contract.simulate.burn(
+            [tokenId, destination, signature]
         )
         return await walletClient!.writeContract(request)
     };
@@ -199,7 +212,8 @@ const useNftProtect = (chainId: number) => {
         getRequestByTokenId,
         getOwnerAddress,
         getOriginalNFTData,
-        protect
+        protect,
+        burn
     }
 };
 
