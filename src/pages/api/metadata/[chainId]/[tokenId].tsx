@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supportedChains } from '../../../../config'
-import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
+import { Alchemy, Network, NftTokenType } from 'alchemy-sdk'
 
 import { graphManager } from '../../../../utils/thegraph'
 import { nftProtectGraphs } from '../../../../config'
@@ -152,14 +152,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
 
             const additionalData = {
                 //protectionStandard: "EIPXXX",
-                name: `🛡️Protected • ${originalMetadata.title}`,
+                name: `🛡️Protected • ${originalMetadata.name}`,
                 description: `${protectionText}${originalMetadata.description ? ` • ${originalMetadata.description}` : ''}`,
                 originalToken: {
                     standard: NFTPTokenStandard[nftGraphData.assetType].toString(),
                     address: nftGraphData.contractAddress,
                     id: nftGraphData.tokenId,
                     amount: nftGraphData.amount.toString(),
-                    uri: originalMetadata.tokenUri?.raw,
+                    uri: originalMetadata.raw.tokenUri,
                     owner: nftGraphData.originalOwnerAddress
                 }
             }
@@ -178,7 +178,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     value: "https://dev.nftprotect.app"
                 }
             }
-            const data:any = { ...originalMetadata.rawMetadata, ...additionalData }
+            const data:any = { ...originalMetadata.raw, ...additionalData }
             data.properties = data.properties ? {...data.properties, ...additionalProperties} : additionalProperties
 
             tokenCache[cacheId] = {

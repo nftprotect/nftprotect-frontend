@@ -1,11 +1,9 @@
 import { 
     Nft as NFTInterface, 
-    NftContract,
     NftTokenType,
-    TokenUri,
-    Media,
-    SpamInfo,
-    NftMetadata
+    NftContractForNft,
+    NftRawMetadata,
+    NftImage
 } from "alchemy-sdk";
 import { centralizeIpfsUrl } from '../utils/ipfs';
 import { ActionRequest, OriginalNFTData } from "../hooks/useNftProtect";
@@ -17,26 +15,24 @@ export default class NFT implements NFTInterface {
     /** The type of ERC token, if known. */
     tokenType: NftTokenType;
     /** The NFT's underlying contract and relevant contract metadata. */
-    contract: NftContract;
+    contract: NftContractForNft;
+    /** The NFT name. */
+    name: string|undefined;
     /** The NFT title. */
     title: string;
     /** The NFT description. */
-    description: string;
+    description: string|undefined;
     /** When the NFT was last updated in the blockchain. Represented in ISO-8601 format. */
     timeLastUpdated: string;
-    /** Holds an error message if there was an issue fetching metadata. */
-    metadataError: string | undefined;
     /**
      * The raw metadata fetched from the metadata URL specified by the NFT. The
      * field is undefined if Alchemy was unable to fetch metadata.
      */
-    rawMetadata: NftMetadata | undefined;
+    raw: NftRawMetadata;
     /** URIs for accessing the NFT's metadata blob. */
-    tokenUri: TokenUri | undefined;
-    /** URIs for accessing the NFT's media assets. */
-    media: Media[];
-    /** Detailed information on why an NFT was classified as spam. */
-    spamInfo: SpamInfo | undefined;
+    tokenUri: string | undefined;
+    /** URIs for accessing the NFT's image. */
+    image: NftImage;
     /** Holds loaded owner address */
     ownerAddress: string | undefined
     /** Holds original data */
@@ -85,15 +81,14 @@ export default class NFT implements NFTInterface {
         this.tokenId = alchemyNFT.tokenId;
         this.tokenType = alchemyNFT.tokenType;
         this.contract = alchemyNFT.contract;
-        this.title = alchemyNFT.title || alchemyNFT.contract.name || '';
+        this.name = alchemyNFT.name;
+        this.title = alchemyNFT.name || alchemyNFT.contract.name || '';
         this.description = alchemyNFT.description;
         this.timeLastUpdated = alchemyNFT.timeLastUpdated;
-        this.metadataError = alchemyNFT.metadataError;
         this.tokenUri = alchemyNFT.tokenUri;
-        this.rawMetadata = alchemyNFT.rawMetadata;
-        this.media = alchemyNFT.media;
-        this.spamInfo = alchemyNFT.spamInfo;
-        this.thumbnail = this.media && this.media[0] &&  centralizeIpfsUrl(this.media[0].raw) || '/images/no-image.png'
+        this.raw = alchemyNFT.raw;
+        this.image = alchemyNFT.image;
+        this.thumbnail = (this.image.originalUrl && centralizeIpfsUrl(this.image.originalUrl)) || '/images/no-image.png' // At the moment we use original image for thumbnails
 
         if (otherProps) {
             Object.assign(this, otherProps);

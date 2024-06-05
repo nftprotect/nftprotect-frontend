@@ -11,7 +11,7 @@ import { useAppContext } from '../../context/AppContextProvider';
 import { Trans } from '@lingui/macro'
 import { useState, useEffect } from 'react';
 import { useAlchemy } from '../../hooks/useAlchemy';
-import { Nft as NFTInterface, NftFilters, NftMetadataBatchToken, NftTokenType } from 'alchemy-sdk';
+import { Nft as NFTInterface, NftMetadataBatchToken, NftTokenType } from 'alchemy-sdk';
 import NFT from '../../classes/NFT';
 import KlerosCaseDialog from '../dialogs/klerosCase/KlerosCaseDialog';
 import ProtectNftDialog from '../dialogs/nft/ProtectNftDialog';
@@ -166,7 +166,7 @@ const NFTView = () => {
             // Own NFTs
             nftApi.getNftsForOwner(
                 account
-            ).then(({blockHash, ownedNfts, totalCount}) => {
+            ).then(({ownedNfts, totalCount}) => {
                 const nftObjects = ownedNfts
                     // Remove all the pNFTs
                     .filter((item: NFTInterface) => {
@@ -206,7 +206,7 @@ const NFTView = () => {
             }));
 
             // Fetch every 100 items
-            const batchDetails: NFTInterface[] = await nftApi.getNftMetadataBatch(batchTokens);
+            const batchDetails: NFTInterface[] = (await nftApi.getNftMetadataBatch(batchTokens)).nfts;
             // Create nfts
             const nfts: NFT[] = batchDetails.map(details => {
                 // Find corresponding TokenGraphData
