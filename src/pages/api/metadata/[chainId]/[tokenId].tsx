@@ -131,8 +131,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
         return
     }
 
-    let data: Data | null = null
-
     try {
         const nftGraphData = await getToken(currentChain.id, BigInt(tokenId as string))
         if (nftGraphData) {
@@ -154,6 +152,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 //protectionStandard: "EIPXXX",
                 name: `🛡️Protected • ${originalMetadata.name}`,
                 description: `${protectionText}${originalMetadata.description ? ` • ${originalMetadata.description}` : ''}`,
+                image: originalMetadata.image.originalUrl,
                 originalToken: {
                     standard: NFTPTokenStandard[nftGraphData.assetType].toString(),
                     address: nftGraphData.contractAddress,
@@ -163,6 +162,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     owner: nftGraphData.originalOwnerAddress
                 }
             }
+            console.log('ORIGINAL_URI', originalMetadata.raw.tokenUri)
             const additionalProperties = {
                 // originalOwner: {
                 //     name: "Owner of original NFT",
@@ -178,7 +178,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     value: "https://dev.nftprotect.app"
                 }
             }
-            const data:any = { ...originalMetadata.raw, ...additionalData }
+            const data:any = { ...originalMetadata.raw.metadata, ...additionalData }
             data.properties = data.properties ? {...data.properties, ...additionalProperties} : additionalProperties
 
             tokenCache[cacheId] = {
