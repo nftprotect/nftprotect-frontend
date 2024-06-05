@@ -48,7 +48,7 @@ const NFTCard = ({ nft: _nft }: NFTInitialData ) => {
     // Set timer for request timeout
     useEffect(() => {
         if (pendingRequest && (pendingRequest.status === ReqStatus.Initial) && !requestTimedOut) {
-            const timeUntilTimeout = pendingRequest.timeout.toNumber() - Date.now();
+            const timeUntilTimeout = Number(pendingRequest.timeout) - Date.now();
             console.log('Time until request timeout:', timeUntilTimeout)
             if (timeUntilTimeout > 0) {
                 const timeoutId = setTimeout(() => {

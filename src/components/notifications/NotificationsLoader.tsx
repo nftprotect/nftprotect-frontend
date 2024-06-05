@@ -567,7 +567,7 @@ const NotificationsLoader = ({
                         if (request.type === ReqType.OwnershipAdjustment) {
                             // If request timeout expired
                             if (loadedRequest.timeout.toString() !== '0') {
-                                const timeoutDate = timestampToDate(loadedRequest.timeout.toNumber())
+                                const timeoutDate = timestampToDate(Number(loadedRequest.timeout))
                                 if (timeoutDate <= new Date()) {
                                     const loadedNft = await getPNft(nft)
                                     // Pending request is needed for dialog
