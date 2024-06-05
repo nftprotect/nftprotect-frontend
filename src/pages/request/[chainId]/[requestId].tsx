@@ -3,7 +3,6 @@ import type { GetServerSideProps, NextPage } from 'next'
 import { loadTranslation } from '../../../utils/lingui'
 import { useEffect, useMemo, useState } from 'react'
 import { supportedChains, switchingManualURI } from '../../../config'
-import { BigNumber } from '@ethersproject/bignumber'
 import { useAlchemy } from '../../../hooks/useAlchemy'
 import NFT from '../../../classes/NFT'
 import { useAppContext } from '../../../context/AppContextProvider'
@@ -44,11 +43,11 @@ const RequestPage: NextPage = () => {
     // Processing query params
     const { requestId, selectedChain, error: initialError } = useMemo(() => {
         let error = undefined;
-        let requestId: BigNumber | undefined;
+        let requestId: bigint | undefined;
         let chainId: number | undefined;
     
         try {
-            requestId = BigNumber.from(query.requestId?.toString());
+            requestId = BigInt(query.requestId!.toString());
         } catch (ex) {
             console.error('Incorrect requestId', ex);
             error = t`Incorrect requestId`;
@@ -153,7 +152,7 @@ const RequestPage: NextPage = () => {
         selectedChain && setChainId(selectedChain.id)
     }, [selectedChain])
 
-    const loadNft = async (tokenId: BigNumber, params?: Partial<NFT>) => {
+    const loadNft = async (tokenId: bigint, params?: Partial<NFT>) => {
         const alchemyNft = await nftApi.getNftMetadata(
             selectedChain!.nftpContractAddress,
             tokenId
@@ -261,7 +260,7 @@ const RequestPage: NextPage = () => {
     return (<>
         { selectedChain && <Head>
             { requestId &&
-                <meta name="description" content={t`The page of the court session in the Kleros decentralized court for the NFT Protect request #${requestId}.`} /> 
+                <meta name="description" content={t`The page of the court session in the Kleros decentralized court for the NFT Protect request #${requestId!.toString()}.`} /> 
             }
             { requestId ? 
                 <title>{t`NFT Protect • Request #${requestId}, ${selectedChain.name}`}</title> :

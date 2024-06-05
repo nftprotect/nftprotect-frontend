@@ -2,21 +2,20 @@ import { usePublicClient, useWalletClient } from 'wagmi';
 import NFTProtectABI from '../abi/NFTProtectABI';
 import { getContract } from 'viem';
 import { useMemo } from 'react';
-import { BigNumber } from '@ethersproject/bignumber'
 import { supportedChains } from '../config';
 import { NftTokenType } from 'alchemy-sdk';
 import { MetaEvidenceType } from './useNftProtectGraph';
 
 export interface ActionRequest {
-    id: BigNumber,
+    id: bigint,
     reqtype: ReqType,
-    tokenId: BigNumber,
+    tokenId: bigint,
     newowner: string,
-    timeout: BigNumber,
+    timeout: bigint,
     status: ReqStatus,
     arbitratorId: number,
-    localDisputeId: BigNumber,
-    externalDisputeId: BigNumber,
+    localDisputeId: bigint,
+    externalDisputeId: bigint,
     metaevidence: number
 }
 
@@ -25,8 +24,8 @@ export interface OriginalNFTData {
     tokenId: string,
     contractAddress: string,
     tokenType: NftTokenType
-    amount: number,
-    nonce: number     //** Holds nonce for signing purposes */
+    amount: bigint,
+    nonce: bigint     //** Holds nonce for signing purposes */
 }
 
 export enum ReqType {
@@ -83,7 +82,7 @@ const useNftProtect = (chainId: number) => {
      * @param requestId The request ID.
      * @returns Request data.
      */
-    const getRequest = async (requestId: BigNumber|bigint|string): Promise<ActionRequest|null> => { // TODO: use bigint
+    const getRequest = async (requestId: bigint|string): Promise<ActionRequest|null> => { // TODO: use bigint
         const contract = getPublicContractInstance(address)
         const result = await contract.read.requests([requestId.toString()]) as Array<any>
         const [
@@ -98,15 +97,15 @@ const useNftProtect = (chainId: number) => {
             metaevidence
         ] = result;
         return {
-            id: BigNumber.from(requestId.toString()),
+            id: BigInt(requestId.toString()),
             reqtype: reqtype as ReqType,
-            tokenId: BigNumber.from(tokenId.toString()),
+            tokenId: BigInt(tokenId.toString()),
             newowner,
-            timeout: BigNumber.from(timeout.toString()),
+            timeout: BigInt(timeout.toString()),
             status: status as ReqStatus,
             arbitratorId: Number(arbitratorId),
-            localDisputeId: BigNumber.from(localDisputeId.toString()),
-            externalDisputeId: BigNumber.from(externalDisputeId.toString()),
+            localDisputeId: BigInt(localDisputeId.toString()),
+            externalDisputeId: BigInt(externalDisputeId.toString()),
             metaevidence
         }
     }
@@ -116,7 +115,7 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID.
      * @returns Request data.
      */
-    const getRequestByTokenId = async (tokenId: BigNumber|bigint|string): Promise<ActionRequest|null> => {
+    const getRequestByTokenId = async (tokenId: bigint|string): Promise<ActionRequest|null> => {
         const contract = getPublicContractInstance(address)
         let requestId
         requestId = await contract.read.tokenToRequest([tokenId.toString()]) as bigint
@@ -128,7 +127,7 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID of the pNFT.
      * @returns The owner address.
      */
-    const getOwnerAddress = async (tokenId: BigNumber|bigint|string): Promise<`0x${string}`> => {
+    const getOwnerAddress = async (tokenId: bigint|string): Promise<`0x${string}`> => {
         const contract = getPublicContractInstance(address)
         const ownerAddress = await contract.read.ownerOf([tokenId.toString()])
         return ownerAddress as `0x${string}`
@@ -139,7 +138,7 @@ const useNftProtect = (chainId: number) => {
      * @param tokenId The token ID of the pNFT.
      * @returns The original NFT data.
      */
-    const getOriginalNFTData = async (tokenId: BigNumber|bigint|string): Promise<OriginalNFTData> => {
+    const getOriginalNFTData = async (tokenId: bigint|string): Promise<OriginalNFTData> => {
         const contract = getPublicContractInstance(address)
         let result
         result = await contract.read.tokens([tokenId.toString()]) as Array<any>
@@ -154,8 +153,8 @@ const useNftProtect = (chainId: number) => {
         
         const nftData: OriginalNFTData = {
             tokenId: tokenId.toString(),
-            amount: Number(amount),
-            nonce: Number(nonce),
+            amount,
+            nonce,
             contractAddress,
             ownerAddress: owner as string,
             tokenType: NftTokenType.NO_SUPPORTED_NFT_STANDARD
@@ -178,11 +177,11 @@ const useNftProtect = (chainId: number) => {
     const protect = async (
         tokenStandard: NFTPTokenStandard,
         contractAddress: `0x${string}`,
-        tokenId: BigNumber|bigint|string,
-        amount: BigNumber|bigint|string|number,
+        tokenId: bigint|string,
+        amount: bigint|string|number,
         user: `0x${string}`,
         referrerAddress: `0x${string}`,
-        value: BigNumber|bigint|string|number
+        value: bigint|string|number
     ) => {
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.protect(
@@ -195,7 +194,7 @@ const useNftProtect = (chainId: number) => {
     };
 
     const burn = async (
-        tokenId: BigNumber|bigint|string,
+        tokenId: bigint|string,
         destination: `0x${string}`,
         signature: string
     ) => {
@@ -208,9 +207,9 @@ const useNftProtect = (chainId: number) => {
     };
 
     const askOwnershipAdjustmentArbitrate = async (
-        requestId: BigNumber|bigint|string,
+        requestId: bigint|string,
         evidenceJSONUrl: string,
-        value: BigNumber|bigint|string|number
+        value: bigint|string|number
     ) => {
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.askOwnershipAdjustmentArbitrate(
@@ -223,7 +222,7 @@ const useNftProtect = (chainId: number) => {
     };
 
     const answerOwnershipAdjustment = async (
-        requestId: BigNumber|bigint|string,
+        requestId: bigint|string,
         answer: boolean,
         signature: string
     ) => {
@@ -235,12 +234,12 @@ const useNftProtect = (chainId: number) => {
     };
 
     const askOwnershipRestoreArbitrate = async (
-        tokenId: BigNumber|bigint|string,
+        tokenId: bigint|string,
         destination: `0x${string}`,
-        arbitratorId: BigNumber|bigint|string|number,
+        arbitratorId: bigint|string|number,
         metaEvidenceType: MetaEvidenceType,
         evidenceJSONUrl: string,
-        value: BigNumber|bigint|string|number
+        value: bigint|string|number
     ) => {
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.askOwnershipRestoreArbitrate(
@@ -253,9 +252,9 @@ const useNftProtect = (chainId: number) => {
     };
 
     const askOwnershipAdjustment = async (
-        tokenId: BigNumber|bigint|string,
+        tokenId: bigint|string,
         destination: `0x${string}`,
-        arbitratorId: BigNumber|bigint|string|number
+        arbitratorId: bigint|string|number
     ) => {
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.askOwnershipAdjustment(
@@ -265,7 +264,7 @@ const useNftProtect = (chainId: number) => {
     };
 
     const adjustOwnership = async (
-        tokenId: BigNumber|bigint|string,
+        tokenId: bigint|string,
         signature: string
     ) => {
         const contract = getWalletContractInstance(address)
@@ -276,7 +275,7 @@ const useNftProtect = (chainId: number) => {
     };
 
     const fetchRuling = async (
-        requestId: BigNumber|bigint|string
+        requestId: bigint|string
     ) => {
         const contract = getWalletContractInstance(address)
         const {request} = await contract.simulate.fetchRuling(

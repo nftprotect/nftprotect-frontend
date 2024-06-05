@@ -178,9 +178,9 @@ const NFTView = () => {
                 // Load amounts for every ERC1155
                 Promise.all(nftObjects.map(async (nft: NFT) => {
                     const amount = (nft.tokenType === NftTokenType.ERC1155) ?
-                        await getBalance(nft.contract.address as `0x${string}`, nft.tokenId, account) || 1 :
-                        1;
-                    nft.amount = Number(amount); // TODO: use BigNumber/bigint
+                        await getBalance(nft.contract.address as `0x${string}`, nft.tokenId, account) :
+                        BigInt(1);
+                    nft.amount = amount;
                     return amount;
                 })).then(() => {
                     console.log('ALCHEMY ALL MY NFTS:', nftObjects)

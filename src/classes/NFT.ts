@@ -44,7 +44,7 @@ export default class NFT implements NFTInterface {
     /** Holds thumbnail */
     thumbnail: string
     /** Holds token amount */
-    amount: number | undefined
+    amount: bigint | undefined
     //** Holds pending request data */
     pendingRequest: ActionRequest | undefined
 

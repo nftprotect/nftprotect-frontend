@@ -1,6 +1,5 @@
 import { usePublicClient, useWalletClient } from 'wagmi';
 import { getContract } from 'viem';
-import { BigNumber } from '@ethersproject/bignumber';
 import ERC1155ABI from '../abi/ERC1155ABI';
 
 const useERC1155 = (chainId: number) => {
@@ -36,10 +35,10 @@ const useERC1155 = (chainId: number) => {
      * @param userAddress The address of the account to check balance.
      * @returns True if the spender is approved, false otherwise.
      */
-    const getBalance = async (contractAddress: `0x${string}`, tokenId: BigNumber|bigint|string, userAddress: `0x${string}`): Promise<BigNumber> => {
+    const getBalance = async (contractAddress: `0x${string}`, tokenId: bigint|string, userAddress: `0x${string}`): Promise<bigint> => {
         const contract = getPublicContractInstance(contractAddress);
         const balance = await contract.read.balanceOf([userAddress, tokenId.toString()]) as bigint;
-        return BigNumber.from(balance.toString()); // TODO: use bigint
+        return BigInt(balance.toString());
     };
 
     /**

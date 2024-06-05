@@ -17,7 +17,7 @@ export interface AppContextInterface {
     currentChain: any | undefined,
     referrerAddress: `0x${string}`,
     baseTokenPrice: number | undefined,
-    fee: number | undefined,
+    fee: bigint | undefined,
     setChainId: Function,
 }
 
@@ -54,7 +54,7 @@ export function AppContextProvider({ children }:any) {
     const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     // Current fee for protecting
-    const [ fee, setFee ] = useState<number>()
+    const [ fee, setFee ] = useState<bigint>()
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
     const { getSystem, getPartner, getUser } = useNftProtectGraph(appState.currentChain?.id || defaultChainId);
 
@@ -161,13 +161,13 @@ export function AppContextProvider({ children }:any) {
                     const partnerData = await getPartner(appState.account);
                     if (partnerData) {
                         const discount = partnerData.discount;
-                        finalFee = finalFee.mul(100 - discount).div(100);
+                        finalFee = finalFee * BigInt(100 - discount)/BigInt(100);
                     }
                 } catch (error) {
                     console.warn("Partner data not found or error fetching:", error);
                 }
 
-                setFee(finalFee.toNumber()); // TODO: use BigNumber / bigint
+                setFee(finalFee);
             } catch (error) {
                 console.error("Failed to fetch system or partner data:", error);
                 setFee(undefined);

@@ -2,7 +2,6 @@ import type { GetStaticProps, NextPage } from 'next'
 import { loadTranslation } from '../utils/lingui'
 import { useEffect, useState } from 'react'
 import { supportedChains } from '../config'
-import { BigNumber } from '@ethersproject/bignumber'
 import { useAlchemy } from '../hooks/useAlchemy'
 import NFT from '../classes/NFT'
 import { useAppContext } from '../context/AppContextProvider'
@@ -75,7 +74,7 @@ const ValidatePage: NextPage = () => {
     const { getToken, getRequest } = useNftProtectGraph(currentChain?.id || defaultChain.id)
     const [ request, setRequest ] = useState<RequestGraphData|null>()
 
-    const loadNft = async (tokenId: BigNumber) => {
+    const loadNft = async (tokenId: bigint) => {
         const alchemyNft = await nftApi.getNftMetadata(
             currentChain.nftpContractAddress,
             tokenId
@@ -90,7 +89,7 @@ const ValidatePage: NextPage = () => {
     }, [nft])
 
     const [ validationRequest, setValidationRequest ] = useState<{
-        tokenId: BigNumber,
+        tokenId: bigint,
         contractAddress: string,
         chainId: number
     }>()
@@ -101,13 +100,13 @@ const ValidatePage: NextPage = () => {
         setValidationRequest({
             chainId: parseInt(formValues.chainId),
             contractAddress: formValues.contractAddress,
-            tokenId: BigNumber.from(formValues.tokenId)
+            tokenId: BigInt(formValues.tokenId)
         })
     }
 
     const checkContract = (address: string) => address.toLowerCase() === currentChain.nftpContractAddress.toLowerCase()
     
-    const checkPNFT = async (tokenId: BigNumber) => {
+    const checkPNFT = async (tokenId: bigint) => {
         const graphNft = await getToken(tokenId)
         setNftGraphData(graphNft)
         return graphNft ? true : false

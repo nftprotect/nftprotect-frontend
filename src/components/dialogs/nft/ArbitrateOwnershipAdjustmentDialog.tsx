@@ -159,7 +159,7 @@ const ArbitrateOwnershipAdjustmentDialog = () => {
     // Set timer for request timeout
     useEffect(() => {
         if (nft?.pendingRequest && (nft.pendingRequest.status === ReqStatus.Initial) && !requestTimedOut) {
-            const timeUntilTimeout = nft.pendingRequest.timeout.toNumber() - Date.now();
+            const timeUntilTimeout = Number(nft.pendingRequest.timeout) - Date.now();
             console.log('Time until request timeout:', timeUntilTimeout)
             if (timeUntilTimeout > 0) {
                 const timeoutId = setTimeout(() => {

@@ -1,6 +1,5 @@
 import { usePublicClient, useWalletClient } from 'wagmi';
 import { getContract } from 'viem';
-import { BigNumber } from '@ethersproject/bignumber';
 import { erc721Abi } from 'viem';
 
 const useERC721 = (chainId: number) => {
@@ -34,10 +33,10 @@ const useERC721 = (chainId: number) => {
      * @param userAddress - The address of the user.
      * @returns The balance of ERC721 tokens.
      */
-    const getBalance = async (contractAddress: `0x${string}`, userAddress: `0x${string}`): Promise<BigNumber> => {
+    const getBalance = async (contractAddress: `0x${string}`, userAddress: `0x${string}`): Promise<bigint> => {
         const contract = getPublicContractInstance(contractAddress);
         const balance = await contract.read.balanceOf([userAddress]) as bigint;
-        return BigNumber.from(balance.toString());
+        return BigInt(balance.toString());
     };
 
     /**
@@ -72,7 +71,7 @@ const useERC721 = (chainId: number) => {
      * @param tokenId - The ID of the token.
      * @returns The transaction hash.
      */
-    const approve = async (contractAddress: `0x${string}`, spender: `0x${string}`, tokenId: bigint|BigNumber|string): Promise<`0x${string}`> => {
+    const approve = async (contractAddress: `0x${string}`, spender: `0x${string}`, tokenId: bigint|string): Promise<`0x${string}`> => {
         const contract = getWalletContractInstance(contractAddress);
         const {request} = await contract.simulate.approve([spender, BigInt(tokenId.toString())]);
         return await walletClient!.writeContract(request);
@@ -84,7 +83,7 @@ const useERC721 = (chainId: number) => {
      * @param tokenId - The ID of the token.
      * @returns The address of the approved spender.
      */
-    const getApproved = async (contractAddress: `0x${string}`, tokenId: bigint|BigNumber|string): Promise<`0x${string}`> => {
+    const getApproved = async (contractAddress: `0x${string}`, tokenId: bigint|string): Promise<`0x${string}`> => {
         const contract = getPublicContractInstance(contractAddress);
         const approvedAddress = await contract.read.getApproved([BigInt(tokenId.toString())]) as `0x${string}`;
         return approvedAddress;

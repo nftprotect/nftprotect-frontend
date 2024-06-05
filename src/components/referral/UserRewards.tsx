@@ -3,7 +3,7 @@ import { Box, Text, Table, Thead, Tbody, Tr, Th, Td, Spinner, Heading, TableCapt
 import { useAppContext } from '../../context/AppContextProvider';
 import { UserData, useNftProtectGraph } from '../../hooks/useNftProtectGraph';
 import { Trans } from "@lingui/macro";
-import { formatEther } from '@ethersproject/units';
+import { formatEther } from 'viem';
 
 const UserRewards = () => {
     const { account, active, currentChain } = useAppContext();

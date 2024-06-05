@@ -25,7 +25,7 @@ import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
 import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans, t } from '@lingui/macro';
-import { formatEther } from "@ethersproject/units";
+import { formatEther } from "viem";
 import NFT from '../../../classes/NFT';
 import { NftTokenType } from 'alchemy-sdk';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
@@ -222,7 +222,7 @@ const ProtectNftDialog = () => {
                                         </Text>
                                         <Flex justifyContent="center" w={"100%"}>
                                             <Text textStyle="h3">
-                                                {"Ξ"}{ formatEther(fee || 0) } 
+                                                {"Ξ"}{ formatEther(fee || BigInt(0)) } 
                                             </Text>
                                             &nbsp;
                                             { baseTokenPrice && <Text fontSize={['12px']} lineHeight={'1em'}>
