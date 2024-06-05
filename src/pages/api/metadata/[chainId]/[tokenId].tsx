@@ -162,7 +162,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     owner: nftGraphData.originalOwnerAddress
                 }
             }
-            console.log('ORIGINAL_URI', originalMetadata.raw.tokenUri)
             const additionalProperties = {
                 // originalOwner: {
                 //     name: "Owner of original NFT",
@@ -179,6 +178,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 }
             }
             const data:any = { ...originalMetadata.raw.metadata, ...additionalData }
+            delete(data.image_data);
             data.properties = data.properties ? {...data.properties, ...additionalProperties} : additionalProperties
 
             tokenCache[cacheId] = {
