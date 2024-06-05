@@ -178,7 +178,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                 }
             }
             const data:any = { ...originalMetadata.raw.metadata, ...additionalData }
-            delete(data.image_data);
             data.properties = data.properties ? {...data.properties, ...additionalProperties} : additionalProperties
 
             tokenCache[cacheId] = {
