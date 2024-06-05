@@ -5,7 +5,7 @@ export const handleTransactionError = (error: any, callback?: Function | { [key:
         const defaultCallback = (typeof callback === 'function') ? callback : callback.default;
         if (error instanceof BaseError) { // Viem Errors
             const realError = (error.cause instanceof BaseError) ? error.cause : error;
-            debugger;
+            //debugger;
             if (typeof callback === 'function') {
                 callback(realError);
             } else if (callback[realError.name]) {
@@ -16,7 +16,7 @@ export const handleTransactionError = (error: any, callback?: Function | { [key:
                 defaultCallback(realError);
             }
         } else {
-            debugger;
+            //debugger;
             defaultCallback(error);
         }
     } else {
