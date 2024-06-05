@@ -52,23 +52,23 @@ const getToken = async (chainId: number, tokenId: bigint) => {
         return undefined;
     }
     return {
-        id: BigInt(data.token.id),
-        tokenId: BigInt(data.token.tokenId),
+        id: data.token.id.toString(),
+        tokenId: data.token.tokenId.toString(),
         ownerAddress: data.token.ownerProtected.id,
         originalOwnerAddress: data.token.ownerOriginal.id,
         assetType: parseInt(data.token.assetType),
         contractAddress: data.token.contract,
-        amount: BigInt(data.token.amount),
+        amount: data.token.amount.toString(),
         mintDate: new Date(parseInt(data.token.timestamp) * 1000),
         mintBlockNumber: parseInt(data.token.blocknumber),
         latestRequest: data.token.latestRequest ? {
-            id: BigInt(data.token.latestRequest.id),
+            id: data.token.latestRequest.id.toString(),
             status: data.token.latestRequest.status,
             type: data.token.latestRequest.type,
             updateDate: new Date(parseInt(data.token.latestRequest.timestampChange) * 1000)
         } : null,
         burned: data.token.burned,
-        nonce: BigInt(data.token.nonce),
+        nonce: data.token.nonce.toString(),
     };
 };
 
