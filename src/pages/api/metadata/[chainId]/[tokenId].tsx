@@ -162,7 +162,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     owner: nftGraphData.originalOwnerAddress
                 }
             }
-            console.log('ORIGINAL_URI', originalMetadata.raw.tokenUri)
             const additionalProperties = {
                 // originalOwner: {
                 //     name: "Owner of original NFT",
