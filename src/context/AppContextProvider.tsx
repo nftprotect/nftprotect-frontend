@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {  
     supportedChains,
     defaultChain as defaultChainId
@@ -21,12 +21,6 @@ export interface AppContextInterface {
     setChainId: Function,
 }
 
-interface AppState {
-    active: boolean,
-    account: `0x${string}` | null | undefined,
-    currentChain: any | undefined,
-}
-
 export const AppContext = createContext<AppContextInterface|null>(null);
 
 const nullAddress = '0x0000000000000000000000000000000000000000'
@@ -43,24 +37,18 @@ export function AppContextProvider({ children }:any) {
         chain
     } = useAccount()
 
-    const [appState, setAppState] = useState<AppState>({ // TODO: make it easier with correct initial values
-        active: false,
-        account: undefined,
-        currentChain: undefined,
-    })
-
-    const isCorrectChain = appState.currentChain ? ((chainId === undefined) || (chainId === appState.currentChain.id)) : false
+    const currentChain = useMemo(() => supportedChains.find( it => it.id === chain?.id ), [chain])
+    const isCorrectChain = currentChain ? ((chainId === undefined) || (chainId === currentChain.id)) : false
 
     const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     // Current fee for protecting
     const [ fee, setFee ] = useState<bigint>()
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
-    const { getSystem, getPartner, getUser } = useNftProtectGraph(appState.currentChain?.id || defaultChainId);
+    const { getSystem, getPartner, getUser } = useNftProtectGraph(currentChain?.id || defaultChainId);
 
     // Loads and sets current base token price in USD
     const updateBaseTokenPrice = () => {
-        const { currentChain } = appState 
         if (currentChain) {
             getTokenPrice(currentChain.symbol).then((result) => {
                 setBaseTokenPrice(result)
@@ -68,30 +56,7 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    const stateSetter = () => {
-        let currentChain: any
-        const currentChainId = chain?.id
-        if (currentChainId) {
-            currentChain = supportedChains.find( it => it.id === currentChainId )
-            if (!currentChain) {
-                console.error('Chain not supported:', currentChainId)
-                return
-            }
-        }
-        setAppState({
-            active,
-            account,
-            currentChain,
-        })
-    }
-
-    useEffect(() => {
-        console.log('SET STATE', appState)
-
-    }, [appState])
-
-    useEffect(updateBaseTokenPrice, [appState.currentChain])
-    useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected])
+    useEffect(updateBaseTokenPrice, [currentChain])
     // Handle chain switching
     useEffect(() => {
         if (chain && chainId && chain.id !== chainId) {
@@ -117,7 +82,6 @@ export function AppContextProvider({ children }:any) {
     // Handle referrer address
     useEffect(() => {
         const fetchReferrerData = async () => {
-            const { account, active } = appState;
             if (active && account && (referrerAddress === nullAddress)) {
                 try {
                     const userData = await getUser(account);
@@ -143,12 +107,12 @@ export function AppContextProvider({ children }:any) {
         };
     
         fetchReferrerData();
-    }, [appState.account, appState.currentChain]);
+    }, [account, currentChain]);
 
     // Load fee from graph
     useEffect(() => {
         const updateFeeBasedOnSystemAndPartner = async () => {
-            if (!appState.currentChain || !appState.account) {
+            if (!currentChain || !account) {
                 setFee(undefined);
                 return;
             }
@@ -158,7 +122,7 @@ export function AppContextProvider({ children }:any) {
                 let finalFee = systemData.feeEntry;
 
                 try {
-                    const partnerData = await getPartner(appState.account);
+                    const partnerData = await getPartner(account);
                     if (partnerData) {
                         const discount = partnerData.discount;
                         finalFee = finalFee * BigInt(100 - discount)/BigInt(100);
@@ -175,11 +139,13 @@ export function AppContextProvider({ children }:any) {
         };
 
         updateFeeBasedOnSystemAndPartner();
-    }, [appState.currentChain, appState.account]);
+    }, [currentChain, account]);
 
     return (
         <AppContext.Provider value={{
-            ...appState,
+            account,
+            active,
+            currentChain,
             isCorrectChain,
             defaultChain,
             referrerAddress,
