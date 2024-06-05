@@ -1,7 +1,6 @@
 import { usePublicClient, useWalletClient } from 'wagmi';
 import { Abi, GetContractReturnType, getContract } from 'viem';
 import { useMemo } from 'react';
-import { BigNumber } from '@ethersproject/bignumber';
 import { supportedChains, maxBlocksPerRequest } from '../config';
 import ArbitrableProxyABI from '../abi/ArbitrableProxyABI';
 import KlerosLiquidABI from '../abi/KlerosLiquidABI';
@@ -16,7 +15,7 @@ export interface EvidenceSubmission {
 }
 
 interface ContractsHolder {
-    arbitratorId: number,
+    arbitratorId: bigint,
     arbitrableProxy?: GetContractReturnType,
     arbitrator?: GetContractReturnType
 }
@@ -31,9 +30,9 @@ export const useArbitrableProxy = (chainId: number) => {
     const publicClient = usePublicClient({ chainId })
     const { data: currentBlock } = useBlockNumber({ chainId });
 
-    const contracts = useMemo(() => new Map<number, ContractsHolder>(), [chainId]);
+    const contracts = useMemo(() => new Map<bigint, ContractsHolder>(), [chainId]);
 
-    const loadArbitrableProxy = async (arbitratorId: number) => {
+    const loadArbitrableProxy = async (arbitratorId: number|bigint) => {
         const arbRegistryAddress = supportedChains.find(it => it.id === chainId)?.arbRegistryContractAddress;
         if (!arbRegistryAddress) throw new Error('Arbitrator registry contract address not found');
 
@@ -61,12 +60,12 @@ export const useArbitrableProxy = (chainId: number) => {
         });
     };
 
-    const getArbitrableProxy = async (arbitratorId: number) => {
-        let holder = contracts.get(arbitratorId);
+    const getArbitrableProxy = async (arbitratorId: number|bigint) => {
+        let holder = contracts.get(BigInt(arbitratorId));
         if (!holder?.arbitrableProxy) {
-            const newHolder: ContractsHolder = holder || { arbitratorId };
+            const newHolder: ContractsHolder = holder || { arbitratorId: BigInt(arbitratorId) };
             newHolder.arbitrableProxy = await loadArbitrableProxy(arbitratorId);
-            contracts.set(arbitratorId, holder ? {...holder, ...newHolder} : newHolder);
+            contracts.set(BigInt(arbitratorId), holder ? {...holder, ...newHolder} : newHolder);
             holder = newHolder;
         }
         if (holder?.arbitrableProxy) {
@@ -76,9 +75,9 @@ export const useArbitrableProxy = (chainId: number) => {
         }
     };
 
-    const getArbitrator = async (arbitratorId: number) => {
+    const getArbitrator = async (arbitratorId: number|bigint) => {
         const arbitrableProxy = await getArbitrableProxy(arbitratorId);
-        let holder = contracts.get(arbitratorId);
+        let holder = contracts.get(BigInt(arbitratorId));
         if (!holder) {
             throw new Error(`Unable to load arbitrableProxy for arbitratorId ${arbitratorId}`);
         }
@@ -93,8 +92,8 @@ export const useArbitrableProxy = (chainId: number) => {
     };
 
     const listEvidences = async (
-        arbitratorId: number,
-        internalDisputeId: BigNumber,
+        arbitratorId: number|bigint,
+        internalDisputeId: bigint,
         blockNumber: number
     ): Promise<EvidenceSubmission[]> => {
         const contract = await getArbitrableProxy(arbitratorId);
@@ -149,8 +148,8 @@ export const useArbitrableProxy = (chainId: number) => {
     };
 
     const getPeriod = async (
-        arbitratorId: number,
-        externalDisputeId: BigNumber,
+        arbitratorId: number|bigint,
+        externalDisputeId: bigint,
     ): Promise<DisputePeriodData> => {
         const contract = await getArbitrator(arbitratorId);
         const { period, lastPeriodChange } = await (contract as any).read.disputes([externalDisputeId.toString()]);
@@ -161,8 +160,8 @@ export const useArbitrableProxy = (chainId: number) => {
     };
 
     const isRuled = async (
-        arbitratorId: number,
-        internalDisputeId: BigNumber,
+        arbitratorId: number|bigint,
+        internalDisputeId: bigint,
     ): Promise<boolean> => {
         const contract = await getArbitrableProxy(arbitratorId);
         const { isRuled } = await (contract as any).read.disputes([internalDisputeId.toString()]);
@@ -170,8 +169,8 @@ export const useArbitrableProxy = (chainId: number) => {
     };
 
     const submitEvidence = async (
-        arbitratorId: number,
-        localDisputeId: BigNumber,
+        arbitratorId: number|bigint,
+        localDisputeId: bigint,
         evidenceURI: string
     ): Promise<any> => {
         const contract = await getArbitrableProxy(arbitratorId);
@@ -179,8 +178,8 @@ export const useArbitrableProxy = (chainId: number) => {
     };
 
     const executeRuling = async (
-        arbitratorId: number,
-        externalDisputeId: BigNumber,
+        arbitratorId: number|bigint,
+        externalDisputeId: bigint,
     ): Promise<any> => {
         const contract = await getArbitrator(arbitratorId);
         return (contract as any).write.executeRuling([externalDisputeId.toString()]);

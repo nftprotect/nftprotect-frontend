@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { formatEther } from "@ethersproject/units"
+import { formatEther } from "viem"
 import { copyTextToClipboard, formatAddress } from '../../utils/helpers'
 import {
     Box,

@@ -1,7 +1,6 @@
-import { ExternalProvider } from "@ethersproject/providers";
-
+type EthereumProvider = { request(...args: any): Promise<any> };
 declare global {
     interface Window {
-        ethereum?: ExternalProvider
+        ethereum?: EthereumProvider
     }
 }

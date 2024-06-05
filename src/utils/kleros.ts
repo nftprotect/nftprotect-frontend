@@ -1,5 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-
 // An enum of Kleros courts
 export enum KlerosCourts {
     General,
@@ -28,6 +26,6 @@ export enum KlerosCourts {
     HumanityCourt
 }
 
-export const createDisputeLink = (disputeId: BigNumber | string) => {
+export const createDisputeLink = (disputeId: bigint | string) => {
     return `https://resolve.kleros.io/cases/${disputeId.toString()}`
 }

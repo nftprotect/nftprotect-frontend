@@ -1,4 +1,3 @@
-import { Contract } from "@ethersproject/contracts";
 import React, { useEffect, useState } from 'react';
 import {
     Button,
@@ -22,25 +21,27 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { Trans } from '@lingui/macro';
 import NFT from '../../../classes/NFT';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
 import { getSigningData } from "../../../utils/signing";
-import { useSignTypedData } from 'wagmi'
+import { usePublicClient, useSignTypedData } from 'wagmi';
+import { ContractFunctionExecutionError, ContractFunctionRevertedError, decodeErrorResult } from 'viem';
+import useNftProtect from "../../../hooks/useNftProtect";
 
 const UnProtectNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const { nftProtectContract, signatureVerifierContract ,account, currentChain } = useAppContext()
+    const { account, currentChain, defaultChain } = useAppContext()
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const [ nextStep, setNextStep ] = useState<number>(0)
     const { getDialog, setDialog } = useCallableDialogContext()
     const { signTypedDataAsync } = useSignTypedData()
-
-    const name = nft?.title
+    const { burn } = useNftProtect(currentChain?.id || defaultChain.id)
+    const publicClient = usePublicClient()
 
     enum StepMapping {
         start,
@@ -67,37 +68,58 @@ const UnProtectNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = (tokenContract: Contract) => {
-        return (tx: any) => {
-            setNextStep(StepMapping.pendingTransaction);
-            tokenContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    // after mined fire wrap
-                    setNextStep(StepMapping.success)
-                    console.log("Transaction successful", tx.hash);
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.pendingTransaction);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash })
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.success)
+            console.log("Transaction successful", hash);
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
     const startButtonOnClick = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected,
+            // ContractFunctionRevertedError: (err: ContractFunctionRevertedError ) => {
+            //     console.log('DCD1', err);
+            //     Object.entries(err).forEach(([key, value]) => {
+            //         console.log('DCD2', `${key}: ${value}`);
+            //     });
+            //     console.log('DCD3', err.signature && decodeErrorResult({abi: NFTProtectABI, data: err.signature}))
+
+            //     debugger;
+            // },
+            // ContractFunctionExecutionError: (err: ContractFunctionExecutionError ) => {
+            //     console.log('DCD4', err);
+            //     Object.entries(err).forEach(([key, value]) => {
+            //         console.log('DCD5', `${key}: ${value}`);
+            //     });
+            //     const cause = err.cause ?
+            //         err.cause as ContractFunctionRevertedError :
+            //         null
+            //     const decodedError = cause?.signature && decodeErrorResult({abi: NFTProtectABI, data: cause.signature})
+            //     console.log('DCD6', decodedError)
+            //     debugger;
+            // },
+        }
         if (nft) {
             try {
                 setNextStep(StepMapping.confirmTransaction);
                 onOpen()
-                const signingData = getSigningData(currentChain.id, nft.tokenId, account!, nft.originalData!.nonce!.toString(), signatureVerifierContract.address );
+                const signingData = getSigningData(currentChain.id, nft.tokenId, account!, nft.originalData!.nonce!.toString(), currentChain.signatureVerifierContractAddress );
                 const signature = await signTypedDataAsync(signingData as any);
                 console.log('SIGNATURE', signingData, signature);
-                nftProtectContract.burn(nft.tokenId, account, signature) // TODO: allow to choose where to extract
-                    .then( finalTransactionSent(nftProtectContract) )
-                    .catch(
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        })
-                    )
+                let hash;
+                try {
+                    hash = await burn(nft.tokenId, account!, signature); // TODO: allow to choose where to extract
+                } catch (error) {
+                    handleTransactionError(error, errorHandlings);
+                    return;
+                }
+                finalTransactionSent(hash);
             } catch (err: any) {
                 handleUnknownError(err)
             }

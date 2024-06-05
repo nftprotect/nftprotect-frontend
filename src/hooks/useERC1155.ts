@@ -1,33 +1,76 @@
-import { usePublicClient } from 'wagmi';
+import { usePublicClient, useWalletClient } from 'wagmi';
 import { getContract } from 'viem';
-import { BigNumber } from '@ethersproject/bignumber';
 import ERC1155ABI from '../abi/ERC1155ABI';
 
 const useERC1155 = (chainId: number) => {
-    const client = usePublicClient({ chainId });
+    const publicClient = usePublicClient({ chainId });
+    const {data: walletClient} = useWalletClient({ chainId })
 
-    const getBalance = async (contractAddress: `0x${string}`, tokenId: BigNumber|bigint|string, userAddress: `0x${string}`): Promise<BigNumber | null> => {
-        if (!client) {
-            throw new Error('Client not configured');
+    const getPublicContractInstance = (contractAddress: `0x${string}`) => {
+        if (!publicClient) {
+            throw new Error('Public client not configured')
         }
-
-        const contract = getContract({
+        return getContract({
             address: contractAddress as `0x${string}`,
             abi: ERC1155ABI,
-            client
+            client: publicClient
         });
+    }
 
-        try {
-            const balance = await contract.read.balanceOf([userAddress, tokenId.toString()]) as bigint;
-            return BigNumber.from(balance.toString()); // TODO: use bigint
-        } catch (e: any) {
-            console.error(`Failed fetching balance for token ${tokenId.toString()} at address ${userAddress}`, e);
-            return null;
+    const getWalletContractInstance = (contractAddress: `0x${string}`) => {
+        if (!walletClient) {
+            throw new Error('Wallet client not configured')
         }
+        return getContract({
+            address: contractAddress as `0x${string}`,
+            abi: ERC1155ABI,
+            client: walletClient
+        });
+    }
+
+    /**
+     * Return token balance of the specified address.
+     * @param contractAddress The address of the token contract.
+     * @param tokenId The id of the token.
+     * @param userAddress The address of the account to check balance.
+     * @returns True if the spender is approved, false otherwise.
+     */
+    const getBalance = async (contractAddress: `0x${string}`, tokenId: bigint|string, userAddress: `0x${string}`): Promise<bigint> => {
+        const contract = getPublicContractInstance(contractAddress);
+        const balance = await contract.read.balanceOf([userAddress, tokenId.toString()]) as bigint;
+        return BigInt(balance.toString());
     };
 
+    /**
+     * Approves a spender to manage the tokens of the caller.
+     * @param contractAddress The address of the token contract.
+     * @param spender The address of the account to be approved.
+     * @param tokenId The ID of the token to be approved.
+     * @returns Transaction receipt.
+     */
+    const setApprovalForAll = async (contractAddress: `0x${string}`, spender: `0x${string}`): Promise<`0x${string}`> => {
+        const contract = getWalletContractInstance(contractAddress);
+        const {request} = await contract.simulate.setApprovalForAll([spender, true]);
+        return await walletClient!.writeContract(request);
+    }
+
+    /**
+     * Checks if an address is approved for managing the tokens of another address.
+     * @param contractAddress The address of the token contract.
+     * @param owner The address of the owner of the tokens.
+     * @param spender The address of the account to check for approval.
+     * @returns True if the spender is approved, false otherwise.
+     */
+    const isApprovedForAll = async (contractAddress: `0x${string}`, owner: `0x${string}`, spender: `0x${string}`): Promise<boolean> => {
+        const contract = getPublicContractInstance(contractAddress);
+        const isApproved = await contract.read.isApprovedForAll([owner, spender]) as boolean;
+        return isApproved;
+    }
+
     return {
-        getBalance
+        getBalance,
+        setApprovalForAll,
+        isApprovedForAll
     };
 };
 

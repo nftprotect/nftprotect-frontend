@@ -1,14 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supportedChains } from '../../../../config'
-import { Alchemy, Network, Nft, NftTokenType } from 'alchemy-sdk'
-import { BigNumber } from '@ethersproject/bignumber'
+import { Alchemy, Network, NftTokenType } from 'alchemy-sdk'
 
 import { graphManager } from '../../../../utils/thegraph'
 import { nftProtectGraphs } from '../../../../config'
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
 // Can't use hook here
-const getToken = async (chainId: number, tokenId: BigNumber) => {
+const getToken = async (chainId: number, tokenId: bigint) => {
     const graphConfig = nftProtectGraphs.find(it => it.chainId === chainId);
     if (!graphConfig || !graphConfig.uri) {
         throw new Error(MissingUriError(chainId));
@@ -53,23 +52,23 @@ const getToken = async (chainId: number, tokenId: BigNumber) => {
         return undefined;
     }
     return {
-        id: BigNumber.from(data.token.id),
-        tokenId: BigNumber.from(data.token.tokenId),
+        id: BigInt(data.token.id),
+        tokenId: BigInt(data.token.tokenId),
         ownerAddress: data.token.ownerProtected.id,
         originalOwnerAddress: data.token.ownerOriginal.id,
         assetType: parseInt(data.token.assetType),
         contractAddress: data.token.contract,
-        amount: BigNumber.from(data.token.amount),
+        amount: BigInt(data.token.amount),
         mintDate: new Date(parseInt(data.token.timestamp) * 1000),
         mintBlockNumber: parseInt(data.token.blocknumber),
         latestRequest: data.token.latestRequest ? {
-            id: BigNumber.from(data.token.latestRequest.id),
+            id: BigInt(data.token.latestRequest.id),
             status: data.token.latestRequest.status,
             type: data.token.latestRequest.type,
             updateDate: new Date(parseInt(data.token.latestRequest.timestampChange) * 1000)
         } : null,
         burned: data.token.burned,
-        nonce: BigNumber.from(data.token.nonce),
+        nonce: BigInt(data.token.nonce),
     };
 };
 
@@ -135,7 +134,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
     let data: Data | null = null
 
     try {
-        const nftGraphData = await getToken(currentChain.id, BigNumber.from(tokenId))
+        const nftGraphData = await getToken(currentChain.id, BigInt(tokenId as string))
         if (nftGraphData) {
             const alchemy = createAlchemy(currentChain.alchemyId)
             const tokenType = nftGraphData.assetType === NFTPTokenStandard.ERC1155 ?
@@ -153,14 +152,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
 
             const additionalData = {
                 //protectionStandard: "EIPXXX",
-                name: `🛡️Protected • ${originalMetadata.title}`,
+                name: `🛡️Protected • ${originalMetadata.name}`,
                 description: `${protectionText}${originalMetadata.description ? ` • ${originalMetadata.description}` : ''}`,
                 originalToken: {
                     standard: NFTPTokenStandard[nftGraphData.assetType].toString(),
                     address: nftGraphData.contractAddress,
                     id: nftGraphData.tokenId,
                     amount: nftGraphData.amount.toString(),
-                    uri: originalMetadata.tokenUri?.raw,
+                    uri: originalMetadata.raw.tokenUri,
                     owner: nftGraphData.originalOwnerAddress
                 }
             }
@@ -179,7 +178,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any | Error>) =
                     value: "https://dev.nftprotect.app"
                 }
             }
-            const data:any = { ...originalMetadata.rawMetadata, ...additionalData }
+            const data:any = { ...originalMetadata.raw, ...additionalData }
             data.properties = data.properties ? {...data.properties, ...additionalProperties} : additionalProperties
 
             tokenCache[cacheId] = {

@@ -1,49 +1,24 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {  
     supportedChains,
     defaultChain as defaultChainId
 } from "../config";
-import NFTProtectABI from "../abi/NFTProtectABI";
-import UserRegistryABI from "../abi/UserRegistryABI";
-import ArbitratorRegistryABI from '../abi/ArbitratorRegistryABI'
-import { Contract } from '@ethersproject/contracts';
-import { Web3Provider } from '@ethersproject/providers'
 import { getTokenPrice } from "../utils/coimarketcap";
-import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
-import { Client } from "viem";
-import { clientToProvider } from '../utils/ethers';
+import { useAccount, useSwitchChain } from "wagmi";
 import { useRouter } from "next/router";
 import { handleReferralLink, loadInvite } from "../utils/referral";
-import SignatureVerifierABI from "../abi/SignatureVerifierABI";
 import { useNftProtectGraph } from "../hooks/useNftProtectGraph";
 
 export interface AppContextInterface {
     active: boolean,
     isCorrectChain: boolean,
     account: `0x${string}` | null | undefined,
-    client: Client|undefined,
-    library: Web3Provider|undefined,
     defaultChain: any | undefined,
     currentChain: any | undefined,
-    nftProtectContract: Contract,
-    arbRegistryContract: Contract,
-    signatureVerifierContract: Contract,
     referrerAddress: `0x${string}`,
     baseTokenPrice: number | undefined,
-    fee: number | undefined,
+    fee: bigint | undefined,
     setChainId: Function,
-}
-
-interface AppState {
-    active: boolean,
-    account: `0x${string}` | null | undefined,
-    currentChain: any | undefined,
-    nftProtectContract: Contract,
-    userRegistryContract: Contract,
-    arbRegistryContract: Contract,
-    signatureVerifierContract: Contract,
-    client: Client|undefined,
-    library: Web3Provider|undefined
 }
 
 export const AppContext = createContext<AppContextInterface|null>(null);
@@ -61,35 +36,19 @@ export function AppContextProvider({ children }:any) {
         isDisconnected,
         chain
     } = useAccount()
-    const {data: walletClient} = useWalletClient({ chainId })
-    const publicClient = usePublicClient({ chainId })
-    const currentClient = walletClient || publicClient
-    const providedLibrary = currentClient ? clientToProvider(currentClient) : undefined
 
-    const [appState, setAppState] = useState<AppState>({
-        active: false,
-        account: undefined,
-        currentChain: undefined,
-        client: currentClient,
-        library: providedLibrary, // this and next props temporarily not null
-        nftProtectContract: new Contract(nullAddress, NFTProtectABI, providedLibrary),
-        userRegistryContract: new Contract(nullAddress, UserRegistryABI, providedLibrary),
-        arbRegistryContract: new Contract(nullAddress, ArbitratorRegistryABI, providedLibrary),
-        signatureVerifierContract: new Contract(nullAddress, SignatureVerifierABI, providedLibrary)
-    })
-
-    const isCorrectChain = appState.currentChain ? ((chainId === undefined) || (chainId === appState.currentChain.id)) : false
+    const currentChain = useMemo(() => supportedChains.find( it => it.id === chain?.id ), [chain])
+    const isCorrectChain = currentChain ? ((chainId === undefined) || (chainId === currentChain.id)) : false
 
     const { switchChain } = useSwitchChain()
     const [ baseTokenPrice, setBaseTokenPrice ] = useState<number>()
     // Current fee for protecting
-    const [ fee, setFee ] = useState<number>()
+    const [ fee, setFee ] = useState<bigint>()
     const [referrerAddress, setReferrerAddress] = useState<`0x${string}`>(nullAddress)
-    const { getSystem, getPartner, getUser } = useNftProtectGraph(appState.currentChain?.id || defaultChainId);
+    const { getSystem, getPartner, getUser } = useNftProtectGraph(currentChain?.id || defaultChainId);
 
     // Loads and sets current base token price in USD
     const updateBaseTokenPrice = () => {
-        const { currentChain } = appState 
         if (currentChain) {
             getTokenPrice(currentChain.symbol).then((result) => {
                 setBaseTokenPrice(result)
@@ -97,38 +56,7 @@ export function AppContextProvider({ children }:any) {
         }
     }
 
-    const stateSetter = () => {
-        let currentChain: any
-        const library = providedLibrary
-        const currentChainId = chain?.id
-        if (currentChainId) {
-            currentChain = supportedChains.find( it => it.id === currentChainId )
-            if (!currentChain) {
-                console.error('Chain not supported:', currentChainId)
-                return
-            }
-        }
-        const signer =  account && library?.getSigner(account)
-        setAppState({
-            active,
-            account,
-            currentChain,
-            library,
-            client: currentClient,
-            nftProtectContract: new Contract(currentChain?.nftpContractAddress || nullAddress, NFTProtectABI, signer || library),
-            userRegistryContract: new Contract(currentChain?.userRegistryContractAddress || nullAddress, UserRegistryABI, signer || library),
-            arbRegistryContract: new Contract(currentChain?.arbRegistryContractAddress || nullAddress, ArbitratorRegistryABI, signer || library),
-            signatureVerifierContract: new Contract(currentChain?.signatureVerifierContractAddress || nullAddress, SignatureVerifierABI, signer || library)
-        })
-    }
-
-    useEffect(() => {
-        console.log('SET STATE', appState)
-
-    }, [appState])
-
-    useEffect(updateBaseTokenPrice, [appState.library, appState.currentChain])
-    useEffect(stateSetter, [account, active, chain, switchChain, chainId, isDisconnected, currentClient])
+    useEffect(updateBaseTokenPrice, [currentChain])
     // Handle chain switching
     useEffect(() => {
         if (chain && chainId && chain.id !== chainId) {
@@ -154,7 +82,6 @@ export function AppContextProvider({ children }:any) {
     // Handle referrer address
     useEffect(() => {
         const fetchReferrerData = async () => {
-            const { account, active } = appState;
             if (active && account && (referrerAddress === nullAddress)) {
                 try {
                     const userData = await getUser(account);
@@ -180,12 +107,12 @@ export function AppContextProvider({ children }:any) {
         };
     
         fetchReferrerData();
-    }, [appState.account, appState.currentChain]);
+    }, [account, currentChain]);
 
     // Load fee from graph
     useEffect(() => {
         const updateFeeBasedOnSystemAndPartner = async () => {
-            if (!appState.currentChain || !appState.account) {
+            if (!currentChain || !account) {
                 setFee(undefined);
                 return;
             }
@@ -195,16 +122,16 @@ export function AppContextProvider({ children }:any) {
                 let finalFee = systemData.feeEntry;
 
                 try {
-                    const partnerData = await getPartner(appState.account);
+                    const partnerData = await getPartner(account);
                     if (partnerData) {
                         const discount = partnerData.discount;
-                        finalFee = finalFee.mul(100 - discount).div(100);
+                        finalFee = finalFee * BigInt(100 - discount)/BigInt(100);
                     }
                 } catch (error) {
                     console.warn("Partner data not found or error fetching:", error);
                 }
 
-                setFee(finalFee.toNumber()); // TODO: use BigNumber / bigint
+                setFee(finalFee);
             } catch (error) {
                 console.error("Failed to fetch system or partner data:", error);
                 setFee(undefined);
@@ -212,13 +139,13 @@ export function AppContextProvider({ children }:any) {
         };
 
         updateFeeBasedOnSystemAndPartner();
-    }, [appState.currentChain, appState.account]);
+    }, [currentChain, account]);
 
     return (
         <AppContext.Provider value={{
-            ...appState,
-            library: appState.library,
-            client: appState.client,
+            account,
+            active,
+            currentChain,
             isCorrectChain,
             defaultChain,
             referrerAddress,

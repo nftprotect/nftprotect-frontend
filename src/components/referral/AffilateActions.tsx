@@ -5,10 +5,9 @@ import { useAppContext } from '../../context/AppContextProvider';
 import AddressDisplay from '../AddressDisplay';
 import { Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { formatEther } from '@ethersproject/units';
+import { formatEther } from 'viem';
 import { Trans } from "@lingui/macro";
 import { generateAddressURL, generateTxURL } from '../../utils/etherscan';
-import { BigNumber } from '@ethersproject/bignumber';
 import Avatar from '../navBar/Avatar';
 import useEnsName from '../../hooks/useEnsName';
 import { formatAddress } from '../../utils/helpers';
@@ -134,7 +133,7 @@ const AffilateActions = () => {
                                     <Trans>Protected NFT</Trans>
                                 }</Td>
                                 <Td borderColor="#D9D9D9">{
-                                    action.amount.gt(BigNumber.from(0)) ?
+                                    action.amount > BigInt(0) ?
                                         `${formatEther(action.amount)} ETH` :
                                         <Box>
                                             {/* Small screen */}

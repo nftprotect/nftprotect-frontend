@@ -20,14 +20,14 @@ export const supportedChains = [
         name: "Sepolia",
         symbol: "ETH",
         explorerUrl: "https://sepolia.etherscan.io",
-        nftpContractAddress: '0x35be7e7dedc7ae13bd80ec8d26cf80ab2f7f0934',
-        userRegistryContractAddress: '0x6307453103337b65636b221b4404d302539c99d5',
-        arbRegistryContractAddress: '0x25bf41c8f7ea92091260c9e50bb44566a0719bd7',
-        signatureVerifierContractAddress: '0xffcf59f89debd62c5821bcdea945382657ca3760',
+        nftpContractAddress: '0x27b6e64bf6faec53141f2a2cd2da55dc1dffa5ba',
+        userRegistryContractAddress: '0xf557231b2e3b088e9b8cb1072c0ce03898975c6a',
+        arbRegistryContractAddress: '0xb8ef2a8ca0be3f5d734446cd6a13f56372a56e2b',
+        signatureVerifierContractAddress: '0x63473816e94ad6c2c8b9ec496957b900b818faf9',
         defaultArbitrator: 1,
         transport: fallback([
             webSocket(`wss://sepolia.infura.io/ws/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`),
-            webSocket(`wss://eth-sepolia.ws.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+           // webSocket(`wss://eth-sepolia.ws.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
         ])
     }
 ]
@@ -48,7 +48,7 @@ export const coinmarketcapUrl = 'https://pro-api.coinmarketcap.com/v1'
 export const nftProtectGraphs = [
     {
         chainId: 11155111,
-        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.6'
+        uri: 'https://api.studio.thegraph.com/query/50822/nftprotect-v1/v0.9.7'
     }
 ]
 

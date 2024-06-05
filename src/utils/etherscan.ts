@@ -1,9 +1,8 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { supportedChains } from '../config'
 
-export const generateBlockURL = (blockNumber: string | number, chainId: number) => {
+export const generateBlockURL = (blockNumber: string | number | bigint, chainId: number) => {
     const decimalBlockNumber = blockNumber.toString().startsWith('0x') ?
-        BigNumber.from(blockNumber).toString() :
+        BigInt(blockNumber).toString() :
         blockNumber.toString()
     return `https://goerli.etherscan.io/block/${decimalBlockNumber}`
 }

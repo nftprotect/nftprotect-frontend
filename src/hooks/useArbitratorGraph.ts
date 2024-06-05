@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { arbitratorGraphs } from "../config";
 import { capitalize, timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
@@ -23,14 +22,14 @@ export interface DisputeGraphData {
     //     id,
     //     subcourtID
     // },
-    numberOfChoices: BigNumber,
+    numberOfChoices: bigint,
     period: Period,
     startTime: Date,
     lastPeriodChange: Date,
-    numberOfRounds: BigNumber,
-    numberOfVotes: BigNumber,
-    numberOfCoherentVotes: BigNumber,
-    coherency: BigNumber,
+    numberOfRounds: bigint,
+    numberOfVotes: bigint,
+    numberOfCoherentVotes: bigint,
+    coherency: bigint,
     appealed: Boolean,
     ruled: Boolean,
     currentRulling: number,
@@ -38,9 +37,9 @@ export interface DisputeGraphData {
     txid: string
 }
 
-export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
+export const useArbitratorGraph = (chainId: number, arbitratorId: number|bigint) => {
     const { arbitrators } = arbitratorGraphs.find( it => it.chainId === chainId ) || { arbitrators: [] }
-    const { uri: graphURI } = arbitrators.find( it => it.arbitratorId === arbitratorId ) || { uri: undefined }
+    const { uri: graphURI } = arbitrators.find( it => it.arbitratorId === Number(arbitratorId) ) || { uri: undefined }
 
     const checkURI = () => {
         if (!graphURI) {
@@ -50,7 +49,7 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
         }
     }
 
-    const getDispute = async (disputeId: BigNumber): Promise<DisputeGraphData|undefined> => {
+    const getDispute = async (disputeId: bigint): Promise<DisputeGraphData|undefined> => {
         checkURI()
         if (graphURI) {
             const query = `
@@ -96,11 +95,11 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                 period: dispute.period ? Period[capitalize(dispute.period) as keyof typeof Period] : undefined,
                 startTime: timestampToDate(dispute.startTime),
                 lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
-                numberOfChoices: BigNumber.from(dispute.numberOfChoices),
-                numberOfRounds: BigNumber.from(dispute.numberOfRounds),
-                numberOfVotes: BigNumber.from(dispute.numberOfVotes),
-                numberOfCoherentVotes: BigNumber.from(dispute.numberOfCoherentVotes),
-                coherency: BigNumber.from(dispute.coherency),
+                numberOfChoices: BigInt(dispute.numberOfChoices),
+                numberOfRounds: BigInt(dispute.numberOfRounds),
+                numberOfVotes: BigInt(dispute.numberOfVotes),
+                numberOfCoherentVotes: BigInt(dispute.numberOfCoherentVotes),
+                coherency: BigInt(dispute.coherency),
                 currentRulling: parseInt(dispute.currentRulling)
             }
         }
@@ -153,11 +152,11 @@ export const useArbitratorGraph = (chainId: number, arbitratorId: number) => {
                     period: dispute.period ? Period[capitalize(dispute.period) as keyof typeof Period] : undefined,
                     startTime: timestampToDate(dispute.startTime),
                     lastPeriodChange: timestampToDate(dispute.lastPeriodChange),
-                    numberOfChoices: BigNumber.from(dispute.numberOfChoices),
-                    numberOfRounds: BigNumber.from(dispute.numberOfRounds),
-                    numberOfVotes: BigNumber.from(dispute.numberOfVotes),
-                    numberOfCoherentVotes: BigNumber.from(dispute.numberOfCoherentVotes),
-                    coherency: BigNumber.from(dispute.coherency),
+                    numberOfChoices: BigInt(dispute.numberOfChoices),
+                    numberOfRounds: BigInt(dispute.numberOfRounds),
+                    numberOfVotes: BigInt(dispute.numberOfVotes),
+                    numberOfCoherentVotes: BigInt(dispute.numberOfCoherentVotes),
+                    coherency: BigInt(dispute.coherency),
                     currentRulling: parseInt(dispute.currentRulling)
                 }
             })

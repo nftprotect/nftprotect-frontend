@@ -34,7 +34,7 @@ import {
 import { Wizard } from 'react-use-wizard';
 import SwitchableOutside from '../../wizardHelpers/SwitchableOutside';
 import { useAppContext } from '../../../context/AppContextProvider';
-import { handleContractError } from '../../../utils/errorHandling';
+import { handleTransactionError } from '../../../utils/errorHandling';
 import { copyTextToClipboard } from '../../../utils/helpers';
 import { ChevronDownIcon, ExternalLinkIcon, CopyIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro';
@@ -42,18 +42,19 @@ import NFT from '../../../classes/NFT';
 import IPFSUpload from '../../../classes/IPFSUpload';
 import KlerosCaseForm from '../../steps/KlerosCaseForm';
 import KlerosEvidencesForm, { EvidenceData, EvidenceJson } from '../../steps/KlerosEvidencesForm';
-import { parseEther } from '@ethersproject/units';
+import { parseEther } from 'viem';
 import { useCallableDialogContext } from '../../../context/CallableDialogContextProvider';
 import NFTImage from '../../nftView/NFTImage';
-import AddressDisplay from '../../AddressDisplay';
 import { MetaEvidenceType } from '../../../hooks/useNftProtectGraph';
 import useNftProtect from '../../../hooks/useNftProtect';
+import { usePublicClient } from 'wagmi';
+import AddressDisplay from '../../AddressDisplay';
 
 const LostPNftDialog = () => {
 
     const [ nft, setNft ] = useState<NFT>()
-    const {account, nftProtectContract, baseTokenPrice, currentChain, defaultChain} = useAppContext()
-    const { getRequestByTokenId } = useNftProtect(currentChain?.id || defaultChain.id)
+    const {account, baseTokenPrice, currentChain, defaultChain} = useAppContext()
+    const { getRequestByTokenId, askOwnershipRestoreArbitrate } = useNftProtect(currentChain?.id || defaultChain.id)
     const disclosure = useDisclosure()
     const { isOpen, onOpen, onClose } = disclosure
     const { getDialog, setDialog } = useCallableDialogContext()
@@ -65,6 +66,7 @@ const LostPNftDialog = () => {
     const [ evidenceFiles, setEvidenceFiles ] = useState<IPFSUpload>()
     //* Stores evidenceJson file*/
     const [ evidence, setEvidence ] = useState<IPFSUpload>()
+    const publicClient = usePublicClient()    
     const DISPUTE_PRICE = '0.03'
 
     enum StepMapping {
@@ -104,22 +106,16 @@ const LostPNftDialog = () => {
         console.log("Transaction failed", tx.hash);
     }
 
-    const finalTransactionSent = () => {
-        return (tx: any) => {
-            setNextStep(StepMapping.waitForTransactionConfirmation);
-            nftProtectContract.provider.once(tx.hash, (receipt) => {
-                if (receipt.status === 1) {
-                    // const action = async () => {
-                    //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
-                    //     setNft(nft)
-                    // }
-                    // action();
-                    setNextStep(StepMapping.finalCompleted)
-                    console.log("Transaction successful", tx.hash);
-                } else {
-                    handleTransactionFailed(tx);
-                }
-            })
+    const finalTransactionSent = async (hash: `0x${string}`) => {
+        setNextStep(StepMapping.waitForTransactionConfirmation);
+        const receipt = await publicClient!.waitForTransactionReceipt({ hash });
+        if (receipt.status === 'success') {
+            setNextStep(StepMapping.finalCompleted);
+            console.log("Transaction successful", hash);
+            //     nft!.pendingRequest = await getRequestByTokenId(nft!.tokenId) || undefined
+            //     setNft(nft)
+        } else {
+            handleTransactionFailed(receipt);
         }
     }
 
@@ -151,29 +147,30 @@ const LostPNftDialog = () => {
         setNextStep(StepMapping.evidenceReview)
     }
 
-    const openDispute = () => {
+    const openDispute = async () => {
+        const errorHandlings = {
+            default: handleUnknownError,
+            UserRejectedRequestError: handleRejected
+        };
         setNextStep(StepMapping.confirmTransaction)
         if (nft && evidence) {
             const evidenceJSONUrl = evidence.getRelativeIPFSUrl()
             try {
-                nftProtectContract.askOwnershipRestoreArbitrate(
-                    nft.tokenId,
-                    account, // TODO: Must be replaced by new address
-                    currentChain.defaultArbitrator,
-                    lostReason,
-                    evidenceJSONUrl,
-                    {
-                        value: parseEther(DISPUTE_PRICE),
-                    //    gasLimit: 1000000
-                    }
-                )
-                    .then( finalTransactionSent() )
-                    .catch( 
-                        handleContractError({
-                            'ACTION_REJECTED': handleRejected,
-                            default: handleUnknownError
-                        }) 
+                let hash;
+                try{
+                    hash = await askOwnershipRestoreArbitrate(
+                        nft.tokenId,
+                        account!, // TODO: Let user to specify a new address
+                        currentChain.defaultArbitrator,
+                        lostReason!,
+                        evidenceJSONUrl,
+                        parseEther(DISPUTE_PRICE)
                     )
+                } catch (error) {
+                    handleTransactionError(error, errorHandlings);
+                    return;
+                }
+                finalTransactionSent(hash!);
             } catch (err: any) {
                 handleUnknownError(err)
             }

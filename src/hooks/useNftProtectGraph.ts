@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { BigNumber } from '@ethersproject/bignumber'
 import { nftProtectGraphs } from "../config";
 import { timestampToDate } from "../utils/helpers";
 import { graphManager } from "../utils/thegraph";
@@ -25,23 +24,23 @@ export interface SystemData {
     nftprotect: string,
     userregistry: string,
     sigatureVerifier: string,
-    feeEntry: BigNumber,
-    feeOpenCase: BigNumber,
-    feeFetchRuling: BigNumber,
+    feeEntry: bigint,
+    feeOpenCase: bigint,
+    feeFetchRuling: bigint,
     burnOnAction: boolean,
     allowThirdPartyTransfers: boolean,
     base: string,
     affiliatePercent: number
 }
 export interface RequestGraphMinimalData {
-    id: BigNumber,
+    id: bigint,
     status: ReqStatus,
     type: ReqType,
     updateDate: Date
 }
 
 export interface RequestGraphData extends RequestGraphMinimalData {
-    tokenId: BigNumber,
+    tokenId: bigint,
     oldOwnerAddress: string,
     newOwnerAddress: string,
     createDate: Date,
@@ -51,18 +50,18 @@ export interface RequestGraphData extends RequestGraphMinimalData {
 }
 
 export interface TokenGraphData {
-    id: BigNumber,
-    tokenId: BigNumber,
+    id: bigint,
+    tokenId: bigint,
     ownerAddress: string,
     originalOwnerAddress: string,
     assetType: number,
     contractAddress: string,
-    amount: BigNumber,
+    amount: bigint,
     mintDate: Date,
     mintBlockNumber: number,
     latestRequest: RequestGraphMinimalData | null,
     burned: Boolean,
-    nonce: BigNumber
+    nonce: bigint
 }
 
 export interface AffiliateActionData {
@@ -70,7 +69,7 @@ export interface AffiliateActionData {
     type: AffiliateActionType,
     referral: `0x${string}`,
     referrer: `0x${string}`,
-    amount: BigNumber,
+    amount: bigint,
     date: Date,
     blockNumber: number,
     txHash: string,
@@ -80,16 +79,16 @@ export interface PartnerData {
     id: string,
     discount: number,
     affiliatePercent: number,
-    totalProtected: BigNumber
+    totalProtected: bigint
 }
 
 export interface UserData {
     id: string,
     referrer: string,
-    totalReferrals: BigNumber,
-    totalRewards: BigNumber,
-    totalProtected: BigNumber,
-    totalOwnedProtected: BigNumber,
+    totalReferrals: bigint,
+    totalRewards: bigint,
+    totalProtected: bigint,
+    totalOwnedProtected: bigint,
 }
 
 const MissingUriError = (chainId: any) => `The Graph URI not found for chainId: ${chainId}`
@@ -132,9 +131,9 @@ export const useNftProtectGraph = (chainId: number) => {
                 nftprotect: data.system.nftprotect,
                 userregistry: data.system.userregistry,
                 sigatureVerifier: data.system.sigatureVerifier,
-                feeEntry: BigNumber.from(data.system.feeEntry),
-                feeOpenCase: BigNumber.from(data.system.feeOpenCase),
-                feeFetchRuling: BigNumber.from(data.system.feeFetchRuling),
+                feeEntry: BigInt(data.system.feeEntry),
+                feeOpenCase: BigInt(data.system.feeOpenCase),
+                feeFetchRuling: BigInt(data.system.feeFetchRuling),
                 burnOnAction: data.system.burnOnAction,
                 allowThirdPartyTransfers: data.system.allowThirdPartyTransfers,
                 base: data.system.base,
@@ -145,7 +144,7 @@ export const useNftProtectGraph = (chainId: number) => {
         }
     }
 
-    const getRequest = async (requestId: BigNumber): Promise<RequestGraphData|null> => {
+    const getRequest = async (requestId: bigint|string): Promise<RequestGraphData|null> => {
         if (graphURI) {
             const query = `
                 query getRequest($requestId: Bytes!) {
@@ -179,10 +178,10 @@ export const useNftProtectGraph = (chainId: number) => {
             }
             const { request } = data
             return request ? {
-                id: BigNumber.from(request.id),
+                id: BigInt(request.id),
                 type: ReqType[request.type as keyof typeof ReqType],
                 status: ReqStatus[request.status as keyof typeof ReqStatus],
-                tokenId: BigNumber.from(request.token.id),
+                tokenId: BigInt(request.token.id),
                 oldOwnerAddress: request.oldowner.id,
                 newOwnerAddress: request.newowner.id,
                 metaEvidenceId: parseInt(request.metaEvidenceId) as MetaEvidenceType,
@@ -196,7 +195,7 @@ export const useNftProtectGraph = (chainId: number) => {
         }
     }
 
-    const getToken = async (tokenId: BigNumber):Promise<TokenGraphData|undefined> => {
+    const getToken = async (tokenId: bigint|string):Promise<TokenGraphData|undefined> => {
         if (graphURI) {
             const query = `
                 query getToken($tokenId: Bytes!) {
@@ -233,23 +232,23 @@ export const useNftProtectGraph = (chainId: number) => {
                 })
             }
             return data.token ? {
-                id: BigNumber.from(data.token.id),
-                tokenId: BigNumber.from(data.token.tokenId),
+                id: BigInt(data.token.id),
+                tokenId: BigInt(data.token.tokenId),
                 ownerAddress: data.token.ownerProtected.id,
                 originalOwnerAddress: data.token.ownerOriginal.id,
                 assetType: parseInt(data.token.assetType),
                 contractAddress: data.token.contract,
-                amount: BigNumber.from(data.token.amount),
+                amount: BigInt(data.token.amount),
                 mintDate: timestampToDate(parseInt(data.token.timestamp)),
                 mintBlockNumber: parseInt(data.token.blocknumber),
                 latestRequest: data.token.latestRequest ? {
-                    id: BigNumber.from(data.token.latestRequest.id),
+                    id: BigInt(data.token.latestRequest.id),
                     status: ReqStatus[data.token.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[data.token.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(data.token.latestRequest.timestampChange))
                 } : null,
                 burned: data.token.burned,
-                nonce: BigNumber.from(data.token.nonce),
+                nonce: BigInt(data.token.nonce),
             } : undefined
         } else {
             throw Error(MissingUriError(chainId))
@@ -280,10 +279,10 @@ export const useNftProtectGraph = (chainId: number) => {
             return data.user ? {
                 id: data.user.id,
                 referrer: data.user.referrer,
-                totalProtected: BigNumber.from(data.user.totalProtected),
-                totalOwnedProtected: BigNumber.from(data.user.totalOwnedProtected),
-                totalReferrals: BigNumber.from(data.user.totalReferrals),
-                totalRewards: BigNumber.from(data.user.totalRewards)
+                totalProtected: BigInt(data.user.totalProtected),
+                totalOwnedProtected: BigInt(data.user.totalOwnedProtected),
+                totalReferrals: BigInt(data.user.totalReferrals),
+                totalRewards: BigInt(data.user.totalRewards)
             } : null
         } else {
             throw Error(MissingUriError(chainId))
@@ -314,7 +313,7 @@ export const useNftProtectGraph = (chainId: number) => {
                     id: data.partner.id,
                     discount: data.partner.discount,
                     affiliatePercent: data.partner.affiliatePercent,
-                    totalProtected: BigNumber.from(data.partner.totalProtected)
+                    totalProtected: BigInt(data.partner.totalProtected)
                 }
             }
             return null;
@@ -368,10 +367,10 @@ export const useNftProtectGraph = (chainId: number) => {
                 });
             }
             return data.requests.map((request: any) => ({
-                id: BigNumber.from(request.id),
+                id: BigInt(request.id),
                 type: ReqType[request.type as keyof typeof ReqType],
                 status: ReqStatus[request.status as keyof typeof ReqStatus],
-                tokenId: BigNumber.from(request.token.id),
+                tokenId: BigInt(request.token.id),
                 oldOwnerAddress: request.oldowner.id,
                 newOwnerAddress: request.newowner.id,
                 metaEvidenceId: parseInt(request.metaEvidenceId) as MetaEvidenceType,
@@ -431,23 +430,23 @@ export const useNftProtectGraph = (chainId: number) => {
                 })
             }
             return data ? data.tokens.map((it: any) => { return {
-                id: BigNumber.from(it.id),
-                tokenId: BigNumber.from(it.tokenId),
+                id: BigInt(it.id),
+                tokenId: BigInt(it.tokenId),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
                 assetType: parseInt(it.assetType),
                 contractAddress: it.contract,
-                amount: BigNumber.from(it.amount),
+                amount: BigInt(it.amount),
                 mintDate: timestampToDate(parseInt(it.timestamp)),
                 mintBlockNumber: parseInt(it.blocknumber),
                 latestRequest: it.latestRequest ? {
-                    id: BigNumber.from(it.latestRequest.id),
+                    id: BigInt(it.latestRequest.id),
                     status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
                 } : null,
                 burned: it.burned, 
-                nonce: BigNumber.from(it.nonce),
+                nonce: BigInt(it.nonce),
             }}) : []
         } else {
             throw Error(MissingUriError(chainId))
@@ -499,23 +498,23 @@ export const useNftProtectGraph = (chainId: number) => {
                 })
             }
             return data ? data.tokens.map((it: any) => { return {
-                id: BigNumber.from(it.id),
-                tokenId: BigNumber.from(it.tokenId),
+                id: BigInt(it.id),
+                tokenId: BigInt(it.tokenId),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
                 assetType: parseInt(it.assetType),
                 contractAddress: it.contract,
-                amount: BigNumber.from(it.amount),
+                amount: BigInt(it.amount),
                 mintDate: timestampToDate(parseInt(it.timestamp)),
                 mintBlockNumber: parseInt(it.blocknumber),
                 latestRequest: it.latestRequest ? {
-                    id: BigNumber.from(it.latestRequest.id),
+                    id: BigInt(it.latestRequest.id),
                     status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
                 } : null,
                 burned: it.burned,
-                nonce: BigNumber.from(it.nonce),
+                nonce: BigInt(it.nonce),
             }}) : []
         } else {
             throw Error(MissingUriError(chainId))
@@ -565,23 +564,23 @@ export const useNftProtectGraph = (chainId: number) => {
                 })
             }
             return data ? data.tokens.map((it: any) => { return {
-                id: BigNumber.from(it.id),
-                tokenId: BigNumber.from(it.tokenId),
+                id: BigInt(it.id),
+                tokenId: BigInt(it.tokenId),
                 ownerAddress: it.ownerProtected.id,
                 originalOwnerAddress: it.ownerOriginal.id,
                 assetType: parseInt(it.assetType),
                 contractAddress: it.contract,
-                amount: BigNumber.from(it.amount),
+                amount: BigInt(it.amount),
                 mintDate: timestampToDate(parseInt(it.timestamp)),
                 mintBlockNumber: parseInt(it.blocknumber),
                 latestRequest: it.latestRequest ? {
-                    id: BigNumber.from(it.latestRequest.id),
+                    id: BigInt(it.latestRequest.id),
                     status: ReqStatus[it.latestRequest.status as keyof typeof ReqStatus],
                     type: ReqType[it.latestRequest.type as keyof typeof ReqType],
                     updateDate: timestampToDate(parseInt(it.latestRequest.timestampChange))
                 } : null,
                 burned: it.burned,
-                nonce: BigNumber.from(it.nonce),
+                nonce: BigInt(it.nonce),
             }}) : []
         } else {
             throw Error(MissingUriError(chainId))
@@ -621,7 +620,7 @@ export const useNftProtectGraph = (chainId: number) => {
                 type: AffiliateActionType[action.type as keyof typeof AffiliateActionType],
                 referral: action.referral,
                 referrer: action.referrer,
-                amount: BigNumber.from(action.amount),
+                amount: BigInt(action.amount),
                 date: timestampToDate(parseInt(action.timestamp)),
                 blockNumber: parseInt(action.blocknumber),
                 txHash: action.txHash
@@ -663,8 +662,8 @@ export const convertTokenGraphData = (tokenData: TokenGraphData): Partial<NFT> =
             tokenId: tokenData.tokenId.toString(),
             contractAddress: tokenData.contractAddress,
             tokenType: assetType,
-            amount: tokenData.amount.toNumber(), 
-            nonce: tokenData.nonce.toNumber()
+            amount: tokenData.amount, 
+            nonce: tokenData.nonce
         }
     };
 };
