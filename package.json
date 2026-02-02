@@ -30,7 +30,7 @@
     "base-x": "^4.0.0",
     "connectkit": "^1.7.3",
     "crypto-convert": "^2.1.5",
-    "eslint": "8.31.0",
+    "eslint": "9.26.0",
     "eslint-config-next": "^14.0.3",
     "formik": "^2.2.9",
     "framer-motion": "^8.4.3",
